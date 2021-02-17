@@ -1,7 +1,9 @@
-class B78XH_Apu {
+Include.addScript('/B78XH/Systems/B78XH_APUInfo.js');
+
+class B78XH_APU extends B78XH_APUInfo {
 
 	constructor() {
-		this.updateDelayer = new HeavyUpdateDelayer();
+		super(...arguments);
 		this.apuEGT = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 		this.apuRPM = SimVar.GetSimVarValue(B78XH_LocalVariables.APU.RPM, 'Percent');
 		this.apuLastRPM = this.apuRPM;
@@ -12,7 +14,7 @@ class B78XH_Apu {
 		this.apuOilTemp = 15;
 	}
 
-	update(_deltaTime, delayInMilliseconds) {
+	update(_deltaTime, delayInMilliseconds){
 		this.updateApuRPM();
 		this.updateApuStatus();
 		this.updateApuEGT();
@@ -51,8 +53,7 @@ class B78XH_Apu {
 				this.apuEGT = 305 + ambientTemperature;
 			}
 		}
-		B78XH_LocalVariables.
-		SimVar.SetSimVarValue(B78XH_LocalVariables.APU.EGT, 'Celsius', this.apuEGT);
+		this.setEGT(this.apuEGT);
 	}
 
 	updateApuRPM() {
@@ -76,7 +77,7 @@ class B78XH_Apu {
 			}
 		}
 
-		SimVar.SetSimVarValue(B78XH_LocalVariables.APU.OIL_PRESS, 'Number', this.apuOilPress);
+		this.setOilPress(this.apuOilPress);
 	}
 
 	updateApuOilTemp() {
@@ -95,7 +96,7 @@ class B78XH_Apu {
 			}
 		}
 
-		SimVar.SetSimVarValue(B78XH_LocalVariables.APU.OIL_TEMP, 'Number', this.apuOilTemp);
+		this.setOilTemp(this.apuOilTemp);
 	}
 
 	getApuRPM(over100 = false) {
