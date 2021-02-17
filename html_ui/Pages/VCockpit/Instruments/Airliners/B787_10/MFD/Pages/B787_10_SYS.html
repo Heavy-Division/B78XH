@@ -1,0 +1,439 @@
+﻿<link rel="stylesheet" href="./B787_10_SYS.css" />
+
+<script type="text/html" id="B787_10_SYS_Template">
+    <svg viewBox="0 0 1200 1800">
+        <g id="PageButtonSmallTemplate">
+            <path class="topLeftBorder" d="M0 0 L200 0 l-10 10 L10 95 l-10 10" />
+            <path class="bottomRightBorder" d="M200 105 L200 0 l-10 10 L10 95 l-10 10" />
+            <rect class="border" x="0px" width="200px" y="0px" height="105px" />
+            <rect class="inner" x="10px" width="180px" y="10px" height="85px" />
+            <text x="100px" y="64px"></text>
+        </g>
+
+        <g id="PageButtonLargeTemplate">
+            <path class="topLeftBorder" d="M0 0 L240 0 l-10 10 L10 95 l-10 10" />
+            <path class="bottomRightBorder" d="M240 105 L240 0 l-10 10 L10 95 l-10 10" />
+            <rect class="border" x="0px" width="240px" y="0px" height="105px" />
+            <rect class="inner" x="10px" width="220px" y="10px" height="85px" />
+            <text x="120px" y="64px"></text>
+        </g>
+
+        <g id="PageButtons">
+            <g id="STAT_PageButton" transform="translate(0, 0)"></g>
+            <g id="ELEC_PageButton" transform="translate(200, 0)"></g>
+            <g id="HYD_PageButton" transform="translate(400, 0)"></g>
+            <g id="FUEL_PageButton" transform="translate(600, 0)"></g>
+            <g id="AIR_PageButton" transform="translate(800, 0)"></g>
+            <g id="DOOR_PageButton" transform="translate(1000, 0)"></g>
+
+            <g id="GEAR_PageButton" transform="translate(0, 105)"></g>
+            <g id="FCTL_PageButton" transform="translate(240, 105)"></g>
+            <g id="EFIS_DSP_PageButton" transform="translate(480, 105)"></g>
+            <g id="MAINT_PageButton" transform="translate(720, 105)"></g>
+            <g id="CB_PageButton" transform="translate(960, 105)"></g>
+        </g>
+
+        <g id="Pages" transform="translate(0, 210)">
+            <g id="STAT_Page">
+
+
+                <g id="boxes">
+                    <path class="box" id="box-hydraulic" d="M 70,62.5 C 58.114946,62.5 48.5,72.114946 48.5,84 V 284 C 48.5,295.88505 58.114946,305.5 70,305.5 H 1130 C 1141.8851,305.5 1151.5,295.88505 1151.5,284 V 84 C 1151.5,72.114946 1141.8851,62.5 1130,62.5 H 715 V 65.5 H 1130 C 1140.2749,65.5 1148.5,73.725054 1148.5,84 V 284 C 1148.5,294.27495 1140.2749,302.5 1130,302.5 H 70 C 59.725054,302.5 51.5,294.27495 51.5,284 V 84 C 51.5,73.725054 59.725054,65.5 70,65.5 H 480 V 62.5 Z" />
+                    <path class="box" id="box-apu" d="M 70,332.5 C 58.114946,332.5 48.5,342.11495 48.5,354 V 504 C 48.5,515.88505 58.114946,525.5 70,525.5 H 1130 C 1141.8851,525.5 1151.5,515.88505 1151.5,504 V 354 C 1151.5,342.11495 1141.8851,332.5 1130,332.5 H 647.05078 V 335.5 H 1130 C 1140.2749,335.5 1148.5,343.72505 1148.5,354 V 504 C 1148.5,514.27495 1140.2749,522.5 1130,522.5 H 70 C 59.725054,522.5 51.5,514.27495 51.5,504 V 354 C 51.5,343.72505 59.725054,335.5 70,335.5 H 555 V 332.5 Z" />
+                    <path class="box" id="box-status-messages" d="M 70,722.5 C 58.114946,722.5 48.5,732.11495 48.5,744 V 1504 C 48.5,1515.8851 58.114946,1525.5 70,1525.5 H 1130 C 1141.8851,1525.5 1151.5,1515.8851 1151.5,1504 V 744 C 1151.5,732.11495 1141.8851,722.5 1130,722.5 H 795 V 725.5 H 1130 C 1140.2749,725.5 1148.5,733.72505 1148.5,744 V 1504 C 1148.5,1514.2749 1140.2749,1522.5 1130,1522.5 H 70 C 59.725054,1522.5 51.5,1514.2749 51.5,1504 V 744 C 51.5,733.72505 59.725054,725.5 70,725.5 H 405 V 722.5 Z" />
+                    <path class="box" id="box-oxygen" d="M 70,552.5 C 58.114946,552.5 48.5,562.11495 48.5,574 V 664 C 48.5,675.88505 58.114946,685.5 70,685.5 H 430 C 441.88505,685.5 451.5,675.88505 451.5,664 V 574 C 451.5,562.11495 441.88505,552.5 430,552.5 H 334.21875 V 555.5 H 430 C 440.27495,555.5 448.5,563.72505 448.5,574 V 664 C 448.5,674.27495 440.27495,682.5 430,682.5 H 70 C 59.725054,682.5 51.5,674.27495 51.5,664 V 574 C 51.5,563.72505 59.725054,555.5 70,555.5 H 164 V 552.5 Z" />
+                    <path class="box" id="box-liquid-cooling" d="M 489,552.5 C 477.11495,552.5 467.5,562.11495 467.5,574 V 664 C 467.5,675.88505 477.11495,685.5 489,685.5 H 1130 C 1141.8851,685.5 1151.5,675.88505 1151.5,664 V 574 C 1151.5,562.11495 1141.8851,552.5 1130,552.5 H 990 V 555.5 H 1130 C 1140.2749,555.5 1148.5,563.72505 1148.5,574 V 664 C 1148.5,674.27495 1140.2749,682.5 1130,682.5 H 489 C 478.72505,682.5 470.5,674.27495 470.5,664 V 574 C 470.5,563.72505 478.72505,555.5 489,555.5 H 625 V 552.5 Z" />
+                </g>
+
+                <g id="box-labels">
+                    <text class="box-label" x="599" y="78" id="box-label-hydraulic">HYDRAULIC</text>
+                    <text class="box-label" x="601" y="348" id="box-label-apu">APU</text>
+                    <text class="box-label" x="600" y="739" id="box-label-status-messages">STATUS MESSAGES</text>
+                    <text class="box-label" x="250" y="569" id="box-label-oxygen">OXYGEN</text>
+                    <text class="box-label" x="809" y="567" id="box-label-liquid-cooling">LIQUID COOLING</text>
+                </g>
+
+                <g id="boxes-content">
+                    <text class="box-content-label" x="70" y="652" id="box-content-label-crew-press-oxygen">CREW PRESS</text>
+                    <text class="box-content-value" x="380" y="652" id="box-content-value-crew-press-oxygen">1950</text>
+                    <text class="box-content-label" x="160" y="186" id="box-content-label-qty-hydraulic">QTY</text>
+                    <text class="box-content-label" x="160" y="242" id="box-content-label-press-hydraulic">PRESS</text>
+                    <text class="box-content-value" x="422" y="242" id="box-content-value-l-press-hydraulic">5100</text>
+                    <text class="box-content-value" x="707" y="242" id="box-content-value-c-press-hydraulic">5100</text>
+                    <text class="box-content-value" x="983" y="242" id="box-content-value-r-press-hydraulic">5100</text>
+                    <text class="box-content-value" x="423" y="186" id="box-content-value-l-qty-hydraulic">1.25</text>
+                    <text class="box-content-value" x="705" y="186" id="box-content-value-c-qty-hydraulic">1.05</text>
+                    <text class="box-content-value" x="984" y="186" id="box-content-value-r-qty-hydraulic">1.14</text>
+                    <text class="box-content-label" x="421" y="135" id="box-content-label-l-hydraulic" text-anchor="middle">L</text>
+                    <text class="box-content-label" x="707" y="135" id="box-content-label-c-hydraulic" text-anchor="middle">C</text>
+                    <text class="box-content-label" x="983" y="135" id="box-content-label-r-hydraulic" text-anchor="middle">R</text>
+
+                    <text class="box-content-label" x="324" y="407.14285" id="box-content-label-rpm-apu">RPM</text>
+                    <text class="box-content-label" x="704" y="407.53348" id="box-content-label-egt-apu">EGT</text>
+                    <text class="box-content-label" x="100" y="473.92856" id="box-content-label-oil-press-apu">OIL PRESS</text>
+                    <text class="box-content-label" x="500" y="474.14212" id="box-content-label-oil-temp-apu">OIL TEMP</text>
+                    <text class="box-content-label" x="850" y="473.57144" id="box-content-label-oil-qty-apu">OIL QTY</text>
+                    <text class="box-content-value" x="450" y="407.53348" id="box-content-value-rpm-apu">100.1</text>
+                    <text class="box-content-value" x="820" y="407.53348" id="box-content-value-egt-apu"><tspan id="box-content-value-egt-apu-span">101</tspan><tspan class="unit" dx="15">C</tspan></text>
+                    <text class="box-content-value" x="375" y="474.28571" id="box-content-value-oil-press-apu"><tspan id="box-content-value-oil-press-apu-span">60</tspan><tspan class="unit" dx="15">PSI</tspan></text>
+                    <text class="box-content-value" x="730" y="474.28571" id="box-content-value-oil-temp-apu"><tspan id="box-content-value-oil-temp-apu-span">75</tspan><tspan class="unit" dx="15">C</tspan></text>
+                    <text class="box-content-value" x="1065"  y="474.28571" id="box-content-value-oil-qty-apu">7.4</text>
+
+
+                    <text class="box-content-label" x="510" y="652" id="box-content-label-qty-liquid-cooling">QTY</text>
+                    <text class="box-content-label" x="674" y="610" id="box-content-label-l-liquid-cooling" text-anchor="middle">L</text>
+                    <text class="box-content-label" x="958" y="610" id="box-content-label-r-liquid-cooling" text-anchor="middle">R</text>
+                    <text class="box-content-value" x="958" y="652" id="box-content-value-l-liquid-cooling">0.98</text>
+                    <text class="box-content-value" x="674" y="652" id="box-content-value-r-liquid-cooling">1.01</text>
+                </g>
+
+            </g>
+
+            <g id="ELEC_Page">
+
+            </g>
+
+            <g id="HYD_Page">
+
+
+
+
+                <g id="boxes-top">
+                    <rect id="box-flaps" class="box" width="202.82605" height="61.994987" x="347.10715" y="23" rx="10" ry="10" />
+                    <rect id="box-flt-ctrl-r" class="box" width="165" height="62" x="896" y="91" rx="10" ry="10" />
+                    <rect id="box-flt-ctrl-c" class="box" width="165" height="62" x="722" y="91" rx="10" ry="10" />
+                    <rect id="box-main-gear" class="box" width="153.0034" height="62.012333" x="558.99384" y="91" rx="10" ry="10" />
+                    <rect id="box-nose-gear" class="box" width="202.82605" height="61.994987" x="347.10715" y="91" rx="10" ry="10" />
+                    <rect id="box-flt-ctrl-l" class="box" width="165" height="62" x="134" y="91" rx="10" ry="10" />
+                    <rect id="box-r-rev" class="box" width="165" height="62" x="896" y="23" rx="10" ry="10" />
+                    <rect id="box-l-rev" class="box" width="165" height="62" x="134" y="23" rx="10" ry="10" />
+                </g>
+
+                <g id="boxes-top-texts">
+                    <text id="text-l-rev" style="font-weight:bold;font-size:28px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#0000ff;fill-opacity:1;" x="216" y="32">
+                        <tspan x="215.65918" dy="1.2em">L REV</tspan>
+                    </text>
+                    <text id="text-flaps" style="font-weight:bold;font-size:28px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle" x="448" y="32">
+                        <tspan x="448.13052" dy="1.2em">FLAPS</tspan>
+                    </text>
+                    <text id="text-r-rev" style="font-weight:bold;font-size:28px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle" x="978" y="32">
+                        <tspan x="977.65918" dy="1.2em">R REV</tspan>
+                    </text>
+                    <text id="text-ftl-ctrl-l" style="font-weight:bold;font-size:28px;line-height:1.1;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#0000ff;fill-opacity:1;" x="226" y="90">
+                        <tspan x="226" dy="1em">FLT</tspan>
+                        <tspan x="228" dy="1em">CTRL</tspan>
+                        <tspan x="228" dy="1em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+                    <text id="text-ftl-ctrl-r" style="font-weight:bold;font-size:28px;line-height:1.1;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#0000ff;fill-opacity:1;" x="988" y="90">
+                        <tspan x="988" dy="1em" >FLT</tspan>
+                        <tspan x="990" dy="1em">CTRL</tspan>
+                        <tspan x="990" dy="1em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+                    <text id="text-flt-ctrl-c" style="font-weight:bold;font-size:28px;line-height:1.1;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#0000ff;fill-opacity:1;" x="814" y="90">
+                        <tspan x="814" dy="1em">FLT</tspan>
+                        <tspan x="816" dy="1em">CTRL</tspan>
+                        <tspan x="816" dy="1em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+                    <text id="text-main-gear" style="font-weight:bold;font-size:28px;line-height:1.1;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#0000ff;fill-opacity:1;" x="644" y="90">
+                        <tspan x="644" dy="1em">MAIN</tspan>
+                        <tspan x="644" dy="1em">GEAR</tspan>
+                        <tspan x="644" dy="1em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+                    <text id="text-nose-gear"style="font-weight:bold;font-size:28px;line-height:1.1;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#0000ff;fill-opacity:1;" x="458" y="90">
+                        <tspan x="458" dy="1em">NOSE GEAR</tspan>
+                        <tspan x="458" dy="1em">&amp; STEERING</tspan>
+                        <tspan x="458" dy="1em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+
+
+                </g>
+
+                <text id="text-press-value-l" style="font-weight:bold;font-size:40px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1" x="218.40039" y="960.07623">
+                    <tspan x="218.40039" y="960.07623">4650</tspan>
+                </text>
+                <text id="text-press-value-c" style="font-weight:bold;font-size:40px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"x="601.71777" y="961.86816">
+                    <tspan x="601.71777" y="961.86816">4650</tspan>
+                </text>
+                <text id="text-press-value-r" style="font-weight:bold;font-size:40px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1" x="977.40039" y="961.86816">
+                    <tspan x="977.40039" y="961.86816">4650</tspan>
+                </text>
+                <text id="text-qty-value-c" style="font-weight:bold;font-size:40px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"  x="600.5166"  y="878.04297">
+                    <tspan x="600.5166" y="878.04297">1.15</tspan>
+                </text>
+                <text id="text-qty-value-l" style="font-weight:bold;font-size:40px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1" x="217.19922" y="878.04297">
+                    <tspan x="217.19922" y="878.04297">1.15</tspan>
+                </text>
+                <text id="text-qty-value-r" style="font-weight:bold;font-size:40px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Bold';text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1" x="976.19922" y="878.04297">
+                    <tspan x="976.19922" y="878.04297">1.15</tspan>
+                </text>
+
+
+
+                <g id="texts">
+                    <text id="text-isln-l" ry="10" x="445" y="250">ISLN</text>
+                    <text id="text-isln-r" ry="10" x="595" y="250">ISLN</text>
+                    <text id="text-sov-l" ry="10" x="205" y="765">SOV</text>
+                    <text id="text-sov-r" ry="10" x="990" y="765">SOV</text>
+                    <text id="text-rat" ry="10" x="742" y="425">RAT</text>
+                    <text id="text-l-eng" x="218.6642" y="432">
+                        <tspan x="226">L</tspan>
+                        <tspan x="218.6642" dy="1.1em">ENG</tspan>
+                    </text>
+                    <text id="text-r-eng" x="981.66418" y="432" id="text-r-eng">
+                        <tspan x="990">R</tspan>
+                        <tspan x="981.66418" dy="1.1em">ENG</tspan>
+                    </text>
+                    <text id="text-r-elec" x="985" y="620.35358">
+                        <tspan x="992">R</tspan>
+                        <tspan x="985" dy="1.1em">ELEC</tspan>
+                    </text>
+                    <text id="text-c2-elec" x="761" y="570">
+                        <tspan x="766">C2</tspan>
+                        <tspan x="761" dy="1.1em">ELEC</tspan>
+                    </text>
+                    <text id="text-c1-elec" x="442" y="570">
+                        <tspan x="450">C1</tspan>
+                        <tspan x="442" dy="1.1em">ELEC</tspan>
+                    </text>
+                    <text id="text-l-elec" x="212" y="620.35358">
+                        <tspan x="220">L</tspan>
+                        <tspan x="212" dy="1.1em">ELEC</tspan></text>
+                    <text id="text-press-l" x="410" y="958">PRESS</text>
+                    <text id="text-press-r" x="790" y="958">PRESS</text>
+
+
+                    <text id="text-primary-l" x="82" y="300">
+                        <tspan x="82px" dy="1.2em">P</tspan>
+                        <tspan x="82px" dy="1.2em">R</tspan>
+                        <tspan x="82px" dy="1.2em">I</tspan>
+                        <tspan x="82px" dy="1.2em">M</tspan>
+                        <tspan x="82px" dy="1.2em">A</tspan>
+                        <tspan x="82px" dy="1.2em">R</tspan>
+                        <tspan x="82px" dy="1.2em">Y</tspan>
+                        <tspan x="82px" dy="1.2em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+
+                    <text id="text-demand-l" x="82" y="600">
+                        <tspan x="82px" dy="1.2em">D</tspan>
+                        <tspan x="82px" dy="1.2em">E</tspan>
+                        <tspan x="82px" dy="1.2em">M</tspan>
+                        <tspan x="82px" dy="1.2em">A</tspan>
+                        <tspan x="82px" dy="1.2em">N</tspan>
+                        <tspan x="82px" dy="1.2em">D</tspan>
+                        <tspan x="82px" dy="1.2em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+                    <text id="text-primary-r" x="1130" y="300">
+                        <tspan x="1120px" dy="1.2em">P</tspan>
+                        <tspan x="1120px" dy="1.2em">R</tspan>
+                        <tspan x="1120px" dy="1.2em">I</tspan>
+                        <tspan x="1120px" dy="1.2em">M</tspan>
+                        <tspan x="1120px" dy="1.2em">A</tspan>
+                        <tspan x="1120px" dy="1.2em">R</tspan>
+                        <tspan x="1120px" dy="1.2em">Y</tspan>
+                        <tspan x="1120px" dy="1.2em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+
+                    <text id="text-demand-r" x="1130" y="600">
+                        <tspan x="1120px" dy="1.2em">D</tspan>
+                        <tspan x="1120px" dy="1.2em">E</tspan>
+                        <tspan x="1120px" dy="1.2em">M</tspan>
+                        <tspan x="1120px" dy="1.2em">A</tspan>
+                        <tspan x="1120px" dy="1.2em">N</tspan>
+                        <tspan x="1120px" dy="1.2em">D</tspan>
+                        <tspan x="1120px" dy="1.2em"><!-- HOT FIX --> &nbsp;</tspan>
+                    </text>
+                </g>
+
+                <path id="l-white" class="whites" d="M 218,164.45898 208.31836,181.22852 198.63477,198 H 216 V 285 H 140 A 2.0002,2.0002 0 0 0 138,287 V 368 H 98 V 370 452 H 138 V 716.74609 C 124.13373,717.77354 113.16406,729.37567 113.16406,743.5 113.16406,757.62433 124.13373,769.22646 138,770.25391 V 812 H 142 V 770.25391 C 155.86627,769.22646 166.83594,757.62433 166.83594,743.5 166.83594,729.37567 155.86627,717.77354 142,716.74609 V 452 H 182 V 368 H 142 V 289 H 218 294 V 628 H 254 V 630 712 H 294 V 812 H 298 V 712 H 338 V 628 H 298 V 287 A 2.0002,2.0002 0 0 0 296,285 H 220 V 198 H 237.36523 L 227.68164,181.22852 Z M 102,372 H 138 V 448 H 102 Z M 142,372 H 178 V 448 H 142 Z M 258,632 H 294 V 708 H 258 Z M 298,632 H 334 V 708 H 298 Z M 138,720.75586 V 766.24414 C 126.306,765.23393 117.16406,755.46122 117.16406,743.5 117.16406,731.53878 126.306,721.76607 138,720.75586 Z M 142,720.75586 C 153.694,721.76607 162.83594,731.53878 162.83594,743.5 162.83594,755.46122 153.694,765.23393 142,766.24414 Z"/>
+                <path id="c-white" class="whites" d="M 384,164.45898 374.31836,181.22852 364.63477,198 H 382 V 287 A 2.0002,2.0002 0 0 0 384,289 H 390 422.30469 C 422.8333,303.33547 434.65286,314.83594 449.11523,314.83594 463.57762,314.83594 475.39903,303.33547 475.92773,289 H 522 V 498 H 482.04883 V 500 582 H 522 V 681.5 812 H 526 V 681.5 582 H 566.04883 V 498 H 526 V 289 H 569.68945 C 570.21807,303.33547 582.03763,314.83594 596.5,314.83594 610.96237,314.83594 622.78193,303.33547 623.31055,289 H 673 V 498 H 633 V 500 582 H 673 V 698 702 812 H 677 V 702 H 816 A 2.0002,2.0002 0 0 0 818,700 V 425.13281 H 858 V 341.13281 H 818 V 287.04883 A 2.0002,2.0002 0 0 0 818,287 V 198 H 835.36523 L 825.68164,181.22852 816,164.45898 806.31836,181.22852 796.63477,198 H 814 V 285 H 677 V 198 H 694.36523 L 684.68164,181.22852 675,164.45898 665.31836,181.22852 655.63477,198 H 673 V 285 H 623.16406 C 621.66738,271.60966 610.28335,261.16406 596.5,261.16406 582.71665,261.16406 571.33262,271.60966 569.83594,285 H 524.04883 524 475.78125 C 474.28434,271.60966 462.89859,261.16406 449.11523,261.16406 435.33188,261.16406 423.94785,271.60966 422.45117,285 H 390 386 V 198 H 403.36523 L 393.68164,181.22852 Z M 449.11523,265.16406 C 460.73302,265.16406 470.28668,273.78953 471.75195,285 H 426.48047 C 427.94547,273.78953 437.49746,265.16406 449.11523,265.16406 Z M 596.5,265.16406 C 608.11777,265.16406 617.66976,273.78953 619.13477,285 H 573.86523 C 575.33024,273.78953 584.88223,265.16406 596.5,265.16406 Z M 426.30469,289 H 471.92773 C 471.40602,301.16952 461.41593,310.83594 449.11523,310.83594 436.81455,310.83594 426.8263,301.16952 426.30469,289 Z M 573.68945,289 H 619.31055 C 618.78893,301.16952 608.80068,310.83594 596.5,310.83594 584.19932,310.83594 574.21107,301.16952 573.68945,289 Z M 677,289 H 814 V 341.13281 H 774 V 343.13281 425.13281 H 814 V 698 H 677 V 582 H 717 V 498 H 677 Z M 778,345.13281 H 814 V 421.13281 H 778 Z M 818,345.13281 H 854 V 421.13281 H 818 Z M 486.04883,502 H 522 V 578 H 486.04883 Z M 526,502 H 562.04883 V 578 H 526 Z M 637,502 H 673 V 578 H 637 Z M 677,502 H 713 V 578 H 677 Z" />
+                <path id="r-white" class="whites" d="M 977,164.45898 967.31836,181.23047 957.63477,198 H 975 V 285 H 899 A 2.0002,2.0002 0 0 0 897,287 V 628 H 857 V 712 H 897 V 812 H 901 V 712 H 941 V 630 628 H 901 V 289 H 976.95117 977 1053 V 368 H 1013 V 452 H 1053 V 716.74609 C 1039.1337,717.77352 1028.1641,729.37565 1028.1641,743.5 1028.1641,757.62435 1039.1337,769.22648 1053,770.25391 V 812 H 1057 V 770.25391 C 1070.8663,769.22648 1081.8359,757.62435 1081.8359,743.5 1081.8359,729.37565 1070.8663,717.77352 1057,716.74609 V 452 H 1097 V 370 368 H 1057 V 287 A 2.0002,2.0002 0 0 0 1055,285 H 979 V 198 H 996.36523 L 986.68164,181.23047 Z M 1017,372 H 1053 V 448 H 1017 Z M 1057,372 H 1093 V 448 H 1057 Z M 861,632 H 897 V 708 H 861 Z M 901,632 H 937 V 708 H 901 Z M 1053,720.75586 V 766.24414 C 1041.306,765.23395 1032.1641,755.46124 1032.1641,743.5 1032.1641,731.53876 1041.306,721.76605 1053,720.75586 Z M 1057,720.75586 C 1068.694,721.76605 1077.8359,731.53876 1077.8359,743.5 1077.8359,755.46124 1068.694,765.23395 1057,766.24414 Z"/>
+
+                <g id="hydraulic-green-lines">
+                    <path id="l-eng-green" class="greens" state="off" d="M 218,164.45898 208.31836,181.22852 198.63477,198 H 211 V 280 H 140 C 136.13417,280.00039 133.00039,283.13417 133,287 V 366 H 96 V 370 454 H 133 V 717.5957 C 121.58697,720.68308 113.16406,731.12381 113.16406,743.5 113.16406,755.87619 121.58697,766.31692 133,769.4043 V 812 H 147 V 769.4043 C 158.41303,766.31692 166.83594,755.87619 166.83594,743.5 166.83594,731.12381 158.41303,720.68308 147,717.5957 V 454 H 184 V 366 H 147 V 294 H 218 C 221.86583,293.99961 224.99961,290.86583 225,287 V 198 H 237.36523 L 227.68164,181.22852 Z M 104,374 H 133 V 446 H 104 Z M 147,374 H 176 V 446 H 147 Z M 133,721.75781 V 765.24219 C 123.80248,762.29387 117.16406,753.69188 117.16406,743.5 117.16406,733.30812 123.80248,724.70613 133,721.75781 Z M 147,721.75781 C 156.19752,724.70613 162.83594,733.30812 162.83594,743.5 162.83594,753.69188 156.19752,762.29387 147,765.24219 Z" />
+                    <path id="r-eng-green" class="greens" state="off" d="M 977,164.45898 967.31836,181.22852 957.63477,198 H 970 V 287 A 7.0007,7.0007 0 0 0 977,294 H 1048 V 366 H 1011 V 370 454 H 1048 V 717.5957 C 1036.587,720.68307 1028.1641,731.12379 1028.1641,743.5 1028.1641,755.87621 1036.587,766.31693 1048,769.4043 V 812 H 1062 V 769.4043 C 1073.413,766.31693 1081.8359,755.87621 1081.8359,743.5 1081.8359,731.12379 1073.413,720.68307 1062,717.5957 V 454 H 1099 V 366 H 1062 V 287 A 7.0007,7.0007 0 0 0 1055,280 H 984 V 198 H 996.36523 L 986.68164,181.22852 Z M 1019,374 H 1048 V 446 H 1019 Z M 1062,374 H 1091 V 446 H 1062 Z M 1048,721.75781 V 765.24219 C 1038.8025,762.29388 1032.1641,753.6919 1032.1641,743.5 1032.1641,733.3081 1038.8025,724.70612 1048,721.75781 Z M 1062,721.75781 C 1071.1975,724.70612 1077.8359,733.3081 1077.8359,743.5 1077.8359,753.6919 1071.1975,762.29388 1062,765.24219 Z" />
+                    <path id="l-elec-green" class="greens" state="off" d="M 218,164.45898 208.31836,181.22852 198.63477,198 H 211 V 287 A 7.0007,7.0007 0 0 0 218,294 H 289 V 626 H 252 V 714 H 289 V 812 H 303 V 714 H 340 V 630 626 H 303 V 287 A 7.0007,7.0007 0 0 0 296,280 H 225 V 198 H 237.36523 L 227.68164,181.22852 Z M 260,634 H 289 V 706 H 260 Z M 303,634 H 332 V 706 H 303 Z"/>
+                    <path id="r-elec-green"  class="greens" state="off" d="M 977,164.45898 967.31836,181.22852 957.63477,198 H 970 V 280 H 899 A 7.0007,7.0007 0 0 0 892,287 V 626 H 855 V 630 714 H 892 V 812 H 906 V 714 H 943 V 626 H 906 V 294 H 977 A 7.0007,7.0007 0 0 0 984,287 V 198 H 996.36523 L 986.68164,181.22852 Z M 863,634 H 892 V 706 H 863 Z M 906,634 H 935 V 706 H 906 Z"/>
+                    <path id="c1-elec-green" class="greens" state="off" d="M 383.9707,164.45898 374.28711,181.22852 364.60547,198 H 377 V 287 A 7.0007,7.0007 0 0 0 384,294 H 422.96484 C 425.69816,305.91751 436.3804,314.83594 449.11523,314.83594 461.85007,314.83594 472.53386,305.91751 475.26758,294 H 517 V 496 H 480.04883 V 500 584 H 517 V 812 H 531 V 584 H 568.04883 V 496 H 531 V 294.04688 L 570.41992,294.30859 C 573.26545,306.07136 583.87514,314.83594 596.5,314.83594 609.00222,314.83594 619.53315,306.24258 622.5,294.65234 L 674.95312,295 A 7.0007,7.0007 0 0 0 677,294.70703 V 295 H 756.01172 V 307.36133 L 772.78125,297.67969 777.42188,295 H 816 A 7.0007,7.0007 0 0 0 823,288 V 198 H 835.36523 L 825.68359,181.22852 816,164.45898 806.31836,181.22852 796.63672,198 H 809 V 281 H 777.43359 L 772.78125,278.31445 756.01172,268.63086 V 281 H 682 V 198 H 694.35938 L 684.67773,181.22852 674.99414,164.45898 665.3125,181.22852 655.62891,198 H 668 V 280.95312 L 622.30469,280.65039 C 619.09998,269.416 608.74907,261.16406 596.5,261.16406 584.37524,261.16406 574.10834,269.24874 570.79297,280.30859 L 527,280.01953 V 280 H 524.04688 474.73438 C 471.32185,269.0979 461.12754,261.16406 449.11523,261.16406 437.10293,261.16406 426.91008,269.0979 423.49805,280 H 391 V 198 H 403.33594 L 393.65234,181.22852 Z M 449.11523,265.16406 C 458.93428,265.16406 467.28101,271.32478 470.51562,280 H 427.7168 C 430.95088,271.32478 439.2962,265.16406 449.11523,265.16406 Z M 596.5,265.16406 C 606.55177,265.16406 615.05476,271.6222 618.11523,280.62305 L 574.98047,280.33789 C 578.12193,271.48546 586.55418,265.16406 596.5,265.16406 Z M 427.07812,294 H 471.1543 C 468.52589,303.71262 459.67288,310.83594 449.11523,310.83594 438.55759,310.83594 429.70608,303.71262 427.07812,294 Z M 574.55664,294.33594 618.35938,294.625 C 615.5273,304.01675 606.82998,310.83594 596.5,310.83594 586.06455,310.83594 577.29611,303.87624 574.55664,294.33594 Z M 488.04883,504 H 517 V 576 H 488.04883 Z M 531,504 H 560.04883 V 576 H 531 Z"/>
+                    <path id="c1-c2-elec-green" class="greens" state="off" d="M 383.9707,164.45898 374.28711,181.22852 364.60547,198 H 377 V 287 A 7.0007,7.0007 0 0 0 384,294 H 422.96484 C 425.69816,305.91751 436.3804,314.83594 449.11523,314.83594 461.85007,314.83594 472.53386,305.91751 475.26758,294 H 517 V 496 H 480.04883 V 500 584 H 517 V 812 H 531 V 584 H 568.04883 V 496 H 531 V 294.04688 L 570.41992,294.30859 C 570.59763,295.04319 570.8061,295.76675 571.04297,296.47656 571.04317,296.47715 571.04277,296.47756 571.04297,296.47856 571.27989,297.18836 571.54657,297.88425 571.83984,298.56645 572.13358,299.24972 572.45331,299.91759 572.80078,300.57035 573.14794,301.22264 573.52192,301.85759 573.91992,302.4766 574.08424,302.73216 574.27072,302.97119 574.44336,303.22074 575.10709,304.18016 575.81401,305.10922 576.59375,305.9727 577.085,306.5167 577.59719,307.03878 578.13086,307.54106 578.66485,308.04363 579.21933,308.52448 579.79297,308.98246 580.36625,309.44015 580.95828,309.87487 581.56836,310.2852 582.17844,310.69557 582.80514,311.08125 583.44922,311.44145 584.09403,311.80211 584.75362,312.13585 585.42969,312.4434 586.10495,312.7506 586.7944,313.03185 587.49805,313.28324 590.31302,314.2891 593.34315,314.83598 596.5,314.83598 603.5325,314.83598 609.94082,312.11775 614.73047,307.67582 618.45671,304.22087 621.2039,299.7237 622.50195,294.65238 L 668,294.95312 V 496 H 631 V 500 584 H 668 V 812 H 682 V 584 H 719 V 496 H 682 V 295 H 756.01172 V 307.36133 L 772.78125,297.67969 777.42188,295 H 816 A 7.0007,7.0007 0 0 0 823,288 V 198 H 835.36523 L 825.68359,181.22852 816,164.45898 806.31836,181.22852 796.63672,198 H 809 V 281 H 777.43359 L 772.78125,278.31445 756.01172,268.63086 V 281 H 682 V 280 198 H 694.35938 L 684.67773,181.22852 674.99414,164.45898 665.3125,181.22852 655.62891,198 H 668 V 280.95312 L 622.30469,280.65039 C 619.09998,269.416 608.74907,261.16406 596.5,261.16406 584.37524,261.16406 574.10834,269.24874 570.79297,280.30859 L 527,280.01953 V 280 H 524.04688 474.73438 C 471.32184,269.0979 461.12754,261.16406 449.11523,261.16406 437.8537,261.16406 428.19203,268.1375 424.2168,277.99219 423.95178,278.64917 423.7113,279.31862 423.49805,280 H 391 V 198 H 403.33594 L 393.65234,181.22852 Z M 449.11523,265.16406 C 458.93428,265.16406 467.28102,271.32478 470.51562,280 H 427.7168 C 427.91893,279.4578 428.14164,278.92596 428.38281,278.4043 432.00041,270.5793 439.90989,265.16406 449.11523,265.16406 Z M 596.5,265.16406 C 606.55177,265.16406 615.05476,271.6222 618.11523,280.62305 L 574.98047,280.33789 C 578.12193,271.48546 586.55418,265.16406 596.5,265.16406 Z M 427.07812,294 H 471.1543 C 468.52589,303.71262 459.67288,310.83594 449.11523,310.83594 445.81597,310.83594 442.68364,310.13962 439.85547,308.88672 439.28983,308.63614 438.73549,308.36437 438.19531,308.07031 432.79357,305.12975 428.7206,300.07039 427.07812,294 Z M 574.55664,294.33594 618.35938,294.625 C 615.52729,304.01675 606.82998,310.83594 596.5,310.83594 592.58671,310.83594 588.90778,309.85735 585.69336,308.13086 583.55038,306.97971 581.61308,305.49552 579.95117,303.74805 579.53603,303.31153 579.13762,302.85901 578.75781,302.39062 578.75748,302.39022 578.75814,302.38862 578.75781,302.38862 578.37806,301.92024 578.01613,301.43752 577.67383,300.9394 577.67352,300.93895 577.67414,300.9374 577.67383,300.9374 577.33126,300.43882 577.00799,299.92651 576.70508,299.40029 576.0989,298.34744 575.57526,297.24239 575.14062,296.0917 574.92362,295.51718 574.7277,294.93155 574.55664,294.33584 Z M 488.04883,504 H 517 V 576 H 488.04883 Z M 531,504 H 560.04883 V 576 H 531 Z M 639,504 H 668 V 576 H 639 Z M 682,504 H 711 V 576 H 682 Z" />
+                    <path id="c2-elec-green" class="greens" state="off" d="M 383.9707,164.45898 374.28711,181.22852 364.60547,198 H 377 V 287 A 7.0007,7.0007 0 0 0 384,294 H 422.96484 C 425.69816,305.91751 436.3804,314.83594 449.11523,314.83594 461.85007,314.83594 472.53386,305.91751 475.26758,294 H 523.95312 L 570.41992,294.30664 C 573.26479,306.07034 583.87448,314.83594 596.5,314.83594 609.00237,314.83594 619.53525,306.24279 622.50195,294.65234 L 668,294.95312 V 496 H 631 V 500 584 H 668 V 812 H 682 V 584 H 719 V 496 H 682 V 295 H 756.01172 V 307.36133 L 772.78125,297.67969 777.42188,295 H 816 A 7.0007,7.0007 0 0 0 823,288 V 198 H 835.36523 L 825.68359,181.22852 816,164.45898 806.31836,181.22852 796.63672,198 H 809 V 281 H 777.43359 L 772.78125,278.31445 756.01172,268.63086 V 281 H 682 V 280 198 H 694.35938 L 684.67773,181.22852 674.99414,164.45898 665.3125,181.22852 655.62891,198 H 668 V 280.95312 L 622.30469,280.65039 C 619.09998,269.416 608.74907,261.16406 596.5,261.16406 584.37524,261.16406 574.10834,269.24874 570.79297,280.30859 L 527,280.01953 V 280 H 474.73438 C 471.32185,269.0979 461.12754,261.16406 449.11523,261.16406 437.10293,261.16406 426.91008,269.0979 423.49805,280 H 391 V 198 H 403.33594 L 393.65234,181.22852 Z M 449.11523,265.16406 C 458.93428,265.16406 467.28101,271.32478 470.51562,280 H 427.7168 C 430.95088,271.32478 439.2962,265.16406 449.11523,265.16406 Z M 596.5,265.16406 C 606.55177,265.16406 615.05476,271.6222 618.11523,280.62305 L 574.98047,280.33789 C 578.12193,271.48546 586.55418,265.16406 596.5,265.16406 Z M 427.07812,294 H 471.1543 C 468.52589,303.71262 459.67288,310.83594 449.11523,310.83594 438.55759,310.83594 429.70608,303.71262 427.07812,294 Z M 574.55664,294.33398 618.35938,294.625 C 615.5273,304.01675 606.82998,310.83594 596.5,310.83594 586.0639,310.83594 577.29552,303.87521 574.55664,294.33398 Z M 639,504 H 668 V 576 H 639 Z M 682,504 H 711 V 576 H 682 Z"/>
+                </g>
+                <g id="boxes-qty">
+                    <path id="box-qty-l" class="box-qty" d="M 105.5,814 H 330.5 V 914 H 105.5 Z" />
+                    <path id="box-qty-l-clip" class="qty-clip" d="M 168,839 H 268 C 276.31,839 283,845.69 283,854 V 874 C 283,882.31 276.31,889 268,889 H 168 C 159.69,889 153,882.31 153,874 V 854 C 153,845.69 159.69,839 168,839 Z" />
+                    <path id="box-qty-c" class="box-qty" transform="translate(383.31738)" d="M 105.5,814 H 330.5 V 914 H 105.5 Z" />
+                    <path id="box-qty-c-clip" class="qty-clip" d="M 551.31738,839 H 651.31738 C 659.62738,839 666.31738,845.69 666.31738,854 V 874 C 666.31738,882.31 659.62738,889 651.31738,889 H 551.31738 C 543.00738,889 536.31738,882.31 536.31738,874 V 854 C 536.31738,845.69 543.00738,839 551.31738,839 Z" />
+                    <path id="box-qty-r" class="box-qty" transform="translate(759)" d="M 105.5,814 H 330.5 V 914 H 105.5 Z" />
+                    <path id="box-qty-r-clip" class="qty-clip" d="M 927,839 H 1027 C 1035.31,839 1042,845.69 1042,854 V 874 C 1042,882.31 1035.31,889 1027,889 H 927 C 918.69,889 912,882.31 912,874 V 854 C 912,845.69 918.69,839 927,839 Z" />
+                </g>
+
+
+
+            </g>
+
+            <g id="FUEL_Page">
+                <g id="TotalFuelDisplay">
+                    <rect x="450px" y="145px" width="300px" height="80px" rx="25px" ry="25px" />
+                    <text class="label" x="465px" y="180px">TOTAL</text>
+                    <text class="label" x="465px" y="212px">FUEL</text>
+                    <text id="TotalFuelValue" class="quantity" x="735px" y="200px">0.0</text>
+                    <text id="TotalFuelUnits" class="units" x="600px" y="285px">KGS X 1000</text>
+                </g>
+
+                <g id="FuelTempDisplay">
+                    <text class="label" x="25px" y="1400px">MIN FUEL TEMP</text>
+                    <text class="label" x="25px" y="1450px">FUEL TEMP</text>
+                    <text id="MinFuelTemp" class="quantity" x="400px" y="1400px">-</text>
+                    <text id="CurrentFuelTemp" class="quantity" x="400px" y="1450px">-</text>
+                </g>
+
+                <g id="Engine1" class="engineInfo" transform="translate(340, 115)">
+                    <rect x="-50px" y="-68px" width="100px" height="50px" rx="15px" ry="30px" />
+                    <path d="M20,70 l-40,0 l-7,-20 l54,0 z" />
+                    <path d="M-50,-43 l100,0 c3,42 -3,93 -5,93 l-90,0 M-50,-43 c-3,42 3,93 5,93" />
+                    <line x1="0px" y1="-40px" x2="0px" y2="50px" />
+                    <circle id="Engine1FuelState" r="28" />
+                </g>
+
+                <g id="Engine2" class="engineInfo" transform="translate(860, 115)">
+                    <rect x="-50px" y="-68px" width="100px" height="50px" rx="15px" ry="30px" />
+                    <path d="M20,70 l-40,0 l-7,-20 l54,0 z" />
+                    <path d="M-50,-43 l100,0 c3,42 -3,93 -5,93 l-90,0 M-50,-43 c-3,42 3,93 5,93" />
+                    <line x1="0px" y1="-40px" x2="0px" y2="50px" />
+                    <circle id="Engine2FuelState" r="28" />
+                </g>
+
+                <g id="Tank1Info" class="tankInfo">
+                    <text class="label" x="600px" y="640px">CENTER</text>
+                    <rect class="background" x="410px" y="665px" width="380px" height="235px" rx="25px" ry="25px" />
+                    <text class="label" x="528px" y="705px">L</text>
+                    <text class="label" x="673px" y="705px">R</text>
+                    <rect class="quantity" x="518px" y="815px" width="164px" height="68px" rx="25px" ry="25px" />
+                    <text id="Tank1Quantity" class="quantity" x="664px" y="863px">0.0</text>
+                </g>
+
+                <g id="Tank2Info" class="tankInfo">
+                    <text class="label" x="140px" y="330px">L MAIN</text>
+                    <rect class="background" x="30px" y="350px" width="325px" height="305px" rx="25px" ry="25px" />
+                    <text class="label" x="98px" y="390px">FWD</text>
+                    <text class="label" x="98px" y="640px">AFT</text>
+                    <rect class="quantity" x="160px" y="468px" width="125px" height="68px" rx="25px" ry="25px" />
+                    <text id="Tank2Quantity" class="quantity" x="268px" y="516px">0.0</text>
+                </g>
+
+                <g id="Tank3Info" class="tankInfo">
+                    <text class="label" x="1060px" y="330px">R MAIN</text>
+                    <rect class="background" x="845px" y="350px" width="325px" height="305px" rx="25px" ry="25px" />
+                    <text class="label" x="1112px" y="390px">FWD</text>
+                    <text class="label" x="1112px" y="640px">AFT</text>
+                    <rect class="quantity" x="915px" y="468px" width="125px" height="68px" rx="25px" ry="25px" />
+                    <text id="Tank3Quantity" class="quantity" x="1023px" y="516px">0.0</text>
+                </g>
+
+                <text class="label" x="600px" y="430px">CROSSFEED</text>
+                <path class="fuelFrame" d="M340,150 L340,755 L480,755 M145,440 L340,440 M145,565 L340,565 M860,150 L860,755 L720,755 M860,440 L1055,440 M860,565 L1055,565 M340,480 L860,480" />
+
+                <g id="FuelPumps">
+                    <rect id="FuelPump1" x="480px" y="720px" width="95px" height="70px" />
+                    <rect id="FuelPump2" x="625px" y="720px" width="95px" height="70px" />
+                    <rect id="FuelPump3" x="50px" y="530px" width="95px" height="70px" />
+                    <rect id="FuelPump4" x="50px" y="405px" width="95px" height="70px" />
+                    <rect id="FuelPump5" x="1055px" y="530px" width="95px" height="70px" />
+                    <rect id="FuelPump6" x="1055px" y="405px" width="95px" height="70px" />
+                </g>
+
+                <g id="FuelValveTemplate">
+                    <circle r="28" />
+                    <line x1="-5" x2="-5" y1="-26" y2="26" />
+                    <line x1="5" x2="5" y1="-26" y2="26" />
+                </g>
+
+                <g id="FuelValves">
+                    <g id="FuelValve1" transform="translate(340, 230) rotate(90)"></g>
+                    <g id="FuelValve2" transform="translate(860, 230) rotate(90)"></g>
+                    <g id="FuelValve3" transform="translate(600, 480) rotate(0)"></g>
+                    <!--<g id="FuelValve4" transform="translate(455, 850) rotate(90)"></g>-->
+                    <!--<g id="FuelValve5" transform="translate(745, 850) rotate(90)"></g>-->
+                    <g id="FuelValve6" transform="translate(860, 850) rotate(90)"></g>
+                    <g id="FuelValve7" transform="translate(340, 850) rotate(90)"></g>
+                    <!--<g id="FuelValve8" transform="translate(170, 1135) rotate(120)"></g>-->
+                    <!--<g id="FuelValve9" transform="translate(1030, 1135) rotate(60)"></g>-->
+                </g>
+
+                <g id="FuelLines">
+                    <line id="FuelLine1" x1="476px" x2="579px" y1="755px" y2="755px" />
+                    <polyline id="FuelLine2" points="340,565 340,755 480,755" />
+                    <line id="FuelLine3" x1="46px" x2="145px" y1="565px" y2="565px" />
+                    <line id="FuelLine4" x1="145px" x2="340px" y1="565px" y2="565px" />
+                    <line id="FuelLine5" x1="340px" x2="340px" y1="480px" y2="573px" />
+                    <line id="FuelLine6" x1="340px" x2="340px" y1="440px" y2="480px" />
+                    <line id="FuelLine7" x1="46px" x2="145px" y1="440px" y2="440px" />
+                    <line id="FuelLine8" x1="145px" x2="348px" y1="440px" y2="440px" />
+                    <line id="FuelLine9" x1="340px" x2="340px" y1="305px" y2="448px" />
+                    <line id="FuelLine10" x1="340px" x2="340px" y1="260px" y2="305px" />
+                    <line id="FuelLine11" x1="340px" x2="340px" y1="74px" y2="260px" />
+                    <line id="FuelLine12" x1="621px" x2="724px" y1="755px" y2="755px" />
+                    <polyline id="FuelLine13" points="860,565 860,755 720,755" />
+                    <line id="FuelLine14" x1="1055px" x2="1154px" y1="565px" y2="565px" />
+                    <line id="FuelLine15" x1="860px" x2="1055px" y1="565px" y2="565px" />
+                    <line id="FuelLine16" x1="860px" x2="860px" y1="480px" y2="573px" />
+                    <line id="FuelLine17" x1="860px" x2="860px" y1="440px" y2="480px" />
+                    <line id="FuelLine18" x1="1055px" x2="1154px" y1="440px" y2="440px" />
+                    <line id="FuelLine19" x1="852px" x2="1055px" y1="440px" y2="440px" />
+                    <line id="FuelLine20" x1="860px" x2="860px" y1="260px" y2="448px" />
+                    <line id="FuelLine21" x1="860px" x2="860px" y1="74px" y2="260px" />
+                    <g id="FuelLine22">
+                        <polyline points="348,280 145,280 145,180" />
+                        <rect x="100px" y="130px" width="90px" height="50px" rx="25px" ry="25px" />
+                        <text class="label" x="145px" y="165px">APU</text>
+                    </g>
+                    <line id="FuelLine23" x1="332px" x2="625px" y1="480px" y2="480px" />
+                    <line id="FuelLine24" x1="575px" x2="868px" y1="480px" y2="480px" />
+                    <line id="FuelLine32" x1="340px" x2="340px" y1="557px" y2="880px" />
+                    <line id="FuelLine33" x1="860px" x2="860px" y1="557px" y2="880px" />
+                    <g id="FuelLine34">
+                        <polyline points="860,878 860,1160, 192,1160 192,700" />
+                        <path d="M192,700 l-15,0 l15,-30 l15,30 z" />
+                        <text class="label" x="600px" y="1200px">BALANCE</text>
+                    </g>
+                    <g id="FuelLine35">
+                        <polyline points="340,878 340,1160, 1008,1160 1008,700" />
+                        <path d="M1008,700 l-15,0 l15,-30 l15,30 z" />
+                        <text class="label" x="600px" y="1200px">BALANCE</text>
+                    </g>
+                </g>
+            </g>
+
+            <g id="AIR_Page">
+
+            </g>
+
+            <g id="DOOR_Page">
+
+            </g>
+
+            <g id="GEAR_Page">
+
+            </g>
+
+            <g id="FCTL_Page">
+
+            </g>
+
+            <g id="EFIS_DSP_Page">
+
+            </g>
+
+            <g id="MAINT_Page">
+
+            </g>
+
+            <g id="CB_Page">
+
+            </g>
+        </g>
+    </svg>
+    <div id="Borders"></div>
+</script>
+
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_SYS.js"></script>
