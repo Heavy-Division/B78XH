@@ -1,4 +1,9 @@
 class B787_10_SAI extends BaseAirliners {
+
+	constructor() {
+		super(...arguments);
+		this.B78XHSystems = null;
+	}
 	get templateID() {
 		return 'B787_10_SAI';
 	}
@@ -18,6 +23,16 @@ class B787_10_SAI extends BaseAirliners {
 
 	onUpdate(_deltaTime) {
 		super.onUpdate(_deltaTime);
+		if(this.B78XHSystems){
+			this.B78XHSystems.update(_deltaTime);
+		}
+	}
+
+	onFlightStart() {
+		super.onFlightStart();
+		if(!this.B78XHSystems){
+			this.B78XHSystems = new B78XH_Systems();
+		}
 	}
 }
 
