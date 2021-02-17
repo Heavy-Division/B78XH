@@ -4,7 +4,7 @@ class B787_10_FMC_InitRefIndexPage {
         fmc.setTemplate([
             ["INIT/REF INDEX"],
             [""],
-            ["\<IDENT", "<NAV DATA"],
+            ["\<IDENT", "NAV DATA>"],
             [""],
             ["\<POS"],
             [""],
@@ -14,7 +14,7 @@ class B787_10_FMC_InitRefIndexPage {
             [""],
             ["\<TAKEOFF"],
             [""],
-            ["\<APPROACH", "<MAINT"]
+            ["\<APPROACH", "MAINT>"]
         ]);
         fmc.onLeftInput[0] = () => { B787_10_FMC_IdentPage.ShowPage1(fmc); };
         fmc.onLeftInput[1] = () => { B787_10_FMC_PosInitPage.ShowPage1(fmc); };
