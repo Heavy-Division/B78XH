@@ -126,7 +126,6 @@ class B787_10_FMC_RoutePage {
 		let allRows = B787_10_FMC_RoutePage._GetAllRows(fmc);
 		let page = (2 + (Math.floor(offset / 4)));
 		let pageCount = (Math.floor(allRows.length / 4) + 2);
-		console.log(fmc.flightPlanManager.getEnRouteWaypoints());
 		let showInput = false;
 		let discontinued = false;
 		if (discontinuity >= allRows.length) {
@@ -135,7 +134,7 @@ class B787_10_FMC_RoutePage {
 		for (let i = 0; i < rows.length; i++) {
 			let ii = i + offset + (discontinued ? -1 : 0);
 			if (allRows[ii]) {
-				rows[i] = allRows[ii];
+				rows[i] = [allRows[ii][0], allRows[ii][1]];
 				let waypointFlightPlanIndex = ii + fmc.flightPlanManager.getDepartureWaypointsCount() + (fmc.flightPlanManager.getDepartureProcIndex() > -1 ? 0 : 1);
 				if (!discontinued && i + offset === discontinuity) {
 					rows[i] = ['-----', '-----'];
@@ -154,18 +153,53 @@ class B787_10_FMC_RoutePage {
 						let value = fmc.inOut;
 						if (value === 'DELETE') {
 							fmc.inOut = '';
-							fmc.removeWaypoint(waypointFlightPlanIndex, () => {
-								B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
-							});
+							let toDelete = allRows[ii][2] + fmc.flightPlanManager.getDepartureWaypointsCount() + (fmc.flightPlanManager.getDepartureProcIndex() > -1 ? 0 : 1);
+							let count = allRows[ii][3];
+							let departure = fmc.flightPlanManager.getDeparture();
+							let lastDepartureWaypoint;
+
+							if(departure){
+								let departureWaypoints = fmc.flightPlanManager.getDepartureWaypointsMap();
+								lastDepartureWaypoint = departureWaypoints[departureWaypoints.length - 1];
+								if(lastDepartureWaypoint && allRows[ii][1] === lastDepartureWaypoint.ident){
+									fmc.flightPlanManager.removeDeparture(() => {
+										B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
+									})
+								} else {
+									for(i = toDelete; i > toDelete - count; i--){
+										fmc.removeWaypoint(i, () =>{
+											B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
+										});
+									}
+								}
+							}
 						}
 					};
+
 					fmc.onRightInput[i] = () => {
 						let value = fmc.inOut;
 						if (value === 'DELETE') {
 							fmc.inOut = '';
-							fmc.removeWaypoint(waypointFlightPlanIndex, () => {
-								B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
-							});
+							let toDelete = allRows[ii][2] + fmc.flightPlanManager.getDepartureWaypointsCount() + (fmc.flightPlanManager.getDepartureProcIndex() > -1 ? 0 : 1);
+							let count = allRows[ii][3];
+							let departure = fmc.flightPlanManager.getDeparture();
+							let lastDepartureWaypoint;
+
+							if(departure){
+								let departureWaypoints = fmc.flightPlanManager.getDepartureWaypointsMap();
+								lastDepartureWaypoint = departureWaypoints[departureWaypoints.length -1];
+								if(lastDepartureWaypoint && allRows[ii][1] === lastDepartureWaypoint.ident){
+									fmc.flightPlanManager.removeDeparture(() => {
+										B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
+									})
+								} else {
+									for(i = toDelete; i > toDelete - count; i--){
+										fmc.removeWaypoint(i, () =>{
+											B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
+										});
+									}
+								}
+							}
 						} else if (value.length > 0) {
 							fmc.clearUserInput();
 							fmc.insertWaypoint(value, waypointFlightPlanIndex, () => {
@@ -192,7 +226,7 @@ class B787_10_FMC_RoutePage {
 						if (value.length > 0) {
 							fmc.clearUserInput();
 							let lastWaypoint = fmc.flightPlanManager.getWaypoints()[fmc.flightPlanManager.getEnRouteWaypointsLastIndex()];
-							if (lastWaypoint.infos instanceof IntersectionInfo) {
+							if (lastWaypoint.infos instanceof IntersectionInfo || lastWaypoint.infos instanceof VORInfo || lastWaypoint.infos instanceof NDBInfo) {
 								let airway = lastWaypoint.infos.airways.find(a => {
 									return a.name === value;
 								});
@@ -279,22 +313,53 @@ class B787_10_FMC_RoutePage {
 				let departureWaypoints = flightPlan.getDepartureWaypointsMap();
 				lastDepartureWaypoint = departureWaypoints[departureWaypoints.length - 1];
 				if (lastDepartureWaypoint) {
-					allRows.push([departure.name, lastDepartureWaypoint.ident]);
+					allRows.push([departure.name, lastDepartureWaypoint.ident, 0, departureWaypoints.length]);
 				}
 			}
 			let routeWaypoints = flightPlan.getEnRouteWaypoints();
+			let lastAirwayName = '';
+			let lastInserted = undefined;
+			let airwayCount = 1;
+			let popNext = true;
 			for (let i = 0; i < routeWaypoints.length; i++) {
 				let prev = routeWaypoints[i - 1];
 				if (i === 0 && lastDepartureWaypoint) {
 					prev = lastDepartureWaypoint;
 				}
 				let wp = routeWaypoints[i];
+				let legIndex = (departure ? i + 1 : i);
 				if (wp) {
 					let prevAirway = IntersectionInfo.GetCommonAirway(prev, wp);
 					if (!prevAirway) {
-						allRows.push(['DIRECT', wp.ident]);
+						airwayCount = 1;
+						lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount]
+						allRows.push(lastInserted);
 					} else {
-						allRows.push([prevAirway.name, wp.ident]);
+						let prevIcaoIndex = prevAirway.icaos.indexOf(prev.icao);
+						let actualIcaoIndex = prevAirway.icaos.indexOf(wp.icao);
+
+						if(prevIcaoIndex + 1 === actualIcaoIndex || prevIcaoIndex - 1 === actualIcaoIndex){
+							if (lastAirwayName === prevAirway.name) {
+								if(popNext){
+									airwayCount = airwayCount + 1
+									allRows.pop();
+								}
+								popNext = true;
+								lastInserted = [prevAirway.name, wp.ident, legIndex, airwayCount]
+								lastAirwayName = prevAirway.name;
+							} else {
+								airwayCount = 1;
+								lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount]
+								lastAirwayName = 'DIRECT';
+							}
+						} else {
+							popNext = false;
+							airwayCount = 1;
+							lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount]
+							lastAirwayName = 'DIRECT';
+						}
+						lastAirwayName = prevAirway.name;
+						allRows.push(lastInserted);
 					}
 				}
 			}

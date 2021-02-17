@@ -661,7 +661,6 @@ class B787_10_FMC extends Boeing_FMC {
 		let airport = this.flightPlanManager.getOrigin();
 		if (airport) {
 			let altitude = airport.infos.coordinates.alt;
-			console.log(airport.ident + ' altitude = ' + altitude);
 			return this.getTakeOffThrustN1(this.getThrustTakeOffTemp(), altitude) - this.getThrustTakeOffMode() * 10;
 		}
 		return 100;
