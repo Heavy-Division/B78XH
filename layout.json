@@ -1,19 +1,29 @@
 {
     "content": [
         {
-            "path": "html_ui/B78XH/Enums/B748H_LocalVariables.js",
-            "size": 1642,
-            "date": 132580132905021596
+            "path": "html_ui/B78XH/Enums/B78XH_LocalVariables.js",
+            "size": 1338,
+            "date": 132580190988542160
         },
         {
-            "path": "html_ui/B78XH/Systems/B78XH_Apu.js",
-            "size": 2943,
-            "date": 132580133014937524
+            "path": "html_ui/B78XH/Systems/B78XH_APU.js",
+            "size": 2817,
+            "date": 132580226678332904
+        },
+        {
+            "path": "html_ui/B78XH/Systems/B78XH_APUInfo.js",
+            "size": 826,
+            "date": 132580244035969030
         },
         {
             "path": "html_ui/B78XH/Systems/B78XH_Systems.js",
-            "size": 2202,
-            "date": 132580134783517410
+            "size": 2235,
+            "date": 132580210594930210
+        },
+        {
+            "path": "html_ui/B78XH/Systems/B78XH_SystemsInfo.js",
+            "size": 474,
+            "date": 132580232359177702
         },
         {
             "path": "html_ui/Heavy/Utils/HeavyDataStorage.js",
@@ -26,19 +36,49 @@
             "date": 132572192650230000
         },
         {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.css",
+            "size": 1695,
+            "date": 132531988301270000
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.html",
+            "size": 3418,
+            "date": 132580229642894502
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.js",
+            "size": 14054,
+            "date": 132531988301370000
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_SYS.css",
+            "size": 11043,
+            "date": 132580160646782234
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_SYS.html",
+            "size": 45165,
+            "date": 132580229686542894
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_SYS.js",
+            "size": 16955,
+            "date": 132580245620139558
+        },
+        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/SAI/B787_10_SAI.css",
             "size": 2047,
             "date": 132580121390581886
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/SAI/B787_10_SAI.html",
-            "size": 2820,
-            "date": 132580121390472196
+            "size": 3138,
+            "date": 132580223353499944
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/SAI/B787_10_SAI.js",
-            "size": 48530,
-            "date": 132580136595422210
+            "size": 48880,
+            "date": 132580197135244278
         }
     ]
 }
