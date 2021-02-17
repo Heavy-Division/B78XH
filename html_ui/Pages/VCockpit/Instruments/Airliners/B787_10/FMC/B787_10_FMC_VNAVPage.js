@@ -67,8 +67,48 @@ class B787_10_FMC_VNAVPage {
 			speedRestrictionCell = speedRestrictionCell + '[color]magenta';
 		}
 
-
 		let transitionAltitudeCell = fmc.transitionAltitude.toFixed();
+
+		let selectedClimbSpeed = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.SPEED, "Number") || false
+		let selectedClimbSpeedFMCCommandSpeed = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.FMC_COMMAND_SPEED, "Number") || false
+
+		fmc.onLeftInput[1] = () => {
+			let value = fmc.inOut;
+			fmc.clearUserInput();
+
+			let storeToLocalVariable = async (value, force = false) => {
+				if(HeavyInputChecks.speedRange(value) || force){
+					await SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.SPEED, "String", value);
+				}
+			}
+
+			if(value === 'DELETE'){
+				fmc.inOut = '';
+				storeToLocalVariable('', true).then(() => {
+					B787_10_FMC_VNAVPage.ShowPage1(fmc);
+				});
+			}
+
+			if(value.length > 0){
+				storeToLocalVariable(value).then(() => {
+					B787_10_FMC_VNAVPage.ShowPage1(fmc);
+				});
+			}
+
+		}
+
+		let selectedClimbSpeedCell = null;
+
+		console.log(selectedClimbSpeed)
+
+		if(selectedClimbSpeed && isFinite(selectedClimbSpeed)){
+			selectedClimbSpeedCell = selectedClimbSpeed + ''
+		}
+
+		if(selectedClimbSpeedFMCCommandSpeed){
+			selectedClimbSpeedCell = selectedClimbSpeedCell + '[color]magenta';
+		}
+
 
 		fmc.onRightInput[2] = () => {
 			let value = fmc.inOut;
@@ -85,8 +125,8 @@ class B787_10_FMC_VNAVPage {
 			['CLB', '1', '3'],
 			['CRZ ALT'],
 			[crzAltCell],
-			['ECON SPD'],
-			[],
+			[(selectedClimbSpeedCell ? 'SEL SPD' : 'ECON SPD')],
+			[(selectedClimbSpeedCell ? selectedClimbSpeedCell : '')],
 			['SPD TRANS', 'TRANS ALT'],
 			[speedTransCell, transitionAltitudeCell],
 			['SPD RESTR'],
