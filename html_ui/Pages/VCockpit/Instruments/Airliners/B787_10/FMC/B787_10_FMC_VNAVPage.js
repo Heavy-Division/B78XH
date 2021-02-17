@@ -1,5 +1,6 @@
 Include.addScript('/B78XH/Enums/B78XH_LocalVariables.js');
 Include.addScript('/Heavy/Utils/HeavyInputChecks.js');
+Include.addScript('/Heavy/Utils/HeavyInputUtils.js');
 
 class B787_10_FMC_VNAVPage {
 	static ShowPage1(fmc) {
@@ -65,12 +66,19 @@ class B787_10_FMC_VNAVPage {
 		if(speedRestrictionAltitudeValue > planeAltitude && speedRestrictionFMCCommandSpeed){
 			speedRestrictionCell = speedRestrictionCell + '[color]magenta';
 		}
-/*
-		fmc.onRightInput[3] = () => {
-			if(HeavyInputChecks)
-		};
 
-*/
+
+		let transitionAltitudeCell = fmc.transitionAltitude.toFixed();
+
+		fmc.onRightInput[2] = () => {
+			let value = fmc.inOut;
+			fmc.clearUserInput();
+			let altitude = HeavyInputUtils.inputToAltitude(value);
+			if (altitude) {
+				fmc.trySetTransAltitude(altitude);
+			}
+			B787_10_FMC_VNAVPage.ShowPage1(fmc);
+		};
 
 
 		fmc.setTemplate([
@@ -80,7 +88,7 @@ class B787_10_FMC_VNAVPage {
 			['ECON SPD'],
 			[],
 			['SPD TRANS', 'TRANS ALT'],
-			[speedTransCell],
+			[speedTransCell, transitionAltitudeCell],
 			['SPD RESTR'],
 			[speedRestrictionCell],
 			[],
