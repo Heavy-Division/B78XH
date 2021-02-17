@@ -377,7 +377,8 @@ b787-10-sys-element #Pages #GEAR_Page #gear-doors #door-status-labels text.door-
 
 
 b787-10-sys-element #Pages #GEAR_Page #gear-doors.up #door-status-labels text.door-status-label,
-b787-10-sys-element #Pages #GEAR_Page #gear-doors.down #door-status-labels text.door-status-label {
+b787-10-sys-element #Pages #GEAR_Page #gear-doors.down #door-status-labels text.door-status-label,
+b787-10-sys-element #Pages #GEAR_Page #gear-doors.inactive #door-status-labels text.door-status-label {
     visibility: visible;
 }
 
