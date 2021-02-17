@@ -23,6 +23,16 @@ class B787_10_SAI extends BaseAirliners {
 
 	onUpdate(_deltaTime) {
 		super.onUpdate(_deltaTime);
+
+		/**
+		 * This is workaround for B78XHL version (B78XH version has to be initialized in onFlightStart because B78XH need to prepare cockpit for cold and dark startup).
+		 * This workaround also allow you to "restart" B78XH systems without resetting flight
+		 */
+
+		if(!this.B78XHSystems){
+			this.B78XHSystems = new B78XH_Systems();
+		}
+
 		if(this.B78XHSystems){
 			this.B78XHSystems.update(_deltaTime);
 		}
