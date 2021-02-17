@@ -23,12 +23,12 @@ class B78XH_Systems {
 	}
 
 	static get SYSTEM() {
-		return {'APU': 'B78XH_APU'};
+		return {'APU': 'B78XH_APU', 'IRS': 'B78XH_IRS'};
 	}
 
 	constructor() {
 		this.systems = {};
-
+		this.init()
 	}
 
 	init() {
