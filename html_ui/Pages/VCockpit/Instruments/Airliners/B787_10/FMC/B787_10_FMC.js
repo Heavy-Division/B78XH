@@ -169,6 +169,10 @@ class B787_10_FMC extends Boeing_FMC {
 					this.onNextPage();
 				}
 			});
+
+			this.getChildById('.fms-heavy').addEventListener('mouseup', () => {
+				B787_10_FMC_HeavyPage.ShowPage1(this);
+			});
 		}
 		this._inOutElement = this.getChildById('.fms-io-buffer');
 		this._titleElement = this.getChildById('.fms-screen-title');
