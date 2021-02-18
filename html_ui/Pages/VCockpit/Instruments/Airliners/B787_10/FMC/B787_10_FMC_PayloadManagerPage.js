@@ -89,8 +89,7 @@ class B787_10_FMC_PayloadManagerPage {
 	}
 
 	static get getMaxPayload(){
-		/** 400000 */
-		return 800000;
+		return 560001;
 	}
 
 	static get getMinPayload(){
