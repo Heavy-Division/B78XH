@@ -46,7 +46,7 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
 
 | Default MSFS 787 ND | B787-10 Heavy ND|
 |---------------------|-----------------|
-|<img src="DOCS/images/nd_default.jpg" width="100%">|<img src="DOCS/images/nd_heavy.jpg" width="100%">|
+|<img src="DOCS/images/map/nd_default.jpg" width="100%">|<img src="DOCS/images/map/nd_heavy.jpg" width="100%">|
 
 | Symbol (default)    | Symbol (Heavy)  | Name |ND Mode | Remarks |
 |:---------------------:|:-----------------:|------|--------|---------|
