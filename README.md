@@ -41,3 +41,20 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
       * CENTER
     * "new" ZFW is set automatically by payload manager
     * manager do not check "GrossWeight" > "Max takeoff weight" (you can overload an aircraft)
+
+# ND
+
+| Default MSFS 787 ND | B787-10 Heavy ND|
+|---------------------|-----------------|
+|<img src="DOCS/images/nd_default.jpg" width="100%">|<img src="DOCS/images/nd_heavy.jpg" width="100%">|
+
+| Symbol (default)    | Symbol (Heavy)  | Name |ND Mode | Remarks |
+|:---------------------:|:-----------------:|------|--------|---------|
+|<img src="DOCS/images/map/default/ICON_MAP_INTERSECTION.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_INTERSECTION.png" width="32" height="32">|Off route waypoint|||
+|<img src="DOCS/images/map/default/ICON_MAP_INTERSECTION_FLIGHTPLAN.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_INTERSECTION_FLIGHTPLAN.png" width="32" height="32">|Waypoint inactive|||
+|<img src="DOCS/images/map/default/ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png" width="32" height="32">|Waypoint active|||
+|<img src="DOCS/images/map/default/ICON_MAP_AIRPORT.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_AIRPORT.png" width="32" height="32">|Airport|||
+|<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR.png" width="32" height="32">|VOR|||
+|<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">|VOR/DME|||
+|<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_TACAN.png" width="32" height="32">|TACAN|||
+|<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">|VORTAC|||
