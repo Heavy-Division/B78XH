@@ -1,0 +1,117 @@
+﻿<link rel="stylesheet" href="B787_10_PFD.css" />
+
+<script type="text/html" id="B787_10_PFD">
+    <glasscockpit-highlight id="highlight"></glasscockpit-highlight>
+    <div id="MainFrame">
+        <div id="Electricity" state="off">
+            <div id="LeftDisplay">
+                <div class="content">
+                    <div id="PlaneInfo" class="element">
+                        <div id="PlaneInfo_Fields">
+                            <div>FLT</div>
+                            <div>MIC</div>
+                            <div>XPDR</div>
+                            <div>SELCAL</div>
+                            <div>TAIL</div>
+                        </div>
+                        <div id="PlaneInfo_Values">
+                            <div id="Value_Flight"></div>
+                            <div id="Value_Frequency"></div>
+                            <div id="Value_XPDR"></div>
+                            <div id="Value_SELCAL"></div>
+                            <div id="Value_Tail"></div>
+                        </div>
+                        <div id="Watch">
+                            <svg id="Analog" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="250" cy="250" r="240" fill=#1E1B1C stroke="white" stroke-width="9" />
+
+                                <rect id="Analog_Hour" x="242.5" y="152" width="15" height="101.35" rx="3.5" ry="3.5" fill=white />
+                                <rect id="Analog_Minutes" x="242.5" y="50.6" width="15" height="202.71" rx="3.5" ry="3.5" fill=white />
+                                <rect id="Analog_Seconds" x="248" y="50.6" width="4" height="202.71" rx="1.2" ry="1.2" fill=red />
+
+                                <circle cx="250" cy="250" r="16" fill=white />
+
+                                <rect x="245" y="10" width="10" height="45" fill=white />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(30, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(60, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(90, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(120, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(150, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(180, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(-150, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(-120, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(-90, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(-60, 250, 250)" />
+                                <rect x="245" y="10" width="10" height="45" fill=white transform="rotate(-30, 250, 250)" />
+                            </svg>
+                            <div id="Digital"></div>
+                        </div>
+                    </div>
+                    <div id="DayInfo" class="element">
+                        <div id="DayInfo_Fields">
+                            <div>UTC TIME</div>
+                            <div>DATE</div>
+                            <div>ELAPSED TIME</div>
+                        </div>
+                        <div id="DayInfo_Values">
+                            <div id="Value_UTC"></div>
+                            <div id="Value_Date"></div>
+                            <div id="Value_Elapsed"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="RightDisplay">
+                <div class="top">
+                    <div id="HorizonContainer">
+                        <jet-pfd-attitude-indicator id="Horizon" background="true"></jet-pfd-attitude-indicator>
+                    </div>
+                    <div id="InstrumentsContainer">
+                        <jet-pfd-altimeter-indicator id="Altimeter"></jet-pfd-altimeter-indicator>
+                        <jet-pfd-vspeed-indicator id="VSpeed"></jet-pfd-vspeed-indicator>
+                        <jet-pfd-airspeed-indicator id="Airspeed"></jet-pfd-airspeed-indicator>
+                        <jet-pfd-ils-indicator id="ILS"></jet-pfd-ils-indicator>
+                    </div>
+                    <div id="FMAContainer">
+                        <boeing-fma id="FMA" class="AS01B_PFD"></boeing-fma>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <div id="Map">
+                        <map-instrument id="MapInstrument" bing-id="PFD" show-overlay="false" show-roads="false" show-bing-map="false" config-path="/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/"></map-instrument>
+                    </div>
+                    <jet-pfd-nd-compass id="Compass" display-mode="arc"></jet-pfd-nd-compass>
+                    <b787-10-pfd-compass-infos id="CompassInfos"></b787-10-pfd-compass-infos>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" import-script="/JS/SimPlane.js"></script>
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/Utils/RadioNav.js"></script>
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/Templates/Highlight/Highlight.js"></script>
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/LogicElements/SelectableElement.js"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/LogicElements/SearchField.js"></script>
+
+<script type="text/html" import-template="/Pages/VCockpit/Instruments/Airliners/Heavy/Map/MapInstrument.html"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/NavSystem.js"></script>
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/PFD/AirspeedIndicator.js"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/PFD/AltimeterIndicator.js"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/PFD/HSIndicator.js"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/PFD/AttitudeIndicator.js"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/PFD/VerticalSpeedIndicator.js"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/PFD/ILSIndicator.js"></script>
+
+<script type="text/html" import-template="/Pages/VCockpit/Instruments/Airliners/Shared/Boeing/Boeing_FMA.html"></script>
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/BaseAirliners.js"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/BaseNDCompass.js"></script>
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/PFD/NDCompass.js"></script>
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/PFD/B787_10_PFD.js"></script>
