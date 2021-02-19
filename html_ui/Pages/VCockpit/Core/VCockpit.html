@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+
+    <!-- This is ND/PFD font fix. Fonts has to be preloaded or labels use two different fonts. ACTIVE/INACTIVE waypoint in flightplan -->
+    <link rel="preload" href="/Fonts/consola.ttf" as="font" type="font/ttf" crossorigin>
+
+
+    <link rel="stylesheet" href="/SCSS/common.css" />
+
+    <script type="text/javascript" src="/JS/coherent.js"></script>
+    <script type="text/javascript" src="/JS/common.js"></script>
+    <script type="text/javascript" src="/JS/Types.js"></script>
+    <script type="text/javascript" src="/JS/simvar.js"></script>
+    <script type="text/javascript" src="/JS/avionics.js"></script>
+    <script type="text/javascript" src="/JS/simplane.js"></script>
+
+    <script type="text/javascript" src="/Pages/VCockpit/Instruments/Shared/Utils/DataReadManager.js"></script>
+    <script type="text/javascript" src="/Pages/VCockpit/Instruments/Shared/BaseInstrument.js"></script>
+    <script type="text/javascript" src="/Pages/VCockpit/Instruments/Shared/Utils/XMLLogic.js"></script>
+
+    <script type="text/javascript" src="VCockpit.js"></script>
+</head>
+
+<body>
+    <vcockpit-panel id="panel"></vcockpit-panel>
+    <!--<div id="debugmouse" style="pointer-events:none; background-color:red; position:absolute; display:none; top:0; left:0; width:15px; height:15px"></div>-->
+</body>
+</html>

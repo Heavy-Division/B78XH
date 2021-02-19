@@ -15,6 +15,7 @@
 
   "flightPlanWaypointIconSize": 22,
   "auxWaypointLabelFontSize": 10,
+  "auxWaypointIconSize": 16,
 
   "intersectionLabelColor": "#009696",
   "vorLabelColor": "#009696",

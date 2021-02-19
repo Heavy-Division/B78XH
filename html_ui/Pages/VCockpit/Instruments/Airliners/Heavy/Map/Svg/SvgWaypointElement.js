@@ -167,6 +167,9 @@ class SvgWaypointElement extends SvgMapElement {
 		if (this.isFlightPlanWaypoint) {
 			iconSize = map.config.flightPlanWaypointIconSize;
 		}
+		if (this.ident === 'DECEL') {
+			iconSize = map.config.auxWaypointIconSize;
+		}
 		this.isFlightPlanWaypoint = false;
 
 		/**
@@ -176,8 +179,8 @@ class SvgWaypointElement extends SvgMapElement {
 
 
 		this._lastIsActiveWaypoint = isActiveWaypoint;
-		this._image.setAttribute('width', fastToFixed(map.config.waypointIconSize, 0));
-		this._image.setAttribute('height', fastToFixed(map.config.waypointIconSize, 0));
+		this._image.setAttribute('width', fastToFixed(iconSize, 0));
+		this._image.setAttribute('height', fastToFixed(iconSize, 0));
 		return this._image;
 	}
 
@@ -303,13 +306,21 @@ class SvgWaypointElement extends SvgMapElement {
 
 
 		if (isFinite(this.x) && isFinite(this.y)) {
+			let iconSize = map.config.waypointIconSize;
+			if (this.isFlightPlanWaypoint) {
+				iconSize = map.config.flightPlanWaypointIconSize;
+			}
+			if (this.ident === 'DECEL') {
+				iconSize = map.config.auxWaypointIconSize;
+			}
+			this.isFlightPlanWaypoint = false;
 			if (this._image && this._lastMinimize !== this.minimize) {
 				if (this.minimize) {
-					this._image.setAttribute('width', fastToFixed(map.config.waypointIconSize * 0.5, 0));
-					this._image.setAttribute('height', fastToFixed(map.config.waypointIconSize * 0.5, 0));
+					this._image.setAttribute('width', fastToFixed(iconSize * 0.5, 0));
+					this._image.setAttribute('height', fastToFixed(iconSize * 0.5, 0));
 				} else {
-					this._image.setAttribute('width', fastToFixed(map.config.waypointIconSize, 0));
-					this._image.setAttribute('height', fastToFixed(map.config.waypointIconSize, 0));
+					this._image.setAttribute('width', fastToFixed(iconSize, 0));
+					this._image.setAttribute('height', fastToFixed(iconSize, 0));
 				}
 				this._lastMinimize = this.minimize;
 				this.needRepaint = true;
@@ -317,8 +328,8 @@ class SvgWaypointElement extends SvgMapElement {
 			if (this.needRepaint || Math.abs(this._lastX - this.x) > 0.1 || Math.abs(this._lastY - this.y) > 0.1) {
 				this._lastX = this.x;
 				this._lastY = this.y;
-				let x = (this.x - map.config.waypointIconSize * 0.5 * (this.minimize ? 0.5 : 1));
-				let y = (this.y - map.config.waypointIconSize * 0.5 * (this.minimize ? 0.5 : 1));
+				let x = (this.x - iconSize * 0.5 * (this.minimize ? 0.5 : 1));
+				let y = (this.y - iconSize * 0.5 * (this.minimize ? 0.5 : 1));
 				this.svgElement.setAttribute('x', x + '');
 				this.svgElement.setAttribute('y', y + '');
 				if (this.source instanceof AirportInfo) {
@@ -340,6 +351,9 @@ class SvgWaypointElement extends SvgMapElement {
 						let c = document.createElement('canvas');
 						let ctx = c.getContext('2d');
 						let fontSize = map.config.waypointLabelFontSize;
+						if (this.ident === 'DECEL') {
+							fontSize = map.config.auxWaypointLabelFontSize;
+						}
 						let text = this.ident;
 						ctx.font = fontSize + 'px ' + map.config.waypointLabelFontFamily;
 						this._textWidth = ctx.measureText(text).width;
@@ -353,15 +367,21 @@ class SvgWaypointElement extends SvgMapElement {
 						let c = document.createElement('canvas');
 						let ctx = c.getContext('2d');
 						let fontSize = map.config.waypointLabelFontSize;
+						if (this.ident === 'DECEL') {
+							fontSize = map.config.auxWaypointLabelFontSize;
+						}
 						let text = this.ident;
 						ctx.font = fontSize + 'px ' + map.config.waypointLabelFontFamily;
 						this._textWidth = ctx.measureText(text).width;
 					}
 					if (!isFinite(this._textHeight)) {
 						let fontSize = map.config.waypointLabelFontSize;
+						if (this.ident === 'DECEL') {
+							fontSize = map.config.auxWaypointLabelFontSize;
+						}
 						this._textHeight = fontSize * 0.675;
 					}
-					let textX = (x + map.config.waypointIconSize * 0.5 - this._textWidth * 0.5 + map.config.waypointLabelDistanceX);
+					let textX = (x + iconSize * 0.5 - this._textWidth * 0.5 + map.config.waypointLabelDistanceX);
 					let textY = y + map.config.waypointLabelDistance;
 					this._label.setAttribute('x', textX + '');
 					this._label.setAttribute('y', textY + '');
