@@ -186,7 +186,7 @@ class B787_10_FMC_PayloadManagerPage {
 			}).then(() => {
 				return this.fmc.getCurrentWeight(true);
 			}).then( weight => {
-				return this.fmc.setZeroFuelWeight(weight + B787_10_FMC_PayloadManagerPage.requestedPayload)
+				return this.fmc.setZeroFuelWeight((298700 + B787_10_FMC_PayloadManagerPage.requestedPayload) / 1000, EmptyCallback.Void, true)
 			}).then(() => {
 				return this.resetPayload();
 			}).then(() => {
@@ -208,7 +208,7 @@ class B787_10_FMC_PayloadManagerPage {
 					});
 				});
 			});
-
+			this.fmc.trySetBlockFuel(0, true)
 			resolve();
 		});
 	}
@@ -237,6 +237,8 @@ class B787_10_FMC_PayloadManagerPage {
 				});
 			});
 		});
+
+		this.fmc.trySetBlockFuel(fuelBlock * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'Pounds') / 1000, true);
 	}
 
 	calculateMainTanks(fuel) {
@@ -287,6 +289,10 @@ class B787_10_FMC_PayloadManagerPage {
 
 		if (!B787_10_FMC_PayloadManagerPage.requestedPayload) {
 			B787_10_FMC_PayloadManagerPage.requestedPayload = this.getTotalPayload(true);
+		}
+
+		if (!B787_10_FMC_PayloadManagerPage.requestedCenterOfGravity) {
+			B787_10_FMC_PayloadManagerPage.requestedCenterOfGravity = this.getCenterOfGravity();
 		}
 
 		if (!B787_10_FMC_PayloadManagerPage.requestedFuel) {
