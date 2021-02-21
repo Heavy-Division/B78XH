@@ -2,7 +2,7 @@ Include.addScript("/JS/dataStorage.js");
 
 const HeavyDataStorage = {};
 
-HeavyDataStorage.storagePrefix = 'HEAVY_B78XHL_';
+HeavyDataStorage.storagePrefix = 'HEAVY_B78XH_';
 
 HeavyDataStorage.get = function (_key, _default) {
 	return GetStoredData(HeavyDataStorage.storagePrefix + _key) || _default || false;
