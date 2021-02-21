@@ -72,4 +72,4 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
 |<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">|VORTAC|||
 
 # SimRate Manager
-<img src="DOCS/images/simrate-manager/simrate-manager.png" width="100%">
+<img src="DOCS/images/simrate-manager/simrate-manager.png" width="50%">
