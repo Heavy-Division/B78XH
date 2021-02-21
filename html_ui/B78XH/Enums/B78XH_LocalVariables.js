@@ -1,6 +1,16 @@
 const B78XH_LocalVariables = {}
 
-B78XH_LocalVariables.VERSION = 'B78XHL';
+/**
+ * TODO: Remove this variable
+ * Both versions will use same variable names and different system implementation
+ *
+ * @type {string}
+ */
+B78XH_LocalVariables.VERSION = 'B78XH';
+
+B78XH_LocalVariables.SIM_RATE_MANAGER = {
+	ACTIVATED: 'L:' + B78XH_LocalVariables.VERSION + '_SIM_RATE_MANAGER_ACTIVATED'
+};
 
 B78XH_LocalVariables.IRS = {
 	L: {
@@ -46,6 +56,45 @@ B78XH_LocalVariables.VNAV = {
 	CUSTOM_VNAV_CLIMB_ENABLED: 'L:' + B78XH_LocalVariables.VERSION + '_VNAV_CUSTOM_CLIMB_ENABLED'
 };
 
-B78XH_LocalVariables.SIM_RATE_MANAGER = {
-	ACTIVATED: 'L:' + B78XH_LocalVariables.VERSION + '_SIM_RATE_MANAGER_ACTIVATED'
-};
+B78XH_LocalVariables.PRESSURIZATION = {
+	PACKS: {
+		L: {
+			SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PRESSURIZATION_PACK_L_SWITCH_STATE'
+		},
+		R:{
+			SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PRESSURIZATION_PACK_R_SWITCH_STATE'
+		}
+	},
+	TRIM_AIR: {
+		L: {
+			SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PRESSURIZATION_TRIMAIR_L_SWITCH_STATE'
+		},
+		R:{
+			SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PRESSURIZATION_TRIMAIR_R_SWITCH_STATE'
+		}
+	},
+	FANS_LOWER: {
+		SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PRESSURIZATION_FANSLOWER_SWITCH_STATE'
+	},
+	RECIRC_UPPER: {
+		SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PRESSURIZATION_RECIRCUPPER_SWITCH_STATE'
+	},
+	COOLING_AFT: {
+		SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PRESSURIZATION_COOLINGAFT_SWITCH_STATE'
+	},
+	EQUIP_FWD: {
+		SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PRESSURIZATION_EQUIPFWD_SWITCH_STATE'
+	},
+	TEMP: {
+		CABIN: {
+			SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PASSENGER_KNOB_TEMPERATURE_CABIN_SWITCH_STATE'
+		},
+		FLIGHT_DECK: {
+			SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PASSENGER_KNOB_TEMPERATURE_FLIGHTDECK_SWITCH_STATE'
+		},
+		CARGO: {
+			SWITCH_STATE: 'L:' + B78XH_LocalVariables.VERSION + '_PASSENGER_KNOB_TEMPERATURE_CARGO_SWITCH_STATE'
+		}
+	}
+
+}
