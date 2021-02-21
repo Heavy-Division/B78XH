@@ -16,28 +16,26 @@
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  */
 
-class B78XH_Systems {
+/**
+ * NOTICE: Class B78XH_Systems should be independent on B78X version. Both versions use own systems classes.
+ */
 
-	static get VERSION() {
-		return 'B78XHL';
-	}
+class B78XH_Systems {
 
 	static get SYSTEM() {
 		return {'APU': 'B78XH_APU', 'IRS': 'B78XH_IRS'};
 	}
 
 	constructor() {
+		this.initializer = new B78XH_Initializer();
 		this.systems = {};
-		this.init()
+		this.init();
 	}
 
 	init() {
-		if(B78XH_Systems.VERSION === 'B78XHL'){
-			this.systems[B78XH_Systems.SYSTEM.APU] = {'instance': new B78XH_APU(), delay: 0};
-		} else if (B78XH_Systems.VERSION === 'B78XH'){
-			this.systems[B78XH_Systems.SYSTEM.APU] = {'instance': new B78XH_APU(), delay: 0};
-			this.systems[B78XH_Systems.SYSTEM.IRS] = {'instance': new B78XH_IRS(), delay: 2500};
-		}
+		this.initializer.init();
+		this.systems[B78XH_Systems.SYSTEM.APU] = {'instance': new B78XH_APU(), delay: 0};
+		this.systems[B78XH_Systems.SYSTEM.IRS] = {'instance': new B78XH_IRS(), delay: 10000};
 	}
 
 	update(_deltaTime) {
