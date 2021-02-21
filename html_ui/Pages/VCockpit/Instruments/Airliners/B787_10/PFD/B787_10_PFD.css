@@ -366,3 +366,116 @@ b787-10-pfd-element #RightDisplay > .bottom #CompassInfos {
     z-index: 2;
 }
 
+/** IRS Modeling */
+
+b787-10-pfd-element #RightDisplay > .top #FakeBlackMask {
+    transform: rotateX(0);
+    position: absolute;
+    width: 1000px;
+    height: 1000px;
+    border: none;
+    background-color: black;
+    overflow: hidden;
+}
+
+b787-10-pfd-element #RightDisplay > .top #FakeBlackMask > #FakeMaskSvg {
+    transform: translate(27px, -115px) scale(0.7);
+}
+
+b787-10-pfd-element #RightDisplay > .top #FakeBlackMask > #FakeMaskSvg > rect {
+    stroke-width: 1;
+    stroke: var(--colorAmber);
+    fill: none;
+}
+
+b787-10-pfd-element #RightDisplay > .top #FakeBlackMask > #FakeMaskSvg > text {
+    fill: var(--colorAmber);
+    font-size: 18px;
+    letter-spacing: 8px;
+}
+
+b787-10-pfd-element #RightDisplay > .top #FakeBlackMask > #FakeMaskSvg > text#AttText {
+    fill: var(--colorAmber);
+    font-size: 21px;
+    font-family: Roboto-Bold;
+    text-anchor: middle;
+    letter-spacing: normal;
+    alignment-baseline: central;
+}
+
+b787-10-pfd-element #RightDisplay > .top #FakeBlackMask > #FakeMaskSvg > #hor-left {
+    fill: none;
+    stroke: white;
+    stroke-width: 1px;
+}
+
+b787-10-pfd-element #RightDisplay > .top #FakeBlackMask > #FakeMaskSvg > #hor-right {
+    fill: none;
+    stroke: red;
+    stroke-width: 1px;
+}
+
+b787-10-pfd-element #RightDisplay > .top #FakeBlackMask > #FakeMaskSvg > #hor-center {
+    stroke: green;
+    stroke-width: 3px;
+}
+
+/** IRS States */
+
+/** Show mask when IRS is not aligned - Selectors OK */
+#FakeBlackMask[irs-state=off] #FakeBlackMask[irs-state=aligning] {
+    display: block;
+}
+
+#FakeBlackMask[irs-state=aligned] {
+    display: none;
+}
+
+/** Hide VSpeed - ok */
+jet-pfd-vspeed-indicator[irs-state=off], jet-pfd-vspeed-indicator[irs-state=aligning] {
+    display: none;
+}
+
+jet-pfd-vspeed-indicator[irs-state=aligned] {
+    display: block;
+}
+
+#selectedHeadingGroup[irs-state=off], #selectedHeadingGroup[irs-state=aligning] {
+    display: none;
+}
+
+#selectedHeadingGroup[irs-state=aligned] {
+    display: block;
+}
+
+#VertBox[irs-state=off], #VertText[irs-state=off] {
+    display: block;
+}
+
+#VertBox[irs-state=aligning], #VertBox[irs-state=aligned], #VertText[irs-state=aligning], #VertText[irs-state=aligned] {
+    display: none;
+}
+
+#AttBox[irs-state=off], #AttText[irs-state=off] {
+    display: block;
+}
+
+#AttBox[irs-state=aligning], #AttBox[irs-state=aligned], #AttText[irs-state=aligning], #AttText[irs-state=aligned] {
+    display: none;
+}
+
+#GroundRibbonGroup[irs-state=off], #GroundRibbonGroup[irs-state=aligning] {
+    display: none;
+}
+
+#GroundRibbonGroup[irs-state=aligned] {
+    display: block;
+}
+
+#GroundLineGroup[irs-state=off], #GroundLineGroup[irs-state=aligning] {
+    display: none;
+}
+
+#GroundLineGroup[irs-state=aligned] {
+    display: block;
+}
