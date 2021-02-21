@@ -941,7 +941,7 @@ class B787_10_FMC extends Boeing_FMC {
 						fmcCommandSpeedRestriction = 0;
 					}
 
-					let selectedClimbSpeed = this.getSelectedClimbSpeed();
+					let selectedClimbSpeed = this.preSelectedClbSpeed;
 					let fmcCommandSelectedClimbSpeed = null;
 
 					if (selectedClimbSpeed) {
@@ -992,7 +992,7 @@ class B787_10_FMC extends Boeing_FMC {
 						fmcCommandSpeedRestriction = 0;
 					}
 
-					let selectedClimbSpeed = this.getSelectedClimbSpeed();
+					let selectedClimbSpeed = this.preSelectedClbSpeed;
 					let fmcCommandSelectedClimbSpeed = null;
 
 					if (selectedClimbSpeed) {
@@ -1079,10 +1079,6 @@ class B787_10_FMC extends Boeing_FMC {
 			this._execLight.style.backgroundColor = this.getIsRouteActivated() ? '#00ff00' : 'black';
 			this.updateAutopilotCooldown = this._apCooldown;
 		}
-	}
-
-	getSelectedClimbSpeed() {
-		return SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.SPEED, 'Number') || null;
 	}
 
 	shouldFMCCommandSpeedRestriction(speed, altitude) {
