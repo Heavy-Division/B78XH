@@ -82,8 +82,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyPage.js",
-            "size": 517,
-            "date": 132581136203501764
+            "size": 522,
+            "date": 132583845337834920
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_InitRefIndexPage.js",
@@ -107,8 +107,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimRateManagerPage.js",
-            "size": 15497,
-            "date": 132583840287034812
+            "size": 15696,
+            "date": 132583858109444576
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_VNAVPage.js",
