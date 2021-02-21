@@ -42,6 +42,18 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
     * "new" ZFW is set automatically by payload manager
     * manager do not check "GrossWeight" > "Max takeoff weight" (you can overload an aircraft)
 
+* ### SimRate manager
+    * Modes:
+        * slow down - change sim rate to 1x few miles before TOD or DECEL waypoint
+        * pause - pause game few miles before TOD or DECEL waypoint
+    * Rate Modes:
+        * Off - do nothing (do not change sim rate)
+        * Linear - Change sim rate to 4x and hold.
+        * Normal - Change sim rate to 4x and hold. 5nm before waypoint change sim rate to 2x and hold. 3nm after waypoint change sim rate to 4x and hold.
+        * Aggressive - change sim rate to 8x and hold (!!!Do not use this mode now!!!)
+    * Unpause button - unpause game when the game is paused by sim rate manager (this is the only way how to unpause game)
+    * Emergency shutdown - Terminates all sim rate manager interventions immediately. During an emergency shutdown is not possible to use FMC for 6 seconds. You will be able to deactivate an emergency shutdown or leave the page without deactivation after 6 seconds.
+
 # ND
 
 | Default MSFS 787 ND | B787-10 Heavy ND|
@@ -58,3 +70,6 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
 |<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">|VOR/DME|||
 |<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_TACAN.png" width="32" height="32">|TACAN|||
 |<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">|VORTAC|||
+
+# SimRate Manager
+<img src="DOCS/images/simrate-manager/simrate-manager.png" width="100%">
