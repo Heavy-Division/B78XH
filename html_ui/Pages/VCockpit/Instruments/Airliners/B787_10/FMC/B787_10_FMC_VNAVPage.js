@@ -53,13 +53,17 @@ class B787_10_FMC_VNAVPage {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
 			let storeToFMC = async (value) => {
-				if (HeavyInputChecks.speedRangeWithAltitude(value)) {
-					let toSet = value.split('/');
-					let speed = toSet[0];
-					let altitude = toSet[1];
-					if (fmc.trySetClimbSpeedRestriction(speed, altitude)) {
+				let toSet = value.split('/');
+				let speed = toSet[0];
+				let altitude = toSet[1];
+				let roundedAltitude = Math.round(altitude / 100) * 100;
+				let valueToCheck = speed + '/' + roundedAltitude;
+				if (HeavyInputChecks.speedRestriction(valueToCheck, fmc.cruiseFlightLevel * 100)) {
+					if (fmc.trySetClimbSpeedRestriction(speed, roundedAltitude)) {
 						fmc.activateExec()
 					}
+				} else {
+					fmc.showErrorMessage(fmc.defaultInputErrorMessage);
 				}
 			};
 

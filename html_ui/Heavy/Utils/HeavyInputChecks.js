@@ -5,10 +5,23 @@ HeavyInputChecks.speedRange = (input, min = 100, max = 399) => {
 	return isFinite(inputCheck) && inputCheck >= min && inputCheck <= max;
 };
 
+HeavyInputChecks.altitudeRange = (input, min = 0, max = Infinity) => {
+	let inputCheck = input;
+	return isFinite(inputCheck) && inputCheck >= min && inputCheck <= max;
+}
+
 HeavyInputChecks.speedRangeWithAltitude = (input) => {
 	let inputCheck = input.split('/');
-	return HeavyInputChecks.speedRange(inputCheck[0]);
+	return inputCheck.length === 2 && inputCheck[0] && inputCheck[1] && HeavyInputChecks.speedRange(inputCheck[0]) && HeavyInputChecks.altitudeRange(inputCheck[1]);
 };
+
+HeavyInputChecks.speedRestriction = (input, cruiseAltitude) => {
+	if(!HeavyInputChecks.speedRangeWithAltitude(input) || !HeavyInputChecks.altitudeRange(cruiseAltitude)){
+		return false;
+	}
+	let inputCheck = input.split('/');
+	return inputCheck.length === 2 && inputCheck[0] && inputCheck[1] && HeavyInputChecks.speedRange(inputCheck[0]) && HeavyInputChecks.altitudeRange(inputCheck[1], 0 , cruiseAltitude)
+}
 
 HeavyInputChecks.waypointConstraints = (input, convertToFeet = true, convertAltitudeDescriptionLettersToIndexes = true) => {
 	let inputCheck = input;
