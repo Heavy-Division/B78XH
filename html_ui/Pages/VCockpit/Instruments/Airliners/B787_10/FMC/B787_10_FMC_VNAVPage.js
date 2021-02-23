@@ -37,7 +37,7 @@ class B787_10_FMC_VNAVPage {
 		let speedRestrictionSpeedValue = '';
 		let speedRestrictionAltitudeValue = '';
 
-		if(fmc._climbSpeedRestrictionExecHandler){
+		if(fmc._activeExecHandlers['CLIMB_SPEED_RESTRICTION_HANDLER']){
 			if(fmc._climbSpeedRestriction){
 				speedRestrictionSpeedValue = fmc._climbSpeedRestriction.speed || '';
 				speedRestrictionAltitudeValue = fmc._climbSpeedRestriction.altitude || '';
@@ -83,7 +83,6 @@ class B787_10_FMC_VNAVPage {
 			let storeToLocalVariable = async (value, force = false) => {
 				if (HeavyInputChecks.speedRange(value) || force) {
 					fmc.trySetPreSelectedClimbSpeed(value)
-					await SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.SPEED, 'String', value);
 				}
 			};
 
@@ -109,9 +108,19 @@ class B787_10_FMC_VNAVPage {
 		};
 
 		let selectedClimbSpeedCell = '';
+		let econCell = '';
 
 		if (selectedClimbSpeed && isFinite(selectedClimbSpeed)) {
 			selectedClimbSpeedCell = selectedClimbSpeed + '';
+			econCell = '<ECON';
+			fmc.onLeftInput[4] = () => {
+				let handler = () => {
+					delete fmc.preSelectedClbSpeed;
+				}
+				fmc._activeExecHandlers['CLIMB_SELECTED_SPEED_REMOVE_HANDLER'] = handler;
+				fmc.activateExecEmissive()
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1)
+			}
 		}
 
 
@@ -139,11 +148,17 @@ class B787_10_FMC_VNAVPage {
 			B787_10_FMC_VNAVPage.ShowPage1(fmc);
 		};
 
-		if(fmc._climbSpeedRestrictionExecHandler){
+
+
+		if(Object.keys(fmc._activeExecHandlers).length > 0){
 			fmc.onExec = () => {
-				if(fmc._climbSpeedRestrictionExecHandler){
-					fmc._climbSpeedRestrictionExecHandler();
-				}
+				Object.keys(fmc._activeExecHandlers).forEach((key) => {
+					fmc._activeExecHandlers[key]()
+					delete fmc._activeExecHandlers[key];
+				});
+				fmc._shouldBeExecEmisssive = false;
+				SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 0);
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1)
 			}
 		}
 
@@ -159,7 +174,7 @@ class B787_10_FMC_VNAVPage {
 			['SPD RESTR'],
 			[speedRestrictionCell],
 			[],
-			['', '<ENG OUT'],
+			[econCell, '<ENG OUT'],
 			[],
 			[]
 		]);

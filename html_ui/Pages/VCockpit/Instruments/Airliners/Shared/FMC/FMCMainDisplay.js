@@ -85,6 +85,7 @@ class FMCMainDisplay extends BaseAirliners {
 		this._smootherTargetPitch = NaN;
 
 		this._shouldBeExecEmisssive = false;
+		this._activeExecHandlers = { };
 
 		FMCMainDisplay.DEBUG_INSTANCE = this;
 	}
@@ -1599,19 +1600,15 @@ class FMCMainDisplay extends BaseAirliners {
 		altitude = parseFloat(altitude)
 		if (isFinite(speed) && isFinite(altitude)){
 			this._climbSpeedRestriction = {speed: speed, altitude: altitude}
-			this._climbSpeedRestrictionExecHandler = function() {
-				let restriction = this._climbSpeedRestriction;
-				if (isFinite(restriction.speed) && isFinite(restriction.altitude)){
-					this.climbSpeedRestriction = restriction;
+			let handler = () => {
+				if (isFinite(this._climbSpeedRestriction.speed) && isFinite(this._climbSpeedRestriction.altitude)){
+					this.climbSpeedRestriction = this._climbSpeedRestriction;
 					this._climbSpeedRestriction = null;
-					this._climbSpeedRestrictionExecHandler = undefined
-					this._shouldBeExecEmisssive = false;
-					SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 0);
-					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1)
 					return true
 				}
 				return false
 			}
+			this._activeExecHandlers['CLIMB_SPEED_RESTRICTION_HANDLER'] = handler;
 			return true
 		}
 		this.showErrorMessage(this.defaultInputErrorMessage);
