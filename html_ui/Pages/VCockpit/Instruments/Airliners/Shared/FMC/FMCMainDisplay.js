@@ -83,6 +83,9 @@ class FMCMainDisplay extends BaseAirliners {
 		this._checkFlightPlan = 0;
 		this._smoothedTargetHeading = NaN;
 		this._smootherTargetPitch = NaN;
+
+		this._shouldBeExecEmisssive = false;
+
 		FMCMainDisplay.DEBUG_INSTANCE = this;
 	}
 
@@ -1586,6 +1589,30 @@ class FMCMainDisplay extends BaseAirliners {
 		if (isFinite(v)) {
 			this.preSelectedDesSpeed = v;
 			return true;
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	trySetClimbSpeedRestriction(speed, altitude){
+		speed = parseFloat(speed);
+		altitude = parseFloat(altitude)
+		if (isFinite(speed) && isFinite(altitude)){
+			this._climbSpeedRestriction = {speed: speed, altitude: altitude}
+			this._climbSpeedRestrictionExecHandler = function() {
+				let restriction = this._climbSpeedRestriction;
+				if (isFinite(restriction.speed) && isFinite(restriction.altitude)){
+					this.climbSpeedRestriction = restriction;
+					this._climbSpeedRestriction = null;
+					this._climbSpeedRestrictionExecHandler = undefined
+					this._shouldBeExecEmisssive = false;
+					SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 0);
+					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1)
+					return true
+				}
+				return false
+			}
+			return true
 		}
 		this.showErrorMessage(this.defaultInputErrorMessage);
 		return false;
