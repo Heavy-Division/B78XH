@@ -43,7 +43,7 @@
         {
             "path": "html_ui/Heavy/Utils/HeavyInputChecks.js",
             "size": 3114,
-            "date": 132585853978207180
+            "date": 132585902126714080
         },
         {
             "path": "html_ui/Heavy/Utils/HeavyInputUtils.js",
@@ -72,8 +72,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js",
-            "size": 44073,
-            "date": 132585736841339060
+            "size": 44179,
+            "date": 132585928800455650
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_DepArrPage.js",
@@ -112,8 +112,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_VNAVPage.js",
-            "size": 6986,
-            "date": 132585863229974020
+            "size": 7928,
+            "date": 132585957010175730
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.css",
@@ -188,7 +188,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Shared/FMC/FMCMainDisplay.js",
             "size": 80261,
-            "date": 132585789146111410
+            "date": 132585928530497550
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_CSTR_AMBER.svg",
@@ -491,11 +491,6 @@
             "date": 132581952840157060
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_TACAN_FLIGHTPLAN_ACTIVE.png",
-            "size": 3604,
-            "date": 132581952840157060
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_VORTAC.png",
             "size": 3697,
             "date": 132581952840167000
@@ -519,6 +514,11 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/WAYPOINT_FLIGHTPLAN.png",
             "size": 961,
             "date": 132581952840187020
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_TACAN_FLIGHTPLAN_ACTIVE.png",
+            "size": 3604,
+            "date": 132581952840157060
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/WAYPOINT_FLIGHTPLAN.svg",

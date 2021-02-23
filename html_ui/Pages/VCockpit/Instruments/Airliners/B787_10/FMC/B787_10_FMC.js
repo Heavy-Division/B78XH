@@ -456,12 +456,16 @@ class B787_10_FMC extends Boeing_FMC {
 		let speed = 310 * (1 - dCI) + 330 * dCI;
 		if (this.overSpeedLimitThreshold) {
 			if (Simplane.getAltitude() < 9800) {
-				speed = Math.min(speed, 250);
+				if(!this._climbSpeedTransitionDeleted){
+					speed = Math.min(speed, 250);
+				}
 				this.overSpeedLimitThreshold = false;
 			}
 		} else if (!this.overSpeedLimitThreshold) {
 			if (Simplane.getAltitude() < 10000) {
-				speed = Math.min(speed, 250);
+				if(!this._climbSpeedTransitionDeleted){
+					speed = Math.min(speed, 250);
+				}
 			} else {
 				this.overSpeedLimitThreshold = true;
 			}

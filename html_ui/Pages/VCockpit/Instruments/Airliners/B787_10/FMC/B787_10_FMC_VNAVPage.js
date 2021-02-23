@@ -28,17 +28,21 @@ class B787_10_FMC_VNAVPage {
 		}
 		speedTransCell += '/10000';
 
+		if (fmc._climbSpeedTransitionDeleted || Simplane.getAltitude() > 10000) {
+			speedTransCell = '';
+		}
+
 		let speedRestrictionCell = '---/-----';
 		let speedRestrictionSpeedValue = '';
 		let speedRestrictionAltitudeValue = '';
 
-		if(fmc._activeExecHandlers['CLIMB_SPEED_RESTRICTION_HANDLER']){
-			if(fmc._climbSpeedRestriction){
+		if (fmc._activeExecHandlers['CLIMB_SPEED_RESTRICTION_HANDLER']) {
+			if (fmc._climbSpeedRestriction) {
 				speedRestrictionSpeedValue = fmc._climbSpeedRestriction.speed || '';
 				speedRestrictionAltitudeValue = fmc._climbSpeedRestriction.altitude || '';
 			}
 		} else {
-			if(fmc.climbSpeedRestriction){
+			if (fmc.climbSpeedRestriction) {
 				speedRestrictionSpeedValue = fmc.climbSpeedRestriction.speed || '';
 				speedRestrictionAltitudeValue = fmc.climbSpeedRestriction.altitude || '';
 			}
@@ -52,28 +56,41 @@ class B787_10_FMC_VNAVPage {
 		fmc.onLeftInput[3] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
-			let storeToFMC = async (value) => {
-				let toSet = value.split('/');
-				let speed = toSet[0];
-				let altitude = toSet[1];
-				let roundedAltitude = Math.round(altitude / 100) * 100;
-				let valueToCheck = speed + '/' + roundedAltitude;
-				if (HeavyInputChecks.speedRestriction(valueToCheck, fmc.cruiseFlightLevel * 100)) {
-					if (fmc.trySetClimbSpeedRestriction(speed, roundedAltitude)) {
-						fmc.activateExec()
-					}
-				} else {
-					fmc.showErrorMessage(fmc.defaultInputErrorMessage);
-				}
-			};
 
-			storeToFMC(value).then(() => {
+			if (value === 'DELETE') {
+				fmc.inOut = '';
+				value = '';
+				fmc.climbSpeedRestriction = null;
+				fmc._climbSpeedRestriction = null;
+				delete fmc._activeExecHandlers['CLIMB_SPEED_RESTRICTION_HANDLER'];
 				B787_10_FMC_VNAVPage.ShowPage1(fmc);
-			});
+			}
+
+			if (value.length > 0) {
+				let storeToFMC = async (value) => {
+					let toSet = value.split('/');
+					let speed = toSet[0];
+					let altitude = toSet[1];
+					let roundedAltitude = Math.round(altitude / 100) * 100;
+					let valueToCheck = speed + '/' + roundedAltitude;
+					if (HeavyInputChecks.speedRestriction(valueToCheck, fmc.cruiseFlightLevel * 100)) {
+						if (fmc.trySetClimbSpeedRestriction(speed, roundedAltitude)) {
+							fmc.activateExec();
+						}
+					} else {
+						fmc.showErrorMessage(fmc.defaultInputErrorMessage);
+					}
+				};
+
+				storeToFMC(value).then(() => {
+					B787_10_FMC_VNAVPage.ShowPage1(fmc);
+				});
+			}
+
 		};
 
 		let transitionAltitudeCell = fmc.transitionAltitude.toFixed();
-		let selectedClimbSpeed = fmc.preSelectedClbSpeed || NaN
+		let selectedClimbSpeed = fmc.preSelectedClbSpeed || NaN;
 
 		fmc.onLeftInput[1] = () => {
 			let value = fmc.inOut;
@@ -81,13 +98,13 @@ class B787_10_FMC_VNAVPage {
 
 			let storeToLocalVariable = async (value, force = false) => {
 				if (HeavyInputChecks.speedRange(value) || force) {
-					fmc.trySetPreSelectedClimbSpeed(value)
+					fmc.trySetPreSelectedClimbSpeed(value);
 				}
 			};
 
 			let storeToFMC = async (value, force = false) => {
 				if (HeavyInputChecks.speedRange(value) || force) {
-					fmc.trySetPreSelectedClimbSpeed(value)
+					fmc.trySetPreSelectedClimbSpeed(value);
 				}
 			};
 
@@ -107,7 +124,7 @@ class B787_10_FMC_VNAVPage {
 		};
 
 
-		let econClimbSpeed = fmc.getClbManagedSpeed()
+		let econClimbSpeed = fmc.getClbManagedSpeed().toFixed(0);
 		let selectedClimbSpeedCell = '';
 		let econCell = '';
 
@@ -117,20 +134,20 @@ class B787_10_FMC_VNAVPage {
 			fmc.onLeftInput[4] = () => {
 				let handler = () => {
 					delete fmc.preSelectedClbSpeed;
-				}
+				};
 				fmc._activeExecHandlers['CLIMB_SELECTED_SPEED_REMOVE_HANDLER'] = handler;
-				fmc.activateExecEmissive()
-				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1)
-			}
+				fmc.activateExecEmissive();
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+			};
 		}
 
 
-		switch (fmc._fmcCommandSpeedType){
+		switch (fmc._fmcCommandSpeedType) {
 			case 'RESTRICTION':
-				if(!fmc._climbSpeedRestriction){
+				if (!fmc._climbSpeedRestriction) {
 					speedRestrictionCell = speedRestrictionCell + '[color]magenta';
 				}
-				break
+				break;
 			case 'SELECTED':
 				selectedClimbSpeedCell = selectedClimbSpeedCell + '[color]magenta';
 				break;
@@ -149,18 +166,34 @@ class B787_10_FMC_VNAVPage {
 			B787_10_FMC_VNAVPage.ShowPage1(fmc);
 		};
 
+		if(!fmc._climbSpeedTransitionDeleted){
+			fmc.onLeftInput[2] = () => {
+				let value = fmc.inOut;
+				fmc.clearUserInput();
+				if (value === 'DELETE') {
+					fmc.inOut = '';
+					fmc._climbSpeedTransitionDeleted = true;
+					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				}
+
+				if(value.length > 0){
+					fmc.showErrorMessage(fmc.defaultInputErrorMessage);
+					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				}
+			};
+		}
 
 
-		if(Object.keys(fmc._activeExecHandlers).length > 0){
+		if (Object.keys(fmc._activeExecHandlers).length > 0) {
 			fmc.onExec = () => {
 				Object.keys(fmc._activeExecHandlers).forEach((key) => {
-					fmc._activeExecHandlers[key]()
+					fmc._activeExecHandlers[key]();
 					delete fmc._activeExecHandlers[key];
 				});
 				fmc._shouldBeExecEmisssive = false;
 				SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 0);
-				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1)
-			}
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+			};
 		}
 
 
@@ -169,7 +202,7 @@ class B787_10_FMC_VNAVPage {
 			['CRZ ALT'],
 			[crzAltCell],
 			[(selectedClimbSpeedCell ? 'SEL SPD' : 'ECON SPD')],
-			[(selectedClimbSpeedCell ? selectedClimbSpeedCell : econClimbSpeed.toFixed(0))],
+			[(selectedClimbSpeedCell ? selectedClimbSpeedCell : econClimbSpeed)],
 			['SPD TRANS', 'TRANS ALT'],
 			[speedTransCell, transitionAltitudeCell],
 			['SPD RESTR'],
