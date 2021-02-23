@@ -68,6 +68,8 @@ class B787_10_FMC extends Boeing_FMC {
 		this._lastFMCCommandSpeedRestrictionValue = null;
 		this._lastFMCCommandSelectedClimbSpeedValue = null;
 		this._disableClimbSpeedRestrictions = 0;
+		this._fmcCommandSpeedType = null;
+		this._lastFmcCommandSpeedType = null;
 	}
 
 	get templateID() {
@@ -925,106 +927,16 @@ class B787_10_FMC extends Boeing_FMC {
 			}
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_TAKEOFF) {
 				if (this.getIsVNAVActive()) {
-					let speed = this.getTakeOffManagedSpeed();
-
-
-					let speedRestrictionSpeed = this.getSpeedRestrictionSpeed();
-					let speedRestrictionAltitude = this.getSpeedRestrictionAltitude();
-					let fmcCommandSpeedRestriction = null;
-
-					if (this.shouldFMCCommandSpeedRestriction(speedRestrictionSpeed, speedRestrictionAltitude)) {
-						speed = speedRestrictionSpeed;
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 1);
-						fmcCommandSpeedRestriction = 1;
-					} else {
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 0);
-						fmcCommandSpeedRestriction = 0;
-					}
-
-					let selectedClimbSpeed = this.preSelectedClbSpeed;
-					let fmcCommandSelectedClimbSpeed = null;
-
-					if (selectedClimbSpeed) {
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.FMC_COMMAND_SPEED, 'Number', 1);
-						fmcCommandSelectedClimbSpeed = 1;
-					} else {
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.FMC_COMMAND_SPEED, 'Number', 0);
-						fmcCommandSelectedClimbSpeed = 0;
-					}
-
-					if (fmcCommandSpeedRestriction && fmcCommandSelectedClimbSpeed && selectedClimbSpeed <= speedRestrictionSpeed) {
-						speed = selectedClimbSpeed;
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 0);
-					} else if (fmcCommandSpeedRestriction && fmcCommandSelectedClimbSpeed && selectedClimbSpeed > speedRestrictionSpeed) {
-						speed = speedRestrictionSpeed;
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.FMC_COMMAND_SPEED, 'Number', 0);
-					}
-
-					if (this._lastFMCCommandSpeedRestrictionValue !== fmcCommandSpeedRestriction) {
-						SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
-						this._lastFMCCommandSpeedRestrictionValue = fmcCommandSpeedRestriction;
-					}
-
-					if (this._lastFMCCommandSelectedClimbSpeedValue !== fmcCommandSelectedClimbSpeed) {
-						SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
-						this._lastFMCCommandSelectedClimbSpeedValue = fmcCommandSelectedClimbSpeed;
-					}
-
+					let speed = this.determineClimbSpeed();
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
 				} else {
-					SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 0);
-					this._lastFMCCommandSpeedRestrictionValue = null;
+					this._fmcCommandSpeedType = null;
+					this._lastFmcCommandSpeedType = null;
 				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
 				if (this.getIsVNAVActive()) {
-					let speed = this.getClbManagedSpeed();
-
-					let speedRestrictionSpeed = this.getSpeedRestrictionSpeed();
-					let speedRestrictionAltitude = this.getSpeedRestrictionAltitude();
-					let fmcCommandSpeedRestriction = null;
-
-					if (this.shouldFMCCommandSpeedRestriction(speedRestrictionSpeed, speedRestrictionAltitude)) {
-						speed = speedRestrictionSpeed;
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 1);
-						fmcCommandSpeedRestriction = 1;
-					} else {
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 0);
-						fmcCommandSpeedRestriction = 0;
-					}
-
-					let selectedClimbSpeed = this.preSelectedClbSpeed;
-					let fmcCommandSelectedClimbSpeed = null;
-
-					if (selectedClimbSpeed) {
-						speed = selectedClimbSpeed;
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.FMC_COMMAND_SPEED, 'Number', 1);
-						fmcCommandSelectedClimbSpeed = 1;
-					} else {
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.FMC_COMMAND_SPEED, 'Number', 0);
-						fmcCommandSelectedClimbSpeed = 0;
-					}
-
-					if (fmcCommandSpeedRestriction && fmcCommandSelectedClimbSpeed && selectedClimbSpeed <= speedRestrictionSpeed) {
-						speed = selectedClimbSpeed;
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 0);
-					} else if (fmcCommandSpeedRestriction && fmcCommandSelectedClimbSpeed && selectedClimbSpeed > speedRestrictionSpeed) {
-						speed = speedRestrictionSpeed;
-						SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.FMC_COMMAND_SPEED, 'Number', 0);
-					}
-
-					if (this._lastFMCCommandSpeedRestrictionValue !== fmcCommandSpeedRestriction) {
-						SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
-						this._lastFMCCommandSpeedRestrictionValue = fmcCommandSpeedRestriction;
-					}
-
-					if (this._lastFMCCommandSelectedClimbSpeedValue !== fmcCommandSelectedClimbSpeed) {
-						SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
-						this._lastFMCCommandSelectedClimbSpeedValue = fmcCommandSelectedClimbSpeed;
-					}
-
+					let speed = this.determineClimbSpeed();
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-
-
 					let altitude = Simplane.getAltitudeAboveGround();
 					let n1 = 100;
 					if (altitude < this.thrustReductionAltitude) {
@@ -1034,14 +946,14 @@ class B787_10_FMC extends Boeing_FMC {
 					}
 					SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
 				} else {
-					SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 0);
-					this._lastFMCCommandSpeedRestrictionValue = null;
+					this._fmcCommandSpeedType = null;
+					this._lastFmcCommandSpeedType = null;
 				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
 
 				if(!this._disableClimbSpeedRestrictions){
-					SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.FMC_COMMAND_SPEED, 'Number', 0);
-					SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.SELECTED_CLIMB_SPEED.FMC_COMMAND_SPEED, 'Number', 0);
+					this._fmcCommandSpeedType = null;
+					this._lastFmcCommandSpeedType = null;
 				}
 
 				if (this.getIsVNAVActive()) {
@@ -1076,15 +988,58 @@ class B787_10_FMC extends Boeing_FMC {
 					}
 				}
 			}
-			this._execLight.style.backgroundColor = this.getIsRouteActivated() ? '#00ff00' : 'black';
+			/** Default ASOBO implementation */
+			//this._execLight.style.backgroundColor = this.getIsRouteActivated() ? '#00ff00' : 'black';
+			/** Heavy implementation (left exec and FMC exec are synchronized) */
+			if(this.getIsRouteActivated() || this._shouldBeExecEmisssive){
+				this._execLight.style.backgroundColor = '#00ff00';
+			} else {
+				this._execLight.style.backgroundColor = 'black';
+			}
 			this.updateAutopilotCooldown = this._apCooldown;
 		}
 	}
 
-	shouldFMCCommandSpeedRestriction(speed, altitude) {
+	determineClimbSpeed(){
+		let climbSpeed = null;
+		let speedRestriction = null;
+		let selectedClimbSpeed = null;
+		this._lastFmcCommandSpeedType = this._fmcCommandSpeedType;
+
+		if(this.climbSpeedRestriction){
+			if(this.shouldFMCCommandSpeedRestriction()){
+				speedRestriction = this.climbSpeedRestriction.speed;
+			}
+		}
+		if(this.preSelectedClbSpeed){
+			selectedClimbSpeed = this.preSelectedClbSpeed;
+		}
+
+		if(selectedClimbSpeed && speedRestriction && selectedClimbSpeed >= speedRestriction){
+			this._fmcCommandSpeedType = 'RESTRICTION';
+			climbSpeed = speedRestriction;
+		} else if (selectedClimbSpeed){
+			this._fmcCommandSpeedType = 'SELECTED';
+			climbSpeed = selectedClimbSpeed;
+		} else if (speedRestriction){
+			this._fmcCommandSpeedType = 'RESTRICTION';
+			climbSpeed = speedRestriction;
+		} else {
+			this._fmcCommandSpeedType = 'MANAGED';
+			climbSpeed = this.getClbManagedSpeed();
+		}
+
+		if (this._lastFmcCommandSpeedType !== this._fmcCommandSpeedType) {
+			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
+		}
+
+		return climbSpeed
+	}
+
+	shouldFMCCommandSpeedRestriction() {
 		let planeAltitude = Simplane.getAltitude();
-		if (speed && isFinite(speed) && altitude && isFinite(altitude)) {
-			if (altitude > planeAltitude) {
+		if (this.climbSpeedRestriction.speed && isFinite(this.climbSpeedRestriction.speed) && this.climbSpeedRestriction.altitude && isFinite(this.climbSpeedRestriction.altitude)) {
+			if (this.climbSpeedRestriction.altitude > planeAltitude) {
 				return true;
 			}
 		}
@@ -1092,11 +1047,11 @@ class B787_10_FMC extends Boeing_FMC {
 	}
 
 	getSpeedRestrictionSpeed() {
-		return SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.SPEED, 'Number') || null;
+		return this.climbSpeedRestriction.speed || null;
 	}
 
 	getSpeedRestrictionAltitude() {
-		return SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.SPEED_RESTRICTION.ALTITUDE, 'Number') || null;
+		return this.climbSpeedRestriction.altitude || null;
 	}
 
 	updateSideButtonActiveStatus() {
