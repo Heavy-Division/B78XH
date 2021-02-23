@@ -1,0 +1,26 @@
+{
+  "name": "b78xhl-heavy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Heavy-Division/B78XHL.git"
+  },
+  "author": "",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/Heavy-Division/B78XHL/issues"
+  },
+  "homepage": "https://github.com/Heavy-Division/B78XHL#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-ignore": "^3.0.0",
+    "gulp-zip": "^5.0.2",
+    "mathjs": "^9.2.0",
+    "through2": "^4.0.2"
+  }
+}
