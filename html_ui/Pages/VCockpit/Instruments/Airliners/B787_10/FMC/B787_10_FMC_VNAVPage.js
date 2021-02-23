@@ -107,6 +107,8 @@ class B787_10_FMC_VNAVPage {
 
 		};
 
+
+		let econClimbSpeed = fmc.getClbManagedSpeed()
 		let selectedClimbSpeedCell = '';
 		let econCell = '';
 
@@ -168,7 +170,7 @@ class B787_10_FMC_VNAVPage {
 			['CRZ ALT'],
 			[crzAltCell],
 			[(selectedClimbSpeedCell ? 'SEL SPD' : 'ECON SPD')],
-			[(selectedClimbSpeedCell ? selectedClimbSpeedCell : '')],
+			[(selectedClimbSpeedCell ? selectedClimbSpeedCell : econClimbSpeed.toFixed(0))],
 			['SPD TRANS', 'TRANS ALT'],
 			[speedTransCell, transitionAltitudeCell],
 			['SPD RESTR'],
