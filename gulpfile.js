@@ -83,5 +83,5 @@ function releaseTask(callback) {
 }
 
 exports.release = gulp.series(buildTask, releaseTask);
-exports.default = defaultTask;
+exports.default = buildTask;
 exports.build = buildTask;
