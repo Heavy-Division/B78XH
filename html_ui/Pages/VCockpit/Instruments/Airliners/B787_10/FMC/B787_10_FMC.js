@@ -467,6 +467,10 @@ class B787_10_FMC extends Boeing_FMC {
 					speed = Math.min(speed, 250);
 				}
 			} else {
+				if(!this._isFmcCurrentPageUpdatedAboveTenThousandFeet){
+					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+					this._isFmcCurrentPageUpdatedAboveTenThousandFeet = true;
+				}
 				this.overSpeedLimitThreshold = true;
 			}
 		}
