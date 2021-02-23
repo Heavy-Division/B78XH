@@ -26,12 +26,7 @@ class B787_10_FMC_VNAVPage {
 		if (isFinite(speed)) {
 			speedTransCell = speed.toFixed(0);
 		}
-		speedTransCell += '/';
-		if (isFinite(fmc.transitionAltitude)) {
-			speedTransCell += '10000';
-		} else {
-			speedTransCell += '-----';
-		}
+		speedTransCell += '/10000';
 
 		let speedRestrictionCell = '---/-----';
 		let speedRestrictionSpeedValue = '';
