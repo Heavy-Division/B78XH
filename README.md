@@ -21,6 +21,11 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
         * All waypoints between first and last added waypoint are inserted to Legs page
     * #### MISC
         * "HEAVY" button added (misc & configuration of mod)
+    
+* ### ND/MFD
+  * Symbols changed to default Boeing symbols
+  * Altitude prediction added (Green Banana)
+    
 * ### EICAS
     *  Gears synoptic page
     *  Hydraulics synoptic page
@@ -70,6 +75,9 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
 |<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">|VOR/DME|||
 |<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_TACAN.png" width="32" height="32">|TACAN|||
 |<img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">|<img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">|VORTAC|||
+
+# ND - Altitude prediction (BANANA)
+<img src="DOCS/images/map/nd_banana.png" width="100%">
 
 # SimRate Manager
 <img src="DOCS/images/simrate-manager/simrate-manager.png" width="50%">
