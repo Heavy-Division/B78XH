@@ -57,6 +57,7 @@ html body {
     --eicasOrange: #db7200;
     --eicasRed: red;
     --eicasMagenta: magenta;
+    --eicasAmber: #ffbf00;
 }
 
 b787-10-sys-element {
@@ -467,5 +468,62 @@ b787-10-sys-element #Pages #HYD_Page path.greens[state=on] {
 }
 
 
+b787-10-sys-element #Pages #DOOR_Page path {
+    stroke-width: 3px;
+    stroke: var(--eicasBlue);
+    fill: none;
+}
 
+b787-10-sys-element #Pages #DOOR_Page text {
+    font-size: 36px;
+    text-align: end;
+    letter-spacing: -1.5px;
+    fill: var(--eicasBlue);
+}
 
+b787-10-sys-element #Pages #DOOR_Page text.text-left {
+    font-size: 36px;
+    text-align: end;
+    letter-spacing: -1.5px;
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #DOOR_Page text.text-right {
+    direction: ltr;
+    text-anchor: end
+}
+
+b787-10-sys-element #Pages #DOOR_Page .static-hidden {
+    visibility: hidden;
+}
+
+b787-10-sys-element #Pages #DOOR_Page .static-visible {
+    visibility: visible;
+}
+
+b787-10-sys-element #Pages #DOOR_Page .door {
+    fill: #000000;
+}
+
+b787-10-sys-element #Pages #DOOR_Page .door-open {
+    stroke: var(--eicasAmber);
+    stroke-width: 3
+}
+
+b787-10-sys-element #Pages #DOOR_Page path.fuseladge-gray-mask {
+    fill: var(--eicasDarkGrey);
+    stroke-width: 0;
+    stroke: none;
+}
+
+b787-10-sys-element #Pages #DOOR_Page text.entry_a_text {
+    fill: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.vacant {
+    fill: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.occupied {
+    fill: var(--eicasWhite);
+}

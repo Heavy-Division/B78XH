@@ -244,21 +244,21 @@ class B787_10_SYS_Page {
 	}
 
 	getApuRPM() {
-		return this.B78XH_SystemsInfo.getAPU().getRPM();
+		return this.B78XH_SystemsInfo.getAPU().getRPM() || 1;
 	}
 
 	getApuEGT() {
-		let egt = this.B78XH_SystemsInfo.getAPU().getEGT()
+		let egt = this.B78XH_SystemsInfo.getAPU().getEGT();
 		return egt || SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'Celsius');
 	}
 
 	getApuOilPress() {
-		let oilPress = this.B78XH_SystemsInfo.getAPU().getOilPress()
+		let oilPress = this.B78XH_SystemsInfo.getAPU().getOilPress();
 		return oilPress || 5;
 	}
 
 	getApuOilTemp() {
-		let oilTemp = this.B78XH_SystemsInfo.getAPU().getOilTemp()
+		let oilTemp = this.B78XH_SystemsInfo.getAPU().getOilTemp();
 		return oilTemp || 15;
 	}
 }
@@ -277,6 +277,7 @@ class B787_10_SYS_Page_STAT extends B787_10_SYS_Page {
 	}
 
 	updateChild(_deltaTime) {
+
 	}
 
 	getName() {
@@ -477,7 +478,100 @@ class B787_10_SYS_Page_AIR extends B787_10_SYS_Page {
 }
 
 class B787_10_SYS_Page_DOOR extends B787_10_SYS_Page {
+	/**
+	 * Points:
+	 * 0 -> Entry 1L
+	 * 7 -> Entry 4R
+	 * 8 -> FWD Cargo
+	 * 11 -> Fuel
+	 * 12 -> Power Unit (Front gear)
+	 */
+	init() {
+		this.doors = {
+			ENTRY_1L: null,
+			ENTRY_2L: null,
+			ENTRY_3L: null,
+			ENTRY_4L: null,
+			FWS_EE_ACCESS: null,
+			REFUEL: null,
+			AFT_EE_ACCESS: null,
+			BULK_CARGO: null,
+			ENTRY_1R: null,
+			ENTRY_2R: null,
+			ENTRY_3R: null,
+			ENTRY_4R: null,
+			FWD_ACCESS: null,
+			FD_OVHD: null,
+			FWD_CARGO: null,
+			AFT_CARGO: null
+		};
+
+		this.doorsGroups = {
+			ENTRY_1L: [['entry_1l_close'], ['entry_1l_open']],
+			ENTRY_2L: [[], []],
+			ENTRY_3L: [[], []],
+			ENTRY_4L: null,
+			FWS_EE_ACCESS: null,
+			REFUEL: null,
+			AFT_EE_ACCESS: null,
+			BULK_CARGO: null,
+			ENTRY_1R: null,
+			ENTRY_2R: null,
+			ENTRY_3R: null,
+			ENTRY_4R: [['entry_4r_close'], ['entry_4r_open']],
+			FWD_ACCESS: null,
+			FD_OVHD: null,
+			FWD_CARGO: [['fwd_cargo_open'], ['fwd_cargo_open']],
+			AFT_CARGO: null
+		};
+
+		this.updateDoorPositions();
+	}
+
 	updateChild(_deltaTime) {
+		this.updateDoorPositions();
+		this.updatePage();
+	}
+
+	updatePage() {
+		let closeRect1l = this.pageRoot.querySelector('#entry_1l_close_rect');
+		let closeText1l = this.pageRoot.querySelector('#entry_1l_close_text');
+		let openRect1l = this.pageRoot.querySelector('#entry_1l_open');
+
+		if (this.doors['ENTRY_1L'] > 5) {
+			closeRect1l.style.visibility = 'hidden';
+			closeText1l.style.visibility = 'hidden';
+			openRect1l.style.visibility = 'visible';
+		} else {
+			closeRect1l.style.visibility = 'visible';
+			closeText1l.style.visibility = 'visible';
+			openRect1l.style.visibility = 'hidden';
+		}
+
+		let closeRect4r = this.pageRoot.querySelector('#entry_4r_close_rect');
+		let closeText4r = this.pageRoot.querySelector('#entry_4r_close_text');
+		let openRect4r = this.pageRoot.querySelector('#entry_4r_open');
+		if (this.doors['ENTRY_4R'] > 5) {
+			closeRect4r.style.visibility = 'hidden';
+			closeText4r.style.visibility = 'hidden';
+			openRect4r.style.visibility = 'visible';
+		} else {
+			closeRect4r.style.visibility = 'visible';
+			closeText4r.style.visibility = 'visible';
+			openRect4r.style.visibility = 'hidden';
+		}
+		let closeRectFwdCargo = this.pageRoot.querySelector('#fwd_cargo_open');
+		if (this.doors['FWD_CARGO'] > 5) {
+			closeRectFwdCargo.style.visibility = 'visible';
+		} else {
+			closeRectFwdCargo.style.visibility = 'hidden';
+		}
+	}
+
+	updateDoorPositions() {
+		this.doors['ENTRY_1L'] = SimVar.GetSimVarValue('INTERACTIVE POINT OPEN:0', 'Percent');
+		this.doors['ENTRY_4R'] = SimVar.GetSimVarValue('INTERACTIVE POINT OPEN:7', 'Percent');
+		this.doors['FWD_CARGO'] = SimVar.GetSimVarValue('INTERACTIVE POINT OPEN:8', 'Percent');
 	}
 
 	getName() {
