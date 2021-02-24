@@ -22,5 +22,8 @@
     "gulp-zip": "^5.0.2",
     "mathjs": "^9.2.0",
     "through2": "^4.0.2"
+  },
+  "dependencies": {
+    "del": "^6.0.0"
   }
 }

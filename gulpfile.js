@@ -2,6 +2,7 @@ const gulp = require('gulp');
 const through = require('through2');
 const fs = require('fs');
 const zip = require('gulp-zip');
+const del = require('del');
 
 /** Default mathjs configuration does not support BigNumbers */
 //const math = require('mathjs');
@@ -73,7 +74,7 @@ function buildTask() {
 }
 
 function releaseTask(callback) {
-	return gulp.src(directoriesToRelease)
+	return gulp.src('release/cache/**')
 	.pipe(zip('release.zip'))
 	.pipe(gulp.dest('release'))
 		.on('finish', function(){
@@ -82,6 +83,21 @@ function releaseTask(callback) {
 		});
 }
 
-exports.release = gulp.series(buildTask, releaseTask);
+function copyFilesForReleaseToCache(callback){
+	return gulp.src(directoriesToRelease)
+	.pipe(gulp.dest('release/cache/B78XHL/'))
+	.on('finish', function(){
+		console.log('Files for release copied.')
+		callback()
+	});
+}
+
+function deleteReleaseCache(callback){
+	del('release/cache');
+	console.log('Release cache deleted.')
+	callback()
+}
+
+exports.release = gulp.series(buildTask, copyFilesForReleaseToCache, releaseTask, deleteReleaseCache);
 exports.default = buildTask;
 exports.build = buildTask;
