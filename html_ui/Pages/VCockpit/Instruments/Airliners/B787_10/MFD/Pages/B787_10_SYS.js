@@ -526,6 +526,7 @@ class B787_10_SYS_Page_DOOR extends B787_10_SYS_Page {
 		};
 
 		this.updateDoorPositions();
+		this.updatePage();
 	}
 
 	updateChild(_deltaTime) {
