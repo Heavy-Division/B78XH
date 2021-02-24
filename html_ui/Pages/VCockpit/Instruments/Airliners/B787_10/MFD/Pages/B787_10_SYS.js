@@ -1,3 +1,5 @@
+Include.addScript('/B78XH/Systems/B78XH_SystemsInfo.js');
+
 class B787_10_SYS extends B787_10_CommonMFD.MFDTemplateElement {
 	constructor() {
 		super(...arguments);
@@ -244,43 +246,51 @@ class B787_10_SYS_Page {
 	}
 
 	getApuRPM() {
-		return this.B78XH_SystemsInfo.getAPU().getRPM() || 1;
+		return (this.B78XH_SystemsInfo ? this.B78XH_SystemsInfo.getAPU().getRPM() : 0);
 	}
 
 	getApuEGT() {
-		let egt = this.B78XH_SystemsInfo.getAPU().getEGT();
+		let egt = (this.B78XH_SystemsInfo ? this.B78XH_SystemsInfo.getAPU().getEGT() : null);
 		return egt || SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'Celsius');
 	}
 
 	getApuOilPress() {
-		let oilPress = this.B78XH_SystemsInfo.getAPU().getOilPress();
-		return oilPress || 5;
+		return (this.B78XH_SystemsInfo ? this.B78XH_SystemsInfo.getAPU().getOilPress() : 5);
 	}
 
 	getApuOilTemp() {
-		let oilTemp = this.B78XH_SystemsInfo.getAPU().getOilTemp();
-		return oilTemp || 15;
+		return (this.B78XH_SystemsInfo ? this.B78XH_SystemsInfo.getAPU().getOilTemp() : 15);
 	}
 }
 
 class B787_10_SYS_Page_STAT extends B787_10_SYS_Page {
 	init() {
+
 		if (this.pageRoot != null) {
+			
 			this.hydraulicPressureLeft = 80;
 			this.hydraulicPressureCenter = 80;
 			this.hydraulicPressureRight = 85;
+			
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-rpm-apu'), this.getApuRPM.bind(this), 1));
+			
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-egt-apu-span'), this.getApuEGT.bind(this), 0));
+			
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-oil-press-apu-span'), this.getApuOilPress.bind(this), 0));
+			
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-oil-temp-apu-span'), this.getApuOilTemp.bind(this), 0));
+			
 		}
+
+
 	}
 
 	updateChild(_deltaTime) {
-
+		
 	}
 
 	getName() {
+		
 		return 'STAT';
 	}
 }
@@ -320,9 +330,11 @@ class B787_10_SYS_Page_HYD extends B787_10_SYS_Page {
 		this.greenLines['c1-elec-green'] = SimVar.GetSimVarValue('L:B78XH_HYDRAULIC_ELEC_C1_SWITCH_STATE', 'Number');
 		this.greenLines['c2-elec-green'] = SimVar.GetSimVarValue('L:B78XH_HYDRAULIC_ELEC_C2_SWITCH_STATE', 'Number');
 
-		Object.keys(this.greenLines).forEach((key) => {
-			this.shouldBeEnabled(key);
-		});
+		if (this.pageRoot != null) {
+			Object.keys(this.greenLines).forEach((key) => {
+				this.shouldBeEnabled(key);
+			});
+		}
 	}
 
 	shouldBeEnabled(key) {
@@ -535,37 +547,39 @@ class B787_10_SYS_Page_DOOR extends B787_10_SYS_Page {
 	}
 
 	updatePage() {
-		let closeRect1l = this.pageRoot.querySelector('#entry_1l_close_rect');
-		let closeText1l = this.pageRoot.querySelector('#entry_1l_close_text');
-		let openRect1l = this.pageRoot.querySelector('#entry_1l_open');
+		if (this.pageRoot != null) {
+			let closeRect1l = this.pageRoot.querySelector('#entry_1l_close_rect');
+			let closeText1l = this.pageRoot.querySelector('#entry_1l_close_text');
+			let openRect1l = this.pageRoot.querySelector('#entry_1l_open');
 
-		if (this.doors['ENTRY_1L'] > 5) {
-			closeRect1l.style.visibility = 'hidden';
-			closeText1l.style.visibility = 'hidden';
-			openRect1l.style.visibility = 'visible';
-		} else {
-			closeRect1l.style.visibility = 'visible';
-			closeText1l.style.visibility = 'visible';
-			openRect1l.style.visibility = 'hidden';
-		}
+			if (this.doors['ENTRY_1L'] > 5) {
+				closeRect1l.style.visibility = 'hidden';
+				closeText1l.style.visibility = 'hidden';
+				openRect1l.style.visibility = 'visible';
+			} else {
+				closeRect1l.style.visibility = 'visible';
+				closeText1l.style.visibility = 'visible';
+				openRect1l.style.visibility = 'hidden';
+			}
 
-		let closeRect4r = this.pageRoot.querySelector('#entry_4r_close_rect');
-		let closeText4r = this.pageRoot.querySelector('#entry_4r_close_text');
-		let openRect4r = this.pageRoot.querySelector('#entry_4r_open');
-		if (this.doors['ENTRY_4R'] > 5) {
-			closeRect4r.style.visibility = 'hidden';
-			closeText4r.style.visibility = 'hidden';
-			openRect4r.style.visibility = 'visible';
-		} else {
-			closeRect4r.style.visibility = 'visible';
-			closeText4r.style.visibility = 'visible';
-			openRect4r.style.visibility = 'hidden';
-		}
-		let closeRectFwdCargo = this.pageRoot.querySelector('#fwd_cargo_open');
-		if (this.doors['FWD_CARGO'] > 5) {
-			closeRectFwdCargo.style.visibility = 'visible';
-		} else {
-			closeRectFwdCargo.style.visibility = 'hidden';
+			let closeRect4r = this.pageRoot.querySelector('#entry_4r_close_rect');
+			let closeText4r = this.pageRoot.querySelector('#entry_4r_close_text');
+			let openRect4r = this.pageRoot.querySelector('#entry_4r_open');
+			if (this.doors['ENTRY_4R'] > 5) {
+				closeRect4r.style.visibility = 'hidden';
+				closeText4r.style.visibility = 'hidden';
+				openRect4r.style.visibility = 'visible';
+			} else {
+				closeRect4r.style.visibility = 'visible';
+				closeText4r.style.visibility = 'visible';
+				openRect4r.style.visibility = 'hidden';
+			}
+			let closeRectFwdCargo = this.pageRoot.querySelector('#fwd_cargo_open');
+			if (this.doors['FWD_CARGO'] > 5) {
+				closeRectFwdCargo.style.visibility = 'visible';
+			} else {
+				closeRectFwdCargo.style.visibility = 'hidden';
+			}
 		}
 	}
 

@@ -32,8 +32,8 @@
         },
         {
             "path": "html_ui/B78XH/Systems/B78XH_SystemsInfo.js",
-            "size": 474,
-            "date": 132580232359177700
+            "size": 543,
+            "date": 132586805143032560
         },
         {
             "path": "html_ui/Heavy/Utils/HeavyDataStorage.js",
@@ -311,13 +311,13 @@
             "date": 132581952839987500
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION_FLIGHTPLAN.svg",
-            "size": 2376,
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png",
+            "size": 2661,
             "date": 132581952839997470
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png",
-            "size": 2661,
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION_FLIGHTPLAN.svg",
+            "size": 2376,
             "date": 132581952839997470
         },
         {
@@ -371,13 +371,13 @@
             "date": 132581952840047330
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_PLANE_B747_02.svg",
-            "size": 2482,
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_TCAS_OTHER_A320.svg",
+            "size": 2483,
             "date": 132581952840057330
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_TCAS_OTHER_A320.svg",
-            "size": 2483,
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_PLANE_B747_02.svg",
+            "size": 2482,
             "date": 132581952840057330
         },
         {
@@ -451,6 +451,11 @@
             "date": 132581952840117150
         },
         {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_DME_FLIGHTPLAN_ACTIVE.svg",
+            "size": 2384,
+            "date": 132581952840124370
+        },
+        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_FLIGHTPLAN.png",
             "size": 568,
             "date": 132581952840127120
@@ -459,11 +464,6 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_FLIGHTPLAN.svg",
             "size": 2837,
             "date": 132581952840127120
-        },
-        {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_DME_FLIGHTPLAN_ACTIVE.svg",
-            "size": 2384,
-            "date": 132581952840124370
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_FLIGHTPLAN_ACTIVE.png",
@@ -567,13 +567,13 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_SYS.html",
-            "size": 78298,
-            "date": 132586777761341340
+            "size": 73999,
+            "date": 132586786491125810
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_SYS.js",
-            "size": 19679,
-            "date": 132586733506492020
+            "size": 19969,
+            "date": 132586810727372290
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/Map/Svg/SvgWaypointElement.js",

@@ -11,7 +11,7 @@ class B78XH_SystemsInfo {
 	}
 
 	getAPU(){
-		return this.systems[B78XH_SystemsInfo.SYSTEM.APU];
+		return (this.systems[B78XH_SystemsInfo.SYSTEM.APU] ? this.systems[B78XH_SystemsInfo.SYSTEM.APU] : new B78XH_APUInfo());
 	}
 
 	getSystem(name) {
