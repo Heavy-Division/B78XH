@@ -1,9 +1,18 @@
 ﻿<link rel="stylesheet" href="./B787_10_ND.css"/>
 
 <script type="text/html" id="B787_10_ND_Template">
+    <svg id="FakeMapBox" viewBox = "0 0 600 600" irs-state="off">
+        <text x="300" y="320">MAP</text>
+        <path d="M273 307L273 334L326 334L326 307L273 307"></path>
+    </svg>
     <div id="Map">
         <map-instrument id="MapInstrument" map-mode="plan" bing-id="MFD" bing-ref="plane" show-overlay="false"
                         config-path="/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/"></map-instrument>
+    </div>
+    <div id="altitudeArc" style="position: absolute; left: 0%; top: 0%; width: 100%; height: 100%;">
+        <svg id="altitudeArcSvg" viewBox="0 0 1200 1800">
+            <path id="altitudeArcPath" d="M 400 0 Q 600 -100 800 0" stroke="green" stroke-width="3" fill="none"></path>
+        </svg>
     </div>
     <div id="ModeChangeMask"></div>
     <jet-mfd-nd-compass id="Compass"></jet-mfd-nd-compass>
@@ -84,6 +93,25 @@
             </svg>
         </div>
     </jet-mfd-nd-info>
+
+    <svg id="FakeCompassBox" viewBox = "0 0 600 600" irs-state="off">
+        <text x="264" y="80" fill="green" font-size="22" font-family="Roboto-Bold" text-anchor="end" alignment-baseline="central">HDG</text>
+        <text x="300" y="80" fill="white" font-size="26" font-family="Roboto-Bold" text-anchor="middle" alignment-baseline="central">---</text>
+        <text x="336" y="80" fill="green" font-size="22" font-family="Roboto-Bold" text-anchor="start" alignment-baseline="central">MAG</text>
+        <path d="M 268.5 60 L 268.5 99 L 331 99 L 331 60" stroke-width="1" stroke="green" fill="none"></path>
+    </svg>
+
+    <svg id="FakeCompassBoxHdg" viewBox = "0 0 600 600" irs-state="off">
+        <text x="300" y="80">HDG</text>
+        <path d="M273 65L273 95L326 95L326 65L273 65"></path>
+    </svg>
+
+    <svg id="align-times" irs-state="off">
+        <text id="GS_FakeText" class="Small" x="22" y="45" alignment-baseline="baseline" irs-state="off">GS</text>
+        <text id="GS_FakeValue" class="Value" x="50" y="45" alignment-baseline="baseline" irs-state="off">---</text>
+        <text id="time-to-align" class="align" x="13" y="70" alignment-baseline="baseline" irs-state="off">TIME TO ALIGN</text>
+        <text id="l-align" class="align" x="13" y="90" alignment-baseline="baseline" irs-state="off">05:53</text>
+    </svg>
 
     <div id="NavPanel">
         <svg viewBox="0 0 1200 1800">

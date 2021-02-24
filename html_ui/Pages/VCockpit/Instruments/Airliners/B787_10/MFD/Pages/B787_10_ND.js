@@ -628,6 +628,23 @@ class B787_10_ND_Map extends MapInstrumentElement {
 		this._fullscreen = false;
 		this._parent = _parent;
 		this.setGPS(this._parent.gps);
+
+		this.altitudeArcOffsets = [
+			[
+				// halfscreen - TOP, TRIANGLE OFFSET, TRIANGLE
+				[220, 1450, 1500],
+				// fullscreen - TOP, TRIANGLE OFFSET, TRIANGLE
+				[210, 750, 770]
+			],
+				/** TODO: Offset are from uncentered map (need to be updated for centered map offsets) */
+				// centered map
+			[	// halfscreen - TOP, TRIANGLE OFFSET, TRIANGLE
+				[220, 1450, 1500],
+					// fullscreen - TOP, TRIANGLE OFFSET, TRIANGLE
+				[210, 750, 770]
+			]
+		];
+
 	}
 
 	get mode() {
@@ -725,6 +742,55 @@ class B787_10_ND_Map extends MapInstrumentElement {
 	onUpdate(_deltaTime) {
 		super.onUpdate(_deltaTime);
 		this.updateMapIfIrsNotAligned();
+		this.updateAltitudeArc(_deltaTime);
+	}
+
+	updateAltitudeArc(_deltatime) {
+		let altitudeArcPath = document.getElementById('altitudeArcPath');
+		let altitudeArcPosition = this.calculateAltitudeArcPosition();
+		let isMapCentered = (this._parent.mapIsCentered ? 1 : 0);
+		let isMapFullscreen = (this._fullscreen ? 1 : 0);
+
+		if (this.shouldBeAltitudeArcVisible() && altitudeArcPosition < this.altitudeArcOffsets[isMapCentered][isMapFullscreen][2] && altitudeArcPosition > this.altitudeArcOffsets[isMapCentered][isMapFullscreen][0]) {
+			altitudeArcPath.setAttribute('transform', `translate(0, ${altitudeArcPosition})`);
+			altitudeArcPath.style.visibility = 'visible';
+		} else {
+			altitudeArcPath.style.visibility = 'hidden';
+		}
+	}
+
+	calculateAltitudeArcPosition(distance = NaN){
+		let isMapCentered = (this._parent.mapIsCentered ? 1 : 0);
+		let isMapFullscreen = (this._fullscreen ? 1 : 0);
+		let triangleOffset = this.altitudeArcOffsets[isMapCentered][isMapFullscreen][2];
+		let top = this.altitudeArcOffsets[isMapCentered][isMapFullscreen][0];
+		let range = this.zoomRanges[this._parent.mapRange]
+		if (!isFinite(distance)) {
+			return triangleOffset - ((triangleOffset - top) / range) * this.calculateDistanceForDescending();
+		}
+		return triangleOffset - ((triangleOffset - top) / range) * distance;
+	}
+
+	shouldBeAltitudeArcVisible() {
+		return (Simplane.getAutoPilotActive()) &&
+			(this._mode === Jet_NDCompass_Display.ARC) &&
+			(this.getAbsoluteAltitudeDeltaForAltitudeArc() >= 150) &&
+			(Simplane.getAltitudeAboveGround() >= 400);
+	};
+
+	calculateDistanceForDescending(toFixed = -1) {
+		let absoluteAltitudeDelta = this.getAbsoluteAltitudeDeltaForAltitudeArc();
+		let verticalSpeed = Simplane.getVerticalSpeed();
+		let absoluteVerticalSpeed = Math.abs(verticalSpeed);
+		let groundSpeed = Simplane.getGroundSpeed();
+		let nauticalMilesPerMinute = groundSpeed / 60;
+
+		let distance = (absoluteAltitudeDelta / absoluteVerticalSpeed) * nauticalMilesPerMinute;
+		return (toFixed < 0 ? distance : distance.toFixed(toFixed));
+	};
+
+	getAbsoluteAltitudeDeltaForAltitudeArc() {
+		return Math.abs(Simplane.getAutoPilotDisplayedAltitudeLockValue() - Simplane.getAltitude());
 	}
 
 	extendMFDHtmlElementsWithIrsState() {

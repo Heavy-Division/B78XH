@@ -1,5 +1,6 @@
 ﻿:root {
     --bodyHeightScale: 1;
+    --colorAmber: #ffbf00;
 }
 
 @keyframes TemporaryShow {
