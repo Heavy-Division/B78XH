@@ -566,6 +566,7 @@ b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top rect {
     stroke-width: 3px;
     fill: var(--eicasBlack);
 }
+
 b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top path {
     stroke: var(--eicasBlue);
     stroke-width: 3px;
@@ -590,22 +591,22 @@ b787-10-sys-element #Pages #AIR_Page #static-texts text {
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #titles-blue text {
     fill: var(--eicasBlue);
-    text-align:center;
-    text-anchor:middle;
+    text-align: center;
+    text-anchor: middle;
     font-size: 24px;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #titles-green text {
     fill: var(--eicasGreen);
-    text-align:center;
-    text-anchor:middle;
+    text-align: center;
+    text-anchor: middle;
     font-size: 24px;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #load-shed text {
     fill: var(--eicasWhite);
-    text-align:center;
-    text-anchor:middle;
+    text-align: center;
+    text-anchor: middle;
     font-size: 24px;
 }
 
@@ -626,9 +627,19 @@ b787-10-sys-element #Pages #AIR_Page #static-texts #temperatures-actual text {
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #top-texts text {
     fill: var(--eicasWhite);
-    text-align:center;
-    text-anchor:middle;
+    text-align: center;
+    text-anchor: middle;
     font-size: 32px;
 }
 
-/* font-weight:500;font-size:24px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Medium'"*/
+b787-10-sys-element #Pages #FCTL_Page #fuselage path {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    fill:none;
+}
+
+b787-10-sys-element #Pages #FCTL_Page #fuselage-mask path {
+    fill: var(--eicasDarkGrey)
+}
