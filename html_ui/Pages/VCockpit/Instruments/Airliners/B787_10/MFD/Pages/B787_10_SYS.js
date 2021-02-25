@@ -1,4 +1,4 @@
-Include.addScript('/B78XH/Systems/B78XH_SystemsInfo.js');
+Include.addScript('/B78XH/Enums/B78XH_LocalVariables.js');
 
 class B787_10_SYS extends B787_10_CommonMFD.MFDTemplateElement {
 	constructor() {
@@ -170,8 +170,6 @@ class B787_10_SYS_Page {
 		}
 		this.gallonToMegagrams = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilogram') * 0.001;
 		this.gallonToMegapounds = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'lbs') * 0.001;
-
-		this.B78XH_SystemsInfo = new B78XH_SystemsInfo();
 	}
 
 	set isActive(_active) {
@@ -244,54 +242,40 @@ class B787_10_SYS_Page {
 			factor = this.gallonToMegagrams;
 		return (SimVar.GetSimVarValue('FUELSYSTEM TANK QUANTITY:' + _index, 'gallons') * factor);
 	}
-
-	getApuRPM() {
-		return (this.B78XH_SystemsInfo ? this.B78XH_SystemsInfo.getAPU().getRPM() : 0);
-	}
-
-	getApuEGT() {
-		let egt = (this.B78XH_SystemsInfo ? this.B78XH_SystemsInfo.getAPU().getEGT() : null);
-		return egt || SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'Celsius');
-	}
-
-	getApuOilPress() {
-		return (this.B78XH_SystemsInfo ? this.B78XH_SystemsInfo.getAPU().getOilPress() : 5);
-	}
-
-	getApuOilTemp() {
-		return (this.B78XH_SystemsInfo ? this.B78XH_SystemsInfo.getAPU().getOilTemp() : 15);
-	}
 }
 
 class B787_10_SYS_Page_STAT extends B787_10_SYS_Page {
 	init() {
-
 		if (this.pageRoot != null) {
-			
-			this.hydraulicPressureLeft = 80;
-			this.hydraulicPressureCenter = 80;
-			this.hydraulicPressureRight = 85;
-			
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-rpm-apu'), this.getApuRPM.bind(this), 1));
-			
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-egt-apu-span'), this.getApuEGT.bind(this), 0));
-			
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-oil-press-apu-span'), this.getApuOilPress.bind(this), 0));
-			
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-oil-temp-apu-span'), this.getApuOilTemp.bind(this), 0));
-			
 		}
-
-
 	}
 
 	updateChild(_deltaTime) {
-		
 	}
 
 	getName() {
-		
 		return 'STAT';
+	}
+
+	getApuRPM() {
+		return SimVar.GetSimVarValue(B78XH_LocalVariables.APU.RPM, 'Percent');
+	}
+
+	getApuEGT() {
+		let egt = SimVar.GetSimVarValue(B78XH_LocalVariables.APU.EGT, 'Celsius');
+		return egt || SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'Celsius');
+	}
+
+	getApuOilPress() {
+		return SimVar.GetSimVarValue(B78XH_LocalVariables.APU.OIL_PRESS, 'Number');
+	}
+
+	getApuOilTemp() {
+		return SimVar.GetSimVarValue(B78XH_LocalVariables.APU.OIL_TEMP, 'Number');
 	}
 }
 
