@@ -465,6 +465,11 @@ class B787_10_SYS_Page_FUEL extends B787_10_SYS_Page {
 }
 
 class B787_10_SYS_Page_AIR extends B787_10_SYS_Page {
+
+	init(){
+
+	}
+
 	updateChild(_deltaTime) {
 	}
 

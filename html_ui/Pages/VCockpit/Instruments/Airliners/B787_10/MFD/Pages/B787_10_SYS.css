@@ -527,3 +527,108 @@ b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.vacant {
 b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.occupied {
     fill: var(--eicasWhite);
 }
+
+b787-10-sys-element #Pages #AIR_Page #white-lines path {
+    stroke-width: 3;
+    stroke: var(--eicasWhite);
+    fill: none;
+}
+
+b787-10-sys-element #Pages #AIR_Page #green-lines path {
+    stroke-width: 9;
+    stroke: var(--eicasGreen);
+    fill: none;
+}
+
+b787-10-sys-element #Pages #AIR_Page #green-lines circle {
+    stroke-width: 3;
+    stroke: var(--eicasGreen);
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #green-lines #r-pack,
+b787-10-sys-element #Pages #AIR_Page #green-lines #l-pack {
+    stroke-width: 3;
+    stroke: var(--eicasGreen);
+    fill: var(--eicasBlack)
+}
+
+b787-10-sys-element #Pages #AIR_Page #fuselage path {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    fill: var(--eicasDarkGrey)
+}
+
+b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top rect {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    fill: var(--eicasBlack);
+}
+b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top path {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #boxes #boxes-bottom rect {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #boxes #boxes-bottom rect#air-distribution {
+    stroke: var(--eicasGreen);
+    stroke-width: 3px;
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts text {
+    fill: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #titles-blue text {
+    fill: var(--eicasBlue);
+    text-align:center;
+    text-anchor:middle;
+    font-size: 24px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #titles-green text {
+    fill: var(--eicasGreen);
+    text-align:center;
+    text-anchor:middle;
+    font-size: 24px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #load-shed text {
+    fill: var(--eicasWhite);
+    text-align:center;
+    text-anchor:middle;
+    font-size: 24px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #temporary-hidden > text {
+    visibility: hidden;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #temperatures-selected text {
+    fill: var(--eicasMagenta);
+
+    font-size: 24px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #temperatures-actual text {
+    fill: var(--eicasWhite);
+    font-size: 32px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #top-texts text {
+    fill: var(--eicasWhite);
+    text-align:center;
+    text-anchor:middle;
+    font-size: 32px;
+}
+
+/* font-weight:500;font-size:24px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Medium'"*/
