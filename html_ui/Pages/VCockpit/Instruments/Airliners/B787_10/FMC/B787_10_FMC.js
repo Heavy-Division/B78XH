@@ -1,3 +1,5 @@
+Include.addScript('/B78XH/Enums/B78XH_LocalVariables.js');
+
 class B787_10_FMC extends Boeing_FMC {
 	constructor() {
 		super(...arguments);
@@ -690,6 +692,16 @@ class B787_10_FMC extends Boeing_FMC {
 		return this.getClimbThrustN1(temperature, altitude) - this.getThrustCLBMode() * 8.6;
 	}
 
+	onEvent(_event) {
+		if (_event.indexOf('AP_ALT_INTERVENTION') != -1){
+			if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number")){
+				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number", 0)
+				return;
+			}
+		}
+		super.onEvent(_event);
+	}
+
 	updateAutopilot() {
 		let now = performance.now();
 		let dt = now - this._lastUpdateAPTime;
@@ -872,9 +884,24 @@ class B787_10_FMC extends Boeing_FMC {
 				} else {
 					let altitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
 					if (isFinite(altitude)) {
-						Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, this.cruiseFlightLevel * 100, this._forceNextAltitudeUpdate);
-						this._forceNextAltitudeUpdate = false;
-						SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
+						/**
+						 * TODO: Temporary level off during climb
+						 */
+						let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number");
+						if((altitude < this.cruiseFlightLevel * 100 || isLevelOffActive) && this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB){
+							if(Simplane.getAutoPilotAltitudeLockActive()){
+								SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number", 1)
+							}
+							if(!isLevelOffActive){
+								Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, altitude, this._forceNextAltitudeUpdate);
+								this._forceNextAltitudeUpdate = false;
+								SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
+							}
+						} else {
+							Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, this.cruiseFlightLevel * 100, this._forceNextAltitudeUpdate);
+							this._forceNextAltitudeUpdate = false;
+							SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
+						}
 					}
 				}
 			} else if (!this.getIsFLCHActive() && this.getIsSPDActive()) {
