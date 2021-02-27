@@ -919,6 +919,13 @@ class B787_10_FMC extends Boeing_FMC {
 			}
 			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MIN_CALCULATED', 'knots', Simplane.getStallProtectionMinSpeed());
 			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MAX_CALCULATED', 'knots', Simplane.getMaxSpeed(Aircraft.AS01B));
+
+			/**
+			 * Commented out. This is ASOBO implementation and we could not find any information about this behavior in FCOM.
+			 * This cause overriding CRZ altitude by MCP everytime when you touch altitude knob.
+			 * Normal behavior should be wait for pushing Altitude Intervention and then override CRZ altitude.
+			 */
+			/*
 			if (this.getIsVNAVActive()) {
 				let altitude = Simplane.getAltitude();
 				let targetAltitude = Simplane.getAutoPilotAltitudeLockValue('feet');
@@ -927,6 +934,7 @@ class B787_10_FMC extends Boeing_FMC {
 					this.activateAltitudeSel();
 				}
 			}
+			*/
 			if (this.currentFlightPhase > FlightPhase.FLIGHT_PHASE_CLIMB) {
 				let altitude = Simplane.getAltitudeAboveGround();
 				if (altitude < 20) {
