@@ -5,14 +5,29 @@ Include.addScript('/Heavy/Utils/HeavyInputUtils.js');
 class B787_10_FMC_VNAVPage {
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
+
+		let isVNAVActive = fmc.getIsVNAVActive();
+
 		let crzAltCell = '□□□□□';
 
 		fmc.refreshPageCallback = () => {
 			B787_10_FMC_VNAVPage.ShowPage1(fmc);
 		};
 
+
+		let departureWaypoints = fmc.flightPlanManager.getDepartureWaypointsMap();
+
+		let commandedAltitudeCruise = true
+		if(departureWaypoints){
+			departureWaypoints.forEach((waypoint) => {
+				if(waypoint.legAltitudeDescription === 3){
+					commandedAltitudeCruise = false;
+				}
+			});
+		}
+
 		if (fmc.cruiseFlightLevel) {
-			crzAltCell = fmc.cruiseFlightLevel + 'FL';
+			crzAltCell = fmc.cruiseFlightLevel + 'FL' + (commandedAltitudeCruise && isVNAVActive ? '[color]magenta' : '');
 		}
 		fmc.onLeftInput[0] = () => {
 			let value = fmc.inOut;
