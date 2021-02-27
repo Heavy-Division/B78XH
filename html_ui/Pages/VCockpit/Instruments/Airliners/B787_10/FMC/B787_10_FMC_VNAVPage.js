@@ -261,10 +261,10 @@ class B787_10_FMC_VNAVPage {
 			[n1Cell],
 			['STEP', 'RECMD', 'OPT', 'MAX'],
 			[],
-			['', '1X @ TOD'],
-			['', 'OFF'],
-			['PAUSE @ TOD'],
-			['OFF', '<LRC']
+			['', ''],
+			['', ''],
+			[''],
+			['', '<LRC']
 		]);
 		fmc.onPrevPage = () => {
 			B787_10_FMC_VNAVPage.ShowPage1(fmc);
