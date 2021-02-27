@@ -466,7 +466,7 @@ class B787_10_SYS_Page_FUEL extends B787_10_SYS_Page {
 
 class B787_10_SYS_Page_AIR extends B787_10_SYS_Page {
 
-	init(){
+	init() {
 
 	}
 
@@ -602,7 +602,182 @@ class B787_10_SYS_Page_GEAR extends B787_10_SYS_Page {
 }
 
 class B787_10_SYS_Page_FCTL extends B787_10_SYS_Page {
+	init() {
+		if(this.pageRoot != null){
+			try {
+				this.stabDisplay = new Boeing.StabDisplay(this.pageRoot.querySelector("#Stab"), 17, 2);
+			} catch (e) {
+
+			}
+
+			try {
+				this.rudderDisplay = new Boeing.RudderDisplay(this.pageRoot.querySelector("#Rudder"));
+			} catch (e) {
+
+			}
+		}
+	}
+
+
 	updateChild(_deltaTime) {
+		if (this.pageRoot != null) {
+			this.updateAileronsPositions();
+			this.updateSpoilersPositions();
+			this.updateRudderPositions();
+			this.updateElevatorsPositions();
+			this.updateStabDisplay(_deltaTime)
+			this.updateRudderDisplay(_deltaTime)
+		}
+	}
+
+	updateStabDisplay(_deltaTime){
+		if(this.stabDisplay){
+			this.stabDisplay.update(_deltaTime);
+		} else {
+			try {
+				this.stabDisplay = new Boeing.StabDisplay(this.pageRoot.querySelector("#Stab"), 17, 2);
+			} catch (e) {
+			}
+		}
+	}
+
+	updateRudderDisplay(_deltaTime){
+		if(this.rudderDisplay){
+			this.rudderDisplay.update(_deltaTime);
+		} else {
+			try {
+				this.rudderDisplay = new Boeing.RudderDisplay(this.pageRoot.querySelector("#Rudder"));
+			} catch (e) {
+			}
+		}
+	}
+
+	updateAileronsPositions() {
+		let leftAileronPointer = this.pageRoot.querySelector('#pointer-l-ail');
+		let rightAileronPointer = this.pageRoot.querySelector('#pointer-r-ail');
+
+		let leftAileronDeflection = SimVar.GetSimVarValue('AILERON LEFT DEFLECTION PCT', 'Percent over 100');
+		let rightAileronDeflection = SimVar.GetSimVarValue('AILERON RIGHT DEFLECTION PCT', 'Percent over 100');
+
+
+		let absoluteLeftAileronDeflection = Math.abs(leftAileronDeflection);
+		let absoluteRightAileronDeflection = Math.abs(rightAileronDeflection);
+
+		let direction = (leftAileronDeflection < 0 ? 1 : 0);
+
+		let leftAileronPosition = 86 * absoluteLeftAileronDeflection;
+		let rightAileronPosition = 86 * absoluteRightAileronDeflection;
+
+		if (direction) {
+			leftAileronPosition = leftAileronPosition * -1;
+		} else {
+			rightAileronPosition = rightAileronPosition * -1;
+		}
+
+		leftAileronPointer.setAttribute('transform', 'translate(0, ' + leftAileronPosition + ')');
+		rightAileronPointer.setAttribute('transform', 'translate(0, ' + rightAileronPosition + ')');
+
+		/** Flaperon logic (UP)
+		 * Flaperon should be in 1.0 position when aileron position is > 0.65
+		 * Aileron range is +- 86 pixels
+		 * Flaperon range is +- 86 pixels
+		 * Flaperon position at 65% of aileron is 55.9 pixels but should be at 86 pixels (fully extended)
+		 * Constant for flaperon is 1.53846153846
+		 * Flaperon position can be calculated as:
+		 *
+		 * ((aileronRange / 100) * aileronDeflection * flaperonConstant) * 100
+		 * or
+		 * (aileronPosition * flaperonConstant)
+		 */
+
+		/** Flaperon logic (DOWN)
+		 * Flaperon position = Aileron position
+		 */
+
+		let leftFlaperonPointer = this.pageRoot.querySelector('#pointer-l-flprn');
+		let rightFlaperonPointer = this.pageRoot.querySelector('#pointer-r-flprn');
+
+		let flaperonConstant = 1.5384;
+
+		let leftFlaperonPosition;
+		let rightFlaperonPosition;
+
+		if (direction) {
+			let leftPosition = leftAileronPosition * flaperonConstant;
+			leftPosition = (leftPosition <= -86 ? -86 : leftPosition);
+			leftFlaperonPosition = leftPosition;
+			rightFlaperonPosition = rightAileronPosition;
+		} else {
+			let rightPosition = rightAileronPosition * flaperonConstant;
+			rightPosition = (rightPosition <= -86 ? -86 : rightPosition);
+			leftFlaperonPosition = leftAileronPosition;
+			rightFlaperonPosition = rightPosition;
+		}
+
+		leftFlaperonPointer.setAttribute('transform', 'translate(0, ' + leftFlaperonPosition + ')');
+		rightFlaperonPointer.setAttribute('transform', 'translate(0, ' + rightFlaperonPosition + ')');
+	}
+
+	updateSpoilersPositions() {
+		let leftSpoilersDeflection = SimVar.GetSimVarValue('SPOILERS LEFT POSITION', 'Position');
+		let rightSpoilersDeflection = SimVar.GetSimVarValue('SPOILERS Right POSITION', 'Position');
+
+		let leftSpoilersPosition = 86 * leftSpoilersDeflection;
+		let rightSpoilersPosition = 86 * rightSpoilersDeflection;
+
+		[
+			this.pageRoot.querySelector('#left-spoiler-1'),
+			this.pageRoot.querySelector('#left-spoiler-2'),
+			this.pageRoot.querySelector('#left-spoiler-3'),
+			this.pageRoot.querySelector('#left-spoiler-4'),
+			this.pageRoot.querySelector('#left-spoiler-5'),
+			this.pageRoot.querySelector('#left-spoiler-6'),
+			this.pageRoot.querySelector('#left-spoiler-7')
+		].forEach((spoiler) => {
+			spoiler.setAttribute('height', leftSpoilersPosition);
+			spoiler.setAttribute('y', 486 - leftSpoilersPosition);
+		});
+
+		[
+			this.pageRoot.querySelector('#right-spoiler-1'),
+			this.pageRoot.querySelector('#right-spoiler-2'),
+			this.pageRoot.querySelector('#right-spoiler-3'),
+			this.pageRoot.querySelector('#right-spoiler-4'),
+			this.pageRoot.querySelector('#right-spoiler-5'),
+			this.pageRoot.querySelector('#right-spoiler-6'),
+			this.pageRoot.querySelector('#right-spoiler-7')
+		].forEach((spoiler) => {
+			spoiler.setAttribute('height', rightSpoilersPosition);
+			spoiler.setAttribute('y', 486 - rightSpoilersPosition);
+		});
+	}
+
+	updateRudderPositions() {
+		let rudderPointer = this.pageRoot.querySelector('#pointer-rudder');
+
+		let rudderDeflection = SimVar.GetSimVarValue('RUDDER DEFLECTION PCT', 'Percent over 100');
+		let rudderPosition = 165 * rudderDeflection;
+		rudderPointer.setAttribute('transform', 'translate(' + rudderPosition + ', 0)');
+	}
+
+	updateElevatorsPositions() {
+		let elevatorDeflection = SimVar.GetSimVarValue('ELEVATOR DEFLECTION PCT', 'Percent over 100');
+		let elevatorPosition = 74 * elevatorDeflection * -1;
+
+
+		let direction = (elevatorDeflection <= 0 ? 1 : 0)
+		let elevatorsConstant = 1.5;
+
+		if(direction){
+			elevatorPosition = elevatorPosition * elevatorsConstant;
+		}
+
+		[
+			this.pageRoot.querySelector('#pointer-l-elev'),
+			this.pageRoot.querySelector('#pointer-r-elev')
+		].forEach((elevator) => {
+			elevator.setAttribute('transform', 'translate(0, ' + elevatorPosition + ')');
+		});
 	}
 
 	getName() {
