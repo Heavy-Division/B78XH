@@ -26,10 +26,12 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
   * Symbols changed to default Boeing symbols
   * Altitude prediction added (Green Banana)
     
-* ### EICAS
+* ### EICAS / SYS
     *  Gears synoptic page
     *  Hydraulics synoptic page
     *  Stat page
+    *  FCTL synoptic page
+    *  AIR synoptic page (static)
 
 * ### MISC
     *  Added HEAVY configuration page
