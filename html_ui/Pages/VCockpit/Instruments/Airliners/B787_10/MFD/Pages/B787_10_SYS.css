@@ -566,6 +566,7 @@ b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top rect {
     stroke-width: 3px;
     fill: var(--eicasBlack);
 }
+
 b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top path {
     stroke: var(--eicasBlue);
     stroke-width: 3px;
@@ -590,22 +591,22 @@ b787-10-sys-element #Pages #AIR_Page #static-texts text {
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #titles-blue text {
     fill: var(--eicasBlue);
-    text-align:center;
-    text-anchor:middle;
+    text-align: center;
+    text-anchor: middle;
     font-size: 24px;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #titles-green text {
     fill: var(--eicasGreen);
-    text-align:center;
-    text-anchor:middle;
+    text-align: center;
+    text-anchor: middle;
     font-size: 24px;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #load-shed text {
     fill: var(--eicasWhite);
-    text-align:center;
-    text-anchor:middle;
+    text-align: center;
+    text-anchor: middle;
     font-size: 24px;
 }
 
@@ -626,9 +627,106 @@ b787-10-sys-element #Pages #AIR_Page #static-texts #temperatures-actual text {
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #top-texts text {
     fill: var(--eicasWhite);
-    text-align:center;
-    text-anchor:middle;
+    text-align: center;
+    text-anchor: middle;
     font-size: 32px;
 }
 
-/* font-weight:500;font-size:24px;line-height:1.25;font-family:Roboto;-inkscape-font-specification:'Roboto Medium'"*/
+b787-10-sys-element #Pages #FCTL_Page #fuselage path {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    fill: none;
+}
+
+b787-10-sys-element #Pages #FCTL_Page #fuselage-mask path {
+    fill: var(--eicasDarkGrey)
+}
+
+b787-10-sys-element #Pages #FCTL_Page #positions #pointers path {
+    fill: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #FCTL_Page #positions #ranges path {
+    fill: none;
+    stroke: var(--eicasWhite);
+    stroke-width: 3;
+}
+
+b787-10-sys-element #Pages #FCTL_Page #spoilers rect {
+    fill: var(--eicasBlack);
+    stroke: var(--eicasWhite);
+    stroke-width: 4;
+}
+
+b787-10-sys-element #Pages #FCTL_Page #spoilers rect.spoiler-value {
+    fill: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #FCTL_Page #elevators path {
+    fill: var(--eicasWhite);
+}
+
+
+b787-10-sys-element #Pages #FCTL_Page #Stab text.value, b787-10-sys-element #Pages #FCTL_Page #Stab text.left, b787-10-sys-element #Pages #FCTL_Page #Stab text.right, b787-10-sys-element #Pages #FCTL_Page #Stab text.info, b787-10-sys-element #Pages #FCTL_Page #Rudder text.value, b787-10-sys-element #Pages #FCTL_Page #Rudder text.left, b787-10-sys-element #Pages #FCTL_Page #Rudder text.right, b787-10-sys-element #Pages #FCTL_Page #Rudder text.info {
+    font-size: 35px;
+    letter-spacing: -3px;
+    text-anchor: middle;
+}
+
+b787-10-sys-element #Pages #FCTL_Page #Stab text.value, b787-10-sys-element #Pages #FCTL_Page #Rudder text.value {
+    text-anchor: end;
+}
+
+b787-10-sys-element #Pages #FCTL_Page #Stab text.takeoff, b787-10-sys-element #Pages #FCTL_Page #Rudder text.takeoff {
+    font-size: 30px;
+    letter-spacing: -3px;
+    text-anchor: middle;
+    fill: var(--eicasMagenta);
+}
+
+b787-10-sys-element #Pages #FCTL_Page #Stab rect, b787-10-sys-element #Pages #FCTL_Page #Stab .bar, b787-10-sys-element #Pages #FCTL_Page #Stab .markers, b787-10-sys-element #Pages #FCTL_Page #Rudder rect, b787-10-sys-element #Pages #FCTL_Page #Rudder .bar, b787-10-sys-element #Pages #FCTL_Page #Rudder .markers {
+    fill: none;
+    stroke: var(--eicasWhite);
+    stroke-width: 4px;
+}
+
+b787-10-sys-element #Pages #FCTL_Page #Stab .arrow, b787-10-sys-element #Pages #FCTL_Page #Rudder .arrow {
+    fill: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #FCTL_Page #Stab rect.trimBand, b787-10-sys-element #Pages #FCTL_Page #Rudder rect.trimBand {
+    fill: var(--eicasGreen);
+    stroke: none;
+}
+
+b787-10-sys-element #Pages #FCTL_Page text.vlabel {
+    fill: var(--eicasBlue);
+    font-size: 32px;
+    letter-spacing: -12px;
+    glyph-orientation-vertical: 0;
+    writing-mode: vertical-lr;
+}
+
+b787-10-sys-element #Pages #FCTL_Page text.label {
+    fill: var(--eicasBlue);
+    font-size: 32px;
+    letter-spacing: -2px;
+    text-anchor: middle; }
+
+b787-10-sys-element #Pages #FCTL_Page #boxes rect {
+    stroke: var(--eicasGreen);
+    stroke-width: 3;
+}
+b787-10-sys-element text {
+    fill: var(--eicasWhite);
+    font-size: 45px;
+    text-anchor: start; }
+
+b787-10-sys-element #Pages #FCTL_Page text.box-label {
+    fill: var(--eicasGreen);
+    font-size: 32px;
+    letter-spacing: -2px;
+    text-anchor: middle;
+}
