@@ -14,6 +14,7 @@ B78XHL is an open source and free modification of default Boeing 787-10 in Micro
         * CLB Selected speed implemented
         * CLB Trans altitude is settable
         * CLB Page active speed is highlighted by magenta
+        * CLB Level off support during climb
     * #### LEGS
         * Cruise speed fixed
     * #### ROUTE
