@@ -20,7 +20,7 @@ class B787_10_FMC_VNAVPage {
 		let commandedAltitudeCruise = true;
 		if (departureWaypoints) {
 			departureWaypoints.forEach((waypoint) => {
-				if (waypoint.legAltitudeDescription === 3) {
+				if (waypoint && waypoint.legAltitudeDescription === 3) {
 					commandedAltitudeCruise = false;
 				}
 			});
