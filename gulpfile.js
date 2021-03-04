@@ -98,6 +98,6 @@ function deleteReleaseCache(callback){
 	callback()
 }
 
-exports.release = gulp.series(buildTask, copyFilesForReleaseToCache, releaseTask, deleteReleaseCache);
+exports.release = gulp.series(deleteReleaseCache, buildTask, copyFilesForReleaseToCache, releaseTask, deleteReleaseCache);
 exports.default = buildTask;
 exports.build = buildTask;
