@@ -89,6 +89,7 @@ class B787_10_FMC_LegsPage {
 							if (value === 'DELETE') {
 								fmc.inOut = '';
 								fmc.removeWaypoint(waypointFPIndex, () => {
+									fmc.activateRoute();
 									B787_10_FMC_LegsPage.ShowPage1(fmc, currentPage);
 								});
 							} else if (value.length > 0) {
