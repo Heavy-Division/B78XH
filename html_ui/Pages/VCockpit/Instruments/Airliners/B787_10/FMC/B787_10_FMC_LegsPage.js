@@ -97,13 +97,16 @@ class B787_10_FMC_LegsPage {
 								/**
 								 * Modified default ASOBO
 								 */
-
-								fmc.setMyBoeingDirectTo(value, ii + 1, (result) => {
-									if (result) {
-										fmc.activateRoute();
-										B787_10_FMC_LegsPage.ShowPage1(fmc);
+								if(currentPage === 1 && ii === 0){
+									if(!value.startsWith("RW")){
+										fmc.setMyBoeingDirectTo(value, ii + 1, (result) => {
+											if (result) {
+												fmc.activateRoute();
+											}
+											B787_10_FMC_LegsPage.ShowPage1(fmc);
+										});
 									}
-								});
+								}
 							} else {
 								fmc.inOut = waypoint.ident;
 							}
@@ -215,9 +218,17 @@ class B787_10_FMC_LegsPage {
 
 		let route2Legs = '\<RTE 2 LEGS';
 
-		if(SimVar.GetSimVarValue("L:B78XH_PREVIEW_DIRECT_TO", "number")){
+		if(fmc.getIsRouteActivated()){
 			route2Legs = '\<ERASE';
 			fmc.onLeftInput[5] = () => {
+				fmc.flightPlanManager.setCurrentFlightPlanIndex(0, () =>{
+					SimVar.SetSimVarValue("L:FMC_FLIGHT_PLAN_IS_TEMPORARY", "number", 0);
+					SimVar.SetSimVarValue("L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN", "number", 0);
+					fmc._isRouteActivated = false;
+					SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+					B787_10_FMC_LegsPage.ShowPage1(fmc, currentPage);
+				});
+				/* This is for extended DIRECT TO
 				let setLocalVariables = async (callback = EmptyCallback.Void) => {
 					delete fmc._activeExecHandlers['B78XH_DIRECT_TO_HANDLER'];
 					fmc._shouldBeExecEmisssive = false;
@@ -229,6 +240,8 @@ class B787_10_FMC_LegsPage {
 				setLocalVariables(() => {
 					B787_10_FMC_LegsPage.ShowPage1(fmc, currentPage, step);
 				})
+
+				*/
 			}
 		}
 
@@ -252,5 +265,5 @@ class B787_10_FMC_LegsPage {
 	}
 }
 
-B787_10_FMC_LegsPage.DEBUG_SHOW_WAYPOINT_PHASE = true;
+B787_10_FMC_LegsPage.DEBUG_SHOW_WAYPOINT_PHASE = false;
 //# sourceMappingURL=B787_10_FMC_LegsPage.js.map
