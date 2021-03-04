@@ -76,6 +76,8 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 		if (this.map != null) {
 			this.updateMap(_deltaTime);
 			this.map.onUpdate(_deltaTime);
+			this.map.updateTopOfDescent();
+			this.map.updateTopOfClimb();
 		}
 		if (this.navMenu) {
 			this.navMenu.onUpdate(_deltaTime);
@@ -760,6 +762,50 @@ class B787_10_ND_Map extends MapInstrumentElement {
 		super.onUpdate(_deltaTime);
 		this.updateMapIfIrsNotAligned();
 		this.updateAltitudeArc(_deltaTime);
+	}
+
+	updateTopOfDescent() {
+		let showTopOfDescent = SimVar.GetSimVarValue("L:AIRLINER_FMS_SHOW_TOP_DSCNT", "number") === 1;
+		if (showTopOfDescent) {
+			if (!this.topOfDescentIcon) {
+				this.topOfDescentIcon = new SvgTopOfXCustomElement("b787-10-top-of-descent", "ICON_MAP_TOD");
+			}
+			this.topOfDescentIcon.lat = SimVar.GetSimVarValue("L:AIRLINER_FMS_LAT_TOP_DSCNT", "number");
+			this.topOfDescentIcon.long = SimVar.GetSimVarValue("L:AIRLINER_FMS_LONG_TOP_DSCNT", "number");
+			this.topOfDescentIcon.heading = SimVar.GetSimVarValue("L:AIRLINER_FMS_HEADING_TOP_DSCNT", "number");
+			let index = this.instrument.topOfCurveElements.indexOf(this.topOfDescentIcon);
+			if (index === -1) {
+				this.instrument.topOfCurveElements.push(this.topOfDescentIcon);
+			}
+		}
+		else {
+			let index = this.instrument.topOfCurveElements.indexOf(this.topOfDescentIcon);
+			if (index != -1) {
+				this.instrument.topOfCurveElements.splice(index, 1);
+			}
+		}
+	}
+
+	updateTopOfClimb() {
+		let showTopOfClimb = SimVar.GetSimVarValue("L:AIRLINER_FMS_SHOW_TOP_CLIMB", "number") === 1;
+		if (showTopOfClimb) {
+			if (!this.topOfClimbIcon) {
+				this.topOfClimbIcon = new SvgTopOfXCustomElement("b787-10-top-of-climb", "ICON_MAP_TOC");
+			}
+			this.topOfClimbIcon.lat = SimVar.GetSimVarValue("L:AIRLINER_FMS_LAT_TOP_CLIMB", "number");
+			this.topOfClimbIcon.long = SimVar.GetSimVarValue("L:AIRLINER_FMS_LONG_TOP_CLIMB", "number");
+			this.topOfClimbIcon.heading = SimVar.GetSimVarValue("L:AIRLINER_FMS_HEADING_TOP_CLIMB", "number");
+			let index = this.instrument.topOfCurveElements.indexOf(this.topOfClimbIcon);
+			if (index === -1) {
+				this.instrument.topOfCurveElements.push(this.topOfClimbIcon);
+			}
+		}
+		else {
+			let index = this.instrument.topOfCurveElements.indexOf(this.topOfClimbIcon);
+			if (index != -1) {
+				this.instrument.topOfCurveElements.splice(index, 1);
+			}
+		}
 	}
 
 	updateAltitudeArc(_deltatime) {
