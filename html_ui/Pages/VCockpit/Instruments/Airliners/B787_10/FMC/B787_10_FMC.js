@@ -694,10 +694,35 @@ class B787_10_FMC extends Boeing_FMC {
 
 	onEvent(_event) {
 		if (_event.indexOf('AP_ALT_INTERVENTION') != -1){
-			if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number")){
+			let shouldOverrideCruiseAltitude = false;
+			let altitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
+			if(altitude  >= this.cruiseFlightLevel * 100){
+				shouldOverrideCruiseAltitude = true;
 				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number", 0)
+			}
+
+			if(altitude < this.cruiseFlightLevel * 100 && this.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_CRUISE){
+				shouldOverrideCruiseAltitude = true;
+				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number", 0)
+			}
+
+			if(altitude <= this.cruiseFlightLevel * 100 && SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')){
+				this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 				return;
 			}
+
+			if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number") && !shouldOverrideCruiseAltitude){
+				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number", 0)
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				return;
+			}
+
+			if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number")){
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				return;
+			}
+			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 		}
 		super.onEvent(_event);
 	}
