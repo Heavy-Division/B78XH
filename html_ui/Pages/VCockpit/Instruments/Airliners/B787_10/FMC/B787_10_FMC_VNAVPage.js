@@ -17,10 +17,10 @@ class B787_10_FMC_VNAVPage {
 
 		let departureWaypoints = fmc.flightPlanManager.getDepartureWaypointsMap();
 
-		let commandedAltitudeCruise = true
-		if(departureWaypoints){
+		let commandedAltitudeCruise = true;
+		if (departureWaypoints) {
 			departureWaypoints.forEach((waypoint) => {
-				if(waypoint.legAltitudeDescription === 3){
+				if (waypoint.legAltitudeDescription === 3) {
 					commandedAltitudeCruise = false;
 				}
 			});
@@ -181,7 +181,7 @@ class B787_10_FMC_VNAVPage {
 			B787_10_FMC_VNAVPage.ShowPage1(fmc);
 		};
 
-		if(!fmc._climbSpeedTransitionDeleted){
+		if (!fmc._climbSpeedTransitionDeleted) {
 			fmc.onLeftInput[2] = () => {
 				let value = fmc.inOut;
 				fmc.clearUserInput();
@@ -191,7 +191,7 @@ class B787_10_FMC_VNAVPage {
 					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 				}
 
-				if(value.length > 0){
+				if (value.length > 0) {
 					fmc.showErrorMessage(fmc.defaultInputErrorMessage);
 					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 				}
@@ -283,6 +283,16 @@ class B787_10_FMC_VNAVPage {
 			speedTransCell = speed.toFixed(0);
 		}
 		speedTransCell += '/10000';
+
+		let descentNowAvailable = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) && SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number');
+
+		if (descentNowAvailable) {
+			fmc.onRightInput[5] = () => {
+				fmc.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
+				SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_ACTIVATED', 'Number', 1);
+			};
+		}
+
 		fmc.setTemplate([
 			['DES', '3', '3'],
 			['E/D AT'],
@@ -296,7 +306,7 @@ class B787_10_FMC_VNAVPage {
 			['PAUSE @ DIST FROM DEST'],
 			['OFF', '<FORECAST'],
 			[],
-			['\<OFFPATH DES']
+			['\<OFFPATH DES', descentNowAvailable && !SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_ACTIVATED', 'Number') ? '<DES NOW' : '']
 		]);
 		fmc.onPrevPage = () => {
 			B787_10_FMC_VNAVPage.ShowPage2(fmc);

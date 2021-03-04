@@ -602,7 +602,7 @@ class Boeing_FMC extends FMCMainDisplay {
 				});
 				if (waypoint) {
 					return this.flightPlanManager.activateDirectTo(waypoint.icao, () => {
-						return callback(true);
+						return callback(null);
 					});
 				}
 			}

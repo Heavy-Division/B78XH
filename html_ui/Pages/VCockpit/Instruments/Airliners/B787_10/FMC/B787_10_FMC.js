@@ -694,10 +694,35 @@ class B787_10_FMC extends Boeing_FMC {
 
 	onEvent(_event) {
 		if (_event.indexOf('AP_ALT_INTERVENTION') != -1){
-			if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number")){
+			let shouldOverrideCruiseAltitude = false;
+			let altitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
+			if(altitude  >= this.cruiseFlightLevel * 100){
+				shouldOverrideCruiseAltitude = true;
 				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number", 0)
+			}
+
+			if(altitude < this.cruiseFlightLevel * 100 && this.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_CRUISE){
+				shouldOverrideCruiseAltitude = true;
+				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number", 0)
+			}
+
+			if(altitude <= this.cruiseFlightLevel * 100 && SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')){
+				this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 				return;
 			}
+
+			if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number") && !shouldOverrideCruiseAltitude){
+				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number", 0)
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				return;
+			}
+
+			if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number")){
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				return;
+			}
+			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 		}
 		super.onEvent(_event);
 	}
@@ -836,34 +861,6 @@ class B787_10_FMC extends Boeing_FMC {
 				let prevWaypoint = this.flightPlanManager.getPreviousActiveWaypoint();
 				let nextWaypoint = this.flightPlanManager.getActiveWaypoint();
 				if (nextWaypoint && (nextWaypoint.legAltitudeDescription === 3 || nextWaypoint.legAltitudeDescription === 4)) {
-					let targetAltitude = nextWaypoint.legAltitude1;
-					if (nextWaypoint.legAltitudeDescription === 4) {
-						targetAltitude = Math.max(nextWaypoint.legAltitude1, nextWaypoint.legAltitude2);
-					}
-					let showTopOfDescent = false;
-					let topOfDescentLat;
-					let topOfDescentLong;
-					this._hasReachedTopOfDescent = true;
-					if (currentAltitude > targetAltitude + 40) {
-						let vSpeed = 1500;
-						let descentDuration = Math.abs(targetAltitude - currentAltitude) / vSpeed / 60;
-						let descentDistance = descentDuration * groundSpeed;
-						let distanceToTarget = Avionics.Utils.computeGreatCircleDistance(prevWaypoint.infos.coordinates, nextWaypoint.infos.coordinates);
-						showTopOfDescent = true;
-						let f = 1 - descentDistance / distanceToTarget;
-						topOfDescentLat = Avionics.Utils.lerpAngle(planeCoordinates.lat, nextWaypoint.infos.lat, f);
-						topOfDescentLong = Avionics.Utils.lerpAngle(planeCoordinates.long, nextWaypoint.infos.long, f);
-						if (distanceToTarget + 1 > descentDistance) {
-							this._hasReachedTopOfDescent = false;
-						}
-					}
-					if (showTopOfDescent) {
-						SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 1);
-						SimVar.SetSimVarValue('L:AIRLINER_FMS_LAT_TOP_DSCNT', 'number', topOfDescentLat);
-						SimVar.SetSimVarValue('L:AIRLINER_FMS_LONG_TOP_DSCNT', 'number', topOfDescentLong);
-					} else {
-						SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
-					}
 					let selectedAltitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
 					if (!this.flightPlanManager.getIsDirectTo() &&
 						isFinite(nextWaypoint.legAltitude1) &&

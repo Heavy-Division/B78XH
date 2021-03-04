@@ -437,12 +437,13 @@ var Boeing_FMA;
 			if (SimVar.GetSimVarValue('L:AP_VNAV_ACTIVE', 'number') === 1) {
 				if (Simplane.getAutoPilotAltitudeLockActive()) {
 					let altitude = Simplane.getAltitude();
-					if (altitude > SimVar.GetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number') + 100) {
+					let cruiseAltitude = SimVar.GetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number');
+					if (altitude > cruiseAltitude + 100) {
 						return 9;
 					}
-					if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number") && Simplane.getCurrentFlightPhase() === FlightPhase.FLIGHT_PHASE_CLIMB){
-					    return 9;
-                    }
+					if(SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, "Number") && Simplane.getCurrentFlightPhase() === FlightPhase.FLIGHT_PHASE_CLIMB && altitude > cruiseAltitude - 200){
+						return 9;
+					}
 					return 7;
 				}
 				return 8;

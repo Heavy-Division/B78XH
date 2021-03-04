@@ -85,7 +85,7 @@ class FMCMainDisplay extends BaseAirliners {
 		this._smootherTargetPitch = NaN;
 
 		this._shouldBeExecEmisssive = false;
-		this._activeExecHandlers = { };
+		this._activeExecHandlers = {};
 
 		FMCMainDisplay.DEBUG_INSTANCE = this;
 	}
@@ -812,7 +812,7 @@ class FMCMainDisplay extends BaseAirliners {
 								await asyncInsertWaypointByIcao(airway.icaos[icaoIndex], realIndex);
 							};
 
-							for(let i = 1; i < count + 1; i++){
+							for (let i = 1; i < count + 1; i++) {
 								await outOfSync(firstIndex + i * inc, index - 1 + i);
 							}
 							return callback(true);
@@ -1595,21 +1595,21 @@ class FMCMainDisplay extends BaseAirliners {
 		return false;
 	}
 
-	trySetClimbSpeedRestriction(speed, altitude){
+	trySetClimbSpeedRestriction(speed, altitude) {
 		speed = parseFloat(speed);
-		altitude = parseFloat(altitude)
-		if (isFinite(speed) && isFinite(altitude)){
-			this._climbSpeedRestriction = {speed: speed, altitude: altitude}
+		altitude = parseFloat(altitude);
+		if (isFinite(speed) && isFinite(altitude)) {
+			this._climbSpeedRestriction = {speed: speed, altitude: altitude};
 			let handler = () => {
-				if (isFinite(this._climbSpeedRestriction.speed) && isFinite(this._climbSpeedRestriction.altitude)){
+				if (isFinite(this._climbSpeedRestriction.speed) && isFinite(this._climbSpeedRestriction.altitude)) {
 					this.climbSpeedRestriction = this._climbSpeedRestriction;
 					this._climbSpeedRestriction = null;
-					return true
+					return true;
 				}
-				return false
-			}
+				return false;
+			};
 			this._activeExecHandlers['CLIMB_SPEED_RESTRICTION_HANDLER'] = handler;
-			return true
+			return true;
 		}
 		this.showErrorMessage(this.defaultInputErrorMessage);
 		return false;
@@ -1779,28 +1779,90 @@ class FMCMainDisplay extends BaseAirliners {
 						Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
 					}
 				}
+
+				/**
+				 * Basic ToC
+				 */
+
+				let showTopOfClimb = false;
+				let topOfClimbLlaHeading;
+				let groundSpeed = Simplane.getGroundSpeed();
+				if (cruiseFlightLevel > altitude + 40) {
+					const vSpeed = Simplane.getVerticalSpeed();
+					const climbDuration = (cruiseFlightLevel - altitude) / vSpeed / 60;
+					const climbDistance = climbDuration * groundSpeed;
+					if (climbDistance > 1 || vSpeed > 150) {
+						topOfClimbLlaHeading = this.flightPlanManager.getCoordinatesHeadingAtDistanceAlongFlightPlan(climbDistance);
+						if (topOfClimbLlaHeading) {
+							showTopOfClimb = true;
+						}
+					}
+				}
+				if (showTopOfClimb) {
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_CLIMB', 'number', 1);
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_LAT_TOP_CLIMB', 'number', topOfClimbLlaHeading.lla.lat);
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_LONG_TOP_CLIMB', 'number', topOfClimbLlaHeading.lla.long);
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_HEADING_TOP_CLIMB', 'number', topOfClimbLlaHeading.heading);
+				} else {
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_CLIMB', 'number', 0);
+				}
+
 			}
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
-				let altitude = SimVar.GetSimVarValue('PLANE ALTITUDE', 'feet');
+				SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_CLIMB', 'number', 0);
+
+
+				/**
+				 * Basic TOD to destination
+				 */
+
+				let vSpeed = 1500;
 				let cruiseFlightLevel = this.cruiseFlightLevel * 100;
+				let groundSpeed = Simplane.getGroundSpeed();
+				let todCoordinates;
+				let showTopOfDescent = false;
+
 				if (isFinite(cruiseFlightLevel)) {
-					if (altitude < 0.9 * cruiseFlightLevel) {
-						this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
-						Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
-					}
 					let destination = this.flightPlanManager.getDestination();
 					if (destination) {
-						let lat = SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude');
-						let long = SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude');
-						let planeLla = new LatLongAlt(lat, long);
-						let dist = Avionics.Utils.computeGreatCircleDistance(destination.infos.coordinates, planeLla);
-						if (dist < cruiseFlightLevel / 6076 * 20) {
+						let descentDuration = Math.abs(destination.altitudeinFP - this.cruiseFlightLevel * 100) / vSpeed / 60;
+						let descentDistance = descentDuration * groundSpeed;
+						todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(descentDistance);
+						let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
+						let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates.lla);
+
+						if(distanceToTOD < 50){
+							if(!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')){
+								SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
+								SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+							}
+						}
+
+						if (distanceToTOD > 1) {
+							if (todCoordinates) {
+								showTopOfDescent = true;
+							}
+						} else {
 							this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
 							Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
 						}
 					}
 				}
+
+				if (showTopOfDescent) {
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 1);
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_LAT_TOP_DSCNT', 'number', todCoordinates.lla.lat);
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_LONG_TOP_DSCNT', 'number', todCoordinates.lla.long);
+				} else {
+					SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
+				}
+
 			}
+
+			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT) {
+				SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
+			}
+
 			if (this.currentFlightPhase != FlightPhase.FLIGHT_PHASE_APPROACH) {
 				if (this.flightPlanManager.decelWaypoint) {
 					let lat = SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude');
