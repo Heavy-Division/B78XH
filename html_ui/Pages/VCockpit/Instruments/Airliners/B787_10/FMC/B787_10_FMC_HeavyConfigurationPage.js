@@ -6,7 +6,7 @@ class B787_10_FMC_HeavyConfigurationPage {
 		fmc.setTemplate([
 			['HEAVY CONFIGURATION'],
 			[''],
-			['', '<(Disable managers (FOREVER'],
+			[''],
 			[''],
 			[''],
 			[''],
@@ -19,10 +19,6 @@ class B787_10_FMC_HeavyConfigurationPage {
 			['<BACK']
 		]);
 
-		fmc.onRightInput[0] = () => {
-			HeavyDataStorage.set("DISABLE_MANAGERS_FOREVER", "true");
-			B787_10_FMC_HeavyPage.ShowPage1(fmc);
-		};
 
 		fmc.onLeftInput[5] = () => {
 			B787_10_FMC_HeavyPage.ShowPage1(fmc);
