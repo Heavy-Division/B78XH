@@ -3,6 +3,19 @@ Include.addScript('/Heavy/Utils/HeavyInputChecks.js');
 Include.addScript('/Heavy/Utils/HeavyInputUtils.js');
 
 class B787_10_FMC_VNAVPage {
+
+	static showPage(fmc){
+		if(fmc.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_CLIMB){
+			B787_10_FMC_VNAVPage.ShowPage1(fmc);
+		}else if (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE){
+			B787_10_FMC_VNAVPage.ShowPage2(fmc);
+		} else if (fmc.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_DESCENT){
+			B787_10_FMC_VNAVPage.ShowPage2(fmc);
+		} else {
+			B787_10_FMC_VNAVPage.ShowPage1(fmc);
+		}
+	}
+
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
 
