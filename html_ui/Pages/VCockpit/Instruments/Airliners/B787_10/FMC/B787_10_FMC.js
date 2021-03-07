@@ -485,6 +485,11 @@ class B787_10_FMC extends Boeing_FMC {
 		return speed;
 	}
 
+	getEconClbManagedSpeed() {
+		let dCI = this.getCostIndexFactor();
+		return 310 * (1 - dCI) + 330 * dCI;
+	}
+
 	getCrzManagedSpeed(highAltitude = false) {
 		let dCI = this.getCostIndexFactor();
 		dCI = dCI * dCI;
@@ -1047,39 +1052,23 @@ class B787_10_FMC extends Boeing_FMC {
 	}
 
 	determineClimbSpeed() {
-		let climbSpeed = null;
-		let speedRestriction = null;
-		let selectedClimbSpeed = null;
+		let speed = {
+			SPEED_RESTRICTION: (this.climbSpeedRestriction && this.shouldFMCCommandSpeedRestriction() ? this.climbSpeedRestriction.speed : null),
+			SPEED_TRANSITION: (!this._climbSpeedTransitionDeleted ? this.getCrzManagedSpeed() : null),
+			SPEED_SELECTED: (this.preSelectedClbSpeed ? this.preSelectedClbSpeed : null),
+			SPEED_ECON: this.getEconClbManagedSpeed()
+		};
+
 		this._lastFmcCommandSpeedType = this._fmcCommandSpeedType;
 
-		if (this.climbSpeedRestriction) {
-			if (this.shouldFMCCommandSpeedRestriction()) {
-				speedRestriction = this.climbSpeedRestriction.speed;
-			}
-		}
-		if (this.preSelectedClbSpeed) {
-			selectedClimbSpeed = this.preSelectedClbSpeed;
-		}
-
-		if (selectedClimbSpeed && speedRestriction && selectedClimbSpeed >= speedRestriction) {
-			this._fmcCommandSpeedType = 'RESTRICTION';
-			climbSpeed = speedRestriction;
-		} else if (selectedClimbSpeed) {
-			this._fmcCommandSpeedType = 'SELECTED';
-			climbSpeed = selectedClimbSpeed;
-		} else if (speedRestriction) {
-			this._fmcCommandSpeedType = 'RESTRICTION';
-			climbSpeed = speedRestriction;
-		} else {
-			this._fmcCommandSpeedType = 'MANAGED';
-			climbSpeed = this.getClbManagedSpeed();
-		}
+		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => { return speed[value] < speed[accumulator] ? value : accumulator }, 'SPEED_ECON');
+		this._fmcCommandSpeedType = commandedSpeedKey
 
 		if (this._lastFmcCommandSpeedType !== this._fmcCommandSpeedType) {
 			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
 		}
 
-		return climbSpeed;
+		return speed[commandedSpeedKey];
 	}
 
 	shouldFMCCommandSpeedRestriction() {

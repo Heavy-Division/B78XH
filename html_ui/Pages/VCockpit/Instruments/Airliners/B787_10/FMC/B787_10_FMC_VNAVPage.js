@@ -36,16 +36,6 @@ class B787_10_FMC_VNAVPage {
 				B787_10_FMC_VNAVPage.ShowPage1(fmc);
 			}
 		};
-		let speedTransCell = '---';
-		let speed = fmc.getCrzManagedSpeed();
-		if (isFinite(speed)) {
-			speedTransCell = speed.toFixed(0);
-		}
-		speedTransCell += '/10000';
-
-		if (fmc._climbSpeedTransitionDeleted || Simplane.getAltitude() > 10000) {
-			speedTransCell = '';
-		}
 
 		let speedRestrictionCell = '---/-----';
 		let speedRestrictionSpeedValue = '';
@@ -139,7 +129,7 @@ class B787_10_FMC_VNAVPage {
 		};
 
 
-		let econClimbSpeed = fmc.getClbManagedSpeed().toFixed(0);
+		let econClimbSpeed = fmc.getEconClbManagedSpeed().toFixed(0);
 		let selectedClimbSpeedCell = '';
 		let econCell = '';
 
@@ -156,18 +146,36 @@ class B787_10_FMC_VNAVPage {
 			};
 		}
 
+		let speedTransCell = '---';
+		let speed = fmc.getCrzManagedSpeed();
+		if (isFinite(speed)) {
+			speedTransCell = speed.toFixed(0);
+		}
+
+		console.log(fmc._fmcCommandSpeedType)
 
 		switch (fmc._fmcCommandSpeedType) {
-			case 'RESTRICTION':
+			case 'SPEED_RESTRICTION':
 				if (!fmc._climbSpeedRestriction) {
 					speedRestrictionCell = speedRestrictionCell + '[color]magenta';
 				}
 				break;
-			case 'SELECTED':
+			case 'SPEED_TRANSITION':
+				speedTransCell = speedTransCell + '/10000' + '[color]magenta';
+				speedTransCell = speedTransCell + '[color]magenta';
+				break;
+			case 'SPEED_SELECTED':
 				selectedClimbSpeedCell = selectedClimbSpeedCell + '[color]magenta';
 				break;
-			case 'MANAGED':
+			case 'SPEED_ECON':
+				econClimbSpeed = econClimbSpeed + '[color]magenta';
 			default:
+		}
+
+		speedTransCell += '/10000';
+
+		if (fmc._climbSpeedTransitionDeleted || Simplane.getAltitude() > 10000) {
+			speedTransCell = '';
 		}
 
 
