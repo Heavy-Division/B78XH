@@ -4,7 +4,7 @@
 
 ## About
 
-B78XHL is an open source and free modification of default Boeing 787-10 in Microsoft Flight Simulator. B78XHL is a "Lite" version of our B78XH modification.
+B78XH is an open source and free modification of default Boeing 787-10 in Microsoft Flight Simulator.
 
 ## Features Overview
 
