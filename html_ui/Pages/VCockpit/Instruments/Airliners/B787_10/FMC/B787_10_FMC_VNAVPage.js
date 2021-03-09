@@ -10,7 +10,7 @@ class B787_10_FMC_VNAVPage {
 		} else if (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
 			B787_10_FMC_VNAVPage.ShowPage2(fmc);
 		} else if (fmc.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_DESCENT) {
-			B787_10_FMC_VNAVPage.ShowPage2(fmc);
+			B787_10_FMC_VNAVPage.ShowPage3(fmc);
 		} else {
 			B787_10_FMC_VNAVPage.ShowPage1(fmc);
 		}
@@ -18,9 +18,7 @@ class B787_10_FMC_VNAVPage {
 
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
-
 		let isVNAVActive = fmc.getIsVNAVActive();
-
 		let crzAltCell = '□□□□□';
 
 		fmc.refreshPageCallback = () => {
