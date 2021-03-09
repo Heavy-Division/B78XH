@@ -69,9 +69,10 @@ class B787_10_FMC extends Boeing_FMC {
 
 		this._lastFMCCommandSpeedRestrictionValue = null;
 		this._lastFMCCommandSelectedClimbSpeedValue = null;
-		this._disableClimbSpeedRestrictions = 0;
-		this._fmcCommandSpeedType = null;
-		this._lastFmcCommandSpeedType = null;
+		this._fmcCommandClimbSpeedType = null;
+		this._lastFmcCommandClimbSpeedType = null;
+		this._fmcCommandCruiseSpeedType = null;
+		this._lastFmcCommandCruiseSpeedType = null;
 	}
 
 	get templateID() {
@@ -486,8 +487,11 @@ class B787_10_FMC extends Boeing_FMC {
 	}
 
 	getEconClbManagedSpeed() {
-		let dCI = this.getCostIndexFactor();
-		return 310 * (1 - dCI) + 330 * dCI;
+		return this.getEconCrzManagedSpeed();
+	}
+
+	getEconCrzManagedSpeed() {
+		return this.getCrzManagedSpeed(true);
 	}
 
 	getCrzManagedSpeed(highAltitude = false) {
@@ -981,8 +985,8 @@ class B787_10_FMC extends Boeing_FMC {
 					let speed = this.determineClimbSpeed();
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
 				} else {
-					this._fmcCommandSpeedType = null;
-					this._lastFmcCommandSpeedType = null;
+					this._fmcCommandClimbSpeedType = null;
+					this._lastFmcCommandClimbSpeedType = null;
 				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
 				if (this.getIsVNAVActive()) {
@@ -997,18 +1001,18 @@ class B787_10_FMC extends Boeing_FMC {
 					}
 					SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
 				} else {
-					this._fmcCommandSpeedType = null;
-					this._lastFmcCommandSpeedType = null;
+					this._fmcCommandClimbSpeedType = null;
+					this._lastFmcCommandClimbSpeedType = null;
 				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
 
-				if (!this._disableClimbSpeedRestrictions) {
-					this._fmcCommandSpeedType = null;
-					this._lastFmcCommandSpeedType = null;
+				if (this._fmcCommandClimbSpeedType || this._lastFmcCommandClimbSpeedType) {
+					this._fmcCommandClimbSpeedType = null;
+					this._lastFmcCommandClimbSpeedType = null;
 				}
 
 				if (this.getIsVNAVActive()) {
-					let speed = this.getCrzManagedSpeed();
+					let speed = this.determineCruiseSpeed();
 					let altitude = Simplane.getAltitudeAboveGround();
 
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
@@ -1019,8 +1023,18 @@ class B787_10_FMC extends Boeing_FMC {
 						n1 = this.getThrustClimbLimit() / 100;
 					}
 					SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
+				} else {
+					this._fmcCommandCruiseSpeedType = null;
+					this._lastFmcCommandCruiseSpeedType = null;
 				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT) {
+				if (this._fmcCommandClimbSpeedType || this._lastFmcCommandClimbSpeedType || this._fmcCommandCruiseSpeedType || this._lastFmcCommandCruiseSpeedType) {
+					this._fmcCommandClimbSpeedType = null;
+					this._lastFmcCommandClimbSpeedType = null;
+					this._fmcCommandCruiseSpeedType = null;
+					this._lastFmcCommandCruiseSpeedType = null;
+				}
+
 				if (this.getIsVNAVActive()) {
 					let speed = this.getDesManagedSpeed();
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
@@ -1059,12 +1073,30 @@ class B787_10_FMC extends Boeing_FMC {
 			SPEED_ECON: this.getEconClbManagedSpeed()
 		};
 
-		this._lastFmcCommandSpeedType = this._fmcCommandSpeedType;
+		this._lastFmcCommandClimbSpeedType = this._fmcCommandClimbSpeedType;
 
 		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => { return speed[value] < speed[accumulator] ? value : accumulator }, 'SPEED_ECON');
-		this._fmcCommandSpeedType = commandedSpeedKey
+		this._fmcCommandClimbSpeedType = commandedSpeedKey
 
-		if (this._lastFmcCommandSpeedType !== this._fmcCommandSpeedType) {
+		if (this._lastFmcCommandClimbSpeedType !== this._fmcCommandClimbSpeedType) {
+			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
+		}
+
+		return speed[commandedSpeedKey];
+	}
+
+	determineCruiseSpeed() {
+		let speed = {
+			SPEED_SELECTED: (this.preSelectedCrzSpeed ? this.preSelectedCrzSpeed : null),
+			SPEED_ECON: this.getEconCrzManagedSpeed()
+		};
+
+		this._lastFmcCommandCruiseSpeedType = this._fmcCommandCruiseSpeedType;
+
+		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => { return speed[value] < speed[accumulator] ? value : accumulator }, 'SPEED_ECON');
+		this._fmcCommandCruiseSpeedType = commandedSpeedKey
+
+		if (this._lastFmcCommandCruiseSpeedType !== this._fmcCommandCruiseSpeedType) {
 			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
 		}
 

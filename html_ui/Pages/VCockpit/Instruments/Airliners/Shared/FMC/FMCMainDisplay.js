@@ -1760,6 +1760,7 @@ class FMCMainDisplay extends BaseAirliners {
 				if (agl > altValue) {
 					this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CLIMB;
 					enterClimbPhase = true;
+					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 				}
 				if (enterClimbPhase) {
 					let origin = this.flightPlanManager.getOrigin();
@@ -1777,6 +1778,7 @@ class FMCMainDisplay extends BaseAirliners {
 					if (altitude >= 0.96 * cruiseFlightLevel) {
 						this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CRUISE;
 						Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+						SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 					}
 				}
 
@@ -1845,6 +1847,7 @@ class FMCMainDisplay extends BaseAirliners {
 						} else {
 							this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
 							Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+							SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 						}
 					}
 				}

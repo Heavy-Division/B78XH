@@ -24,7 +24,7 @@ class B787_10_FMC_VNAVPage {
 		let crzAltCell = '□□□□□';
 
 		fmc.refreshPageCallback = () => {
-			B787_10_FMC_VNAVPage.ShowPage1(fmc);
+			B787_10_FMC_VNAVPage.showPage(fmc);
 		};
 
 
@@ -165,9 +165,7 @@ class B787_10_FMC_VNAVPage {
 			speedTransCell = speed.toFixed(0);
 		}
 
-		console.log(fmc._fmcCommandSpeedType)
-
-		switch (fmc._fmcCommandSpeedType) {
+		switch (fmc._fmcCommandClimbSpeedType) {
 			case 'SPEED_RESTRICTION':
 				if (!fmc._climbSpeedRestriction) {
 					speedRestrictionCell = speedRestrictionCell + '[color]magenta';
@@ -256,6 +254,11 @@ class B787_10_FMC_VNAVPage {
 
 	static ShowPage2(fmc) {
 		fmc.clearDisplay();
+
+		fmc.refreshPageCallback = () => {
+			B787_10_FMC_VNAVPage.showPage(fmc);
+		};
+
 		let crzAltCell = '□□□□□';
 		if (fmc.cruiseFlightLevel) {
 			crzAltCell = fmc.cruiseFlightLevel + 'FL';
@@ -272,18 +275,78 @@ class B787_10_FMC_VNAVPage {
 		if (isFinite(n1Value)) {
 			n1Cell = n1Value.toFixed(1) + '%';
 		}
+
+		let econCruiseSpeed = fmc.getEconClbManagedSpeed().toFixed(0);
+		let selectedCruiseSpeedCell = '';
+		let econCell = '';
+		let selectedCruiseSpeed = fmc.preSelectedCrzSpeed || NaN;
+
+		fmc.onLeftInput[1] = () => {
+			let value = fmc.inOut;
+			fmc.clearUserInput();
+
+			let storeToFMC = async (value, force = false) => {
+				if (HeavyInputChecks.speedRange(value) || force) {
+					fmc.trySetPreSelectedCruiseSpeed(value);
+				}
+			};
+
+			if (value.length > 0) {
+				storeToFMC(value).then(() => {
+					B787_10_FMC_VNAVPage.ShowPage2(fmc);
+				});
+			}
+
+		};
+
+		if (selectedCruiseSpeed && isFinite(selectedCruiseSpeed)) {
+			selectedCruiseSpeedCell = selectedCruiseSpeed + '';
+			econCell = '<ECON';
+			fmc.onLeftInput[4] = () => {
+				let handler = () => {
+					delete fmc.preSelectedCrzSpeed;
+				};
+				fmc._activeExecHandlers['CRUISE_SELECTED_SPEED_REMOVE_HANDLER'] = handler;
+				fmc.activateExecEmissive();
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+			};
+		}
+
+		if (Object.keys(fmc._activeExecHandlers).length > 0) {
+			fmc.onExec = () => {
+				Object.keys(fmc._activeExecHandlers).forEach((key) => {
+					fmc._activeExecHandlers[key]();
+					delete fmc._activeExecHandlers[key];
+				});
+				fmc._shouldBeExecEmisssive = false;
+				SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 0);
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+			};
+		}
+
+		/** Highlight speeds */
+
+		switch (fmc._fmcCommandCruiseSpeedType) {
+			case 'SPEED_SELECTED':
+				selectedCruiseSpeedCell = selectedCruiseSpeedCell + '[color]magenta';
+				break;
+			case 'SPEED_ECON':
+				econCruiseSpeed = econCruiseSpeed + '[color]magenta';
+			default:
+		}
+
 		fmc.setTemplate([
 			['CRZ', '2', '3'],
 			['CRZ ALT', 'STEP TO'],
 			[crzAltCell],
-			['ECON SPD', 'AT'],
-			[],
+			[(selectedCruiseSpeedCell ? 'SEL SPD' : 'ECON SPD'), 'AT'],
+			[(selectedCruiseSpeedCell ? selectedCruiseSpeedCell : econCruiseSpeed)],
 			['N1'],
 			[n1Cell],
 			['STEP', 'RECMD', 'OPT', 'MAX'],
 			[],
 			['', ''],
-			['', ''],
+			[econCell, ''],
 			[''],
 			['', '<LRC']
 		]);
