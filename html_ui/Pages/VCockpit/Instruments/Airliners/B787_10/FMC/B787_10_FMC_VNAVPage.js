@@ -26,7 +26,7 @@ class B787_10_FMC_VNAVPage {
 		let crzAltCell = '□□□□□';
 
 		this.fmc.refreshPageCallback = () => {
-			B787_10_FMC_VNAVPage.showPage(fmc);
+			this.showPage();
 		};
 
 		let titleCell = '';
@@ -54,7 +54,7 @@ class B787_10_FMC_VNAVPage {
 			let value = this.fmc.inOut;
 			this.fmc.clearUserInput();
 			if (this.fmc.setCruiseFlightLevelAndTemperature(value)) {
-				B787_10_FMC_VNAVPage.ShowPage1(fmc);
+				this.showPage1();
 			}
 		};
 
@@ -89,7 +89,7 @@ class B787_10_FMC_VNAVPage {
 				this.fmc.climbSpeedRestriction = null;
 				this.fmc._climbSpeedRestriction = null;
 				delete this.fmc._activeExecHandlers['CLIMB_SPEED_RESTRICTION_HANDLER'];
-				B787_10_FMC_VNAVPage.ShowPage1(fmc);
+				this.showPage1();
 			}
 
 			if (value.length > 0) {
@@ -109,7 +109,7 @@ class B787_10_FMC_VNAVPage {
 				};
 
 				storeToFMC(value).then(() => {
-					B787_10_FMC_VNAVPage.ShowPage1(fmc);
+					this.showPage1();
 				});
 			}
 
@@ -137,13 +137,13 @@ class B787_10_FMC_VNAVPage {
 			if (value === 'DELETE') {
 				this.fmc.inOut = '';
 				storeToFMC(null, true).then(() => {
-					B787_10_FMC_VNAVPage.ShowPage1(fmc);
+					this.showPage1();
 				});
 			}
 
 			if (value.length > 0) {
 				storeToFMC(value).then(() => {
-					B787_10_FMC_VNAVPage.ShowPage1(fmc);
+					this.showPage1();
 				});
 			}
 
@@ -210,7 +210,7 @@ class B787_10_FMC_VNAVPage {
 			if (altitude) {
 				this.fmc.trySetTransAltitude(altitude);
 			}
-			B787_10_FMC_VNAVPage.ShowPage1(fmc);
+			this.showPage1();
 		};
 
 		if (!this.fmc._climbSpeedTransitionDeleted) {
@@ -269,7 +269,7 @@ class B787_10_FMC_VNAVPage {
 		this.fmc.clearDisplay();
 
 		this.fmc.refreshPageCallback = () => {
-			B787_10_FMC_VNAVPage.showPage(fmc);
+			this.showPage();
 		};
 
 		let titleCell = '';
@@ -287,7 +287,7 @@ class B787_10_FMC_VNAVPage {
 			let value = this.fmc.inOut;
 			this.fmc.clearUserInput();
 			if (this.fmc.setCruiseFlightLevelAndTemperature(value)) {
-				B787_10_FMC_VNAVPage.ShowPage2(fmc);
+				this.showPage2();
 			}
 		};
 		let n1Cell = '--%';
@@ -313,7 +313,7 @@ class B787_10_FMC_VNAVPage {
 
 			if (value.length > 0) {
 				storeToFMC(value).then(() => {
-					B787_10_FMC_VNAVPage.ShowPage2(fmc);
+					this.showPage2();
 				});
 			}
 
