@@ -4,12 +4,12 @@ Include.addScript('/Heavy/Utils/HeavyInputUtils.js');
 
 class B787_10_FMC_VNAVPage {
 
-	static showPage(fmc){
-		if(fmc.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_CLIMB){
+	static showPage(fmc) {
+		if (fmc.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_CLIMB) {
 			B787_10_FMC_VNAVPage.ShowPage1(fmc);
-		}else if (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE){
+		} else if (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
 			B787_10_FMC_VNAVPage.ShowPage2(fmc);
-		} else if (fmc.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_DESCENT){
+		} else if (fmc.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_DESCENT) {
 			B787_10_FMC_VNAVPage.ShowPage2(fmc);
 		} else {
 			B787_10_FMC_VNAVPage.ShowPage1(fmc);
@@ -27,6 +27,12 @@ class B787_10_FMC_VNAVPage {
 			B787_10_FMC_VNAVPage.showPage(fmc);
 		};
 
+		let titleCell = '';
+		if (Object.keys(fmc._activeExecHandlers).length > 0) {
+			titleCell = titleCell + 'MOD ';
+		} else {
+			titleCell = titleCell + 'ACT ';
+		}
 
 		let departureWaypoints = fmc.flightPlanManager.getDepartureWaypointsMap();
 
@@ -170,17 +176,22 @@ class B787_10_FMC_VNAVPage {
 				if (!fmc._climbSpeedRestriction) {
 					speedRestrictionCell = speedRestrictionCell + '[color]magenta';
 				}
+				titleCell = titleCell + fmc.climbSpeedRestriction.speed + 'KT ';
 				break;
 			case 'SPEED_TRANSITION':
 				speedTransCell = speedTransCell + '/10000' + '[color]magenta';
 				speedTransCell = speedTransCell + '[color]magenta';
+				titleCell = titleCell + '250KT';
 				break;
 			case 'SPEED_SELECTED':
 				selectedClimbSpeedCell = selectedClimbSpeedCell + '[color]magenta';
+				titleCell = titleCell + selectedClimbSpeed + 'KT';
 				break;
 			case 'SPEED_ECON':
 				econClimbSpeed = econClimbSpeed + '[color]magenta';
+				break;
 			default:
+				titleCell = titleCell + 'ECON';
 		}
 
 		speedTransCell += '/10000';
@@ -232,7 +243,7 @@ class B787_10_FMC_VNAVPage {
 
 
 		fmc.setTemplate([
-			['CLB', '1', '3'],
+			[titleCell + ' CLB', '1', '3'],
 			['CRZ ALT'],
 			[crzAltCell],
 			[(selectedClimbSpeedCell ? 'SEL SPD' : 'ECON SPD')],
@@ -258,6 +269,13 @@ class B787_10_FMC_VNAVPage {
 		fmc.refreshPageCallback = () => {
 			B787_10_FMC_VNAVPage.showPage(fmc);
 		};
+
+		let titleCell = '';
+		if (Object.keys(fmc._activeExecHandlers).length > 0) {
+			titleCell = titleCell + 'MOD ';
+		} else {
+			titleCell = titleCell + 'ACT ';
+		}
 
 		let crzAltCell = '□□□□□';
 		if (fmc.cruiseFlightLevel) {
@@ -329,14 +347,18 @@ class B787_10_FMC_VNAVPage {
 		switch (fmc._fmcCommandCruiseSpeedType) {
 			case 'SPEED_SELECTED':
 				selectedCruiseSpeedCell = selectedCruiseSpeedCell + '[color]magenta';
+				titleCell = titleCell + selectedCruiseSpeed + 'KT';
 				break;
 			case 'SPEED_ECON':
 				econCruiseSpeed = econCruiseSpeed + '[color]magenta';
+				titleCell = titleCell + 'ECON';
+				break;
 			default:
+				titleCell = titleCell + 'ECON';
 		}
 
 		fmc.setTemplate([
-			['CRZ', '2', '3'],
+			[titleCell + ' CRZ', '2', '3'],
 			['CRZ ALT', 'STEP TO'],
 			[crzAltCell],
 			[(selectedCruiseSpeedCell ? 'SEL SPD' : 'ECON SPD'), 'AT'],

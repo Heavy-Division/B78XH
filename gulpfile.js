@@ -85,7 +85,7 @@ function releaseTask(callback) {
 
 function copyFilesForReleaseToCache(callback){
 	return gulp.src(directoriesToRelease)
-	.pipe(gulp.dest('release/cache/B78XHL/'))
+	.pipe(gulp.dest('release/cache/B78XH/'))
 	.on('finish', function(){
 		console.log('Files for release copied.')
 		callback()
