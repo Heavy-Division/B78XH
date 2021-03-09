@@ -1,4 +1,4 @@
-# B78XHL (B787-10 Heavy) Lite version
+# B78XH (B787-10 Heavy)
 
 [![Discord](https://img.shields.io/discord/808476259016769546?color=7289da&logoColor=ffffff&labelColor=99aab5&logo=discord&label=)](https://discord.gg/Hh84CanyHt)
 
@@ -10,13 +10,24 @@ B78XH is an open source and free modification of default Boeing 787-10 in Micros
 
 * ### FMC
     * #### VNAV
-        * CLB Speed Restriction implemented
-        * CLB Selected speed implemented
-        * CLB Trans altitude is settable
-        * CLB Page active speed is highlighted by magenta
-        * CLB Level off support during climb
+        * CLB Speed restriction
+        * CLB Selected speed
+        * CLB Selected speed can be deleted by ECON prompt
+        * CLB settable transition altitude
+        * CLB FMC commanded speed is highlighted by magenta
+        * CLB page title depends on commanded speed (ACT/MOD ECON CLB, ACT/MOD xxxKT CLB, ...)
+        * CRZ settable selected speed
+        * CRZ FMC commanded speed is highlighted by magenta
+        * CRZ Selected speed can be deleted by ECON prompt
+        * CRZ page title depends on commanded speed (ACT/MOD ECON CRZ, ACT/MOD xxxKT CRZ, ...)
+        * Cruise Climb
+        * Cruise Descent
+        * Early descent (descent path calculation not supported now)
+        * DES NOW (descent path calculation not supported now)
+        * Climb leveling off
     * #### LEGS
         * Cruise speed fixed
+        * DIRECT TO (basic)
     * #### ROUTE
         * Airways support
         * All waypoints between first and last added waypoint are inserted to Legs page
@@ -24,8 +35,11 @@ B78XH is an open source and free modification of default Boeing 787-10 in Micros
         * "HEAVY" button added (misc & configuration of mod)
     
 * ### ND/MFD
-  * Symbols changed to default Boeing symbols
-  * Altitude prediction added (Green Banana)
+  * MFD is touchable on both sides
+  * ND symbols changed to default Boeing symbols
+  * Altitude Range Arc (ARA) [Green banana]
+  * TOD
+  * TOC
     
 * ### EICAS / SYS
     *  Gears synoptic page
@@ -37,6 +51,7 @@ B78XH is an open source and free modification of default Boeing 787-10 in Micros
 * ### MISC
     *  Added HEAVY configuration page
     *  Payload Manager added to HEAVY configuration page
+    *  SimRate Manager added to HEAVY configuration page
 
 * ### Payload manager
     * CG range 0 - 100%
