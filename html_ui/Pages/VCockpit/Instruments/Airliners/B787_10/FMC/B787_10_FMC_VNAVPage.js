@@ -275,6 +275,19 @@ class B787_10_FMC_VNAVPage {
 		if (isFinite(n1Value)) {
 			n1Cell = n1Value.toFixed(1) + '%';
 		}
+
+		if (Object.keys(fmc._activeExecHandlers).length > 0) {
+			fmc.onExec = () => {
+				Object.keys(fmc._activeExecHandlers).forEach((key) => {
+					fmc._activeExecHandlers[key]();
+					delete fmc._activeExecHandlers[key];
+				});
+				fmc._shouldBeExecEmisssive = false;
+				SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 0);
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+			};
+		}
+
 		fmc.setTemplate([
 			['CRZ', '2', '3'],
 			['CRZ ALT', 'STEP TO'],
