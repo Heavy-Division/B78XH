@@ -165,9 +165,7 @@ class B787_10_FMC_VNAVPage {
 			speedTransCell = speed.toFixed(0);
 		}
 
-		console.log(fmc._fmcCommandSpeedType)
-
-		switch (fmc._fmcCommandSpeedType) {
+		switch (fmc._fmcCommandClimbSpeedType) {
 			case 'SPEED_RESTRICTION':
 				if (!fmc._climbSpeedRestriction) {
 					speedRestrictionCell = speedRestrictionCell + '[color]magenta';

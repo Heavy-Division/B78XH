@@ -1012,7 +1012,7 @@ class B787_10_FMC extends Boeing_FMC {
 				}
 
 				if (this.getIsVNAVActive()) {
-					let speed = this.getCrzManagedSpeed();
+					let speed = this.determineCruiseSpeed();
 					let altitude = Simplane.getAltitudeAboveGround();
 
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
@@ -1079,6 +1079,24 @@ class B787_10_FMC extends Boeing_FMC {
 		this._fmcCommandClimbSpeedType = commandedSpeedKey
 
 		if (this._lastFmcCommandClimbSpeedType !== this._fmcCommandClimbSpeedType) {
+			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
+		}
+
+		return speed[commandedSpeedKey];
+	}
+
+	determineCruiseSpeed() {
+		let speed = {
+			SPEED_SELECTED: (this.preSelectedCrzSpeed ? this.preSelectedCrzSpeed : null),
+			SPEED_ECON: this.getEconCrzManagedSpeed()
+		};
+
+		this._lastFmcCommandCruiseSpeedType = this._fmcCommandCruiseSpeedType;
+
+		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => { return speed[value] < speed[accumulator] ? value : accumulator }, 'SPEED_ECON');
+		this._fmcCommandCruiseSpeedType = commandedSpeedKey
+
+		if (this._lastFmcCommandCruiseSpeedType !== this._fmcCommandCruiseSpeedType) {
 			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
 		}
 
