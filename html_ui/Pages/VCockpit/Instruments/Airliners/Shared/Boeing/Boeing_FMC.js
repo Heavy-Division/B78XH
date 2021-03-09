@@ -574,8 +574,6 @@ class Boeing_FMC extends FMCMainDisplay {
 	 *
 	 * TODO: Add "ActivateDirectTo" for departure and enroute waypoints
 	 *
-	 * TODO: DIRECT TO sometimes remove less waypoints
-	 *
 	 * MSFS does not support deleting waypoints from STAR.
 	 *
 	 * DIRECT TO STARs use "activateDirectTo". "ActivateDirectTo" works different than normal Boeing direct to.
@@ -587,12 +585,16 @@ class Boeing_FMC extends FMCMainDisplay {
 	 */
 
 	setMyBoeingDirectTo(directToWaypointIdent, directToWaypointIndex, callback = EmptyCallback.Boolean) {
-		const waypoints = this.flightPlanManager.getWaypoints();
-		const indexInFlightPlan = waypoints.findIndex(w => {
+		let waypoints = this.flightPlanManager.getWaypoints();
+		let departureCount = this.flightPlanManager.getDepartureWaypointsCount() - 1
+		waypoints.splice(1, departureCount);
+
+		let waypointIndex = waypoints.findIndex(w => {
 			return w.ident === directToWaypointIdent;
 		});
-		if (indexInFlightPlan === -1) {
-			const waypoints = this.flightPlanManager.getApproachWaypoints();
+
+		if (waypointIndex === -1) {
+			waypoints = this.flightPlanManager.getApproachWaypoints();
 			if (waypoints) {
 				let waypoint = waypoints.find(w => {
 					return w.ident === directToWaypointIdent;
@@ -604,22 +606,28 @@ class Boeing_FMC extends FMCMainDisplay {
 				}
 			}
 		}
-		this.ensureCurrentFlightPlanIsTemporary(() =>  {
-			let i = 1;
-			const removeWaypointMethod = (callback = EmptyCallback.Void) => {
-				if (i < indexInFlightPlan) {
-					this.flightPlanManager.removeWaypoint(1, i === indexInFlightPlan - 1, () => {
-						i++;
-						removeWaypointMethod(callback);
-					});
-				} else {
-					callback(true);
-				}
-			};
-			removeWaypointMethod(() => {
-				callback(true)
+
+		if (waypointIndex > -1) {
+			this.ensureCurrentFlightPlanIsTemporary(() => {
+				this.flightPlanManager.setDepartureProcIndex(-1, () => {
+					let i = 1;
+					let removeWaypointMethod = () => {
+						if (i < waypointIndex) {
+							console.log('Remove Waypoint ' + this.flightPlanManager.getWaypoints()[directToWaypointIndex].ident);
+							this.flightPlanManager.removeWaypoint(1, i === waypointIndex - 1, () => {
+								i++;
+								removeWaypointMethod();
+							});
+						} else {
+							callback(true);
+						}
+					};
+					removeWaypointMethod();
+				});
 			});
-		})
+		} else {
+			callback(false);
+		}
 	}
 
 	setBoeingDirectTo(directToWaypointIdent, directToWaypointIndex, callback = EmptyCallback.Boolean) {

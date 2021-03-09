@@ -24,7 +24,7 @@ class B787_10_FMC_VNAVPage {
 		let crzAltCell = '□□□□□';
 
 		fmc.refreshPageCallback = () => {
-			B787_10_FMC_VNAVPage.ShowPage1(fmc);
+			B787_10_FMC_VNAVPage.showPage(fmc);
 		};
 
 
@@ -256,7 +256,7 @@ class B787_10_FMC_VNAVPage {
 		fmc.clearDisplay();
 
 		fmc.refreshPageCallback = () => {
-			B787_10_FMC_VNAVPage.ShowPage2(fmc);
+			B787_10_FMC_VNAVPage.showPage(fmc);
 		};
 
 		let crzAltCell = '□□□□□';
