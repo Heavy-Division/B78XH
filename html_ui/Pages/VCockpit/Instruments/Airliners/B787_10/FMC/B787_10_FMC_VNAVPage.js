@@ -467,7 +467,7 @@ class B787_10_FMC_VNAVPage {
 			[n1Cell],
 			['STEP', 'RECMD', 'OPT', 'MAX'],
 			[],
-			['', ''],
+			['---------------------------------------'],
 			[econPromptCell, ''],
 			[''],
 			['', '<LRC']
