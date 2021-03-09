@@ -324,6 +324,17 @@ class B787_10_FMC_VNAVPage {
 			};
 		}
 
+		/** Highlight speeds */
+
+		switch (fmc._fmcCommandCruiseSpeedType) {
+			case 'SPEED_SELECTED':
+				selectedCruiseSpeedCell = selectedCruiseSpeedCell + '[color]magenta';
+				break;
+			case 'SPEED_ECON':
+				econCruiseSpeed = econCruiseSpeed + '[color]magenta';
+			default:
+		}
+
 		fmc.setTemplate([
 			['CRZ', '2', '3'],
 			['CRZ ALT', 'STEP TO'],
