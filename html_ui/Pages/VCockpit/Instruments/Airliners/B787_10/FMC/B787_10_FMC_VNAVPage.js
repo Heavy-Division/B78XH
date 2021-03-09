@@ -20,7 +20,7 @@ class B787_10_FMC_VNAVPage {
 		}
 	}
 
-	getPageTitle() {
+	getClimbPageTitle() {
 		let cell = '';
 		if (Object.keys(this.fmc._activeExecHandlers).length > 0) {
 			cell = cell + 'MOD ';
@@ -30,7 +30,7 @@ class B787_10_FMC_VNAVPage {
 
 		switch (this.fmc._fmcCommandClimbSpeedType) {
 			case 'SPEED_RESTRICTION':
-				if(this.fmc.climbSpeedRestriction){
+				if (this.fmc.climbSpeedRestriction) {
 					cell = cell + this.fmc.climbSpeedRestriction.speed + 'KT ';
 				}
 				break;
@@ -51,7 +51,7 @@ class B787_10_FMC_VNAVPage {
 		return cell;
 	}
 
-	getCrzAltCell() {
+	getClimbCruiseAltitudeCell() {
 		let cell = '□□□□□';
 
 		let departureWaypoints = this.fmc.flightPlanManager.getDepartureWaypointsMap();
@@ -71,7 +71,7 @@ class B787_10_FMC_VNAVPage {
 		return cell;
 	}
 
-	getSpeedRestrictionCell() {
+	getClimbSpeedRestrictionCell() {
 		let cell = '---/-----';
 		let speedRestrictionSpeedValue = '';
 		let speedRestrictionAltitudeValue = '';
@@ -99,7 +99,7 @@ class B787_10_FMC_VNAVPage {
 		return cell;
 	}
 
-	getSpeedTransitionCell() {
+	getClimbSpeedTransitionCell() {
 		let cell = '';
 		let speed = this.fmc.getCrzManagedSpeed();
 		if (isFinite(speed)) {
@@ -117,7 +117,7 @@ class B787_10_FMC_VNAVPage {
 		return cell;
 	}
 
-	getTransitionAltitudeCell() {
+	getClimbTransitionAltitudeCell() {
 		return this.fmc.transitionAltitude.toFixed();
 	}
 
@@ -135,7 +135,7 @@ class B787_10_FMC_VNAVPage {
 		return cell;
 	}
 
-	getEconPromptCell() {
+	getEconClimbPromptCell() {
 		let selectedClimbSpeed = this.fmc.preSelectedClbSpeed || NaN;
 		return (selectedClimbSpeed && isFinite(selectedClimbSpeed)) ? '<ECON' : '';
 	}
@@ -291,14 +291,14 @@ class B787_10_FMC_VNAVPage {
 		/**
 		 * Cells inits
 		 */
-		let pageTitleCell = this.getPageTitle();
-		let crzAltCell = this.getCrzAltCell();
-		let speedRestrictionCell = this.getSpeedRestrictionCell();
+		let pageTitleCell = this.getClimbPageTitle();
+		let cruiseAltitudeCell = this.getClimbCruiseAltitudeCell();
+		let speedRestrictionCell = this.getClimbSpeedRestrictionCell();
 		let selectedClimbSpeedCell = this.getSelectedClimbSpeedCell();
-		let speedTransitionCell = this.getSpeedTransitionCell();
+		let speedTransitionCell = this.getClimbSpeedTransitionCell();
 		let econClimbSpeedCell = this.getEconClimbSpeedCell();
-		let econPromptCell = this.getEconPromptCell();
-		let transitionAltitudeCell = this.getTransitionAltitudeCell();
+		let econPromptCell = this.getEconClimbPromptCell();
+		let transitionAltitudeCell = this.getClimbTransitionAltitudeCell();
 
 		this.setupClimbPageEvents();
 		this.checkExecHandlers();
@@ -306,7 +306,7 @@ class B787_10_FMC_VNAVPage {
 		this.fmc.setTemplate([
 			[pageTitleCell + ' CLB', '1', '3'],
 			['CRZ ALT'],
-			[crzAltCell],
+			[cruiseAltitudeCell],
 			[(selectedClimbSpeedCell ? 'SEL SPD' : 'ECON SPD')],
 			[(selectedClimbSpeedCell ? selectedClimbSpeedCell : econClimbSpeedCell)],
 			['SPD TRANS', 'TRANS ALT'],
@@ -324,44 +324,86 @@ class B787_10_FMC_VNAVPage {
 		this.fmc.updateSideButtonActiveStatus();
 	}
 
-	showPage2() {
-		/**
-		 * Page default settings
-		 */
-		this.fmc.clearDisplay();
-		this.fmc.refreshPageCallback = () => {
-			this.showPage();
-		};
 
-
-		let titleCell = '';
+	getCruisePageTitle() {
+		let cell = '';
 		if (Object.keys(this.fmc._activeExecHandlers).length > 0) {
-			titleCell = titleCell + 'MOD ';
+			cell = cell + 'MOD ';
 		} else {
-			titleCell = titleCell + 'ACT ';
+			cell = cell + 'ACT ';
+		}
+		let selectedCruiseSpeed = this.fmc.preSelectedCrzSpeed || NaN;
+
+		switch (this.fmc._fmcCommandCruiseSpeedType) {
+			case 'SPEED_SELECTED':
+				cell = cell + selectedCruiseSpeed + 'KT';
+				break;
+			case 'SPEED_ECON':
+				cell = cell + 'ECON';
+				break;
+			default:
+				cell = cell + 'ECON';
 		}
 
-		let crzAltCell = '□□□□□';
+		return cell;
+	}
+
+	getCruiseAltitudeCell() {
+		let cell = '□□□□□';
+
 		if (this.fmc.cruiseFlightLevel) {
-			crzAltCell = this.fmc.cruiseFlightLevel + 'FL';
+			cell = this.fmc.cruiseFlightLevel + 'FL' + (this.fmc.getIsVNAVActive() ? '[color]magenta' : '');
 		}
-		this.fmc.onRightInput[0] = () => {
+		return cell;
+	}
+
+	getSelectedCruiseSpeedCell() {
+		let selectedCruiseSpeed = this.fmc.preSelectedCrzSpeed || NaN;
+		let cell = '';
+		if (selectedCruiseSpeed && isFinite(selectedCruiseSpeed)) {
+			cell = selectedCruiseSpeed + '';
+		}
+
+		if (this.fmc._fmcCommandCruiseSpeedType === 'SPEED_SELECTED') {
+			cell = cell + '[color]magenta';
+		}
+
+		return cell;
+	}
+
+	getEconCruisePromptCell() {
+		let selectedCruiseSpeed = this.fmc.preSelectedCrzSpeed || NaN;
+		return (selectedCruiseSpeed && isFinite(selectedCruiseSpeed)) ? '<ECON' : '';
+	}
+
+	getEconCruiseSpeedCell() {
+		let cell = this.fmc.getEconCrzManagedSpeed().toFixed(0);
+		if (this.fmc._fmcCommandCruiseSpeedType === 'SPEED_ECON') {
+			cell = cell + '[color]magenta';
+		}
+		return cell;
+	}
+
+	getN1Cell() {
+		let cell = '--%';
+		let n1Value = this.fmc.getThrustClimbLimit();
+		if (isFinite(n1Value)) {
+			cell = n1Value.toFixed(1) + '%';
+		}
+		return cell;
+	}
+
+	setupCruisePageEvents() {
+		/**
+		 * Left side
+		 */
+		this.fmc.onLeftInput[0] = () => {
 			let value = this.fmc.inOut;
 			this.fmc.clearUserInput();
 			if (this.fmc.setCruiseFlightLevelAndTemperature(value)) {
 				this.showPage2();
 			}
 		};
-		let n1Cell = '--%';
-		let n1Value = this.fmc.getThrustClimbLimit();
-		if (isFinite(n1Value)) {
-			n1Cell = n1Value.toFixed(1) + '%';
-		}
-
-		let econCruiseSpeed = this.fmc.getEconClbManagedSpeed().toFixed(0);
-		let selectedCruiseSpeedCell = '';
-		let econCell = '';
-		let selectedCruiseSpeed = this.fmc.preSelectedCrzSpeed || NaN;
 
 		this.fmc.onLeftInput[1] = () => {
 			let value = this.fmc.inOut;
@@ -378,12 +420,10 @@ class B787_10_FMC_VNAVPage {
 					this.showPage2();
 				});
 			}
-
 		};
 
+		let selectedCruiseSpeed = this.fmc.preSelectedCrzSpeed || NaN;
 		if (selectedCruiseSpeed && isFinite(selectedCruiseSpeed)) {
-			selectedCruiseSpeedCell = selectedCruiseSpeed + '';
-			econCell = '<ECON';
 			this.fmc.onLeftInput[4] = () => {
 				let handler = () => {
 					delete this.fmc.preSelectedCrzSpeed;
@@ -393,46 +433,42 @@ class B787_10_FMC_VNAVPage {
 				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 			};
 		}
+	}
 
-		if (Object.keys(this.fmc._activeExecHandlers).length > 0) {
-			this.fmc.onExec = () => {
-				Object.keys(this.fmc._activeExecHandlers).forEach((key) => {
-					this.fmc._activeExecHandlers[key]();
-					delete this.fmc._activeExecHandlers[key];
-				});
-				this.fmc._shouldBeExecEmisssive = false;
-				SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 0);
-				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
-			};
-		}
+	showPage2() {
+		/**
+		 * Page default settings
+		 */
+		this.fmc.clearDisplay();
+		this.fmc.refreshPageCallback = () => {
+			this.showPage();
+		};
+
+		let pageTitleCell = this.getCruisePageTitle();
+		let cruiseAltitudeCell = this.getCruiseAltitudeCell();
+		let n1Cell = this.getN1Cell();
+
+		let econCruiseSpeedCell = this.getEconCruiseSpeedCell();
+		let selectedCruiseSpeedCell = this.getSelectedCruiseSpeedCell();
+		let econPromptCell = this.getEconCruisePromptCell();
+
+		this.setupCruisePageEvents();
+		this.checkExecHandlers();
 
 		/** Highlight speeds */
 
-		switch (this.fmc._fmcCommandCruiseSpeedType) {
-			case 'SPEED_SELECTED':
-				selectedCruiseSpeedCell = selectedCruiseSpeedCell + '[color]magenta';
-				titleCell = titleCell + selectedCruiseSpeed + 'KT';
-				break;
-			case 'SPEED_ECON':
-				econCruiseSpeed = econCruiseSpeed + '[color]magenta';
-				titleCell = titleCell + 'ECON';
-				break;
-			default:
-				titleCell = titleCell + 'ECON';
-		}
-
 		this.fmc.setTemplate([
-			[titleCell + ' CRZ', '2', '3'],
+			[pageTitleCell + ' CRZ', '2', '3'],
 			['CRZ ALT', 'STEP TO'],
-			[crzAltCell],
+			[cruiseAltitudeCell],
 			[(selectedCruiseSpeedCell ? 'SEL SPD' : 'ECON SPD'), 'AT'],
-			[(selectedCruiseSpeedCell ? selectedCruiseSpeedCell : econCruiseSpeed)],
+			[(selectedCruiseSpeedCell ? selectedCruiseSpeedCell : econCruiseSpeedCell)],
 			['N1'],
 			[n1Cell],
 			['STEP', 'RECMD', 'OPT', 'MAX'],
 			[],
 			['', ''],
-			[econCell, ''],
+			[econPromptCell, ''],
 			[''],
 			['', '<LRC']
 		]);
