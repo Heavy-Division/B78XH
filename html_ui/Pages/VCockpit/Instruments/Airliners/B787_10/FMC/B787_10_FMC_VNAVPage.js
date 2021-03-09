@@ -276,6 +276,24 @@ class B787_10_FMC_VNAVPage {
 			n1Cell = n1Value.toFixed(1) + '%';
 		}
 
+		let econCruiseSpeed = fmc.getEconClbManagedSpeed().toFixed(0);
+		let selectedCruiseSpeedCell = '';
+		let econCell = '';
+		let selectedCruiseSpeed = fmc.preSelectedCrzSpeed || NaN;
+
+		if (selectedCruiseSpeed && isFinite(selectedCruiseSpeed)) {
+			selectedCruiseSpeedCell = selectedCruiseSpeed + '';
+			econCell = '<ECON';
+			fmc.onLeftInput[4] = () => {
+				let handler = () => {
+					delete fmc.preSelectedCrzSpeed;
+				};
+				fmc._activeExecHandlers['CRUISE_SELECTED_SPEED_REMOVE_HANDLER'] = handler;
+				fmc.activateExecEmissive();
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+			};
+		}
+
 		if (Object.keys(fmc._activeExecHandlers).length > 0) {
 			fmc.onExec = () => {
 				Object.keys(fmc._activeExecHandlers).forEach((key) => {
@@ -292,14 +310,14 @@ class B787_10_FMC_VNAVPage {
 			['CRZ', '2', '3'],
 			['CRZ ALT', 'STEP TO'],
 			[crzAltCell],
-			['ECON SPD', 'AT'],
-			[],
+			[(selectedCruiseSpeedCell ? 'SEL SPD' : 'ECON SPD'), 'AT'],
+			[(selectedCruiseSpeedCell ? selectedCruiseSpeedCell : econCruiseSpeed)],
 			['N1'],
 			[n1Cell],
 			['STEP', 'RECMD', 'OPT', 'MAX'],
 			[],
 			['', ''],
-			['', ''],
+			[econCell, ''],
 			[''],
 			['', '<LRC']
 		]);
