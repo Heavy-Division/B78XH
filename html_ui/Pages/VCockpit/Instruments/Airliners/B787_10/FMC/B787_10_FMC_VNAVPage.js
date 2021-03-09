@@ -254,6 +254,11 @@ class B787_10_FMC_VNAVPage {
 
 	static ShowPage2(fmc) {
 		fmc.clearDisplay();
+
+		fmc.refreshPageCallback = () => {
+			B787_10_FMC_VNAVPage.ShowPage2(fmc);
+		};
+
 		let crzAltCell = '□□□□□';
 		if (fmc.cruiseFlightLevel) {
 			crzAltCell = fmc.cruiseFlightLevel + 'FL';
