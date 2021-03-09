@@ -117,7 +117,7 @@ class B787_10_FMC extends Boeing_FMC {
 				B787_10_FMC_NavRadioPage.ShowPage(this);
 			};
 			this.onVNAV = () => {
-				B787_10_FMC_VNAVPage.showPage(this);
+				new B787_10_FMC_VNAVPage(this).showPage()
 			};
 			this._pointer = this.getChildById('fms-pointer');
 			this._pointer.style.zIndex = '5';
@@ -157,7 +157,7 @@ class B787_10_FMC extends Boeing_FMC {
 				B787_10_FMC_LegsPage.ShowPage1(this);
 			});
 			this.getChildById('.fms-vnav').addEventListener('mouseup', () => {
-				B787_10_FMC_VNAVPage.showPage(this);
+				new B787_10_FMC_VNAVPage(this).showPage();
 			});
 			this.getChildById('.fms-exec').addEventListener('mouseup', () => {
 				if (this.onExec) {
