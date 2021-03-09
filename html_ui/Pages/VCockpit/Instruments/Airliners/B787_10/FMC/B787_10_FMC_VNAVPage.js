@@ -281,6 +281,24 @@ class B787_10_FMC_VNAVPage {
 		let econCell = '';
 		let selectedCruiseSpeed = fmc.preSelectedCrzSpeed || NaN;
 
+		fmc.onLeftInput[1] = () => {
+			let value = fmc.inOut;
+			fmc.clearUserInput();
+
+			let storeToFMC = async (value, force = false) => {
+				if (HeavyInputChecks.speedRange(value) || force) {
+					fmc.trySetPreSelectedCruiseSpeed(value);
+				}
+			};
+
+			if (value.length > 0) {
+				storeToFMC(value).then(() => {
+					B787_10_FMC_VNAVPage.ShowPage2(fmc);
+				});
+			}
+
+		};
+
 		if (selectedCruiseSpeed && isFinite(selectedCruiseSpeed)) {
 			selectedCruiseSpeedCell = selectedCruiseSpeed + '';
 			econCell = '<ECON';
