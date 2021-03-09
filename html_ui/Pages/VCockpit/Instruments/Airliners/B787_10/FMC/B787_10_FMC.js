@@ -1023,8 +1023,18 @@ class B787_10_FMC extends Boeing_FMC {
 						n1 = this.getThrustClimbLimit() / 100;
 					}
 					SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
+				} else {
+					this._fmcCommandCruiseSpeedType = null;
+					this._lastFmcCommandCruiseSpeedType = null;
 				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT) {
+				if (this._fmcCommandClimbSpeedType || this._lastFmcCommandClimbSpeedType || this._fmcCommandCruiseSpeedType || this._lastFmcCommandCruiseSpeedType) {
+					this._fmcCommandClimbSpeedType = null;
+					this._lastFmcCommandClimbSpeedType = null;
+					this._fmcCommandCruiseSpeedType = null;
+					this._lastFmcCommandCruiseSpeedType = null;
+				}
+
 				if (this.getIsVNAVActive()) {
 					let speed = this.getDesManagedSpeed();
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
