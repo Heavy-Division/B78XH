@@ -916,6 +916,13 @@ class B787_10_FMC extends Boeing_FMC {
 									this._forceNextAltitudeUpdate = false;
 									SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
 								}
+							} else {
+								/**
+								 * Default fallback
+								 */
+								Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, altitude, this._forceNextAltitudeUpdate);
+								this._forceNextAltitudeUpdate = false;
+								SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
 							}
 						} else {
 							Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, this.cruiseFlightLevel * 100, this._forceNextAltitudeUpdate);
