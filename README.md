@@ -6,6 +6,10 @@
 
 B78XH is an open source and free modification of default Boeing 787-10 in Microsoft Flight Simulator.
 
+## Normal vs WO release
+
+WO release is same as normal release but the release does not contain managers. (Payload and SimRate manager) 
+
 ## Features Overview
 
 * ### FMC
