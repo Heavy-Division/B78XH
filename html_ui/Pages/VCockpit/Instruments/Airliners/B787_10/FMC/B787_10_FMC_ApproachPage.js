@@ -39,11 +39,22 @@ class B787_10_FMC_ApproachPage {
 		let finalCell = '-----';
 		let runwayLengthCell = '---';
 		let approach = fmc.flightPlanManager.getApproach();
+		let destination = fmc.flightPlanManager.getDestination()
+
+
+
+		if (destination && destination.ident) {
+			finalCell = destination.ident + ' ';
+		}
+
 		if (approach && approach.name) {
-			finalCell = Avionics.Utils.formatRunway(approach.name);
+			if(finalCell === '-----'){
+				finalCell = '';
+			}
+			finalCell = finalCell + Avionics.Utils.formatRunway(approach.name);
 			let approachRunway = fmc.flightPlanManager.getApproachRunway();
 			if (approachRunway) {
-				runwayLengthCell = approachRunway.length.toFixed(0) + 'M';
+				runwayLengthCell = ' ' + (approachRunway.length * 3.2808399).toFixed(0) + 'FT ' + approachRunway.length.toFixed(0) + 'M';
 			}
 		}
 		let selectedFlapSpeedCell = '';
@@ -71,13 +82,13 @@ class B787_10_FMC_ApproachPage {
 			[landingWeightCell, flaps20VRefCell, flaps20Cell],
 			[''],
 			['', flaps25VRefCell, flaps25Cell],
-			['QNH LANDING'],
-			['', flaps30VRefCell, flaps30Cell],
+			['LANDING REF'],
+			['<[size=small]QFE[/size]←→[color=green]QNH[/color]', flaps30VRefCell, flaps30Cell],
 			[finalCell, 'FLAP/SPD'],
 			[runwayLengthCell, selectedFlapSpeedCell],
 			[''],
 			[''],
-			['--------------------------------------'],
+			['---------------------------------------'],
 			['\<INDEX', '<THRUST LIM']
 		]);
 		fmc.onLeftInput[5] = () => {

@@ -223,6 +223,54 @@ class FMCMainDisplay extends BaseAirliners {
 			content = '------------------------';
 		}
 		if (content !== '') {
+			content = content.replace('\<', '&lt');
+			if (content.indexOf('[s-text]') !== -1) {
+				content = content.replace('[s-text]', '');
+				this._lineElements[row][col].classList.add('s-text');
+			} else {
+				this._lineElements[row][col].classList.remove('s-text');
+			}
+			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+			content = content.replace(re2, '<tspan class="$1">$2</tspan>')
+
+			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+			content = content.replace(re, '<tspan class="$1">$2</tspan>');
+			let color = content.split('[color]')[1];
+			if (!color) {
+				color = 'white';
+			}
+			let e = this._lineElements[row][col];
+			e.classList.remove('white', 'blue', 'yellow', 'green', 'red', 'magenta');
+			e.classList.add(color);
+			content = content.split('[color]')[0];
+		}
+		this._lines[row][col] = this._lines[row][col] + content;
+		this._lineElements[row][col].innerHTML = this._lines[row][col];
+		console.log(this._lineElements[row][col].innerHTML)
+		console.log(this._lines[row][col])
+	}
+
+	setLine2(content, row, col = -1) {
+		if (col >= this._lineElements[row].length) {
+			return;
+		}
+		if (!content) {
+			content = '';
+		}
+		if (!this._lines[row]) {
+			this._lines[row] = [];
+		}
+		if (col === -1) {
+			for (let i = 0; i < this._lineElements[row].length; i++) {
+				this._lines[row][i] = '';
+				this._lineElements[row][i].textContent = '';
+			}
+			col = 0;
+		}
+		if (content === '__FMCSEPARATOR') {
+			content = '------------------------';
+		}
+		if (content !== '') {
 			if (content.indexOf('[s-text]') !== -1) {
 				content = content.replace('[s-text]', '');
 				this._lineElements[row][col].classList.add('s-text');
