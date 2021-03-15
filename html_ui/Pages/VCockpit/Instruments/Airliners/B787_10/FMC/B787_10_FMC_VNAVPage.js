@@ -263,7 +263,7 @@ class B787_10_FMC_VNAVPage {
 				};
 				this.fmc._activeExecHandlers['CLIMB_SELECTED_SPEED_REMOVE_HANDLER'] = handler;
 				this.fmc.activateExecEmissive();
-				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				this.showPage1()
 			};
 		}
 
@@ -303,7 +303,7 @@ class B787_10_FMC_VNAVPage {
 		 */
 		this.fmc.clearDisplay();
 		this.fmc.refreshPageCallback = () => {
-			this.showPage1();
+			this.showPage();
 		};
 
 		/**
@@ -465,7 +465,7 @@ class B787_10_FMC_VNAVPage {
 				};
 				this.fmc._activeExecHandlers['CRUISE_SELECTED_SPEED_REMOVE_HANDLER'] = handler;
 				this.fmc.activateExecEmissive();
-				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				this.showPage2()
 			};
 		}
 	}
@@ -476,7 +476,7 @@ class B787_10_FMC_VNAVPage {
 		 */
 		this.fmc.clearDisplay();
 		this.fmc.refreshPageCallback = () => {
-			this.showPage2();
+			this.showPage();
 		};
 
 		let pageTitleCell = this.getCruisePageTitle();

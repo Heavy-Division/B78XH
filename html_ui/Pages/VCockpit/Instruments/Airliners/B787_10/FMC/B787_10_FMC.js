@@ -920,7 +920,7 @@ class B787_10_FMC extends Boeing_FMC {
 							 * Descent new implementation
 							 */
 
-							let nextAltitude = (isFinite(nextWaypoint.legAltitude1) ? nextWaypoint.legAltitude1 : (isFinite(nextWaypoint.altitudeinFP) ? nextWaypoint.altitudeinFP : NaN));
+							let nextAltitude = (isFinite(nextWaypoint.legAltitude1) ? Math.round(nextWaypoint.legAltitude1) : (isFinite(nextWaypoint.altitudeinFP) ? Math.round(nextWaypoint.altitudeinFP) : NaN));
 							let selectedAltitude = altitude;
 							this._selectedAltitude = altitude;
 							let shouldEnableLevelOff = null;
