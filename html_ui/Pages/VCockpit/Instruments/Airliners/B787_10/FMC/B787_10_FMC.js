@@ -923,7 +923,6 @@ class B787_10_FMC extends Boeing_FMC {
 							let nextAltitude = (isFinite(nextWaypoint.legAltitude1) ? nextWaypoint.legAltitude1 : (isFinite(nextWaypoint.altitudeinFP) ? nextWaypoint.altitudeinFP : NaN));
 							let selectedAltitude = altitude;
 							this._selectedAltitude = altitude;
-							let planeAltitude = Simplane.getAltitude();
 							let shouldEnableLevelOff = null;
 							let needUpdateAltitude = false;
 							let targetAltitude = NaN;
