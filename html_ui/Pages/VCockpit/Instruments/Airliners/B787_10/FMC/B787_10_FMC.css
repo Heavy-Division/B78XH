@@ -310,3 +310,16 @@
 .small {
     font-size: 16px;
 }
+
+.medium-size {
+    font-size: 18px;
+}
+
+.settable {
+    border-style: inset;
+    border-width: thin;
+    border-color: white;
+    background-color: #303030;
+    padding-left: 6px;
+    padding-right: 6px;
+}

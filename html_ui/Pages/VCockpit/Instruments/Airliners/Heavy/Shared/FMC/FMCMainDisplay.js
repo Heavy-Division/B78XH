@@ -107,6 +107,17 @@ class FMCMainDisplay extends BaseAirliners {
 	}
 
 	setTitle(content) {
+		if(content !== ''){
+			let re3 = /\[settable\](.*?)\[\/settable\]/g;
+			content = content.replace(re3, '<span class="settable">$1</span>')
+
+			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+			content = content.replace(re2, '<tspan class="$1">$2</tspan>')
+
+			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+			content = content.replace(re, '<tspan class="$1">$2</tspan>');
+			let color = content.split('[color]')[1];
+		}
 		let color = content.split('[color]')[1];
 		if (!color) {
 			color = 'white';
@@ -179,9 +190,19 @@ class FMCMainDisplay extends BaseAirliners {
 			col = 0;
 		}
 		if (label === '__FMCSEPARATOR') {
-			label = '------------------------';
+			label = '---------------------------------------';
 		}
 		if (label !== '') {
+			let re3 = /\[settable\](.*?)\[\/settable\]/g;
+			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
+			label = label.replace(re3, '<span class="settable">$1</span>')
+
+			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+			label = label.replace(re2, '<tspan class="$1">$2</tspan>')
+
+			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+			label = label.replace(re, '<tspan class="$1">$2</tspan>');
+
 			let color = label.split('[color]')[1];
 			if (!color) {
 				color = 'white';
@@ -220,7 +241,7 @@ class FMCMainDisplay extends BaseAirliners {
 			col = 0;
 		}
 		if (content === '__FMCSEPARATOR') {
-			content = '------------------------';
+			content = '---------------------------------------';
 		}
 		if (content !== '') {
 			content = content.replace('\<', '&lt');
@@ -230,6 +251,11 @@ class FMCMainDisplay extends BaseAirliners {
 			} else {
 				this._lineElements[row][col].classList.remove('s-text');
 			}
+
+			let re3 = /\[settable\](.*?)\[\/settable\]/g;
+			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
+			content = content.replace(re3, '<span class="settable">$1</span>')
+
 			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
 			content = content.replace(re2, '<tspan class="$1">$2</tspan>')
 

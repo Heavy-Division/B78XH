@@ -1,7 +1,13 @@
 class B787_10_FMC_ThrustLimPage {
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
-		let selectedTempCell = fmc.getThrustTakeOffTemp() + '°';
+
+		fmc.refreshPageCallback = () => {
+			B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
+		};
+
+		let selectedTempCell = '[settable]' + fmc.getThrustTakeOffTemp() + '[/settable]';
+		selectedTempCell = selectedTempCell + '°';
 		fmc.onLeftInput[0] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
@@ -58,22 +64,39 @@ class B787_10_FMC_ThrustLimPage {
 				toN1CellTitle = 'TO N1';
 		}
 
+		let thrustClimbModeCell0 = '';
+		let thrustClimbModeCell1 = '';
+		let thrustClimbModeCell2 = '';
+		switch (thrustClimbMode) {
+			case 0:
+				thrustClimbModeCell0 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>')
+				break;
+			case 1:
+				thrustClimbModeCell1 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>')
+				break;
+			case 2:
+				thrustClimbModeCell2 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>')
+				break;
+			default:
+				toN1CellTitle = 'TO N1';
+		}
+
 		fmc.setTemplate([
 			['THRUST LIM'],
 			['SEL/OAT', toN1CellTitle],
-			[selectedTempCell + 'C/' + oatCell + 'C', toN1Cell],
+			[selectedTempCell + '[size=medium-size]C[/size]/' + oatCell + '[size=medium-size]C[/size]', toN1Cell],
 			[''],
-			['\<TO', '<CLB', (thrustTOMode === 0 ? '<SEL>' : ''), (thrustClimbMode === 0 ? '<SEL> ' : '')],
+			['\<TO', '<CLB', (thrustTOMode === 0 ? '<SEL>' : ''), thrustClimbModeCell0],
 			['TO 1'],
-			['\<-10%', '<CLB 1', (thrustTOMode === 1 ? '<SEL>' : ''), (thrustClimbMode === 1 ? '<SEL> ' : '')],
+			['\<-10%', '<CLB 1', (thrustTOMode === 1 ? '<SEL>' : ''), thrustClimbModeCell1],
 			['TO 2'],
-			['\<-20%', '<CLB 2', (thrustTOMode === 2 ? '<SEL>' : ''), (thrustClimbMode === 2 ? '<SEL> ' : '')],
+			['\<-20%', '<CLB 2', (thrustTOMode === 2 ? '<SEL>' : ''), thrustClimbModeCell2],
 			[''],
 			[''], //['\<TO-B'],
-			['---------------------------------------'],
+			['__FMCSEPARATOR'],
 			['\<INDEX', '<TAKEOFF']
 		]);
-		// (thrustClimbMode === 2 ? '<SEL> ' : '')
+
 		fmc.onLeftInput[5] = () => {
 			B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
 		};

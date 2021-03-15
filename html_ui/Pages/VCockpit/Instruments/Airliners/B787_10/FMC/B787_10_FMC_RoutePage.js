@@ -107,7 +107,7 @@ class B787_10_FMC_RoutePage {
 			[runwayCell, flightNoCell],
 			['REQUEST', 'CO ROUTE'],
 			['\<SEND', coRouteCell],
-			['--------------------------------------'],
+			['__FMCSEPARATOR'],
 			[''],
 			[''],
 			[''],

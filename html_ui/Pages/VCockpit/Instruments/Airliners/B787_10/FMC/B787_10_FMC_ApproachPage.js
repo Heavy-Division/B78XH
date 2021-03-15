@@ -88,7 +88,7 @@ class B787_10_FMC_ApproachPage {
 			[runwayLengthCell, selectedFlapSpeedCell],
 			[''],
 			[''],
-			['---------------------------------------'],
+			['__FMCSEPARATOR'],
 			['\<INDEX', '<THRUST LIM']
 		]);
 		fmc.onLeftInput[5] = () => {

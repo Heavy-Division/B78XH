@@ -23,7 +23,7 @@ class B787_10_FMC_VNAVPage {
 	getClimbPageTitle() {
 		let cell = '';
 		if (Object.keys(this.fmc._activeExecHandlers).length > 0) {
-			cell = cell + 'MOD ';
+			cell = cell + '[settable]MOD[/settable] ';
 		} else {
 			cell = cell + 'ACT ';
 		}
@@ -66,8 +66,16 @@ class B787_10_FMC_VNAVPage {
 		}
 
 		if (this.fmc.cruiseFlightLevel) {
-			cell = this.fmc.cruiseFlightLevel + 'FL' + (commandedAltitudeCruise && this.fmc.getIsVNAVActive() ? '[color]magenta' : '');
+			cell = this.fmc.cruiseFlightLevel + 'FL';
+			if(commandedAltitudeCruise && this.fmc.getIsVNAVActive()){
+				cell = '[color=magenta]' + cell + '[/color]';
+			}
 		}
+
+		if(cell){
+			cell = '[settable]' + cell + '[/settable]'
+		}
+
 		return cell;
 	}
 
@@ -89,13 +97,15 @@ class B787_10_FMC_VNAVPage {
 
 
 		if (speedRestrictionSpeedValue && isFinite(speedRestrictionSpeedValue) && speedRestrictionAltitudeValue && isFinite(speedRestrictionAltitudeValue)) {
+			if (this.fmc._fmcCommandClimbSpeedType === 'SPEED_RESTRICTION') {
+				if (!this.fmc._climbSpeedRestriction) {
+					speedRestrictionSpeedValue = '[color=magenta]' + speedRestrictionSpeedValue + '[/color]';
+				}
+			}
 			cell = speedRestrictionSpeedValue + '/' + speedRestrictionAltitudeValue;
 		}
-		if (this.fmc._fmcCommandClimbSpeedType === 'SPEED_RESTRICTION') {
-			if (!this.fmc._climbSpeedRestriction) {
-				cell = cell + '[color]magenta';
-			}
-		}
+
+		cell = '[settable]' + cell + '[/settable]'
 		return cell;
 	}
 
@@ -103,22 +113,24 @@ class B787_10_FMC_VNAVPage {
 		let cell = '';
 		let speed = this.fmc.getCrzManagedSpeed();
 		if (isFinite(speed)) {
-			cell = speed.toFixed(0) + '/10000';
-		}
-
-		if (this.fmc._climbSpeedTransitionDeleted || Simplane.getAltitude() > 10000) {
-			cell = '';
+			cell = speed.toFixed(0);
 		}
 
 		if (this.fmc._fmcCommandClimbSpeedType === 'SPEED_TRANSITION') {
-			cell = cell + '[color]magenta';
+			cell = '[color=magenta]' + cell + '[/color]';
+		}
+
+		cell = cell + '/10000';
+
+		if (this.fmc._climbSpeedTransitionDeleted || Simplane.getAltitude() > 10000) {
+			cell = '';
 		}
 
 		return cell;
 	}
 
 	getClimbTransitionAltitudeCell() {
-		return this.fmc.transitionAltitude.toFixed();
+		return '[settable]' + this.fmc.transitionAltitude.toFixed() + '[/settable]';
 	}
 
 	getSelectedClimbSpeedCell() {
@@ -129,9 +141,12 @@ class B787_10_FMC_VNAVPage {
 		}
 
 		if (this.fmc._fmcCommandClimbSpeedType === 'SPEED_SELECTED') {
-			cell = cell + '[color]magenta';
+			cell = '[color=magenta]' + cell + '[/color]';
 		}
 
+		if(cell){
+			cell = '[settable]' + cell + '[/settable]'
+		}
 		return cell;
 	}
 
@@ -144,6 +159,9 @@ class B787_10_FMC_VNAVPage {
 		let cell = this.fmc.getEconClbManagedSpeed().toFixed(0);
 		if (this.fmc._fmcCommandClimbSpeedType === 'SPEED_ECON') {
 			cell = cell + '[color]magenta';
+		}
+		if(cell){
+			cell = '[settable]' + cell + '[/settable]'
 		}
 		return cell;
 	}
@@ -285,7 +303,7 @@ class B787_10_FMC_VNAVPage {
 		 */
 		this.fmc.clearDisplay();
 		this.fmc.refreshPageCallback = () => {
-			this.showPage();
+			this.showPage1();
 		};
 
 		/**
@@ -313,7 +331,7 @@ class B787_10_FMC_VNAVPage {
 			[speedTransitionCell, transitionAltitudeCell],
 			['SPD RESTR'],
 			[speedRestrictionCell],
-			[],
+			['__FMCSEPARATOR'],
 			[econPromptCell, '<ENG OUT'],
 			[],
 			[]
@@ -328,7 +346,7 @@ class B787_10_FMC_VNAVPage {
 	getCruisePageTitle() {
 		let cell = '';
 		if (Object.keys(this.fmc._activeExecHandlers).length > 0) {
-			cell = cell + 'MOD ';
+			cell = cell + '[settable]MOD[/settable] ';
 		} else {
 			cell = cell + 'ACT ';
 		}
@@ -352,8 +370,16 @@ class B787_10_FMC_VNAVPage {
 		let cell = '□□□□□';
 
 		if (this.fmc.cruiseFlightLevel) {
-			cell = this.fmc.cruiseFlightLevel + 'FL' + (this.fmc.getIsVNAVActive() ? '[color]magenta' : '');
+			cell = this.fmc.cruiseFlightLevel + 'FL';
+			if(this.fmc.getIsVNAVActive()){
+				cell = '[color=magenta]' + cell + '[/color]';
+			}
 		}
+
+		if(cell){
+			cell = '[settable]' + cell + '[/settable]'
+		}
+
 		return cell;
 	}
 
@@ -365,7 +391,11 @@ class B787_10_FMC_VNAVPage {
 		}
 
 		if (this.fmc._fmcCommandCruiseSpeedType === 'SPEED_SELECTED') {
-			cell = cell + '[color]magenta';
+			cell = '[color=magenta]' + cell + '[/color]';
+		}
+
+		if(cell){
+			cell = '[settable]' + cell + '[/settable]'
 		}
 
 		return cell;
@@ -379,8 +409,13 @@ class B787_10_FMC_VNAVPage {
 	getEconCruiseSpeedCell() {
 		let cell = this.fmc.getEconCrzManagedSpeed().toFixed(0);
 		if (this.fmc._fmcCommandCruiseSpeedType === 'SPEED_ECON') {
-			cell = cell + '[color]magenta';
+			cell = '[color=magenta]' + cell + '[/color]';
 		}
+
+		if(cell){
+			cell = '[settable]' + cell + '[/settable]'
+		}
+
 		return cell;
 	}
 
@@ -441,7 +476,7 @@ class B787_10_FMC_VNAVPage {
 		 */
 		this.fmc.clearDisplay();
 		this.fmc.refreshPageCallback = () => {
-			this.showPage();
+			this.showPage2();
 		};
 
 		let pageTitleCell = this.getCruisePageTitle();
@@ -467,7 +502,7 @@ class B787_10_FMC_VNAVPage {
 			[n1Cell],
 			['STEP', 'RECMD', 'OPT', 'MAX'],
 			[],
-			['---------------------------------------'],
+			['__FMCSEPARATOR'],
 			[econPromptCell, ''],
 			[''],
 			['', '<LRC']

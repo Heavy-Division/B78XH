@@ -171,7 +171,7 @@ class B787_10_FMC_DepArrPage {
 			[originIdent + ' DEPARTURES', currentPage.toFixed(0), pageCount.toFixed(0)],
 			['SIDS', 'RUNWAYS', 'RTE 1'],
 			...rows,
-			['--------------------------------------'],
+			['__FMCSEPARATOR'],
 			['\<INDEX', '<ROUTE']
 		]);
 		fmc.onLeftInput[5] = () => {
@@ -352,7 +352,7 @@ class B787_10_FMC_DepArrPage {
 			[destinationIdent + ' ARRIVALS', currentPage.toFixed(0), pageCount.toFixed(0)],
 			['STAR', 'APPROACH', 'RTE 1'],
 			...rows,
-			['--------------------------------------'],
+			['__FMCSEPARATOR'],
 			['\<INDEX', '<ROUTE']
 		]);
 		fmc.onLeftInput[5] = () => {

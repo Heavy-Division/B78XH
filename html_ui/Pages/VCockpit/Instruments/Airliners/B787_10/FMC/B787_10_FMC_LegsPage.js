@@ -249,7 +249,7 @@ class B787_10_FMC_LegsPage {
 		fmc.setTemplate([
 			[(fmc.getIsRouteActivated() ? 'MOD' : 'ACT') + ' RTE 1 LEGS', currentPage.toFixed(0), pageCount.toFixed(0)],
 			...rows,
-			['--------------------------------------'],
+			['__FMCSEPARATOR'],
 			[route2Legs, isMapModePlan ? '<STEP' : '<RTE DATA']
 		]);
 		fmc.onPrevPage = () => {
