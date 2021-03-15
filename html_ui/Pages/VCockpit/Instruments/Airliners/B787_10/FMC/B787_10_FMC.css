@@ -306,3 +306,7 @@
 .magenta {
     color: magenta;
 }
+
+.small {
+    font-size: 16px;
+}
