@@ -668,28 +668,37 @@ class VORInfo extends WayPointInfo {
 		let fName = '';
 		switch (this.type) {
 			case 1:
-				fName = 'ICON_MAP_VOR.svg';
+				fName = 'ICON_MAP_VOR';
 				break;
 			case 2:
-				fName = 'ICON_MAP_VOR_DME.svg';
+				fName = 'ICON_MAP_VOR_DME';
 				break;
 			case 3:
-				fName = 'ICON_MAP_VOR_DME.svg';
+				fName = 'ICON_MAP_VOR_DME';
 				break;
 			case 4:
-				fName = 'ICON_MAP_VOR_TACAN.svg';
+				fName = 'ICON_MAP_VOR_TACAN';
 				break;
 			case 5:
-				fName = 'ICON_MAP_VOR_VORTAC.svg';
+				fName = 'ICON_MAP_VOR_VORTAC';
 				break;
 			case 6:
-				fName = 'ICON_MAP_VOR.svg';
+				fName = 'ICON_MAP_VOR';
 				break;
 		}
-		if (BaseInstrument.useSvgImages) {
-			return fName;
+
+		if (this.isInFlightPlan) {
+			fName += '_FLIGHTPLAN';
 		}
-		return fName.replace('.svg', '.png');
+		if (this.isActiveInFlightPlan) {
+			fName += '_ACTIVE';
+		}
+
+		if (BaseInstrument.useSvgImages) {
+			return fName + '.svg';
+		}
+
+		return fName + '.png';
 	}
 
 	UpdateInfos(_CallBack = null) {
@@ -847,10 +856,19 @@ class IntersectionInfo extends WayPointInfo {
 	}
 
 	imageFileName() {
-		if (BaseInstrument.useSvgImages) {
-			return 'ICON_MAP_INTERSECTION.svg';
+		let fName = 'ICON_MAP_INTERSECTION';
+		if (this.isInFlightPlan) {
+			fName += '_FLIGHTPLAN';
 		}
-		return 'ICON_MAP_INTERSECTION.png';
+		if (this.isActiveInFlightPlan) {
+			fName += '_ACTIVE';
+		}
+
+		if (BaseInstrument.useSvgImages) {
+			return fName + '.svg';
+		}
+
+		return fName + '.png';
 	}
 
 	vorImageFileNameSync() {
