@@ -6,6 +6,7 @@ class B787_10_FMC_DepArrPage {
 		if (origin) {
 			rowOrigin = ['\<DEP', '', origin.ident];
 			fmc.onLeftInput[0] = () => {
+				//new B787_10_FMC_DeparturesPage(fmc).showPage()
 				B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
 			};
 		}
@@ -154,9 +155,15 @@ class B787_10_FMC_DepArrPage {
 						let ii = i;
 						rows[2 * rowIndex][0] = departure.name;
 						fmc.onLeftInput[rowIndex] = () => {
+							let approachIndex = fmc.flightPlanManager.getApproachIndex();
 							fmc.setDepartureIndex(ii, () => {
-								fmc.activateRoute();
-								B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+								/**
+								 * HOTFIX: ND is not working without this (does not show full route)
+								 */
+								fmc.setApproachIndex(approachIndex, () => {
+									fmc.activateRoute();
+									B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+								});
 							});
 						};
 					}

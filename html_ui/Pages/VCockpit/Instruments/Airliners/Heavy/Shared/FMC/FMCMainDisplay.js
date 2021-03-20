@@ -107,12 +107,12 @@ class FMCMainDisplay extends BaseAirliners {
 	}
 
 	setTitle(content) {
-		if(content !== ''){
+		if (content !== '') {
 			let re3 = /\[settable\](.*?)\[\/settable\]/g;
-			content = content.replace(re3, '<span class="settable">$1</span>')
+			content = content.replace(re3, '<span class="settable">$1</span>');
 
 			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
-			content = content.replace(re2, '<tspan class="$1">$2</tspan>')
+			content = content.replace(re2, '<tspan class="$1">$2</tspan>');
 
 			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
 			content = content.replace(re, '<tspan class="$1">$2</tspan>');
@@ -195,10 +195,10 @@ class FMCMainDisplay extends BaseAirliners {
 		if (label !== '') {
 			let re3 = /\[settable\](.*?)\[\/settable\]/g;
 			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
-			label = label.replace(re3, '<span class="settable">$1</span>')
+			label = label.replace(re3, '<span class="settable">$1</span>');
 
 			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
-			label = label.replace(re2, '<tspan class="$1">$2</tspan>')
+			label = label.replace(re2, '<tspan class="$1">$2</tspan>');
 
 			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
 			label = label.replace(re, '<tspan class="$1">$2</tspan>');
@@ -254,10 +254,10 @@ class FMCMainDisplay extends BaseAirliners {
 
 			let re3 = /\[settable\](.*?)\[\/settable\]/g;
 			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
-			content = content.replace(re3, '<span class="settable">$1</span>')
+			content = content.replace(re3, '<span class="settable">$1</span>');
 
 			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
-			content = content.replace(re2, '<tspan class="$1">$2</tspan>')
+			content = content.replace(re2, '<tspan class="$1">$2</tspan>');
 
 			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
 			content = content.replace(re, '<tspan class="$1">$2</tspan>');
@@ -272,8 +272,8 @@ class FMCMainDisplay extends BaseAirliners {
 		}
 		this._lines[row][col] = this._lines[row][col] + content;
 		this._lineElements[row][col].innerHTML = this._lines[row][col];
-		console.log(this._lineElements[row][col].innerHTML)
-		console.log(this._lines[row][col])
+		console.log(this._lineElements[row][col].innerHTML);
+		console.log(this._lines[row][col]);
 	}
 
 	setLine2(content, row, col = -1) {
@@ -676,9 +676,12 @@ class FMCMainDisplay extends BaseAirliners {
 			this.flightPlanManager.setDepartureProcIndex(departureIndex, () => {
 				if (currentRunway) {
 					let departure = this.flightPlanManager.getDeparture();
-					let departureRunwayIndex = departure.runwayTransitions.findIndex(t => {
-						return t.name.indexOf(currentRunway.designation) != -1;
-					});
+					let departureRunwayIndex = -1;
+					if (departure) {
+						departureRunwayIndex = departure.runwayTransitions.findIndex(t => {
+							return t.name.indexOf(currentRunway.designation) != -1;
+						});
+					}
 					if (departureRunwayIndex >= -1) {
 						return this.flightPlanManager.setDepartureRunwayIndex(departureRunwayIndex, () => {
 							return callback(true);
@@ -722,7 +725,7 @@ class FMCMainDisplay extends BaseAirliners {
 				});
 			});
 		});
-	}
+	};
 
 	removeArrival() {
 		this.flightPlanManager.removeDeparture();
@@ -1853,7 +1856,7 @@ class FMCMainDisplay extends BaseAirliners {
 						let lastFlightPhase = this.currentFlightPhase;
 						this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CRUISE;
 						Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
-						if(lastFlightPhase !== FlightPhase.FLIGHT_PHASE_CRUISE){
+						if (lastFlightPhase !== FlightPhase.FLIGHT_PHASE_CRUISE) {
 							SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 						}
 					}
@@ -1910,8 +1913,8 @@ class FMCMainDisplay extends BaseAirliners {
 						let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
 						let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates.lla);
 
-						if(distanceToTOD < 50){
-							if(!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')){
+						if (distanceToTOD < 50) {
+							if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
 								SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
 								SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 							}
@@ -1925,7 +1928,7 @@ class FMCMainDisplay extends BaseAirliners {
 							let lastFlightPhase = this.currentFlightPhase;
 							this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
 							Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
-							if(lastFlightPhase !== FlightPhase.FLIGHT_PHASE_DESCENT){
+							if (lastFlightPhase !== FlightPhase.FLIGHT_PHASE_DESCENT) {
 								SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 							}
 						}
