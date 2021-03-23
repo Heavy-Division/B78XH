@@ -272,10 +272,7 @@ class WayPointInfo {
 	}
 
 	async UpdateAirway(name) {
-		let airwayIndex = this.airways.findIndex((airway) => {
-			return airway.name === name
-		});
-		if (airwayIndex === -1) {
+		if (this.airways.findIndex(airway => airway.name === name) === -1) {
 			let airways = await this.instrument.facilityLoader.getAllAirways(this, name);
 			if (airways.length === 1) {
 				this.airways.push(airways[0]);

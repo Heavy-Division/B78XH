@@ -930,7 +930,7 @@ class FacilityLoader {
 		return airways;
 	}
 
-	async getAllAirways(intersection, maxLength = 100) {
+	async getAllAirways(intersection, name = undefined, maxLength = 100) {
 		await this.waitRegistration();
 		let airways = [];
 		let intersectionInfo;
@@ -940,7 +940,7 @@ class FacilityLoader {
 			intersectionInfo = intersection;
 		}
 		if (intersectionInfo instanceof WayPointInfo) {
-			let datas = await this.getAllAirwaysData(intersectionInfo, maxLength);
+			let datas = await this.getAllAirwaysData(intersectionInfo, name,maxLength);
 			for (let i = 0; i < datas.length; i++) {
 				let airway = new Airway();
 				airway.SetFromIAirwayData(datas[i]);
@@ -950,19 +950,25 @@ class FacilityLoader {
 		return airways;
 	}
 
-	async getAllAirwaysData(intersectionInfo, maxLength = 100) {
+	async getAllAirwaysData(intersectionInfo, name = undefined, maxLength = 100) {
 		await this.waitRegistration();
 		let airways = [];
 		if (intersectionInfo.routes) {
 			for (let i = 0; i < intersectionInfo.routes.length; i++) {
-				let routeName = intersectionInfo.routes[i].name;
-				let airwayData = this.loadedAirwayDatas.get(routeName);
-				if (!airwayData) {
-					airwayData = await this.getAirwayData(intersectionInfo, intersectionInfo.routes[i].name, maxLength);
-					this.loadedAirwayDatas.set(routeName, airwayData);
-				}
-				if (airwayData) {
-					airways.push(airwayData);
+				if (name === undefined || name === intersectionInfo.routes[i].name) {
+					let routeName = intersectionInfo.routes[i].name;
+					let airwayData = this.loadedAirwayDatas.get(routeName);
+					if (!airwayData) {
+						airwayData = await this.getAirwayData(intersectionInfo, intersectionInfo.routes[i].name, maxLength);
+						this.loadedAirwayDatas.set(routeName, airwayData);
+					}
+					if (airwayData) {
+						if (airwayData.icaos.findIndex((x) => x === intersectionInfo.icao) === -1) {
+							airwayData = await this.getAirwayData(intersectionInfo, intersectionInfo.routes[i].name, maxLength);
+							this.loadedAirwayDatas.set(routeName, airwayData);
+						}
+						airways.push(airwayData);
+					}
 				}
 			}
 		}
