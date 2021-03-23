@@ -6,7 +6,7 @@ class B787_10_FMC_HeavyConfigurationPage {
 		fmc.setTemplate([
 			['HEAVY CONFIGURATION'],
 			[''],
-			[''],
+			['', '<SimBrief'],
 			[''],
 			[''],
 			[''],
@@ -19,11 +19,18 @@ class B787_10_FMC_HeavyConfigurationPage {
 			['<BACK']
 		]);
 
+		this.setupInputHandlers(fmc);
 
+		fmc.updateSideButtonActiveStatus();
+	}
+
+	static setupInputHandlers(fmc){
 		fmc.onLeftInput[5] = () => {
 			B787_10_FMC_HeavyPage.ShowPage1(fmc);
 		}
 
-		fmc.updateSideButtonActiveStatus();
+		fmc.onRightInput[0] = () => {
+			new B787_10_FMC_SimBriefConfigurationPage(fmc).showPage();
+		}
 	}
 }

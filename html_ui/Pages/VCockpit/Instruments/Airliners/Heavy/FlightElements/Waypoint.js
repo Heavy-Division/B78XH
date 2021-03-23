@@ -82,9 +82,9 @@ class WayPoint {
 		}
 	}
 
-	UpdateInfos(_CallBack = null, _LoadApproaches = true) {
+	UpdateInfos(_CallBack = null, lazy = true) {
 		this.instrument.facilityLoader.getFacilityDataCB(this.icao, (data) => {
-			this.SetFromIFacility(data);
+			this.SetFromIFacility(data, EmptyCallback.Void, lazy);
 			if (_CallBack) {
 				_CallBack();
 			}
@@ -128,7 +128,7 @@ class WayPoint {
 		}
 	}
 
-	SetFromIFacility(data, callback = EmptyCallback.Void) {
+	SetFromIFacility(data, callback = EmptyCallback.Void, lazy = false) {
 		if (data == undefined) {
 			console.warn('Trying to set a waypoint with undefined data');
 			return;
@@ -143,17 +143,17 @@ class WayPoint {
 		this.type = this.icao[0];
 		if (this.type === 'A') {
 			this.infos = new AirportInfo(this.instrument);
-			this.infos.SetFromIFacilityAirport(data);
+			this.infos.SetFromIFacilityAirport(data, lazy);
 			return callback();
 		} else if (this.type === 'W') {
 			this.infos = new IntersectionInfo(this.instrument);
-			this.infos.SetFromIFacilityIntersection(data, callback);
+			this.infos.SetFromIFacilityIntersection(data, callback, lazy);
 		} else if (this.type === 'V') {
 			this.infos = new VORInfo(this.instrument);
-			this.infos.SetFromIFacilityVOR(data, callback);
+			this.infos.SetFromIFacilityVOR(data, callback, lazy);
 		} else if (this.type === 'N') {
 			this.infos = new NDBInfo(this.instrument);
-			this.infos.SetFromIFacilityNDB(data, callback);
+			this.infos.SetFromIFacilityNDB(data, callback, lazy);
 		}
 	}
 
@@ -271,7 +271,20 @@ class WayPointInfo {
 		this.long = data.lon;
 	}
 
+	async UpdateAirway(name) {
+		let airwayIndex = this.airways.findIndex((airway) => {
+			return airway.name === name
+		});
+		if (airwayIndex === -1) {
+			let airways = await this.instrument.facilityLoader.getAllAirways(this, name);
+			if (airways.length === 1) {
+				this.airways.push(airways[0]);
+			}
+		}
+	}
+
 	async UpdateAirways() {
+		this.airways = await this.instrument.facilityLoader.getAllAirways(this);
 	}
 }
 
@@ -701,7 +714,7 @@ class VORInfo extends WayPointInfo {
 		return fName + '.png';
 	}
 
-	UpdateInfos(_CallBack = null) {
+	UpdateInfos(_CallBack = null, lazy = true) {
 		this.loaded = false;
 		this.instrument.facilityLoader.getVorDataCB(this.icao, (data) => {
 			this.SetFromIFacilityVOR(data, () => {
@@ -709,7 +722,7 @@ class VORInfo extends WayPointInfo {
 				if (_CallBack) {
 					_CallBack();
 				}
-			});
+			}, lazy);
 		});
 	}
 
@@ -731,7 +744,7 @@ class VORInfo extends WayPointInfo {
 		}
 	}
 
-	SetFromIFacilityVOR(data, callback = EmptyCallback.Void) {
+	SetFromIFacilityVOR(data, callback = EmptyCallback.Void, lazy) {
 		super.SetFromIFacilityWaypoint(data);
 		this.frequencyMHz = data.freqMHz;
 		this.frequencyBcd16 = data.freqBCD16;
@@ -744,6 +757,9 @@ class VORInfo extends WayPointInfo {
 				return callback();
 			}
 			this.routes = data.routes;
+			if (lazy) {
+				return callback();
+			}
 			this.instrument.facilityLoader.getAllAirways(this, 75).then(airways => {
 				this.airways = airways;
 				return callback();
@@ -791,7 +807,7 @@ class NDBInfo extends WayPointInfo {
 		return this.loaded;
 	}
 
-	UpdateInfos(_CallBack = null) {
+	UpdateInfos(_CallBack = null, lazy = true) {
 		this.loaded = false;
 		this.instrument.facilityLoader.getNdbDataCB(this.icao, (data) => {
 			this.SetFromIFacilityNDB(data, () => {
@@ -799,7 +815,7 @@ class NDBInfo extends WayPointInfo {
 				if (_CallBack) {
 					_CallBack();
 				}
-			});
+			}, lazy);
 		});
 	}
 
@@ -818,7 +834,7 @@ class NDBInfo extends WayPointInfo {
 		}
 	}
 
-	SetFromIFacilityNDB(data, callback = EmptyCallback.Void) {
+	SetFromIFacilityNDB(data, callback = EmptyCallback.Void, lazy) {
 		super.SetFromIFacilityWaypoint(data);
 		this.type = data.type;
 		this.weatherBroadcast = data.weatherBroadcast;
@@ -828,6 +844,9 @@ class NDBInfo extends WayPointInfo {
 				return callback();
 			}
 			this.routes = data.routes;
+			if (lazy) {
+				return callback();
+			}
 			this.instrument.facilityLoader.getAllAirways(this, 75).then(airways => {
 				this.airways = airways;
 				return callback();
@@ -899,7 +918,7 @@ class IntersectionInfo extends WayPointInfo {
 		return fName.replace('.svg', '.png');
 	}
 
-	UpdateInfos(_CallBack = null) {
+	UpdateInfos(_CallBack = null, lazy) {
 		this.loaded = false;
 		this.instrument.facilityLoader.getIntersectionDataCB(this.icao, (data) => {
 			this.SetFromIFacilityIntersection(data, () => {
@@ -907,7 +926,7 @@ class IntersectionInfo extends WayPointInfo {
 				if (_CallBack) {
 					_CallBack();
 				}
-			});
+			}, lazy);
 		});
 	}
 
@@ -963,7 +982,7 @@ class IntersectionInfo extends WayPointInfo {
 		}
 	}
 
-	SetFromIFacilityIntersection(data, callback = EmptyCallback.Void) {
+	SetFromIFacilityIntersection(data, callback = EmptyCallback.Void, lazy = false) {
 		super.SetFromIFacilityWaypoint(data);
 		this.routes = data.routes;
 		this.nearestVORType = data.nearestVorType;
@@ -974,6 +993,9 @@ class IntersectionInfo extends WayPointInfo {
 		this.nearestVORTrueRadial = data.nearestVorTrueRadial;
 		this.nearestVORMagneticRadial = data.nearestVorMagneticRadial;
 		this.nearestVORDistance = data.nearestVorDistance;
+		if (lazy) {
+			return callback();
+		}
 		this.instrument.facilityLoader.getAllAirways(this, 75).then(airways => {
 			this.airways = airways;
 			return callback();
