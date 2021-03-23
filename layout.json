@@ -38,17 +38,17 @@
         {
             "path": "html_ui/Heavy/SimBrief/SimBrief.js",
             "size": 822,
-            "date": 132609372700674000
+            "date": 132609744688207600
         },
         {
             "path": "html_ui/Heavy/SimBrief/SimBriefApi.js",
             "size": 974,
-            "date": 132609365799169900
+            "date": 132609744688207600
         },
         {
             "path": "html_ui/Heavy/SimBrief/SimBriefCredentials.js",
             "size": 489,
-            "date": 132609365799179890
+            "date": 132609744688217580
         },
         {
             "path": "html_ui/Heavy/Utils/HeavyDataStorage.js",
@@ -73,7 +73,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Core/VCockpit.html",
             "size": 1420,
-            "date": 132609742205515940
+            "date": 132610015836163680
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.css",
@@ -82,8 +82,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.html",
-            "size": 15553,
-            "date": 132609402372572370
+            "size": 15562,
+            "date": 132609766084451360
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js",
@@ -108,7 +108,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyConfigurationPage.js",
             "size": 648,
-            "date": 132609385135943230
+            "date": 132609744688237520
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyPage.js",
@@ -121,29 +121,29 @@
             "date": 132580500166496480
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_LegsPage.js",
-            "size": 9655,
-            "date": 132609365799189870
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PayloadManagerPage.js",
             "size": 16379,
             "date": 132581790348054000
         },
         {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_LegsPage.js",
+            "size": 9655,
+            "date": 132609365799189870
+        },
+        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RoutePage.js",
             "size": 11978,
-            "date": 132609401944175400
+            "date": 132609744688247500
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RouteRequestPage.js",
-            "size": 3866,
-            "date": 132609740654472940
+            "size": 6643,
+            "date": 132609783011856350
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimBriefConfigurationPage.js",
             "size": 1866,
-            "date": 132609389576277090
+            "date": 132609744688257470
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimRateManagerPage.js",
@@ -212,23 +212,13 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/FlightElements/Waypoint.js",
-            "size": 27244,
-            "date": 132609720317976910
+            "size": 27190,
+            "date": 132609775879921020
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/FlightElements/WaypointLoader.js",
-            "size": 48725,
-            "date": 132609725867114400
-        },
-        {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/Map/MapInstrument.css",
-            "size": 2247,
-            "date": 132581952840260960
-        },
-        {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/Map/MapInstrument.html",
-            "size": 5320,
-            "date": 132606850573070880
+            "size": 49118,
+            "date": 132609999191110400
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Shared/Boeing/Boeing_FMA.js",
@@ -239,6 +229,16 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Shared/Boeing/Boeing_FMC.js",
             "size": 19576,
             "date": 132609365799219790
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/Map/MapInstrument.css",
+            "size": 2247,
+            "date": 132581952840260960
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/Map/MapInstrument.html",
+            "size": 5320,
+            "date": 132606850573070880
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_CSTR_AMBER.svg",
@@ -336,14 +336,14 @@
             "date": 132581997011521310
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION.svg",
-            "size": 2428,
-            "date": 132581952839977520
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION.png",
             "size": 3074,
             "date": 132581952839967550
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION.svg",
+            "size": 2428,
+            "date": 132581952839977520
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION_ACTIVE.png",
@@ -658,7 +658,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/Shared/FMC/FMCMainDisplay.js",
             "size": 85731,
-            "date": 132609468034328540
+            "date": 132609744688287400
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/Heavy/Map/Svg/SvgConstraintElement.js",
