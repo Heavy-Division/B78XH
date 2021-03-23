@@ -99,6 +99,13 @@ class B787_10_FMC_RoutePage {
 				});
 			};
 		}
+
+		if(HeavyDataStorage.get('SIMBRIEF_USERNAME') || HeavyDataStorage.get('SIMBRIEF_USERID')){
+			fmc.onLeftInput[2] = () => {
+				new B787_10_FMC_RouteRequestPage(fmc).showPage();
+			}
+		}
+
 		fmc.setTemplate([
 			['RTE 1', '1', pageCount.toFixed(0)],
 			['ORIGIN', 'DEST'],

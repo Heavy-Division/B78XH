@@ -272,8 +272,6 @@ class FMCMainDisplay extends BaseAirliners {
 		}
 		this._lines[row][col] = this._lines[row][col] + content;
 		this._lineElements[row][col].innerHTML = this._lines[row][col];
-		console.log(this._lineElements[row][col].innerHTML);
-		console.log(this._lines[row][col]);
 	}
 
 	setLine2(content, row, col = -1) {
