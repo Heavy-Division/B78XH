@@ -84,7 +84,7 @@ class B787_10_FMC_RouteRequestPage {
 				 * Remove SID, STAR, TOC and TOD
 				 */
 				this.flightPlan.navlog.fix.forEach((fix) => {
-					if (fix.ident !== 'TOD' && fix.ident !== 'TOC' && fix.is_sid_star != 1 && fix.via_airway !== sid && fix.via_airway !== star) {
+					if ((fix.ident !== 'TOD' && fix.ident !== 'TOC' && fix.is_sid_star != 1 && fix.via_airway !== sid && fix.via_airway !== star) || fix.via_airway === 'DCT') {
 						waypoints.push({ident: fix.ident, airway: fix.via_airway, altitude: fix.altitude_feet});
 					}
 				});
@@ -108,11 +108,7 @@ class B787_10_FMC_RouteRequestPage {
 					lastAirway = waypoint.airway;
 				});
 
-				this.waypoints = waypoints;
-
-				this.waypoints.forEach((waypoint) => {
-					console.log(waypoint.ident + ' : ' + waypoint.airway);
-				});
+				this.waypoints = finalWaypoints;
 			};
 
 			let updateWaypoints = async () => {
