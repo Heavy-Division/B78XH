@@ -56,6 +56,7 @@ class B787_10_FMC_RouteRequestPage {
 
 			let updateDestination = () => {
 				this.fmc.updateRouteDestination(this.flightPlan.destination['icao_code'], () => {
+					//parseNavlog();
 					updateWaypoints();
 				});
 			};
@@ -75,14 +76,30 @@ class B787_10_FMC_RouteRequestPage {
 			let parseNavlog = () => {
 				let waypoints = [];
 				let finalWaypoints = [];
+
+				let sid = (this.flightPlan.navlog.fix[0] !== 'DCT' ? this.flightPlan.navlog.fix[0].via_airway : '')
+				let star = (this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length- 1] !== 'DCT' ? this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length- 1].via_airway : '')
+
+				/**
+				 * Remove SID, STAR, TOC and TOD
+				 */
 				this.flightPlan.navlog.fix.forEach((fix) => {
-					if (fix.ident !== 'TOD' && fix.ident !== 'TOC' && fix.is_sid_star != 1) {
+					if (fix.ident !== 'TOD' && fix.ident !== 'TOC' && fix.is_sid_star != 1 && fix.via_airway !== sid && fix.via_airway !== star) {
 						waypoints.push({ident: fix.ident, airway: fix.via_airway, altitude: fix.altitude_feet});
 					}
 				});
 
+				/**
+				 * SET first waypoint to DCT
+				 */
+
+				waypoints[0].airway = 'DCT';
+
+				/**
+				 * GROUP BY Airway
+				 */
+
 				let lastAirway = '';
-				let position = 0;
 				waypoints.forEach((waypoint) => {
 					if (lastAirway === waypoint.airway && waypoint.airway !== 'DCT') {
 						finalWaypoints.pop();
@@ -91,21 +108,11 @@ class B787_10_FMC_RouteRequestPage {
 					lastAirway = waypoint.airway;
 				});
 
-				finalWaypoints.shift();
-				if (finalWaypoints[0].airway !== 'DCT') {
-					let firstIndex = waypoints.findIndex((w) => {
-						return w.airway === finalWaypoints[0].airway;
-					});
+				this.waypoints = waypoints;
 
-					if (firstIndex >= 0) {
-						let firstWaypoint = waypoints[firstIndex];
-						firstWaypoint.airway = 'DCT';
-						finalWaypoints.unshift(firstWaypoint);
-					}
-				}
-
-
-				this.waypoints = finalWaypoints;
+				this.waypoints.forEach((waypoint) => {
+					console.log(waypoint.ident + ' : ' + waypoint.airway);
+				});
 			};
 
 			let updateWaypoints = async () => {
@@ -113,10 +120,6 @@ class B787_10_FMC_RouteRequestPage {
 				parseNavlog();
 				// TRUKN2 TIPRE Q126 GAROT DCT EKR J84 SNY DCT FOD DCT DBQ DCT KG75M DCT DAFLU J70 LVZ LENDY6
 				// TRUKN2 TIPRE Q126 GAROT EKR J84 SNY FOD DBQ KG75M DAFLU J70 MAGIO J70 LVZ LENDY6
-
-				this.waypoints.forEach((waypoint) => {
-					console.log(waypoint.ident + ' : ' + waypoint.airway);
-				});
 
 				let insertWaypoint = async () => {
 					if (iterator >= this.waypoints.length) {
@@ -126,17 +129,15 @@ class B787_10_FMC_RouteRequestPage {
 					if (this.waypoints[iterator].airway !== 'DCT') {
 						let lastWaypoint = this.fmc.flightPlanManager.getWaypoints()[this.fmc.flightPlanManager.getEnRouteWaypointsLastIndex()];
 						if (lastWaypoint.infos instanceof WayPointInfo) {
-							console.log("A2")
 							lastWaypoint.infos.UpdateAirway(this.waypoints[iterator].airway).then(() => {
 								let airway = lastWaypoint.infos.airways.find(a => { return a.name === this.waypoints[iterator].airway; });
 								if (airway) {
-									console.log("A3")
 									this.insertWaypointsAlongAirway(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, this.waypoints[iterator].airway, () => {
 										iterator++;
 										insertWaypoint();
 									});
 								} else {
-									console.log("A4")
+									iterator++;
 									insertWaypoint();
 								}
 							});
