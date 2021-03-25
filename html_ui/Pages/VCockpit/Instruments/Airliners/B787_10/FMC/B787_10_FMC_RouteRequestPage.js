@@ -132,6 +132,28 @@ class B787_10_FMC_RouteRequestPage {
 							lastWaypoint.infos.UpdateAirway(this.waypoints[iterator].airway).then(() => {
 								let airway = lastWaypoint.infos.airways.find(a => { return a.name === this.waypoints[iterator].airway; });
 								if (airway) {
+									this.fmc.setTemplate([
+										['FLIGHT PLANS'],
+										[''],
+										[''],
+										[''],
+										[''],
+										[''],
+										['[color=yellow]ADD AIRWAY: ' + this.waypoints[iterator].airway + '[/color]'],
+										[''],
+										['[color=yellow]WAYPOINT: ' + this.waypoints[iterator].ident + '[/color]'],
+										[''],
+										[''],
+										[''],
+										['']
+									]);
+									this.fmc.onLeftInput[0] = undefined;
+									this.fmc.onLeftInput[1] = undefined;
+									this.fmc.onLeftInput[2] = undefined;
+									this.fmc.onLeftInput[3] = undefined;
+									this.fmc.onLeftInput[4] = undefined;
+									this.fmc.onLeftInput[5] = undefined;
+									this.fmc.updateSideButtonActiveStatus();
 									this.insertWaypointsAlongAirway(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, this.waypoints[iterator].airway, () => {
 										iterator++;
 										insertWaypoint();
@@ -143,7 +165,28 @@ class B787_10_FMC_RouteRequestPage {
 							});
 						}
 					} else {
-						console.log(this.waypoints[iterator].ident);
+						this.fmc.setTemplate([
+							['FLIGHT PLANS'],
+							[''],
+							[''],
+							[''],
+							[''],
+							[''],
+							['[color=yellow]ADD AIRWAY: ' + 'DCT' + '[/color]'],
+							[''],
+							['[color=yellow]WAYPOINT: ' + this.waypoints[iterator].ident + '[/color]'],
+							[''],
+							[''],
+							[''],
+							['']
+						]);
+						this.fmc.onLeftInput[0] = undefined;
+						this.fmc.onLeftInput[1] = undefined;
+						this.fmc.onLeftInput[2] = undefined;
+						this.fmc.onLeftInput[3] = undefined;
+						this.fmc.onLeftInput[4] = undefined;
+						this.fmc.onLeftInput[5] = undefined;
+						this.fmc.updateSideButtonActiveStatus();
 						this.fmc.insertWaypoint(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, () => {
 							iterator++;
 							insertWaypoint();
