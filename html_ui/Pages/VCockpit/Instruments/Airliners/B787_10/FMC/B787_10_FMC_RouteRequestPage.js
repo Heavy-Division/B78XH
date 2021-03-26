@@ -113,11 +113,22 @@ class B787_10_FMC_RouteRequestPage {
 
 			let updateWaypoints = async () => {
 				let iterator = 0;
+				let protection = 0;
 				parseNavlog();
-				// TRUKN2 TIPRE Q126 GAROT DCT EKR J84 SNY DCT FOD DCT DBQ DCT KG75M DCT DAFLU J70 LVZ LENDY6
-				// TRUKN2 TIPRE Q126 GAROT EKR J84 SNY FOD DBQ KG75M DAFLU J70 MAGIO J70 LVZ LENDY6
 
 				let insertWaypoint = async () => {
+					protection++;
+					if(protection > 400){
+						iterator = 20000
+						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+						return;
+					}
+					if(!this.waypoints[iterator]){
+						iterator = 20000
+						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+						return;
+					}
+
 					if (iterator >= this.waypoints.length) {
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}
@@ -149,6 +160,12 @@ class B787_10_FMC_RouteRequestPage {
 									this.fmc.onLeftInput[3] = undefined;
 									this.fmc.onLeftInput[4] = undefined;
 									this.fmc.onLeftInput[5] = undefined;
+									this.fmc.onRightInput[0] = undefined;
+									this.fmc.onRightInput[1] = undefined;
+									this.fmc.onRightInput[2] = undefined;
+									this.fmc.onRightInput[3] = undefined;
+									this.fmc.onRightInput[4] = undefined;
+									this.fmc.onRightInput[5] = undefined;
 									this.fmc.updateSideButtonActiveStatus();
 									this.insertWaypointsAlongAirway(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, this.waypoints[iterator].airway, () => {
 										iterator++;
@@ -182,6 +199,12 @@ class B787_10_FMC_RouteRequestPage {
 						this.fmc.onLeftInput[3] = undefined;
 						this.fmc.onLeftInput[4] = undefined;
 						this.fmc.onLeftInput[5] = undefined;
+						this.fmc.onRightInput[0] = undefined;
+						this.fmc.onRightInput[1] = undefined;
+						this.fmc.onRightInput[2] = undefined;
+						this.fmc.onRightInput[3] = undefined;
+						this.fmc.onRightInput[4] = undefined;
+						this.fmc.onRightInput[5] = undefined;
 						this.fmc.updateSideButtonActiveStatus();
 						this.fmc.insertWaypoint(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, () => {
 							iterator++;
