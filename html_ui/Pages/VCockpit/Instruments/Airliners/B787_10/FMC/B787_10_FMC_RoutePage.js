@@ -234,14 +234,16 @@ class B787_10_FMC_RoutePage {
 							fmc.clearUserInput();
 							let lastWaypoint = fmc.flightPlanManager.getWaypoints()[fmc.flightPlanManager.getEnRouteWaypointsLastIndex()];
 							if (lastWaypoint.infos instanceof IntersectionInfo || lastWaypoint.infos instanceof VORInfo || lastWaypoint.infos instanceof NDBInfo) {
-								let airway = lastWaypoint.infos.airways.find(a => {
-									return a.name === value;
+								lastWaypoint.infos.UpdateAirway(value).then(() => {
+									let airway = lastWaypoint.infos.airways.find(a => {
+										return a.name === value;
+									});
+									if (airway) {
+										B787_10_FMC_RoutePage.ShowPage2(fmc, offset, airway);
+									} else {
+										fmc.showErrorMessage('NOT IN DATABASE');
+									}
 								});
-								if (airway) {
-									B787_10_FMC_RoutePage.ShowPage2(fmc, offset, airway);
-								} else {
-									fmc.showErrorMessage('NOT IN DATABASE');
-								}
 							}
 						}
 					};
