@@ -85,7 +85,8 @@ class B787_10_FMC_RouteRequestPage {
 				 */
 				this.flightPlan.navlog.fix.forEach((fix) => {
 					if ((fix.ident !== 'TOD' && fix.ident !== 'TOC' && fix.is_sid_star != 1 && fix.via_airway !== sid && fix.via_airway !== star) || fix.via_airway === 'DCT') {
-						waypoints.push({ident: fix.ident, airway: fix.via_airway, altitude: fix.altitude_feet});
+						let ident = SimBriefOceanicWaypointConverter.convert(fix.ident);
+						waypoints.push({ident: ident, airway: fix.via_airway, altitude: fix.altitude_feet});
 					}
 				});
 

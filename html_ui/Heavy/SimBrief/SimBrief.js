@@ -1,4 +1,5 @@
 Include.addScript('/Heavy/Utils/HeavyDataStorage.js');
+Include.addScript('/Heavy/SimBrief/SimBriefOceanicWaypointConverter.js');
 Include.addScript('/Heavy/SimBrief/SimBriefCredentials.js');
 Include.addScript('/Heavy/SimBrief/SimBriefApi.js');
 
