@@ -866,7 +866,7 @@ class FMCMainDisplay extends BaseAirliners {
 				if (airway) {
 					let firstIndex = airway.icaos.indexOf(referenceWaypoint.icao);
 					let lastWaypointIcao = airway.icaos.find(icao => {
-						return icao.indexOf(lastWaypointIdent) !== -1;
+						return icao.trim().split(' ').pop() === lastWaypointIdent;
 					});
 					let lastIndex = airway.icaos.indexOf(lastWaypointIcao);
 					if (firstIndex >= 0) {
