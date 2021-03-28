@@ -74,21 +74,69 @@ class B787_10_FMC_RouteRequestPage {
 				this.fmc.setCruiseFlightLevelAndTemperature(this.flightPlan.general['initial_altitude']);
 			};
 
+			let removeOriginAndDestination = (navlog) => {
+				let out = [];
+
+				navlog.forEach((fix) => {
+					if (fix.ident !== this.flightPlan.origin.icao_code && fix.ident !== this.flightPlan.destination.icao_code) {
+						out.push(fix);
+					}
+				});
+				return out;
+			};
+
+			let removeSidAndStar = (navlog) => {
+				let out = [];
+				let sid = (this.flightPlan.navlog.fix[0] !== 'DCT' ? this.flightPlan.navlog.fix[0].via_airway : '');
+				let star = (this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length - 1] !== 'DCT' ? this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length - 1].via_airway : '');
+				navlog.forEach((fix) => {
+					if ((fix.is_sid_star !== 1 && fix.via_airway !== sid && fix.via_airway !== star) || fix.via_airway === 'DCT') {
+						out.push(fix);
+					}
+				});
+				return out;
+			};
+			let removeTocAndTod = (navlog) => {
+				let out = [];
+				navlog.forEach((fix) => {
+					if (fix.ident !== 'TOD' && fix.ident !== 'TOC') {
+						out.push(fix);
+					}
+				});
+				return out;
+			};
+
+			let breakAPartNAT = (navlog) => {
+				let out = [];
+				navlog.forEach((fix) => {
+					if (fix.via_airway === 'NATZ') {
+						fix.via_airway = 'DCT';
+					}
+
+					out.push(fix);
+				});
+				return out;
+			};
+
 			let parseNavlog = () => {
+				let navlog = this.flightPlan.navlog.fix;
 				let waypoints = [];
 				let finalWaypoints = [];
 
-				let sid = (this.flightPlan.navlog.fix[0] !== 'DCT' ? this.flightPlan.navlog.fix[0].via_airway : '');
-				let star = (this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length - 1] !== 'DCT' ? this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length - 1].via_airway : '');
+				navlog = removeOriginAndDestination(navlog);
+				navlog = removeSidAndStar(navlog);
+				navlog = removeTocAndTod(navlog);
+				navlog = breakAPartNAT(navlog);
 
-				/**
-				 * Remove SID, STAR, TOC and TOD
-				 */
-				this.flightPlan.navlog.fix.forEach((fix) => {
-					if ((fix.ident !== 'TOD' && fix.ident !== 'TOC' && fix.is_sid_star != 1 && fix.via_airway !== sid && fix.via_airway !== star) || fix.via_airway === 'DCT') {
-						let ident = SimBriefOceanicWaypointConverter.convert(fix.ident);
-						waypoints.push({ident: ident, airway: fix.via_airway, altitude: fix.altitude_feet});
-					}
+				navlog.forEach((fix) => {
+					let ident = SimBriefOceanicWaypointConverter.convert(fix.ident);
+					waypoints.push({
+						ident: ident,
+						airway: fix.via_airway,
+						altitude: fix.altitude_feet,
+						lat: fix.pos_lat,
+						long: fix.pos_long
+					});
 				});
 
 				/**
@@ -113,6 +161,7 @@ class B787_10_FMC_RouteRequestPage {
 				this.waypoints = finalWaypoints;
 
 				this.waypoints.forEach((waypoint) => {
+					console.log(waypoint.airway + ':' + waypoint.ident);
 					this.progress.push([waypoint.airway, waypoint.ident, '', false]);
 				});
 			};
@@ -166,7 +215,7 @@ class B787_10_FMC_RouteRequestPage {
 						this.fmc.onRightInput = [];
 						this.fmc.updateSideButtonActiveStatus();
 						this.progress[iterator][2] = this.waypoints[iterator].ident;
-						this.fmc.insertWaypoint(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, () => {
+						this.insertWaypoint(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, iterator, () => {
 							iterator++;
 							insertWaypoint();
 						});
@@ -192,7 +241,7 @@ class B787_10_FMC_RouteRequestPage {
 		let rows = [['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']];
 		rows[0][0] = 'FLIGHT PLANS';
 		for (let i = 1; i <= 5; i++) {
-			if(this.progress[i + (5 * actualPage) - 1]){
+			if (this.progress[i + (5 * actualPage) - 1]) {
 				if (iterator > i + (5 * actualPage) - 1) {
 					rows[i * 2][0] = '[color=green]' + this.progress[i + (5 * actualPage) - 1][0] + '[/color]';
 					rows[i * 2][1] = '[color=green]' + this.progress[i + (5 * actualPage) - 1][1] + '[/color]';
@@ -291,5 +340,38 @@ class B787_10_FMC_RouteRequestPage {
 		}
 		this.fmc.showErrorMessage('NO REF WAYPOINT');
 		return callback(false);
+	}
+
+	insertWaypoint(newWaypointTo, index, iterator, callback = EmptyCallback.Boolean) {
+		this.fmc.ensureCurrentFlightPlanIsTemporary(async () => {
+			this.getOrSelectWaypointByIdent(newWaypointTo, iterator, (waypoint) => {
+				if (!waypoint) {
+					this.fmc.showErrorMessage('NOT IN DATABASE');
+					return callback(false);
+				}
+				this.fmc.flightPlanManager.addWaypoint(waypoint.icao, index, () => {
+					return callback(true);
+				});
+			});
+		});
+	}
+
+	getOrSelectWaypointByIdent(ident, iterator, callback) {
+		this.fmc.dataManager.GetWaypointsByIdent(ident).then((waypoints) => {
+			if (!waypoints || waypoints.length === 0) {
+				return callback(undefined);
+			}
+			if (waypoints.length === 1) {
+				return callback(waypoints[0]);
+			}
+
+			for (let i = 0; i <= waypoints.length - 1; i++) {
+				if (parseFloat(waypoints[i].infos.coordinates.lat).toFixed(5) === parseFloat(this.waypoints[iterator].lat).toFixed(5) && parseFloat(waypoints[i].infos.coordinates.long).toFixed(5) === parseFloat(this.waypoints[iterator].long).toFixed(5)) {
+					return callback(waypoints[i]);
+				}
+			}
+
+			B787_10_FMC_SelectWptPage.ShowPage(this.fmc, waypoints, callback);
+		});
 	}
 }
