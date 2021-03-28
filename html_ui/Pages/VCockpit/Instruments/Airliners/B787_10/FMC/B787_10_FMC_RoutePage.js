@@ -100,10 +100,10 @@ class B787_10_FMC_RoutePage {
 			};
 		}
 
-		if(HeavyDataStorage.get('SIMBRIEF_USERNAME') || HeavyDataStorage.get('SIMBRIEF_USERID')){
+		if (HeavyDataStorage.get('SIMBRIEF_USERNAME') || HeavyDataStorage.get('SIMBRIEF_USERID')) {
 			fmc.onLeftInput[2] = () => {
 				new B787_10_FMC_RouteRequestPage(fmc).showPage();
-			}
+			};
 		}
 
 		fmc.setTemplate([
@@ -165,16 +165,16 @@ class B787_10_FMC_RoutePage {
 							let departure = fmc.flightPlanManager.getDeparture();
 							let lastDepartureWaypoint;
 
-							if(departure){
+							if (departure) {
 								let departureWaypoints = fmc.flightPlanManager.getDepartureWaypointsMap();
 								lastDepartureWaypoint = departureWaypoints[departureWaypoints.length - 1];
-								if(lastDepartureWaypoint && allRows[ii][1] === lastDepartureWaypoint.ident){
+								if (lastDepartureWaypoint && allRows[ii][1] === lastDepartureWaypoint.ident) {
 									fmc.flightPlanManager.removeDeparture(() => {
 										B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
-									})
+									});
 								} else {
-									for(i = toDelete; i > toDelete - count; i--){
-										fmc.removeWaypoint(i, () =>{
+									for (i = toDelete; i > toDelete - count; i--) {
+										fmc.removeWaypoint(i, () => {
 											B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
 										});
 									}
@@ -192,16 +192,16 @@ class B787_10_FMC_RoutePage {
 							let departure = fmc.flightPlanManager.getDeparture();
 							let lastDepartureWaypoint;
 
-							if(departure){
+							if (departure) {
 								let departureWaypoints = fmc.flightPlanManager.getDepartureWaypointsMap();
-								lastDepartureWaypoint = departureWaypoints[departureWaypoints.length -1];
-								if(lastDepartureWaypoint && allRows[ii][1] === lastDepartureWaypoint.ident){
+								lastDepartureWaypoint = departureWaypoints[departureWaypoints.length - 1];
+								if (lastDepartureWaypoint && allRows[ii][1] === lastDepartureWaypoint.ident) {
 									fmc.flightPlanManager.removeDeparture(() => {
 										B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
-									})
+									});
 								} else {
-									for(i = toDelete; i > toDelete - count; i--){
-										fmc.removeWaypoint(i, () =>{
+									for (i = toDelete; i > toDelete - count; i--) {
+										fmc.removeWaypoint(i, () => {
 											B787_10_FMC_RoutePage.ShowPage2(fmc, offset, pendingAirway, ii);
 										});
 									}
@@ -341,30 +341,30 @@ class B787_10_FMC_RoutePage {
 					let prevAirway = IntersectionInfo.GetCommonAirway(prev, wp);
 					if (!prevAirway) {
 						airwayCount = 1;
-						lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount]
+						lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount];
 						allRows.push(lastInserted);
 					} else {
 						let prevIcaoIndex = prevAirway.icaos.indexOf(prev.icao);
 						let actualIcaoIndex = prevAirway.icaos.indexOf(wp.icao);
 
-						if(prevIcaoIndex + 1 === actualIcaoIndex || prevIcaoIndex - 1 === actualIcaoIndex){
+						if (prevIcaoIndex + 1 === actualIcaoIndex || prevIcaoIndex - 1 === actualIcaoIndex) {
 							if (lastAirwayName === prevAirway.name) {
-								if(popNext){
-									airwayCount = airwayCount + 1
+								if (popNext) {
+									airwayCount = airwayCount + 1;
 									allRows.pop();
 								}
 								popNext = true;
-								lastInserted = [prevAirway.name, wp.ident, legIndex, airwayCount]
+								lastInserted = [prevAirway.name, wp.ident, legIndex, airwayCount];
 								lastAirwayName = prevAirway.name;
 							} else {
 								airwayCount = 1;
-								lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount]
+								lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount];
 								lastAirwayName = 'DIRECT';
 							}
 						} else {
 							popNext = false;
 							airwayCount = 1;
-							lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount]
+							lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount];
 							lastAirwayName = 'DIRECT';
 						}
 						lastAirwayName = prevAirway.name;
