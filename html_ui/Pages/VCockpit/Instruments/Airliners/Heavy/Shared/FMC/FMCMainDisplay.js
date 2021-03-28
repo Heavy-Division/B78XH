@@ -193,6 +193,7 @@ class FMCMainDisplay extends BaseAirliners {
 			label = '---------------------------------------';
 		}
 		if (label !== '') {
+			label = label.replace('\<', '&lt');
 			let re3 = /\[settable\](.*?)\[\/settable\]/g;
 			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
 			label = label.replace(re3, '<span class="settable">$1</span>');
@@ -213,7 +214,7 @@ class FMCMainDisplay extends BaseAirliners {
 			label = label.split('[color]')[0];
 		}
 		this._labels[row][col] = label;
-		this._labelElements[row][col].textContent = label;
+		this._labelElements[row][col].innerHTML = label;
 	}
 
 	getLine(row, col = 0) {
@@ -270,7 +271,7 @@ class FMCMainDisplay extends BaseAirliners {
 			e.classList.add(color);
 			content = content.split('[color]')[0];
 		}
-		this._lines[row][col] = this._lines[row][col] + content;
+		this._lines[row][col] = content;
 		this._lineElements[row][col].innerHTML = this._lines[row][col];
 	}
 
@@ -876,18 +877,25 @@ class FMCMainDisplay extends BaseAirliners {
 								inc = -1;
 							}
 							let count = Math.abs(lastIndex - firstIndex);
-							let asyncInsertWaypointByIcao = async (icao, index) => {
-								return new Promise(resolve => {
-									this.flightPlanManager.addWaypoint(icao, index, () => {
-										resolve();
-									});
-								});
-							};
-							let outOfSync = async (icaoIndex, realIndex) => {
-								await asyncInsertWaypointByIcao(airway.icaos[icaoIndex], realIndex);
-							};
-
 							for (let i = 1; i < count + 1; i++) {
+								let asyncInsertWaypointByIcao = async (icao, index) => {
+									return new Promise(resolve => {
+										this.flightPlanManager.addWaypoint(icao, index, () => {
+											const waypoint = this.flightPlanManager.getWaypoint(index);
+											waypoint.infos.UpdateAirway(airwayName).then(() => {
+												waypoint.infos.airwayIn = airwayName;
+												if (i < count) {
+													waypoint.infos.airwayOut = airwayName;
+												}
+												resolve();
+											});
+										});
+									});
+								};
+								let outOfSync = async (icaoIndex, realIndex) => {
+									await asyncInsertWaypointByIcao(airway.icaos[icaoIndex], realIndex);
+								};
+
 								await outOfSync(firstIndex + i * inc, index - 1 + i);
 							}
 							return callback(true);
@@ -949,6 +957,7 @@ class FMCMainDisplay extends BaseAirliners {
 		if (this.flightPlanManager.getCurrentFlightPlanIndex() === 1) {
 			this.flightPlanManager.copyCurrentFlightPlanInto(0, () => {
 				this.flightPlanManager.setCurrentFlightPlanIndex(0, () => {
+					this.synchronizeTemporaryAndActiveFlightPlanWaypoints();
 					SimVar.SetSimVarValue('L:FMC_FLIGHT_PLAN_IS_TEMPORARY', 'number', 0);
 					SimVar.SetSimVarValue('L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN', 'number', 0);
 					if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_APPROACH) {
@@ -957,6 +966,25 @@ class FMCMainDisplay extends BaseAirliners {
 					callback();
 				});
 			});
+		}
+	}
+
+
+	async synchronizeTemporaryAndActiveFlightPlanWaypoints() {
+		const temporaryFPWaypoints = this.flightPlanManager.getWaypoints(1);
+		const activeFPWaypoints = this.flightPlanManager.getWaypoints(0);
+
+		for (let i = 0; i < activeFPWaypoints.length; i++) {
+			if (temporaryFPWaypoints[i] && activeFPWaypoints[i]) {
+				await this._synchronizeAirways(temporaryFPWaypoints[i], activeFPWaypoints[i]);
+			}
+		}
+	}
+
+	_synchronizeAirways(temporaryWaypoint, activeWaypoint){
+		if (temporaryWaypoint.infos && activeWaypoint.infos && temporaryWaypoint.icao === activeWaypoint.icao) {
+			activeWaypoint.infos.airwayIn = temporaryWaypoint.infos.airwayIn;
+			activeWaypoint.infos.airwayOut = temporaryWaypoint.infos.airwayOut;
 		}
 	}
 
