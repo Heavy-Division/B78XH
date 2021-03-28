@@ -190,6 +190,8 @@ class WayPointInfo {
 		this.coordinates = new LatLongAlt();
 		this.loaded = false;
 		this.airways = [];
+		this.airwayIn = undefined;
+		this.airwayOut = undefined;
 		this._svgElements = [];
 		this.instrument = _instrument;
 		this.loaded = true;
