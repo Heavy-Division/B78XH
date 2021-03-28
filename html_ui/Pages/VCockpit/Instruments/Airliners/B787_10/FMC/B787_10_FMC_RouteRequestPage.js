@@ -161,7 +161,6 @@ class B787_10_FMC_RouteRequestPage {
 				this.waypoints = finalWaypoints;
 
 				this.waypoints.forEach((waypoint) => {
-					console.log(waypoint.airway + ':' + waypoint.ident);
 					this.progress.push([waypoint.airway, waypoint.ident, '', false]);
 				});
 			};

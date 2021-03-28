@@ -338,36 +338,24 @@ class B787_10_FMC_RoutePage {
 				let wp = routeWaypoints[i];
 				let legIndex = (departure ? i + 1 : i);
 				if (wp) {
-					let prevAirway = IntersectionInfo.GetCommonAirway(prev, wp);
+					let prevAirway = wp.infos.airwayIn;
 					if (!prevAirway) {
 						airwayCount = 1;
 						lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount];
 						allRows.push(lastInserted);
 					} else {
-						let prevIcaoIndex = prevAirway.icaos.indexOf(prev.icao);
-						let actualIcaoIndex = prevAirway.icaos.indexOf(wp.icao);
-
-						if (prevIcaoIndex + 1 === actualIcaoIndex || prevIcaoIndex - 1 === actualIcaoIndex) {
-							if (lastAirwayName === prevAirway.name) {
-								if (popNext) {
-									airwayCount = airwayCount + 1;
-									allRows.pop();
-								}
-								popNext = true;
-								lastInserted = [prevAirway.name, wp.ident, legIndex, airwayCount];
-								lastAirwayName = prevAirway.name;
-							} else {
-								airwayCount = 1;
-								lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount];
-								lastAirwayName = 'DIRECT';
+						if (lastAirwayName === prevAirway) {
+							if (popNext) {
+								airwayCount = airwayCount + 1;
+								allRows.pop();
 							}
+							popNext = true;
+							lastInserted = [prevAirway, wp.ident, legIndex, airwayCount];
 						} else {
-							popNext = false;
 							airwayCount = 1;
-							lastInserted = ['DIRECT', wp.ident, legIndex, airwayCount];
-							lastAirwayName = 'DIRECT';
+							lastInserted = [prevAirway, wp.ident, legIndex, airwayCount];
 						}
-						lastAirwayName = prevAirway.name;
+						lastAirwayName = prevAirway;
 						allRows.push(lastInserted);
 					}
 				}
