@@ -28,12 +28,13 @@ class Boeing_FMC extends FMCMainDisplay {
 		this.cruiseFlightLevel = 100;
 		this.onExec = () => {
 			if (this.getIsRouteActivated()) {
-				this.insertTemporaryFlightPlan();
-				this._isRouteActivated = false;
-				SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
-				if (this.refreshPageCallback) {
-					this.refreshPageCallback();
-				}
+				this.insertTemporaryFlightPlan(() => {
+					this._isRouteActivated = false;
+					SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+					if (this.refreshPageCallback) {
+						this.refreshPageCallback();
+					}
+				});
 			}
 		};
 		this.onDel = () => {
