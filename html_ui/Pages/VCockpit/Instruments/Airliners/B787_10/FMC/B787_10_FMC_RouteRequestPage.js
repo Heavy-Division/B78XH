@@ -1,6 +1,7 @@
 class B787_10_FMC_RouteRequestPage {
 	constructor(fmc) {
 		this.fmc = fmc;
+		this.progress = [];
 	}
 
 	showPage() {
@@ -77,8 +78,8 @@ class B787_10_FMC_RouteRequestPage {
 				let waypoints = [];
 				let finalWaypoints = [];
 
-				let sid = (this.flightPlan.navlog.fix[0] !== 'DCT' ? this.flightPlan.navlog.fix[0].via_airway : '')
-				let star = (this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length- 1] !== 'DCT' ? this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length- 1].via_airway : '')
+				let sid = (this.flightPlan.navlog.fix[0] !== 'DCT' ? this.flightPlan.navlog.fix[0].via_airway : '');
+				let star = (this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length - 1] !== 'DCT' ? this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length - 1].via_airway : '');
 
 				/**
 				 * Remove SID, STAR, TOC and TOD
@@ -110,6 +111,10 @@ class B787_10_FMC_RouteRequestPage {
 				});
 
 				this.waypoints = finalWaypoints;
+
+				this.waypoints.forEach((waypoint) => {
+					this.progress.push([waypoint.airway, waypoint.ident, '', false]);
+				});
 			};
 
 			let updateWaypoints = async () => {
@@ -119,13 +124,13 @@ class B787_10_FMC_RouteRequestPage {
 
 				let insertWaypoint = async () => {
 					protection++;
-					if(protection > 400){
-						iterator = 20000
+					if (protection > 400) {
+						iterator = 20000;
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 						return;
 					}
-					if(!this.waypoints[iterator]){
-						iterator = 20000
+					if (!this.waypoints[iterator]) {
+						iterator = 20000;
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 						return;
 					}
@@ -134,39 +139,17 @@ class B787_10_FMC_RouteRequestPage {
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}
 
+					this.updateProgress(iterator);
 					if (this.waypoints[iterator].airway !== 'DCT') {
 						let lastWaypoint = this.fmc.flightPlanManager.getWaypoints()[this.fmc.flightPlanManager.getEnRouteWaypointsLastIndex()];
 						if (lastWaypoint.infos instanceof WayPointInfo) {
 							lastWaypoint.infos.UpdateAirway(this.waypoints[iterator].airway).then(() => {
-								let airway = lastWaypoint.infos.airways.find(a => { return a.name === this.waypoints[iterator].airway; });
+								let airway = lastWaypoint.infos.airways.find(a => {
+									return a.name === this.waypoints[iterator].airway;
+								});
 								if (airway) {
-									this.fmc.setTemplate([
-										['FLIGHT PLANS'],
-										[''],
-										[''],
-										[''],
-										[''],
-										[''],
-										['[color=yellow]ADD AIRWAY: ' + this.waypoints[iterator].airway + '[/color]'],
-										[''],
-										['[color=yellow]WAYPOINT: ' + this.waypoints[iterator].ident + '[/color]'],
-										[''],
-										[''],
-										[''],
-										['']
-									]);
-									this.fmc.onLeftInput[0] = undefined;
-									this.fmc.onLeftInput[1] = undefined;
-									this.fmc.onLeftInput[2] = undefined;
-									this.fmc.onLeftInput[3] = undefined;
-									this.fmc.onLeftInput[4] = undefined;
-									this.fmc.onLeftInput[5] = undefined;
-									this.fmc.onRightInput[0] = undefined;
-									this.fmc.onRightInput[1] = undefined;
-									this.fmc.onRightInput[2] = undefined;
-									this.fmc.onRightInput[3] = undefined;
-									this.fmc.onRightInput[4] = undefined;
-									this.fmc.onRightInput[5] = undefined;
+									this.fmc.onLeftInput = [];
+									this.fmc.onRightInput = [];
 									this.fmc.updateSideButtonActiveStatus();
 									this.insertWaypointsAlongAirway(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, this.waypoints[iterator].airway, () => {
 										iterator++;
@@ -179,34 +162,10 @@ class B787_10_FMC_RouteRequestPage {
 							});
 						}
 					} else {
-						this.fmc.setTemplate([
-							['FLIGHT PLANS'],
-							[''],
-							[''],
-							[''],
-							[''],
-							[''],
-							['[color=yellow]ADD AIRWAY: ' + 'DCT' + '[/color]'],
-							[''],
-							['[color=yellow]WAYPOINT: ' + this.waypoints[iterator].ident + '[/color]'],
-							[''],
-							[''],
-							[''],
-							['']
-						]);
-						this.fmc.onLeftInput[0] = undefined;
-						this.fmc.onLeftInput[1] = undefined;
-						this.fmc.onLeftInput[2] = undefined;
-						this.fmc.onLeftInput[3] = undefined;
-						this.fmc.onLeftInput[4] = undefined;
-						this.fmc.onLeftInput[5] = undefined;
-						this.fmc.onRightInput[0] = undefined;
-						this.fmc.onRightInput[1] = undefined;
-						this.fmc.onRightInput[2] = undefined;
-						this.fmc.onRightInput[3] = undefined;
-						this.fmc.onRightInput[4] = undefined;
-						this.fmc.onRightInput[5] = undefined;
+						this.fmc.onLeftInput = [];
+						this.fmc.onRightInput = [];
 						this.fmc.updateSideButtonActiveStatus();
+						this.progress[iterator][2] = this.waypoints[iterator].ident;
 						this.fmc.insertWaypoint(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, () => {
 							iterator++;
 							insertWaypoint();
@@ -225,6 +184,41 @@ class B787_10_FMC_RouteRequestPage {
 				updateFlightPlan();
 			});
 		};
+	}
+
+	updateProgress(iterator) {
+		let actualPage = Math.floor((iterator) / 5);
+
+		let rows = [['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']];
+		rows[0][0] = 'FLIGHT PLANS';
+		for (let i = 1; i <= 5; i++) {
+			if(this.progress[i + (5 * actualPage) - 1]){
+				if (iterator > i + (5 * actualPage) - 1) {
+					rows[i * 2][0] = '[color=green]' + this.progress[i + (5 * actualPage) - 1][0] + '[/color]';
+					rows[i * 2][1] = '[color=green]' + this.progress[i + (5 * actualPage) - 1][1] + '[/color]';
+				} else if (iterator === i + (5 * actualPage) - 1) {
+					rows[i * 2][0] = '[color=yellow]' + this.progress[i + (5 * actualPage) - 1][0] + '[/color]';
+					rows[i * 2][1] = '[color=yellow]' + this.progress[i + (5 * actualPage) - 1][1] + '[/color]';
+				} else {
+					rows[i * 2][0] = this.progress[i + (5 * actualPage) - 1][0];
+					rows[i * 2][1] = this.progress[i + (5 * actualPage) - 1][1];
+				}
+				if (this.progress[i - 1][3] === false && iterator === i + (5 * actualPage) - 1) {
+					rows[i * 2 + 1][0] = '[color=yellow]' + this.progress[i + (5 * actualPage) - 1][2] + '[/color]';
+					rows[i * 2 + 1][1] = '[color=yellow]adding[/color]';
+				} else if (this.progress[i + (5 * actualPage) - 1][3] === false && iterator < i + (5 * actualPage) - 1) {
+					rows[i * 2 + 1][0] = this.progress[i + (5 * actualPage) - 1][2];
+					rows[i * 2 + 1][1] = 'waiting';
+				} else if (this.progress[i + (5 * actualPage) - 1][3] === false && iterator > i + (5 * actualPage) - 1) {
+					rows[i * 2 + 1][0] = '[color=green]' + this.progress[i + (5 * actualPage) - 1][2] + '[/color]';
+					rows[i * 2 + 1][1] = '[color=green]done[/color]';
+				}
+			}
+		}
+
+		this.fmc.clearDisplay();
+
+		this.fmc.setTemplate(rows);
 	}
 
 	async insertWaypointsAlongAirway(lastWaypointIdent, index, airwayName, callback = EmptyCallback.Boolean) {
@@ -248,26 +242,37 @@ class B787_10_FMC_RouteRequestPage {
 								inc = -1;
 							}
 							let count = Math.abs(lastIndex - firstIndex);
-							let asyncInsertWaypointByIcao = async (icao, index) => {
-								return new Promise(resolve => {
-									this.fmc.flightPlanManager.addWaypoint(icao, index, () => {
-										const waypoint = this.fmc.flightPlanManager.getWaypoint(index);
-										waypoint.infos.UpdateAirway(airwayName).then(() => {
-											//waypoint.infos.airwayIn = airwayName;
-											//if (i < count) {
-											//	waypoint.infos.airwayOut = airwayName;
-											//}
-											//console.log("icao:" + icao + " added");
-											resolve();
-										});
-									});
-								});
-							};
-							let outOfSync = async (icaoIndex, realIndex) => {
-								await asyncInsertWaypointByIcao(airway.icaos[icaoIndex], realIndex);
-							};
 
 							for (let i = 1; i < count + 1; i++) {
+								let asyncInsertWaypointByIcao = async (icao, index) => {
+									return new Promise(resolve => {
+
+										let progressIndex = this.progress.findIndex((w) => {
+											return w[1] === lastWaypointIdent;
+										});
+
+										if (progressIndex) {
+											this.progress[progressIndex][2] = icao.trim().split(' ').pop();
+											this.updateProgress(progressIndex);
+										}
+
+
+										this.fmc.flightPlanManager.addWaypoint(icao, index, () => {
+											const waypoint = this.fmc.flightPlanManager.getWaypoint(index);
+											waypoint.infos.UpdateAirway(airwayName).then(() => {
+												waypoint.infos.airwayIn = airwayName;
+												if (i < count) {
+													waypoint.infos.airwayOut = airwayName;
+												}
+												resolve();
+											});
+										});
+									});
+								};
+								let outOfSync = async (icaoIndex, realIndex) => {
+									await asyncInsertWaypointByIcao(airway.icaos[icaoIndex], realIndex);
+								};
+
 								await outOfSync(firstIndex + i * inc, index - 1 + i);
 							}
 							return callback(true);
