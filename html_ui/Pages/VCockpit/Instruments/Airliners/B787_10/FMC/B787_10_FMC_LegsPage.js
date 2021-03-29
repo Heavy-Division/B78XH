@@ -1,6 +1,14 @@
 class B787_10_FMC_LegsPage {
 	static ShowPage1(fmc, currentPage = 1, step = 0) {
 		fmc.clearDisplay();
+		B787_10_FMC_LegsPage._updateCounter = 0;
+		fmc.pageUpdate = () => {
+			if (B787_10_FMC_LegsPage._updateCounter >= 50) {
+				B787_10_FMC_LegsPage.ShowPage1(fmc, currentPage, step);
+			} else {
+				B787_10_FMC_LegsPage._updateCounter++;
+			}
+		};
 		fmc.refreshPageCallback = () => {
 			B787_10_FMC_LegsPage.ShowPage1(fmc, currentPage, step);
 		};
@@ -34,26 +42,17 @@ class B787_10_FMC_LegsPage {
 				for (let i = 0; i < approachWaypoints.length; i++) {
 					waypoints.push(approachWaypoints[i]);
 				}
-				activeWaypoint = waypoints.findIndex( (w) => {
+				activeWaypoint = waypoints.findIndex((w) => {
 					return w.ident === fmc.flightPlanManager.getActiveWaypointIdent();
 				});
-				/**
-				 * Never show departure airport
-				 * TODO: hotfix
-				 */
-				if(activeWaypoint !== -1){
-					waypoints.splice(0, activeWaypoint);
-				} else {
-					waypoints.splice(0, 1);
-				}
+
+				waypoints.splice(0, activeWaypoint);
 
 				pageCount = Math.floor((waypoints.length - 1) / 5) + 1;
 				for (let i = 0; i < 5; i++) {
 					let waypointFPIndex = i + offset + 1;
 					let waypoint = waypoints[i + offset];
 					if (waypoint) {
-						let prevWaypoint = fmc.flightPlanManager.getWaypoint(waypointFPIndex - 1, undefined, true);
-						let nextWaypoint = fmc.flightPlanManager.getWaypoint(waypointFPIndex + 1, undefined, true);
 						let isEnRouteWaypoint = false;
 						let isDepartureWaypoint = false;
 						let isLastDepartureWaypoint = false;
@@ -98,8 +97,8 @@ class B787_10_FMC_LegsPage {
 								/**
 								 * Modified default ASOBO
 								 */
-								if(currentPage === 1 && ii === 0){
-									if(!value.startsWith("RW")){
+								if (currentPage === 1 && ii === 0) {
+									if (!value.startsWith('RW')) {
 										fmc.setMyBoeingDirectTo(value, ii + 1, (result) => {
 											if (result) {
 												fmc.activateRoute();
@@ -219,12 +218,12 @@ class B787_10_FMC_LegsPage {
 
 		let route2Legs = '\<RTE 2 LEGS';
 
-		if(fmc.getIsRouteActivated()){
+		if (fmc.getIsRouteActivated()) {
 			route2Legs = '\<ERASE';
 			fmc.onLeftInput[5] = () => {
-				fmc.flightPlanManager.setCurrentFlightPlanIndex(0, () =>{
-					SimVar.SetSimVarValue("L:FMC_FLIGHT_PLAN_IS_TEMPORARY", "number", 0);
-					SimVar.SetSimVarValue("L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN", "number", 0);
+				fmc.flightPlanManager.setCurrentFlightPlanIndex(0, () => {
+					SimVar.SetSimVarValue('L:FMC_FLIGHT_PLAN_IS_TEMPORARY', 'number', 0);
+					SimVar.SetSimVarValue('L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN', 'number', 0);
 					fmc._isRouteActivated = false;
 					SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
 					B787_10_FMC_LegsPage.ShowPage1(fmc, currentPage);
@@ -243,7 +242,7 @@ class B787_10_FMC_LegsPage {
 				})
 
 				*/
-			}
+			};
 		}
 
 		fmc.setTemplate([
@@ -266,5 +265,6 @@ class B787_10_FMC_LegsPage {
 	}
 }
 
+B787_10_FMC_LegsPage._updateCounter = 0;
 B787_10_FMC_LegsPage.DEBUG_SHOW_WAYPOINT_PHASE = false;
 //# sourceMappingURL=B787_10_FMC_LegsPage.js.map

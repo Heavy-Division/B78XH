@@ -30,12 +30,11 @@ class B787_10_FMC_HeavyPage {
 			fmc.onRightInput[1] = () => {
 				new B787_10_FMC_SimRateManagerPage(fmc).showPage();
 			};
-
-
-			fmc.onRightInput[5] = () => {
-				B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
-			};
 		}
+
+		fmc.onRightInput[5] = () => {
+			B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
+		};
 
 		fmc.setTemplate(
 			rows
