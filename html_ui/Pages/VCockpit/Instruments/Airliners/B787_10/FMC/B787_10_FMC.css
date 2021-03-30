@@ -35,7 +35,7 @@
     width: 100%;
     height: 100%;
     vertical-align: top;
-    background-color: #141414;
+    background-color: #5c656f;
 }
 
 #Electricity[state=off] {
@@ -218,7 +218,7 @@
 }
 
 .fms-button.active {
-    background-color: #382F30;
+    background-color: #8d828a;
     border-top: 1px solid black;
     border-left: 1px solid black;
     border-right: 2px solid black;
@@ -322,4 +322,14 @@
     background-color: #303030;
     padding-left: 6px;
     padding-right: 6px;
+}
+
+#Borders {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-right: 4px ridge white;
+    pointer-events: none;
 }
