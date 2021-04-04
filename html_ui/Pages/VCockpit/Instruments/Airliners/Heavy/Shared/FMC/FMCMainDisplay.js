@@ -109,7 +109,7 @@ class FMCMainDisplay extends BaseAirliners {
 	setTitle(content) {
 		if (content !== '') {
 			let re3 = /\[settable\](.*?)\[\/settable\]/g;
-			content = content.replace(re3, '<span class="settable">$1</span>');
+			content = content.replace(re3, '<div class="settable"><span>$1</span></div>');
 
 			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
 			content = content.replace(re2, '<tspan class="$1">$2</tspan>');
@@ -196,7 +196,7 @@ class FMCMainDisplay extends BaseAirliners {
 			label = label.replace('\<', '&lt');
 			let re3 = /\[settable\](.*?)\[\/settable\]/g;
 			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
-			label = label.replace(re3, '<span class="settable">$1</span>');
+			label = label.replace(re3, '<div class="settable"><span>$1</span></div>');
 
 			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
 			label = label.replace(re2, '<tspan class="$1">$2</tspan>');
@@ -255,7 +255,7 @@ class FMCMainDisplay extends BaseAirliners {
 
 			let re3 = /\[settable\](.*?)\[\/settable\]/g;
 			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
-			content = content.replace(re3, '<span class="settable">$1</span>');
+			content = content.replace(re3, '<div class="settable"><span>$1</span></div>');
 
 			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
 			content = content.replace(re2, '<tspan class="$1">$2</tspan>');
