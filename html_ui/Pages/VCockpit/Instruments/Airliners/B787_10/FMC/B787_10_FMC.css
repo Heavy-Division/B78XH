@@ -219,10 +219,14 @@
 
 .fms-button.active {
     background-color: #8d828a;
-    border-top: 1px solid black;
-    border-left: 1px solid black;
-    border-right: 2px solid black;
-    border-bottom: 2px solid black;
+    border-style: outset;
+    border-width: 3px;
+    border-color: #736f6f;
+    border-top-color: #534f4f;
+    border-left-color: #736f6f;
+    border-right-color: #e0e0e0;
+    border-bottom-color: #e0e0e0;
+    outline: 2px solid black;
 }
 
 .fms-button {
@@ -239,9 +243,9 @@
 }
 
 .fms-button.page-button {
-    width: 12.5%;
+    width: 12%;
     height: 60px;
-    margin-right: -14px;
+    margin-right: -12px;
     margin-top: -14px;
     margin-bottom: -7px;
     font-size: 16px;
@@ -259,7 +263,7 @@
 .fms-exec-light {
     position: absolute;
     top: 463px;
-    right: 31px;
+    right: 38px;
     width: 35px;
     height: 7px;
     background-color: black;
