@@ -10,6 +10,8 @@ class B787_10_FMC_RoutePage {
 				originCell = fmc.tmpOrigin;
 			}
 		}
+
+		originCell = fmc.makeSettable(originCell);
 		fmc.onLeftInput[0] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
@@ -28,6 +30,8 @@ class B787_10_FMC_RoutePage {
 				destinationCell = fmc.tmpDestination;
 			}
 		}
+
+		destinationCell = fmc.makeSettable(destinationCell);
 		fmc.onRightInput[0] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
@@ -42,6 +46,8 @@ class B787_10_FMC_RoutePage {
 		if (flightNoValue) {
 			flightNoCell = flightNoValue;
 		}
+
+		flightNoCell = fmc.makeSettable(flightNoCell);
 		fmc.onRightInput[1] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
@@ -55,6 +61,7 @@ class B787_10_FMC_RoutePage {
 		if (fmc.coRoute) {
 			coRouteCell = fmc.coRoute;
 		}
+		coRouteCell = fmc.makeSettable(coRouteCell);
 		fmc.onRightInput[2] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
@@ -83,11 +90,13 @@ class B787_10_FMC_RoutePage {
 				B787_10_FMC_PerfInitPage.ShowPage1(fmc);
 			};
 		}
-		let runwayCell = '';
+		let runwayCell = '-----';
 		let runway = fmc.flightPlanManager.getDepartureRunway();
 		if (runway) {
 			runwayCell = Avionics.Utils.formatRunway(runway.designation);
 		}
+
+		runwayCell = fmc.makeSettable(runwayCell);
 		if (fmc.flightPlanManager.getOrigin()) {
 			fmc.onLeftInput[1] = () => {
 				let value = fmc.inOut;
@@ -112,12 +121,12 @@ class B787_10_FMC_RoutePage {
 			[originCell, destinationCell],
 			['RUNWAY', 'FLT NO'],
 			[runwayCell, flightNoCell],
-			['REQUEST', 'CO ROUTE'],
-			['\<SEND', coRouteCell],
-			['__FMCSEPARATOR'],
-			[''],
-			[''],
-			[''],
+			['ROUTE', 'CO ROUTE'],
+			['\<REQUEST', coRouteCell],
+			['ROUTE'],
+			['\<REPORT', '<RTE COPY'],
+			['ROUTE ---------------------------------'],
+			['\<PRINT', '<ALTN'],
 			[''],
 			['\<RTE 2', activateCell]
 		]);
