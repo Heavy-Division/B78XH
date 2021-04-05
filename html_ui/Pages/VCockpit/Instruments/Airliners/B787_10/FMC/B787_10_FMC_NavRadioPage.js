@@ -44,7 +44,7 @@ class B787_10_FMC_NavRadioPage {
 			}
 
 			if(bacon.radial){
-				radialRCell = bacon.radial.toFixed(0)
+				//radialLCell = bacon.radial.toFixed(0)
 			}
 
 			fmc.onLeftInput[0] = () => {
