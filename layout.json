@@ -78,7 +78,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Core/VCockpit.html",
             "size": 1420,
-            "date": 132620537673353820
+            "date": 132620563583550110
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.css",
@@ -154,6 +154,11 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimRateManagerPage.js",
             "size": 15696,
             "date": 132592002599324020
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_TakeOffRefPage.js",
+            "size": 3840,
+            "date": 132620562743184480
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ThrustLimPage.js",
@@ -406,14 +411,14 @@
             "date": 132592002599473620
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_PLANE_A320.png",
-            "size": 3125,
-            "date": 132592002599473620
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_PLANE_A320.svg",
             "size": 3250,
             "date": 132592002599483580
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_PLANE_A320.png",
+            "size": 3125,
+            "date": 132592002599473620
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_PLANE_B747.png",
