@@ -113,6 +113,14 @@ class FMCMainDisplay extends BaseAirliners {
 		return '[settable]' + content + '[/settable]';
 	}
 
+	colorizeContent(content, color){
+		return '[color=' + color + ']' + content + '[/color]';
+	}
+
+	resizeContent(content, size){
+		return '[size=' + size + ']' + content + '[/size]';
+	}
+
 	setTitle(content) {
 		if (content !== '') {
 			let re3 = /\[settable\](.*?)\[\/settable\]/g;
