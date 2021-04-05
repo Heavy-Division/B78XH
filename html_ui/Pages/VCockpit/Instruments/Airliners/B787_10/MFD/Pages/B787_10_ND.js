@@ -246,13 +246,13 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 		 */
 
 
-		if (SimVar.GetSimVarValue("L:B78XH_PREVIEW_DIRECT_TO", "number")) {
+		if (SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO', 'number')) {
 			if (!this.map.instrument.tmpDirectToElement) {
-				this.map.instrument.tmpDirectToElement = new SvgBackOnTrackElement("yellow");
+				this.map.instrument.tmpDirectToElement = new SvgBackOnTrackElement('yellow');
 			}
-			this.map.instrument.tmpDirectToElement.llaRequested = new LatLongAlt(SimVar.GetSimVarValue("L:B78XH_PREVIEW_DIRECT_TO_LAT_0", "number"), SimVar.GetSimVarValue("L:B78XH_PREVIEW_DIRECT_TO_LONG_0", "number"));
-			this.map.instrument.tmpDirectToElement.targetLla = new LatLongAlt(SimVar.GetSimVarValue("L:B78XH_PREVIEW_DIRECT_TO_LAT_1", "number"), SimVar.GetSimVarValue("L:B78XH_PREVIEW_DIRECT_TO_LONG_1", "number"));
-			this.map.instrument.tmpDirectToElement.planeHeading = SimVar.GetSimVarValue("PLANE HEADING DEGREES TRUE", "degree");
+			this.map.instrument.tmpDirectToElement.llaRequested = new LatLongAlt(SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LAT_0', 'number'), SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LONG_0', 'number'));
+			this.map.instrument.tmpDirectToElement.targetLla = new LatLongAlt(SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LAT_1', 'number'), SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LONG_1', 'number'));
+			this.map.instrument.tmpDirectToElement.planeHeading = SimVar.GetSimVarValue('PLANE HEADING DEGREES TRUE', 'degree');
 		} else {
 			this.map.instrument.tmpDirectToElement = undefined;
 		}
@@ -655,11 +655,11 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				// fullscreen - TOP, TRIANGLE OFFSET, TRIANGLE
 				[210, 750, 770]
 			],
-				/** TODO: Offset are from uncentered map (need to be updated for centered map offsets) */
-				// centered map
+			/** TODO: Offset are from uncentered map (need to be updated for centered map offsets) */
+			// centered map
 			[	// halfscreen - TOP, TRIANGLE OFFSET, TRIANGLE
 				[220, 1450, 1500],
-					// fullscreen - TOP, TRIANGLE OFFSET, TRIANGLE
+				// fullscreen - TOP, TRIANGLE OFFSET, TRIANGLE
 				[210, 750, 770]
 			]
 		];
@@ -765,20 +765,19 @@ class B787_10_ND_Map extends MapInstrumentElement {
 	}
 
 	updateTopOfDescent() {
-		let showTopOfDescent = SimVar.GetSimVarValue("L:AIRLINER_FMS_SHOW_TOP_DSCNT", "number") === 1;
+		let showTopOfDescent = SimVar.GetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number') === 1;
 		if (showTopOfDescent) {
 			if (!this.topOfDescentIcon) {
-				this.topOfDescentIcon = new SvgTopOfXCustomElement("b787-10-top-of-descent", "ICON_MAP_TOD");
+				this.topOfDescentIcon = new SvgTopOfXCustomElement('b787-10-top-of-descent', 'ICON_MAP_TOD');
 			}
-			this.topOfDescentIcon.lat = SimVar.GetSimVarValue("L:AIRLINER_FMS_LAT_TOP_DSCNT", "number");
-			this.topOfDescentIcon.long = SimVar.GetSimVarValue("L:AIRLINER_FMS_LONG_TOP_DSCNT", "number");
-			this.topOfDescentIcon.heading = SimVar.GetSimVarValue("L:AIRLINER_FMS_HEADING_TOP_DSCNT", "number");
+			this.topOfDescentIcon.lat = SimVar.GetSimVarValue('L:AIRLINER_FMS_LAT_TOP_DSCNT', 'number');
+			this.topOfDescentIcon.long = SimVar.GetSimVarValue('L:AIRLINER_FMS_LONG_TOP_DSCNT', 'number');
+			this.topOfDescentIcon.heading = SimVar.GetSimVarValue('L:AIRLINER_FMS_HEADING_TOP_DSCNT', 'number');
 			let index = this.instrument.topOfCurveElements.indexOf(this.topOfDescentIcon);
 			if (index === -1) {
 				this.instrument.topOfCurveElements.push(this.topOfDescentIcon);
 			}
-		}
-		else {
+		} else {
 			let index = this.instrument.topOfCurveElements.indexOf(this.topOfDescentIcon);
 			if (index != -1) {
 				this.instrument.topOfCurveElements.splice(index, 1);
@@ -787,20 +786,19 @@ class B787_10_ND_Map extends MapInstrumentElement {
 	}
 
 	updateTopOfClimb() {
-		let showTopOfClimb = SimVar.GetSimVarValue("L:AIRLINER_FMS_SHOW_TOP_CLIMB", "number") === 1;
+		let showTopOfClimb = SimVar.GetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_CLIMB', 'number') === 1;
 		if (showTopOfClimb) {
 			if (!this.topOfClimbIcon) {
-				this.topOfClimbIcon = new SvgTopOfXCustomElement("b787-10-top-of-climb", "ICON_MAP_TOC");
+				this.topOfClimbIcon = new SvgTopOfXCustomElement('b787-10-top-of-climb', 'ICON_MAP_TOC');
 			}
-			this.topOfClimbIcon.lat = SimVar.GetSimVarValue("L:AIRLINER_FMS_LAT_TOP_CLIMB", "number");
-			this.topOfClimbIcon.long = SimVar.GetSimVarValue("L:AIRLINER_FMS_LONG_TOP_CLIMB", "number");
-			this.topOfClimbIcon.heading = SimVar.GetSimVarValue("L:AIRLINER_FMS_HEADING_TOP_CLIMB", "number");
+			this.topOfClimbIcon.lat = SimVar.GetSimVarValue('L:AIRLINER_FMS_LAT_TOP_CLIMB', 'number');
+			this.topOfClimbIcon.long = SimVar.GetSimVarValue('L:AIRLINER_FMS_LONG_TOP_CLIMB', 'number');
+			this.topOfClimbIcon.heading = SimVar.GetSimVarValue('L:AIRLINER_FMS_HEADING_TOP_CLIMB', 'number');
 			let index = this.instrument.topOfCurveElements.indexOf(this.topOfClimbIcon);
 			if (index === -1) {
 				this.instrument.topOfCurveElements.push(this.topOfClimbIcon);
 			}
-		}
-		else {
+		} else {
 			let index = this.instrument.topOfCurveElements.indexOf(this.topOfClimbIcon);
 			if (index != -1) {
 				this.instrument.topOfCurveElements.splice(index, 1);
@@ -822,12 +820,12 @@ class B787_10_ND_Map extends MapInstrumentElement {
 		}
 	}
 
-	calculateAltitudeArcPosition(distance = NaN){
+	calculateAltitudeArcPosition(distance = NaN) {
 		let isMapCentered = (this._parent.mapIsCentered ? 1 : 0);
 		let isMapFullscreen = (this._fullscreen ? 1 : 0);
 		let triangleOffset = this.altitudeArcOffsets[isMapCentered][isMapFullscreen][2];
 		let top = this.altitudeArcOffsets[isMapCentered][isMapFullscreen][0];
-		let range = this.zoomRanges[this._parent.mapRange]
+		let range = this.zoomRanges[this._parent.mapRange];
 		if (!isFinite(distance)) {
 			return triangleOffset - ((triangleOffset - top) / range) * this.calculateDistanceForDescending();
 		}
@@ -922,56 +920,56 @@ class B787_10_ND_Map extends MapInstrumentElement {
 			let now = Math.floor(new Date().getTime() / 1000);
 
 
-			if(irsLState >= 1 || irsRState >= 1){
-				let irsLTimeForAlign = SimVar.GetSimVarValue("L:B78XH_IRS_L_TIME_FOR_ALIGN", "Number")
-				let irsRTimeForAlign = SimVar.GetSimVarValue("L:B78XH_IRS_R_TIME_FOR_ALIGN", "Number")
-				let irsLInitAlignTime = SimVar.GetSimVarValue("L:B78XH_IRS_L_INIT_ALIGN_TIME", "Number")
-				let irsRInitAlignTime = SimVar.GetSimVarValue("L:B78XH_IRS_R_INIT_ALIGN_TIME", "Number")
+			if (irsLState >= 1 || irsRState >= 1) {
+				let irsLTimeForAlign = SimVar.GetSimVarValue('L:B78XH_IRS_L_TIME_FOR_ALIGN', 'Number');
+				let irsRTimeForAlign = SimVar.GetSimVarValue('L:B78XH_IRS_R_TIME_FOR_ALIGN', 'Number');
+				let irsLInitAlignTime = SimVar.GetSimVarValue('L:B78XH_IRS_L_INIT_ALIGN_TIME', 'Number');
+				let irsRInitAlignTime = SimVar.GetSimVarValue('L:B78XH_IRS_R_INIT_ALIGN_TIME', 'Number');
 
 				let mode = 0;
 
-				if(irsLInitAlignTime !== -1 && irsRInitAlignTime !== -1){
-					mode = 3
-				} else if(irsLInitAlignTime !== -1 && irsRInitAlignTime === -1){
+				if (irsLInitAlignTime !== -1 && irsRInitAlignTime !== -1) {
+					mode = 3;
+				} else if (irsLInitAlignTime !== -1 && irsRInitAlignTime === -1) {
 					mode = 1;
-				} else if(irsRInitAlignTime !== -1 && irsLInitAlignTime === -1){
-					mode = 2
+				} else if (irsRInitAlignTime !== -1 && irsLInitAlignTime === -1) {
+					mode = 2;
 				}
 
 
-				if(mode === 3){
-					if( irsLInitAlignTime + irsLTimeForAlign <= irsRInitAlignTime + irsRTimeForAlign){
+				if (mode === 3) {
+					if (irsLInitAlignTime + irsLTimeForAlign <= irsRInitAlignTime + irsRTimeForAlign) {
 						let totalSeconds = (irsLInitAlignTime + irsLTimeForAlign) - now;
 						let minutes = Math.floor(totalSeconds / 60);
 						let seconds = totalSeconds - minutes * 60;
-						let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, "0") : minutes.toString())
-						let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, "0") : seconds.toString())
-						aligns[position].textContent =  minutesString + ":" + secondsString;
+						let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
+						let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
+						aligns[position].textContent = minutesString + ':' + secondsString;
 						aligns[position].style.visibility = 'visible';
-					} else{
+					} else {
 						let totalSeconds = (irsRInitAlignTime + irsRTimeForAlign) - now;
 						let minutes = Math.floor(totalSeconds / 60);
 						let seconds = totalSeconds - minutes * 60;
-						let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, "0") : minutes.toString())
-						let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, "0") : seconds.toString())
-						aligns[position].textContent =  minutesString + ":" + secondsString;
+						let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
+						let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
+						aligns[position].textContent = minutesString + ':' + secondsString;
 						aligns[position].style.visibility = 'visible';
 					}
-				} else if (mode === 1){
+				} else if (mode === 1) {
 					let totalSeconds = (irsLInitAlignTime + irsLTimeForAlign) - now;
 					let minutes = Math.floor(totalSeconds / 60);
 					let seconds = totalSeconds - minutes * 60;
-					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, "0") : minutes.toString())
-					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, "0") : seconds.toString())
-					aligns[position].textContent =  minutesString + ":" + secondsString;
+					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
+					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
+					aligns[position].textContent = minutesString + ':' + secondsString;
 					aligns[position].style.visibility = 'visible';
-				} else if (mode === 2){
+				} else if (mode === 2) {
 					let totalSeconds = (irsRInitAlignTime + irsRTimeForAlign) - now;
 					let minutes = Math.floor(totalSeconds / 60);
 					let seconds = totalSeconds - minutes * 60;
-					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, "0") : minutes.toString())
-					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, "0") : seconds.toString())
-					aligns[position].textContent =  minutesString + ":" + secondsString;
+					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
+					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
+					aligns[position].textContent = minutesString + ':' + secondsString;
 					aligns[position].style.visibility = 'visible';
 				}
 			}
