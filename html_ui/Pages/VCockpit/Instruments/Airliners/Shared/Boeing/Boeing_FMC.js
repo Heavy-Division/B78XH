@@ -25,7 +25,6 @@ class Boeing_FMC extends FMCMainDisplay {
 	Init() {
 		super.Init();
 		this.maxCruiseFL = 450;
-		this.cruiseFlightLevel = 100;
 		this.onExec = () => {
 			if (this.getIsRouteActivated()) {
 				this.insertTemporaryFlightPlan(() => {
@@ -482,6 +481,8 @@ class Boeing_FMC extends FMCMainDisplay {
 		if (this.getIsVNAVActive()) {
 			let displayedAltitude = Simplane.getAutoPilotDisplayedAltitudeLockValue();
 			this.cruiseFlightLevel = Math.floor(displayedAltitude / 100);
+		} else {
+			Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, Simplane.getAutoPilotDisplayedAltitudeLockValue(), true);
 		}
 	}
 
