@@ -441,8 +441,8 @@ class B787_10_PFD_ILS extends NavSystemElement {
 		}
 		if (this.ils) {
 			let showIls = false;
-			let localizer = this.gps.radioNav.getBestILSBeacon(false);
-			if ((localizer.id != 0 && this.altWentAbove500) || (this.gps.currFlightPlanManager.isActiveApproach() && Simplane.getAutoPilotApproachType() == 10)) {
+			let localizer = this.gps.radioNav.getBestILSBeacon(UseNavSource.YES_FALLBACK);
+			if ((localizer.id != 0 && this.altWentAbove500) || (this.gps.currFlightPlanManager.isActiveApproach() && Simplane.getAutoPilotApproachType() == ApproachType.APPROACH_TYPE_RNAV)) {
 				showIls = true;
 			}
 			this.ils.showLocalizer(showIls);
@@ -461,6 +461,8 @@ class B787_10_PFD_ILS extends NavSystemElement {
 class B787_10_PFD_Compass extends NavSystemElement {
 	init(root) {
 		this.svg = this.gps.getChildById('Compass');
+		this.svg.forceNavAid(1, NAV_AID_STATE.ADF);
+		this.svg.forceNavAid(2, NAV_AID_STATE.ADF);
 		this.svg.setMode(Jet_NDCompass_Display.ARC, Jet_NDCompass_Navigation.NAV);
 		this.svg.aircraft = Aircraft.AS01B;
 		this.svg.gps = this.gps;
