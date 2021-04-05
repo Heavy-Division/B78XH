@@ -64,10 +64,13 @@ class FMCMainDisplay extends BaseAirliners {
 		this.needApproachToSwitchToNav = true;
 		this._vhf1Frequency = 0;
 		this._vhf2Frequency = 0;
+		this._vor1FrequencyIdent = '';
 		this._vor1Frequency = 0;
 		this._vor1Course = 0;
+		this._vor2FrequencyIdent = '';
 		this._vor2Frequency = 0;
 		this._vor2Course = 0;
+		this._ilsFrequencyIdent = '';
 		this._ilsFrequency = 0;
 		this._ilsCourse = 0;
 		this._adf1Frequency = 0;
@@ -741,15 +744,17 @@ class FMCMainDisplay extends BaseAirliners {
 				let frequency = this.flightPlanManager.getApproachNavFrequency();
 				if (isFinite(frequency)) {
 					let freq = Math.round(frequency * 100) / 100;
-					if (this.connectIlsFrequency(freq)) {
-						SimVar.SetSimVarValue('L:FLIGHTPLAN_APPROACH_ILS', 'number', freq);
-						let approach = this.flightPlanManager.getApproach();
-						if (approach && approach.name && approach.name.indexOf('ILS') !== -1) {
+					let approach = this.flightPlanManager.getApproach();
+					if (approach && approach.name && approach.name.indexOf('ILS') !== -1) {
+						if (this.connectIlsFrequency(freq)) {
+							SimVar.SetSimVarValue('L:FLIGHTPLAN_APPROACH_ILS', 'number', freq);
 							let runway = this.flightPlanManager.getApproachRunway();
 							if (runway) {
 								SimVar.SetSimVarValue('L:FLIGHTPLAN_APPROACH_COURSE', 'number', runway.direction);
 							}
 						}
+					} else {
+						this.vor1Frequency = freq;
 					}
 				}
 				callback(true);
@@ -1873,7 +1878,7 @@ class FMCMainDisplay extends BaseAirliners {
 					let origin = this.flightPlanManager.getOrigin();
 					if (origin) {
 						origin.altitudeWasReached = Simplane.getAltitude();
-						origin.timeWasReached = SimVar.GetGlobalVarValue('LOCAL TIME', 'seconds');
+						origin.timeWasReached = SimVar.GetGlobalVarValue('ZULU TIME', 'seconds');
 						origin.fuelWasReached = SimVar.GetSimVarValue('FUEL TOTAL QUANTITY', 'gallons') * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms') / 1000;
 					}
 				}
@@ -2012,6 +2017,23 @@ class FMCMainDisplay extends BaseAirliners {
 	onFlightPhaseChanged() {
 	}
 
+	connectVorFrequency(_index, _freq) {
+		if (_freq >= 108 && _freq <= 117.95 && RadioNav.isHz50Compliant(_freq)) {
+			if (_index == 1) {
+				SimVar.SetSimVarValue('L:FMC_VOR_FREQUENCY:1', 'Hz', _freq * 1000000);
+				if (!this.isRadioNavActive()) {
+					this.radioNav.setVORActiveFrequency(1, _freq);
+				}
+			} else if (_index == 2) {
+				SimVar.SetSimVarValue('L:FMC_VOR_FREQUENCY:2', 'Hz', _freq * 1000000);
+				if (!this.isRadioNavActive()) {
+					this.radioNav.setVORActiveFrequency(2, _freq);
+				}
+			}
+		}
+		return false;
+	}
+
 	connectIlsFrequency(_freq) {
 		if (_freq >= 108 && _freq <= 111.95 && RadioNav.isHz50Compliant(_freq)) {
 			switch (this.radioNav.mode) {
@@ -2119,11 +2141,11 @@ class FMCMainDisplay extends BaseAirliners {
 					this.adf2Frequency = this.radioNav.getADFActiveFrequency(2);
 				} else {
 					if (Math.abs(this.radioNav.getADFActiveFrequency(1) - this.adf1Frequency) > 0.005) {
-						SimVar.SetSimVarValue('K:ADF_COMPLETE_SET', 'Frequency ADF BCD32', Avionics.Utils.make_adf_bcd32(this.adf1Frequency * 1000)).then(() => {
+						SimVar.SetSimVarValue('K:ADF_ACTIVE_SET', 'Frequency ADF BCD32', Avionics.Utils.make_adf_bcd32(this.adf1Frequency * 1000)).then(() => {
 						});
 					}
 					if (Math.abs(this.radioNav.getADFActiveFrequency(2) - this.adf2Frequency) > 0.005) {
-						SimVar.SetSimVarValue('K:ADF2_COMPLETE_SET', 'Frequency ADF BCD32', Avionics.Utils.make_adf_bcd32(this.adf2Frequency * 1000)).then(() => {
+						SimVar.SetSimVarValue('K:ADF2_ACTIVE_SET', 'Frequency ADF BCD32', Avionics.Utils.make_adf_bcd32(this.adf2Frequency * 1000)).then(() => {
 						});
 					}
 				}
@@ -2175,7 +2197,7 @@ class FMCMainDisplay extends BaseAirliners {
 				}
 			}
 			if (apNavIndex != this._apNavIndex) {
-				SimVar.SetSimVarValue('K:AP_NAV_SELECT_SET', 'number', apNavIndex);
+				Simplane.setAutoPilotSelectedNav(apNavIndex);
 				this._apNavIndex = apNavIndex;
 			}
 			let curState = SimVar.GetSimVarValue('GPS DRIVES NAV1', 'Bool');
@@ -2217,6 +2239,10 @@ class FMCMainDisplay extends BaseAirliners {
 		return this._vhf2Frequency;
 	}
 
+	get vor1FrequencyIdent() {
+		return this._vor1FrequencyIdent;
+	}
+
 	get vor1Frequency() {
 		return this._vor1Frequency;
 	}
@@ -2225,12 +2251,20 @@ class FMCMainDisplay extends BaseAirliners {
 		return this._vor1Course;
 	}
 
+	get vor2FrequencyIdent() {
+		return this._vor2FrequencyIdent;
+	}
+
 	get vor2Frequency() {
 		return this._vor2Frequency;
 	}
 
 	get vor2Course() {
 		return this._vor2Course;
+	}
+
+	get ilsFrequencyIdent() {
+		return this._ilsFrequencyIdent;
 	}
 
 	get ilsFrequency() {
@@ -2269,22 +2303,37 @@ class FMCMainDisplay extends BaseAirliners {
 		this._vhf2Frequency = _frq;
 	}
 
+	set vor1FrequencyIdent(_ident) {
+		this._vor1FrequencyIdent = _ident;
+		this.radioNav.setVORActiveIdent(1, _ident);
+	}
+
 	set vor1Frequency(_frq) {
 		this._vor1Frequency = _frq;
-		SimVar.SetSimVarValue('L:FMC_VOR_FREQUENCY:1', 'Hz', _frq * 1000000);
+		this.connectVorFrequency(1, _frq);
 	}
 
 	set vor1Course(_crs) {
 		this._vor1Course = _crs;
 	}
 
+	set vor2FrequencyIdent(_ident) {
+		this._vor2FrequencyIdent = _ident;
+		this.radioNav.setVORActiveIdent(2, _ident);
+	}
+
 	set vor2Frequency(_frq) {
 		this._vor2Frequency = _frq;
-		SimVar.SetSimVarValue('L:FMC_VOR_FREQUENCY:2', 'Hz', _frq * 1000000);
+		this.connectVorFrequency(2, _frq);
 	}
 
 	set vor2Course(_crs) {
 		this._vor2Course = _crs;
+	}
+
+	set ilsFrequencyIdent(_ident) {
+		this._ilsFrequencyIdent = _ident;
+		this.radioNav.setILSActiveIdent(1, _ident);
 	}
 
 	set ilsFrequency(_frq) {
@@ -2437,15 +2486,17 @@ class FMCMainDisplay extends BaseAirliners {
 					let frequency = this.flightPlanManager.getApproachNavFrequency();
 					if (isFinite(frequency)) {
 						let freq = Math.round(frequency * 100) / 100;
-						if (this.connectIlsFrequency(freq)) {
-							SimVar.SetSimVarValue('L:FLIGHTPLAN_APPROACH_ILS', 'number', freq);
-							let approach = this.flightPlanManager.getApproach();
-							if (approach && approach.name && approach.name.indexOf('ILS') !== -1) {
+						let approach = this.flightPlanManager.getApproach();
+						if (approach && approach.name && approach.name.indexOf('ILS') !== -1) {
+							if (this.connectIlsFrequency(freq)) {
+								SimVar.SetSimVarValue('L:FLIGHTPLAN_APPROACH_ILS', 'number', freq);
 								let runway = this.flightPlanManager.getApproachRunway();
 								if (runway) {
 									SimVar.SetSimVarValue('L:FLIGHTPLAN_APPROACH_COURSE', 'number', runway.direction);
 								}
 							}
+						} else {
+							this.vor1Frequency = freq;
 						}
 					}
 					if (Simplane.getAltitude() > 1000) {
@@ -2523,6 +2574,7 @@ class FMCMainDisplay extends BaseAirliners {
 		let gpsDriven = SimVar.GetSimVarValue('GPS DRIVES NAV1', 'Bool');
 		if (!gpsDriven)
 			SimVar.SetSimVarValue('K:TOGGLE_GPS_DRIVES_NAV1', 'Bool', 0);
+		this._canSwitchToNav = false;
 		this.initRadioNav(true);
 	}
 
@@ -2823,7 +2875,7 @@ class FMCMainDisplay extends BaseAirliners {
 			return NaN;
 		}
 		if (isNaN(currentTime)) {
-			currentTime = SimVar.GetGlobalVarValue('LOCAL TIME', 'seconds');
+			currentTime = SimVar.GetGlobalVarValue('ZULU TIME', 'seconds');
 		}
 		let eteSeconds = distance / speed * 3600;
 		let etaSeconds = currentTime + eteSeconds;
