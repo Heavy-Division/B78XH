@@ -206,7 +206,7 @@ class B787_10_FMC_LegsPage {
 			};
 		} else {
 			fmc.onRightInput[5] = () => {
-				B787_10_FMC_RoutePage.ShowPage2(fmc);
+				new B787_10_FMC_RouteDataPage(fmc).showPage();
 			};
 		}
 
