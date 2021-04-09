@@ -1,4 +1,4 @@
-class Heavy_FMCMainDisplay extends BaseAirliners {
+class Heavy_FMCMainDisplay extends FMCMainDisplay {
 	constructor() {
 		super();
 
