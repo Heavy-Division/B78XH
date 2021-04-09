@@ -64,7 +64,7 @@ class B787_10_FMC_RouteDataPage {
 						if (isFinite(eta)) {
 							let etaHours = Math.floor(eta / 3600);
 							let etaMinutes = Math.floor((eta - etaHours * 3600) / 60);
-							etaCell = etaHours.toFixed(0).padStart(2, "0") + etaMinutes.toFixed(0).padStart(2, "0");
+							etaCell = etaHours.toFixed(0).padStart(2, "0") + etaMinutes.toFixed(0).padStart(2, "0") + '[size=small]Z[/size]';
 						}
 
 						let fuelLeft = this.fmc.computeFuelLeft(waypoint.cumulativeDistanceInFP, speed, currentFuel, currentFuelFlow);
@@ -72,7 +72,7 @@ class B787_10_FMC_RouteDataPage {
 							fuelCell = fuelLeft.toFixed(1);
 						}
 
-						rows[2 * i] = [etaCell + '[size=small]Z[/size]', '<', waypoint.ident, fuelCell];
+						rows[2 * i] = [etaCell, '<', waypoint.ident, fuelCell];
 					}
 				}
 			}
