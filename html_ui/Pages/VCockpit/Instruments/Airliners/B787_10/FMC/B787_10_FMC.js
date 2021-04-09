@@ -1,6 +1,6 @@
 Include.addScript('/B78XH/Enums/B78XH_LocalVariables.js');
 
-class B787_10_FMC extends Boeing_FMC {
+class B787_10_FMC extends Heavy_Boeing_FMC {
 	constructor() {
 		super(...arguments);
 		this._registered = false;
