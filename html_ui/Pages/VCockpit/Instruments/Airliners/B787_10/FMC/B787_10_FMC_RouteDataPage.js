@@ -60,7 +60,10 @@ class B787_10_FMC_RouteDataPage {
 					let fuelCell = '';
 					let waypoint = waypoints[i + offset];
 					if (waypoint) {
-						let eta = this.fmc.computeETA(waypoint.cumulativeDistanceInFP, speed, currentTime);
+						let eta = undefined;
+						if(speed > 10){
+							eta = waypoint.estimatedTimeOfArrivalFP % 86400
+						}
 						if (isFinite(eta)) {
 							let etaHours = Math.floor(eta / 3600);
 							let etaMinutes = Math.floor((eta - etaHours * 3600) / 60);
