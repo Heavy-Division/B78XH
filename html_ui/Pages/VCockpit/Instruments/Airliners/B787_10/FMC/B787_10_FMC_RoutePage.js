@@ -86,7 +86,6 @@ class B787_10_FMC_RoutePage {
 		if (activateCell === '') {
 			activateCell = '<PERF INIT';
 			fmc.onRightInput[5] = () => {
-				fmc.activateRoute();
 				B787_10_FMC_PerfInitPage.ShowPage1(fmc);
 			};
 		}
