@@ -15,7 +15,8 @@ class B787_10_FMC_DepArrPage {
 		if (destination) {
 			rowDestination = ['', '<ARR', destination.ident];
 			fmc.onRightInput[1] = () => {
-				B787_10_FMC_DepArrPage.ShowArrivalPage(fmc);
+				new B787_10_FMC_ArrivalsPage(fmc).showPage();
+				//B787_10_FMC_DepArrPage.ShowArrivalPage(fmc);
 			};
 		}
 		fmc.setTemplate([
