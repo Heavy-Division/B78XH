@@ -123,6 +123,13 @@ class B787_10_FMC_ArrivalsPage {
 				this.showPage(currentPage + 1);
 			}
 		};
+
+		this.fmc.onLeftInput[5] = () => {
+			B787_10_FMC_DepArrPage.ShowPage1(this.fmc);
+		};
+		this.fmc.onRightInput[5] = () => {
+			B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+		};
 		this.fmc.updateSideButtonActiveStatus();
 	}
 
