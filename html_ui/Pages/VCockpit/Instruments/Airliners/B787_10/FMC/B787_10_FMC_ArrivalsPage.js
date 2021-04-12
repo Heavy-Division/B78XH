@@ -37,8 +37,8 @@ class B787_10_FMC_ArrivalsPage {
 					});
 				};
 			} else {
-				let offset = (currentPage * 5) - 5;
-				for (let i = 1; i < 5; i++) {
+				let offset = (currentPage * 4) - 4;
+				for (let i = 1; i <= 4; i++) {
 					if(rows[i * 2][0]){
 						this.fmc.onLeftInput[i] = () => {
 							this.fmc.ensureCurrentFlightPlanIsTemporary(() => {
@@ -81,8 +81,8 @@ class B787_10_FMC_ArrivalsPage {
 					});
 				};
 			} else {
-				let offset = (currentPage * 5) - 5;
-				for (let i = 1; i < 4; i++) {
+				let offset = (currentPage * 4) - 4;
+				for (let i = 1; i <= 4; i++) {
 					if(rows[i * 2][1]){
 						this.fmc.onRightInput[i] = () => {
 							this.fmc.setApproachTransitionIndex(i + offset - 1, () => {
@@ -184,7 +184,6 @@ class B787_10_FMC_ArrivalsPage {
 		let leftSideRows = this.getLeftSideRows();
 		let rightSideRows = this.getRightSideRows();
 		let offset = (currentPage * 5) - 5;
-
 		if (leftSideRows.selectedArrival) {
 			finalRows[0][0] = leftSideRows.selectedArrival;
 			if (leftSideRows.availableTransitions.length > 0) {
@@ -197,11 +196,14 @@ class B787_10_FMC_ArrivalsPage {
 				finalRows[2][0] = leftSideRows.selectedTransition;
 				arrivalTransitionCount = 1;
 			} else {
-				for (let i = offset; i <= offset + 5; i++) {
-					if (leftSideRows.availableTransitions[i - 1]) {
-						finalRows[(i - offset) * 2][0] = leftSideRows.availableTransitions[i - 1];
+				let offset = (currentPage * 4) - 4;
+				let transitions = leftSideRows.availableTransitions.slice(offset, offset + 4)
+
+				Object.keys(transitions).forEach((k) => {
+					if(finalRows[(parseInt(k)  + 1) * 2]){
+						finalRows[(parseInt(k)  + 1) * 2][1] = transitions[k];
 					}
-				}
+				});
 				arrivalTransitionCount = leftSideRows.availableTransitions.length;
 			}
 		} else {
@@ -224,11 +226,14 @@ class B787_10_FMC_ArrivalsPage {
 				finalRows[2][1] = rightSideRows.selectedTransition;
 				approachTransitionCount = 1;
 			} else {
-				for (let i = offset; i <= offset + 5; i++) {
-					if (rightSideRows.availableTransitions[i - 1]) {
-						finalRows[(i - offset) * 2][1] = rightSideRows.availableTransitions[i - 1];
+				let offset = (currentPage * 4) - 4;
+				let transitions = rightSideRows.availableTransitions.slice(offset, offset + 4)
+
+				Object.keys(transitions).forEach((k) => {
+					if(finalRows[(parseInt(k)  + 1) * 2]){
+						finalRows[(parseInt(k)  + 1) * 2][1] = transitions[k];
 					}
-				}
+				});
 				approachTransitionCount = rightSideRows.availableTransitions.length;
 			}
 		} else {
