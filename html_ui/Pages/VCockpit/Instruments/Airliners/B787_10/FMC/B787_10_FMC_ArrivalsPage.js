@@ -201,7 +201,7 @@ class B787_10_FMC_ArrivalsPage {
 
 				Object.keys(transitions).forEach((k) => {
 					if(finalRows[(parseInt(k)  + 1) * 2]){
-						finalRows[(parseInt(k)  + 1) * 2][1] = transitions[k];
+						finalRows[(parseInt(k)  + 1) * 2][0] = transitions[k];
 					}
 				});
 				arrivalTransitionCount = leftSideRows.availableTransitions.length;
