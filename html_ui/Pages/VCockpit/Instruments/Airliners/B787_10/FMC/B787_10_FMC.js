@@ -87,6 +87,78 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		return true;
 	}
 
+	/**
+	 * WT Integration
+	 */
+
+	updateRouteOrigin(newRouteOrigin, callback = EmptyCallback.Boolean) {
+		this.dataManager.GetAirportByIdent(newRouteOrigin).then(airport => {
+			if (!airport) {
+				this.showErrorMessage("NOT IN DATABASE");
+				return callback(false);
+			}
+			this.flightPlanManager.setOrigin(airport.icao, () => {
+				this.tmpOrigin = airport.ident;
+				callback(true);
+			});
+		});
+	}
+
+	onInteractionEvent(args) {
+		super.onInteractionEvent(args);
+
+		const apPrefix = "WT_CJ4_AP_";
+		if (args[0].startsWith(apPrefix)) {
+			this._navModeSelector.onNavChangedEvent(args[0].substring(apPrefix.length));
+		}
+	}
+
+	//function added to set departure enroute transition index
+	setDepartureEnrouteTransitionIndex(departureEnrouteTransitionIndex, callback = EmptyCallback.Boolean) {
+		this.ensureCurrentFlightPlanIsTemporary(() => {
+			this.flightPlanManager.setDepartureEnRouteTransitionIndex(departureEnrouteTransitionIndex, () => {
+				callback(true);
+			});
+		});
+	}
+	//function added to set arrival runway transition index
+	setArrivalRunwayTransitionIndex(arrivalRunwayTransitionIndex, callback = EmptyCallback.Boolean) {
+		this.ensureCurrentFlightPlanIsTemporary(() => {
+			this.flightPlanManager.setArrivalRunwayIndex(arrivalRunwayTransitionIndex, () => {
+				callback(true);
+			});
+		});
+	}
+	//function added to set arrival and runway transition
+	setArrivalAndRunwayIndex(arrivalIndex, enrouteTransitionIndex, callback = EmptyCallback.Boolean) {
+		this.ensureCurrentFlightPlanIsTemporary(() => {
+			let landingRunway = this.vfrLandingRunway;
+			if (landingRunway === undefined) {
+				landingRunway = this.flightPlanManager.getApproachRunway();
+			}
+			this.flightPlanManager.setArrivalProcIndex(arrivalIndex, () => {
+				this.flightPlanManager.setArrivalEnRouteTransitionIndex(enrouteTransitionIndex, () => {
+					if (landingRunway) {
+						const arrival = this.flightPlanManager.getArrival();
+						const arrivalRunwayIndex = arrival.runwayTransitions.findIndex(t => {
+							return t.name.indexOf(landingRunway.designation) != -1;
+						});
+						if (arrivalRunwayIndex >= -1) {
+							return this.flightPlanManager.setArrivalRunwayIndex(arrivalRunwayIndex, () => {
+								return callback(true);
+							});
+						}
+					}
+					return callback(true);
+				});
+			});
+		});
+	}
+
+	/**
+	 * WT Integration END
+	 */
+
 	connectedCallback() {
 		super.connectedCallback();
 		RegisterViewListener('JS_LISTENER_KEYEVENT', () => {
@@ -763,6 +835,12 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				this._apMasterStatus = currentApMasterStatus;
 				this._forceNextAltitudeUpdate = true;
 			}
+
+			if (!this._navModeSelector) {
+				this._navModeSelector = new CJ4NavModeSelector(this.flightPlanManager);
+			}
+
+
 			this._apHasDeactivated = !currentApMasterStatus && this._previousApMasterStatus;
 			this._apHasActivated = currentApMasterStatus && !this._previousApMasterStatus;
 			this._previousApMasterStatus = currentApMasterStatus;
