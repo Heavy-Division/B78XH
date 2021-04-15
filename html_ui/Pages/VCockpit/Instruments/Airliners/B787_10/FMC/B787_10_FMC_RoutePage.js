@@ -321,6 +321,103 @@ class B787_10_FMC_RoutePage {
 	}
 
 	static _GetAllRows(fmc) {
+		const allRows = [];
+		const flightPlanManager = fmc.flightPlanManager;
+		let lastDepartureWaypoint = undefined;
+		let foundActive = false; // haaaaackyyy
+		if (flightPlanManager) {
+			const departure = flightPlanManager.getDeparture();
+			if (departure) {
+				const departureWaypoints = flightPlanManager.getDepartureWaypointsMap();
+				const lastDepartureIdx = departureWaypoints.length - 1;
+				lastDepartureWaypoint = departureWaypoints[lastDepartureIdx];
+				if (lastDepartureWaypoint) {
+					foundActive = flightPlanManager.getActiveWaypointIndex() <= lastDepartureIdx;
+					allRows.push(new FpRow(lastDepartureWaypoint.ident, lastDepartureIdx + 1, departure.name, undefined, foundActive));
+				}
+			}
+			const fpIndexes = [];
+			const routeWaypoints = flightPlanManager.getEnRouteWaypoints(fpIndexes);
+			let tmpFoundActive = false;
+			for (let i = 0; i < routeWaypoints.length; i++) {
+				const prev = (i == 0) ? lastDepartureWaypoint : routeWaypoints[i - 1]; // check with dep on first waypoint
+				const wp = routeWaypoints[i];
+				if (wp) {
+
+					tmpFoundActive = tmpFoundActive || (!foundActive && flightPlanManager.getActiveWaypointIndex() <= fpIndexes[i]);
+					if (tmpFoundActive) {
+						foundActive = true;
+					}
+
+					if (wp.infos.airwayIn !== undefined && prev && prev.infos.airwayOut === wp.infos.airwayIn) {
+						// is there a next waypoint?
+						const nextWp = routeWaypoints[i + 1];
+						if (nextWp) {
+							const airwayContinues = (wp.infos.airwayIn === wp.infos.airwayOut && nextWp.infos.airwayIn === wp.infos.airwayOut);
+							if (airwayContinues) {
+								continue;
+							}
+						}
+						allRows.push(new FpRow(wp.ident, fpIndexes[i], wp.infos.airwayIn, wp.infos.airwayOut, tmpFoundActive));
+						tmpFoundActive = false;
+					} else {
+						allRows.push(new FpRow(wp.ident, fpIndexes[i], undefined, wp.infos.airwayOut, tmpFoundActive));
+						tmpFoundActive = false;
+					}
+				}
+			}
+
+			/** @type {ManagedFlightPlan} */
+			const fpln = flightPlanManager.getCurrentFlightPlan();
+
+			const arrivalSeg = fpln.getSegment(SegmentType.Arrival);
+			if (arrivalSeg !== FlightPlanSegment.Empty) {
+				const arrival = flightPlanManager.getArrival();
+				const currentWaypointIndex = fpln.activeWaypointIndex;
+
+				if (arrival) {
+					const transitionIndex = fpln.procedureDetails.arrivalTransitionIndex;
+					const transition = arrival.enRouteTransitions[transitionIndex];
+					const arrivalName = transitionIndex !== -1 && transition
+						? `${transition.name}.${arrival.name}`
+						: `${arrival.name}`;
+
+					const finalFix = arrivalSeg.waypoints[arrivalSeg.waypoints.length - 1];
+					const isSegmentActive = currentWaypointIndex >= arrivalSeg.offset && currentWaypointIndex < arrivalSeg.offset + arrivalSeg.waypoints.length;
+
+					allRows.push(new FpRow(finalFix.ident, arrivalSeg.offset, arrivalName, undefined, isSegmentActive));
+				}
+			}
+
+			/** @type {FlightPlanSegment} */
+			const approachSeg = fpln.getSegment(SegmentType.Approach);
+			if (approachSeg !== FlightPlanSegment.Empty) {
+				// first app fix
+				const fWp = approachSeg.waypoints[0];
+				const fFpIdx = approachSeg.offset;
+				let tmpFoundActive = !foundActive && flightPlanManager.getActiveWaypointIndex() <= fFpIdx;
+				if (tmpFoundActive) {
+					foundActive = true;
+				}
+				allRows.push(new FpRow(fWp.ident, fFpIdx, undefined, undefined, tmpFoundActive));
+
+				// last app fix
+				let appName = (flightPlanManager.getAirportApproach() !== undefined) ? flightPlanManager.getAirportApproach().name : "APP";
+				appName = `${allRows[allRows.length - 1].ident}.${appName}`;
+				const wp = approachSeg.waypoints[approachSeg.waypoints.length - 1];
+				const fpIdx = approachSeg.offset + (approachSeg.waypoints.length - 1);
+				tmpFoundActive = !foundActive && flightPlanManager.getActiveWaypointIndex() <= fpIdx;
+				if (tmpFoundActive) {
+					foundActive = true;
+				}
+				allRows.push(new FpRow(wp.ident, fpIdx, appName, undefined, tmpFoundActive));
+			}
+
+		}
+		return allRows;
+	}
+
+	static _GetAllRows2(fmc) {
 		let allRows = [];
 		let flightPlan = fmc.flightPlanManager;
 		if (flightPlan) {
@@ -370,6 +467,66 @@ class B787_10_FMC_RoutePage {
 			}
 		}
 		return allRows;
+	}
+}
+
+class FpRow {
+	constructor(ident = "-----", fpIdx = Infinity, airwayIn = undefined, airwayOut = undefined, isActive = false) {
+		this._ident = ident;
+		this._fpIdx = fpIdx;
+		this._airwayIn = airwayIn;
+		this._airwayOut = airwayOut;
+		this._isActive = isActive;
+	}
+
+	get ident() {
+		return this._ident;
+	}
+	set ident(val) {
+		this._ident = val;
+	}
+	get fpIdx() {
+		return this._fpIdx;
+	}
+	set fpIdx(val) {
+		this._fpIdx = val;
+	}
+	get airwayOut() {
+		return this._airwayOut;
+	}
+	set airwayOut(val) {
+		this._airwayOut = val;
+	}
+	get airwayIn() {
+		return this._airwayIn;
+	}
+	set airwayIn(val) {
+		this._airwayIn = val;
+	}
+
+	getTemplate() {
+		let row1tmpl, row2tmpl = ["", ""];
+		if (this._airwayIn === undefined) {
+			if (this._ident !== "-----") {
+				row1tmpl = ["DIRECT", this._ident];
+			} else {
+				row1tmpl = ["-----", this._ident];
+
+			}
+		} else {
+			row1tmpl = [this._airwayIn, this._ident];
+			if (this._ident === "-----") {
+				row1tmpl[1] = "□□□□□[s-text]";
+				row2tmpl = ["----[s-text]", "----[s-text]", "DISCONTINUITY[s-text]"];
+			}
+		}
+
+		if (this._isActive) {
+			row1tmpl[0] += "[magenta]";
+			row1tmpl[1] += "[magenta]";
+		}
+
+		return [row1tmpl, row2tmpl];
 	}
 }
 

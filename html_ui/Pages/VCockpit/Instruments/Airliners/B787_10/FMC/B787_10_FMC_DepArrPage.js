@@ -74,12 +74,13 @@ class B787_10_FMC_DepArrPage {
 		}
 		if (selectedRunway) {
 			rows[0] = ['', Avionics.Utils.formatRunway(selectedRunway.designation), '', '<SEL>'];
-			fmc.onRightInput[0] = () => {
-				fmc.setRunwayIndex(-1, (success) => {
-					fmc.activateRoute();
+			fmc.flightPlanManager.pauseSync();
+			fmc.setRunwayIndex(-1, () => {
+				fmc.setDepartureIndex(-1, () => {
+					fmc.flightPlanManager.resumeSync();
 					B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
 				});
-			};
+			});
 		} else {
 			let i = 0;
 			let rowIndex = -5 * (currentPage - 1);
@@ -107,12 +108,10 @@ class B787_10_FMC_DepArrPage {
 						fmc.onRightInput[rowIndex] = () => {
 							if (fmc.flightPlanManager.getDepartureProcIndex() === -1) {
 								fmc.setOriginRunwayIndex(index, () => {
-									fmc.activateRoute();
 									B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, undefined);
 								});
 							} else {
 								fmc.setRunwayIndex(index, () => {
-									fmc.activateRoute();
 									B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, undefined);
 								});
 							}
@@ -127,9 +126,12 @@ class B787_10_FMC_DepArrPage {
 			rows[0][0] = selectedDeparture.name;
 			rows[0][2] = '<SEL>';
 			fmc.onLeftInput[0] = () => {
-				fmc.setDepartureIndex(-1, () => {
-					fmc.activateRoute();
-					B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+				fmc.flightPlanManager.pauseSync();
+				fmc.setRunwayIndex(-1, () => {
+					fmc.setDepartureIndex(-1, () => {
+						fmc.flightPlanManager.resumeSync();
+						B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+					});
 				});
 			};
 		} else {
@@ -155,16 +157,24 @@ class B787_10_FMC_DepArrPage {
 						let ii = i;
 						rows[2 * rowIndex][0] = departure.name;
 						fmc.onLeftInput[rowIndex] = () => {
+							fmc.flightPlanManager.pauseSync();
+							fmc.setDepartureIndex(ii, () => {
+								fmc.flightPlanManager.resumeSync();
+								B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+							});
+							/*
 							let approachIndex = fmc.flightPlanManager.getApproachIndex();
 							fmc.setDepartureIndex(ii, () => {
 								/**
 								 * HOTFIX: ND is not working without this (does not show full route)
-								 */
+
 								fmc.setApproachIndex(approachIndex, () => {
 									fmc.activateRoute();
 									B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
 								});
 							});
+
+							 */
 						};
 					}
 					rowIndex++;
@@ -217,27 +227,27 @@ class B787_10_FMC_DepArrPage {
 		}
 
 		apps.forEach((a) => {
-			console.log("Approach: " + a.name);
-			console.log("TL: " + a.transitions.length);
+			console.log('Approach: ' + a.name);
+			console.log('TL: ' + a.transitions.length);
 			a.transitions.forEach((t) => {
-				console.log("Approach transition: " + t.name);
-			})
-		})
+				console.log('Approach transition: ' + t.name);
+			});
+		});
 
 		arrs.forEach((a) => {
-		//console.log(a.enRouteTransitions.length)
+			//console.log(a.enRouteTransitions.length)
 			a.enRouteTransitions.forEach((t) => {
 				//console.log(t.name)
 
 				//Object.keys(t).forEach((k) => {
 				//	console.log(k)
 				//})
-			})
+			});
 			//a.enRouteTransitions.forEach((t) => {
 			//	console.log(t.name)
-				//Object.keys(t).forEach((k) => {
-				//	console.log(k)
-				//})
+			//Object.keys(t).forEach((k) => {
+			//	console.log(k)
+			//})
 			//});
 			//console.log(a.runwayTransitions.length)
 			a.runwayTransitions.forEach((t) => {
@@ -246,10 +256,10 @@ class B787_10_FMC_DepArrPage {
 				//Object.keys(t).forEach((k) => {
 				//	console.log(k)
 				//})
-			})
+			});
 
 			//console.log("Arrival: " + a.name);
-		})
+		});
 
 
 		fmc.onLeftInput[5] = () => {

@@ -2056,6 +2056,8 @@
          */
         buildDeparture() {
             return __awaiter(this, void 0, void 0, function* () {
+
+                console.log("DEPARTURE 1")
                 const legs = [];
                 const origin = this.originAirfield;
                 const departureIndex = this.procedureDetails.departureIndex;
@@ -2063,43 +2065,59 @@
                 const transitionIndex = this.procedureDetails.departureTransitionIndex;
                 const selectedOriginRunwayIndex = this.procedureDetails.originRunwayIndex;
                 const airportInfo = origin.infos;
+                console.log("DEPARTURE 2")
                 if (departureIndex !== -1 && runwayIndex !== -1) {
+                    console.log("DEPARTURE 3")
                     const runwayTransition = airportInfo.departures[departureIndex].runwayTransitions[runwayIndex];
                     if (runwayTransition !== undefined) {
+                        console.log("DEPARTURE 4")
                         legs.push(...runwayTransition.legs);
                     }
                 }
+                console.log("DEPARTURE 5")
                 if (departureIndex !== -1) {
+                    console.log("DEPARTURE 6")
                     legs.push(...airportInfo.departures[departureIndex].commonLegs);
                 }
+                console.log("DEPARTURE 7")
                 if (transitionIndex !== -1 && departureIndex !== -1) {
+                    console.log("DEPARTURE 8")
                     // TODO: are enroutetransitions working?
                     if (airportInfo.departures[departureIndex].enRouteTransitions.length > 0) {
                         const transition = airportInfo.departures[departureIndex].enRouteTransitions[transitionIndex].legs;
                         legs.push(...transition);
                     }
+                    console.log("DEPARTURE 9")
                 }
                 let segment = this.departure;
                 if (segment !== FlightPlanSegment.Empty) {
+                    console.log("DEPARTURE 10")
                     for (let i = 0; i < segment.waypoints.length; i++) {
                         this.removeWaypoint(segment.offset);
                     }
                     this.removeSegment(segment.type);
                 }
+                console.log("DEPARTURE 11")
                 if (legs.length > 0 || selectedOriginRunwayIndex !== -1 || (departureIndex !== -1 && runwayIndex !== -1)) {
                     segment = this.addSegment(exports.SegmentType.Departure);
+                    console.log("DEPARTURE 28");
                     let procedure = new LegsProcedure(legs, origin, undefined, this._parentInstrument);
+                    console.log("DEPARTURE 29");
                     let runway;
                     if (selectedOriginRunwayIndex !== -1) {
+                        console.log("DEPARTURE 21");
                         runway = airportInfo.oneWayRunways[selectedOriginRunwayIndex];
                     }
                     else if (runwayIndex !== -1) {
+                        console.log("DEPARTURE 22");
                         runway = this.getRunway(airportInfo.oneWayRunways, airportInfo.departures[departureIndex].runwayTransitions[runwayIndex].name);
                     }
                     if (runway) {
+                        console.log("DEPARTURE 23");
                         const selectedRunwayMod = runway.designation.slice(-1);
                         let selectedRunwayOutput = undefined;
                         if (selectedRunwayMod == "L" || selectedRunwayMod == "C" || selectedRunwayMod == "R") {
+                            console.log("DEPARTURE 24");
                             if (runway.designation.length == 2) {
                                 selectedRunwayOutput = "0" + runway.designation;
                             }
@@ -2108,6 +2126,7 @@
                             }
                         }
                         else {
+                            console.log("DEPARTURE 25");
                             if (runway.designation.length == 2) {
                                 selectedRunwayOutput = runway.designation;
                             }
@@ -2115,17 +2134,21 @@
                                 selectedRunwayOutput = "0" + runway.designation;
                             }
                         }
+                        console.log("DEPARTURE 26");
                         const runwayWaypoint = procedure.buildWaypoint(`RW${selectedRunwayOutput}`, runway.beginningCoordinates);
                         // runwayWaypoint.legAltitudeDescription = 1;
                         // runwayWaypoint.legAltitude1 = (runway.elevation * 3.28084) + 50;
                         runwayWaypoint.isRunway = true;
+                        console.log("DEPARTURE 13")
                         this.addWaypoint(runwayWaypoint, undefined, segment.type);
                         procedure = new LegsProcedure(legs, runwayWaypoint, origin, this._parentInstrument);
                     }
                     let waypointIndex = segment.offset;
                     while (procedure.hasNext()) {
+                        console.log("DEPARTURE 15")
                         const waypoint = yield procedure.getNext();
                         if (waypoint !== undefined) {
+                            console.log("DEPARTURE 14")
                             this.addWaypoint(waypoint, ++waypointIndex, segment.type);
                         }
                     }

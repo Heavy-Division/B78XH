@@ -270,6 +270,73 @@ class B787_10_FMC_RouteRequestPage {
 	}
 
 	async insertWaypointsAlongAirway(lastWaypointIdent, index, airwayName, callback = EmptyCallback.Boolean) {
+		const referenceWaypoint = this.fmc.flightPlanManager.getWaypoint(index);
+		if (referenceWaypoint) {
+			const infos = referenceWaypoint.infos;
+			if (infos instanceof WayPointInfo) {
+				const airway = infos.airways.find(a => {
+					return a.name === airwayName;
+				});
+				if (airway) {
+					const firstIndex = airway.icaos.indexOf(referenceWaypoint.icao);
+					const lastWaypointIcao = airway.icaos.find(icao => icao.substring(7, 12) === lastWaypointIdent.padEnd(5, " "));
+					const lastIndex = airway.icaos.indexOf(lastWaypointIcao);
+					if (firstIndex >= 0) {
+						if (lastIndex >= 0) {
+							let inc = 1;
+							if (lastIndex < firstIndex) {
+								inc = -1;
+							}
+
+							const count = Math.abs(lastIndex - firstIndex);
+							for (let i = 1; i < count + 1; i++) { // 9 -> 6
+								const syncInsertWaypointByIcao = async (icao, idx) => {
+									return new Promise(resolve => {
+
+										let progressIndex = this.progress.findIndex((w) => {
+											return w[1] === lastWaypointIdent;
+										});
+
+										if (progressIndex) {
+											this.progress[progressIndex][2] = icao.trim().split(' ').pop();
+											this.updateProgress(progressIndex);
+										}
+										console.log("add icao:" + icao + " @ " + idx);
+										this.fmc.flightPlanManager.addWaypoint(icao, idx, () => {
+											const waypoint = fmc.flightPlanManager.getWaypoint(idx);
+											waypoint.infos.UpdateAirway(airwayName).then(() => {
+												waypoint.infos.airwayIn = airwayName;
+												if (i < count) {
+													waypoint.infos.airwayOut = airwayName;
+												}
+												console.log("icao:" + icao + " added");
+												resolve();
+											});
+										});
+									});
+								};
+
+								await syncInsertWaypointByIcao(airway.icaos[firstIndex + i * inc], index + i);
+							}
+							callback(true);
+							return;
+						}
+						this.fmc.showErrorMessage("2ND INDEX NOT FOUND");
+						return callback(false);
+					}
+					this.fmc.showErrorMessage("1ST INDEX NOT FOUND");
+					return callback(false);
+				}
+				this.fmc.showErrorMessage("NO REF WAYPOINT");
+				return callback(false);
+			}
+			this.fmc.showErrorMessage("NO WAYPOINT INFOS");
+			return callback(false);
+		}
+		this.fmc.showErrorMessage("NO REF WAYPOINT");
+		return callback(false);
+	}
+	async insertWaypointsAlongAirway2(lastWaypointIdent, index, airwayName, callback = EmptyCallback.Boolean) {
 		let referenceWaypoint = this.fmc.flightPlanManager.getWaypoint(index - 1);
 		if (referenceWaypoint) {
 			let infos = referenceWaypoint.infos;
