@@ -15,8 +15,7 @@ class B787_10_FMC_DepArrPage {
 		if (destination) {
 			rowDestination = ['', '<ARR', destination.ident];
 			fmc.onRightInput[1] = () => {
-				new B787_10_FMC_ArrivalsPage(fmc).showPage();
-				//B787_10_FMC_DepArrPage.ShowArrivalPage(fmc);
+				B787_10_FMC_DepArrPage.ShowArrivalPage(fmc);
 			};
 		}
 		fmc.setTemplate([
@@ -202,6 +201,77 @@ class B787_10_FMC_DepArrPage {
 	}
 
 	static ShowArrivalPage(fmc, currentPage = 1) {
+		fmc.clearDisplay();
+
+		let destination = fmc.flightPlanManager.getDestination();
+		let apps = [];
+		let arrs = [];
+
+
+		if (destination) {
+			let airportInfo = destination.infos;
+			if (airportInfo instanceof AirportInfo) {
+				apps = airportInfo.approaches;
+				arrs = airportInfo.arrivals;
+			}
+		}
+
+		apps.forEach((a) => {
+			console.log("Approach: " + a.name);
+			console.log("TL: " + a.transitions.length);
+			a.transitions.forEach((t) => {
+				console.log("Approach transition: " + t.name);
+			})
+		})
+
+		arrs.forEach((a) => {
+		//console.log(a.enRouteTransitions.length)
+			a.enRouteTransitions.forEach((t) => {
+				//console.log(t.name)
+
+				//Object.keys(t).forEach((k) => {
+				//	console.log(k)
+				//})
+			})
+			//a.enRouteTransitions.forEach((t) => {
+			//	console.log(t.name)
+				//Object.keys(t).forEach((k) => {
+				//	console.log(k)
+				//})
+			//});
+			//console.log(a.runwayTransitions.length)
+			a.runwayTransitions.forEach((t) => {
+				//console.log(t.name)
+
+				//Object.keys(t).forEach((k) => {
+				//	console.log(k)
+				//})
+			})
+
+			//console.log("Arrival: " + a.name);
+		})
+
+
+		fmc.onLeftInput[5] = () => {
+			B787_10_FMC_DepArrPage.ShowPage1(fmc);
+		};
+		fmc.onRightInput[5] = () => {
+			B787_10_FMC_RoutePage.ShowPage1(fmc);
+		};
+		fmc.onPrevPage = () => {
+			if (currentPage > 0) {
+				B787_10_FMC_DepArrPage.ShowArrivalPage(fmc, currentPage - 1);
+			}
+		};
+		fmc.onNextPage = () => {
+			if (currentPage < pageCount) {
+				B787_10_FMC_DepArrPage.ShowArrivalPage(fmc, currentPage + 1);
+			}
+		};
+		fmc.updateSideButtonActiveStatus();
+	}
+
+	static ShowArrivalPage2(fmc, currentPage = 1) {
 		fmc.clearDisplay();
 		let destinationIdent = '';
 		let destination = fmc.flightPlanManager.getDestination();
