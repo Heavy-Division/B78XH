@@ -43,22 +43,13 @@ class B787_10_FMC_DepArrPage {
 		if (origin) {
 			originIdent = origin.ident;
 		}
-		let rows = [
-			[''],
-			[''],
-			[''],
-			[''],
-			[''],
-			[''],
-			[''],
-			[''],
-			['']
-		];
+		let rows = [[''], [''], [''], [''], [''], [''], [''], [''], ['']];
 		let runways = [];
 		let displayableRunwaysCount = 0;
 		let departures = [];
 		let selectedDeparture;
 		let displayableDeparturesCount = 0;
+		let displayableDpEnrouteTransitionsCount = 0;
 		let selectedRunway = fmc.flightPlanManager.getDepartureRunway();
 		if (origin) {
 			let airportInfo = origin.infos;
@@ -72,19 +63,23 @@ class B787_10_FMC_DepArrPage {
 				departures = airportInfo.departures;
 			}
 		}
+
 		if (selectedRunway) {
 			rows[0] = ['', Avionics.Utils.formatRunway(selectedRunway.designation), '', '<SEL>'];
-			fmc.flightPlanManager.pauseSync();
-			fmc.setRunwayIndex(-1, () => {
-				fmc.setDepartureIndex(-1, () => {
-					fmc.flightPlanManager.resumeSync();
-					B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+			fmc.onRightInput[0] = () => {
+				fmc.flightPlanManager.pauseSync();
+				fmc.setRunwayIndex(-1, () => {
+					fmc.setDepartureIndex(-1, () => {
+						fmc.flightPlanManager.resumeSync();
+						B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, currentPage);
+					});
 				});
-			});
+			};
 		} else {
-			let i = 0;
-			let rowIndex = -5 * (currentPage - 1);
-			while (i < runways.length) {
+			let runwayPages = [[]];
+			let rowIndex = 0;
+			let pageIndex = 0;
+			for (let i = 0; i < runways.length; i++) {
 				let runway = runways[i];
 				let appendRow = false;
 				let index = i;
@@ -102,26 +97,36 @@ class B787_10_FMC_DepArrPage {
 					}
 				}
 				if (appendRow) {
-					if (rowIndex >= 0 && rowIndex < 5) {
-						let ii = i;
-						rows[2 * rowIndex] = ['', Avionics.Utils.formatRunway(runway.designation)];
-						fmc.onRightInput[rowIndex] = () => {
-							if (fmc.flightPlanManager.getDepartureProcIndex() === -1) {
-								fmc.setOriginRunwayIndex(index, () => {
-									B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, undefined);
-								});
-							} else {
-								fmc.setRunwayIndex(index, () => {
-									B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, undefined);
-								});
-							}
-						};
+					if (rowIndex === 5) {
+						pageIndex++;
+						rowIndex = 0;
+						runwayPages[pageIndex] = [];
 					}
+					runwayPages[pageIndex][rowIndex] = {
+						text: Avionics.Utils.formatRunway(runway.designation) + '[s-text]',
+						runwayIndex: index
+					};
 					rowIndex++;
 				}
-				i++;
+			}
+			let displayedPageIndex = Math.min(currentPage, runwayPages.length) - 1;
+			for (let i = 0; i < runwayPages[displayedPageIndex].length; i++) {
+				let runwayIndex = runwayPages[displayedPageIndex][i].runwayIndex;
+				rows[2 * i] = ['', runwayPages[displayedPageIndex][i].text];
+				fmc.onRightInput[i] = () => {
+					if (fmc.flightPlanManager.getDepartureProcIndex() === -1) {
+						fmc.setOriginRunwayIndex(runwayIndex, () => {
+							B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, undefined);
+						});
+					} else {
+						fmc.setRunwayIndex(runwayIndex, () => {
+							B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, undefined);
+						});
+					}
+				};
 			}
 		}
+
 		if (selectedDeparture) {
 			rows[0][0] = selectedDeparture.name;
 			rows[0][2] = '<SEL>';
@@ -130,14 +135,43 @@ class B787_10_FMC_DepArrPage {
 				fmc.setRunwayIndex(-1, () => {
 					fmc.setDepartureIndex(-1, () => {
 						fmc.flightPlanManager.resumeSync();
-						B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+						B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, currentPage);
 					});
 				});
 			};
+			rows[1][0] = ' TRANS';
+			let selectedDpEnrouteTransitionIndex = fmc.flightPlanManager.getDepartureEnRouteTransitionIndex();
+			let selectedDpEnrouteTransition = selectedDeparture.enRouteTransitions[selectedDpEnrouteTransitionIndex];
+			if (selectedDpEnrouteTransition) {
+				rows[2][0] = selectedDpEnrouteTransition.name.trim();
+				fmc.onLeftInput[1] = () => {
+					fmc.setDepartureEnrouteTransitionIndex(-1, () => {
+						B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, currentPage);
+					});
+				};
+			} else {
+				displayableDpEnrouteTransitionsCount = selectedDeparture.enRouteTransitions.length;
+				let maxDpEnrouteTransitionPageIndex = Math.max(Math.ceil(displayableDpEnrouteTransitionsCount / 4), 1) - 1;
+				let displayedDpEnrouteTransitionPageIndex = Math.min(currentPage - 1, maxDpEnrouteTransitionPageIndex);
+				for (let i = 0; i < 4; i++) {
+					let enrouteDpTransitionIndex = 4 * displayedDpEnrouteTransitionPageIndex + i;
+					let enrouteDpTransition = selectedDeparture.enRouteTransitions[enrouteDpTransitionIndex];
+					if (enrouteDpTransition) {
+						let enrouteDpTransitionName = enrouteDpTransition.name.trim();
+						rows[2 * (i + 1)][0] = enrouteDpTransitionName;
+						fmc.onLeftInput[i + 1] = () => {
+							fmc.setDepartureEnrouteTransitionIndex(enrouteDpTransitionIndex, () => {
+								B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+							});
+						};
+					}
+				}
+			}
 		} else {
-			let i = 0;
-			let rowIndex = -5 * (currentPage - 1);
-			while (i < departures.length) {
+			let departurePages = [[]];
+			let rowIndex = 0;
+			let pageIndex = 0;
+			for (let i = 0; i < departures.length; i++) {
 				let departure = departures[i];
 				let appendRow = false;
 				if (!selectedRunway) {
@@ -153,46 +187,79 @@ class B787_10_FMC_DepArrPage {
 					}
 				}
 				if (appendRow) {
-					if (rowIndex >= 0 && rowIndex < 5) {
-						let ii = i;
-						rows[2 * rowIndex][0] = departure.name;
-						fmc.onLeftInput[rowIndex] = () => {
-							fmc.flightPlanManager.pauseSync();
-							fmc.setDepartureIndex(ii, () => {
-								fmc.flightPlanManager.resumeSync();
-								B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
-							});
-							/*
-							let approachIndex = fmc.flightPlanManager.getApproachIndex();
-							fmc.setDepartureIndex(ii, () => {
-								/**
-								 * HOTFIX: ND is not working without this (does not show full route)
-
-								fmc.setApproachIndex(approachIndex, () => {
-									fmc.activateRoute();
-									B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
-								});
-							});
-
-							 */
-						};
+					if (rowIndex === 5) {
+						pageIndex++;
+						rowIndex = 0;
+						departurePages[pageIndex] = [];
 					}
+					departurePages[pageIndex][rowIndex] = {
+						text: departure.name,
+						departureIndex: i
+					};
 					rowIndex++;
 				}
-				i++;
+			}
+			let displayedPageIndex = Math.min(currentPage, departurePages.length) - 1;
+			for (let i = 0; i < departurePages[displayedPageIndex].length; i++) {
+				let departureIndex = departurePages[displayedPageIndex][i].departureIndex;
+				rows[2 * i][0] = departurePages[displayedPageIndex][i].text;
+				fmc.onLeftInput[i] = () => {
+					fmc.flightPlanManager.pauseSync();
+					fmc.setDepartureIndex(departureIndex, () => {
+						fmc.flightPlanManager.resumeSync();
+						B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+					});
+				};
 			}
 		}
-		let rowsCount = Math.max(displayableRunwaysCount, displayableDeparturesCount);
-		let pageCount = Math.floor(rowsCount / 5) + 1;
+
+		let rowsCountOf5RowsPerPageData = Math.max(displayableRunwaysCount, displayableDeparturesCount);
+		let rowsCountOf4RowsPerPageData = displayableDpEnrouteTransitionsCount;
+		let pageCountOf5RowsPerPageData = Math.ceil(rowsCountOf5RowsPerPageData / 5);
+		let pageCountOf4RowsPerPageData = Math.ceil(rowsCountOf4RowsPerPageData / 4);
+		let pageCount = Math.max(Math.max(pageCountOf5RowsPerPageData, pageCountOf4RowsPerPageData), 1);
+
+		let erasePrompt = '';
+		if (fmc.flightPlanManager.getCurrentFlightPlanIndex() === 1) {
+			fmc.fpHasChanged = true;
+			erasePrompt = '<ERASE';
+		} else if (fmc.flightPlanManager.getCurrentFlightPlanIndex() === 0) {
+			erasePrompt = '<INDEX';
+			fmc.fpHasChanged = false;
+		}
+
 		fmc.setTemplate([
 			[originIdent + ' DEPARTURES', currentPage.toFixed(0), pageCount.toFixed(0)],
 			['SIDS', 'RUNWAYS', 'RTE 1'],
 			...rows,
 			['__FMCSEPARATOR'],
-			['\<INDEX', '<ROUTE']
+			[erasePrompt, '<ROUTE']
 		]);
+
+		fmc.onExecPage = () => {
+			if (fmc.flightPlanManager.getCurrentFlightPlanIndex() === 1) {
+				if (!fmc.getIsRouteActivated()) {
+					fmc.activateRoute();
+				}
+				fmc.onExecDefault();
+			}
+		};
+
+		fmc.refreshPageCallback = () => {
+			B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+		};
+
 		fmc.onLeftInput[5] = () => {
-			B787_10_FMC_DepArrPage.ShowPage1(fmc);
+			if (erasePrompt == '<ERASE') {
+				if (fmc.flightPlanManager.getCurrentFlightPlanIndex() === 1) {
+					fmc.eraseTemporaryFlightPlan(() => {
+						fmc.fpHasChanged = false;
+						B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+					});
+				}
+			} else {
+				B787_10_FMC_DepArrPage.ShowPage1(fmc);
+			}
 		};
 		fmc.onRightInput[5] = () => {
 			B787_10_FMC_RoutePage.ShowPage1(fmc);
@@ -207,6 +274,7 @@ class B787_10_FMC_DepArrPage {
 				B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, currentPage + 1);
 			}
 		};
+
 		fmc.updateSideButtonActiveStatus();
 	}
 
