@@ -91,6 +91,16 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	 * WT Integration
 	 */
 
+	activateRoute(directTo = false, callback = EmptyCallback.Void) {
+		if (directTo) {
+			this._activatingDirectTo = true;
+		}
+		this._isRouteActivated = true;
+		this.fpHasChanged = true;
+		SimVar.SetSimVarValue("L:FMC_EXEC_ACTIVE", "number", 1);
+		callback();
+	}
+
 	updateRouteOrigin(newRouteOrigin, callback = EmptyCallback.Boolean) {
 		this.dataManager.GetAirportByIdent(newRouteOrigin).then(airport => {
 			if (!airport) {
