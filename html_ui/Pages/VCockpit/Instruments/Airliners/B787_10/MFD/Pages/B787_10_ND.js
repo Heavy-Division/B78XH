@@ -745,6 +745,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				this.instrument.zoomRanges = (this._fullscreen) ? this.getAdaptiveRanges(1.95) : this.getAdaptiveRanges(1.42);
 				break;
 		}
+		this.instrument.resize(0,0)
 	}
 
 	showWeather() {
