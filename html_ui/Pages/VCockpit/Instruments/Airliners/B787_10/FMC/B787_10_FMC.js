@@ -91,6 +91,134 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	 * WT Integration
 	 */
 
+
+
+	updateAutopilot(dt) {
+		if (isFinite(dt)) {
+			this.updateAutopilotCooldown -= dt;
+		}
+		if (SimVar.GetSimVarValue("L:AIRLINER_FMC_FORCE_NEXT_UPDATE", "number") === 1) {
+			SimVar.SetSimVarValue("L:AIRLINER_FMC_FORCE_NEXT_UPDATE", "number", 0);
+			this.updateAutopilotCooldown = -1;
+		}
+		if (this.updateAutopilotCooldown < 0) {
+			const currentApMasterStatus = SimVar.GetSimVarValue("AUTOPILOT MASTER", "boolean");
+			if (currentApMasterStatus != this._apMasterStatus) {
+				this._apMasterStatus = currentApMasterStatus;
+			}
+			this._apHasDeactivated = !currentApMasterStatus && this._previousApMasterStatus;
+			this._previousApMasterStatus = currentApMasterStatus;
+
+			if (!this._navModeSelector) {
+				this._navModeSelector = new CJ4NavModeSelector(this.flightPlanManager);
+			}
+
+			if (!this._navToNavTransfer) {
+				//this._navToNavTransfer = new NavToNavTransfer(this.flightPlanManager, this._navRadioSystem, this._navModeSelector);
+			}
+
+			//this._navToNavTransfer.update(dt);
+
+			//RUN VNAV ALWAYS
+			if (this._vnav === undefined) {
+				this._vnav = new WT_BaseVnav(this.flightPlanManager, this);
+				this._vnav.activate();
+			} else {
+				try {
+					this._vnav.update();
+				} catch (error) {
+					console.error(error);
+				}
+			}
+
+			//RUN LNAV ALWAYS
+			if (this._lnav === undefined) {
+				this._lnav = new LNavDirector(this.flightPlanManager, this._navModeSelector);
+			} else {
+				try {
+					this._lnav.update();
+				} catch (error) {
+					console.error(error);
+				}
+			}
+
+			this._navModeSelector.generateInputDataEvents();
+			this._navModeSelector.processEvents();
+
+			//RUN VERTICAL AP ALWAYS
+			if (this._currentVerticalAutopilot === undefined) {
+				this._currentVerticalAutopilot = new WT_VerticalAutopilot(this._vnav, this._navModeSelector);
+				this._currentVerticalAutopilot.activate();
+			} else {
+				try {
+					this._currentVerticalAutopilot.update();
+				} catch (error) {
+					console.error(error);
+				}
+			}
+
+			// RUN SPEED RESTRICTION OBSERVER
+			if (this._speedObs === undefined) {
+				this._speedObs = new CJ4_SpeedObserver(this.flightPlanManager);
+			} else {
+				try {
+					this._speedObs.update();
+				} catch (error) {
+					console.error(error);
+				}
+			}
+
+			SimVar.SetSimVarValue("SIMVAR_AUTOPILOT_AIRSPEED_MIN_CALCULATED", "knots", Simplane.getStallProtectionMinSpeed());
+			SimVar.SetSimVarValue("SIMVAR_AUTOPILOT_AIRSPEED_MAX_CALCULATED", "knots", Simplane.getMaxSpeed(Aircraft.CJ4));
+
+			//TAKEOFF MODE HEADING SET (constant update to current heading when on takeoff roll)
+			if (this._navModeSelector.currentLateralActiveState === LateralNavModeState.TO && Simplane.getIsGrounded()) {
+				Coherent.call("HEADING_BUG_SET", 2, SimVar.GetSimVarValue('PLANE HEADING DEGREES MAGNETIC', 'Degrees'));
+			}
+
+			//CHECK FOR ALT set >45000
+			if (SimVar.GetSimVarValue("AUTOPILOT ALTITUDE LOCK VAR:1", "feet") > 45000) {
+				Coherent.call("AP_ALT_VAR_SET_ENGLISH", 1, 45000, true);
+			}
+			this.updateAutopilotCooldown = this._apCooldown;
+		}
+	}
+
+
+	/**
+	 * Registers a periodic page refresh with the FMC display.
+	 * @param {number} interval The interval, in ms, to run the supplied action.
+	 * @param {function} action An action to run at each interval. Can return a bool to indicate if the page refresh should stop.
+	 * @param {boolean} runImmediately If true, the action will run as soon as registered, and then after each
+	 * interval. If false, it will start after the supplied interval.
+	 */
+	registerPeriodicPageRefresh(action, interval, runImmediately) {
+		this.unregisterPeriodicPageRefresh();
+
+		const refreshHandler = () => {
+			const isBreak = action();
+			if (isBreak) {
+				return;
+			}
+			this._pageRefreshTimer = setTimeout(refreshHandler, interval);
+		};
+
+		if (runImmediately) {
+			refreshHandler();
+		} else {
+			this._pageRefreshTimer = setTimeout(refreshHandler, interval);
+		}
+	}
+
+	/**
+	 * Unregisters a periodic page refresh with the FMC display.
+	 */
+	unregisterPeriodicPageRefresh() {
+		if (this._pageRefreshTimer) {
+			clearInterval(this._pageRefreshTimer);
+		}
+	}
+
 	activateRoute(directTo = false, callback = EmptyCallback.Void) {
 		if (directTo) {
 			this._activatingDirectTo = true;
@@ -119,6 +247,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 		const apPrefix = "WT_CJ4_AP_";
 		if (args[0].startsWith(apPrefix)) {
+
+			console.log(args[0].startsWith(apPrefix));
 			this._navModeSelector.onNavChangedEvent(args[0].substring(apPrefix.length));
 		}
 	}
@@ -324,7 +454,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		if (this.urlConfig.index != 1) {
 			return;
 		}
-		this.updateAutopilot();
+		this.updateAutopilot(_deltaTime);
 		this._updateTimeAndDate();
 	}
 
@@ -705,6 +835,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		super.clearDisplay();
 		this.onPrevPage = EmptyCallback.Void;
 		this.onNextPage = EmptyCallback.Void;
+		this.unregisterPeriodicPageRefresh();
 	}
 
 	getClimbThrustN1(temperature, altitude) {
@@ -828,7 +959,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		super.onEvent(_event);
 	}
 
-	updateAutopilot() {
+	updateAutopilot2() {
 		let now = performance.now();
 		let dt = now - this._lastUpdateAPTime;
 		this._lastUpdateAPTime = now;
