@@ -2159,7 +2159,9 @@ class FMCMainDisplay extends BaseAirliners {
                 this.thrustReductionAltitude = altitude + 1500;
                 this.accelerationAltitude = altitude + 1500;
                 if (origin.infos instanceof AirportInfo) {
-                    this.transitionAltitude = origin.infos.transitionAltitude;
+                    if(isFinite(origin.infos.transitionAltitude)){
+                        this.transitionAltitude = origin.infos.transitionAltitude;
+                    }
                 }
                 SimVar.SetSimVarValue("L:AIRLINER_THR_RED_ALT", "Number", this.thrustReductionAltitude);
                 SimVar.SetSimVarValue("L:AIRLINER_ACC_ALT", "Number", this.accelerationAltitude);
@@ -2168,7 +2170,9 @@ class FMCMainDisplay extends BaseAirliners {
         let destination = this.flightPlanManager.getDestination();
         if (destination) {
             if (destination.infos instanceof AirportInfo) {
-                this.perfApprTransAlt = destination.infos.transitionAltitude;
+                if(isFinite(destination.infos.transitionAltitude)){
+                    this.perfApprTransAlt = destination.infos.transitionAltitude;
+                }
             }
         }
     }
