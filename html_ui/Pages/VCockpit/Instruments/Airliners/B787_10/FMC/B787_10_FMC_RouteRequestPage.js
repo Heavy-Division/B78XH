@@ -270,7 +270,7 @@ class B787_10_FMC_RouteRequestPage {
 	}
 
 	async insertWaypointsAlongAirway(lastWaypointIdent, index, airwayName, callback = EmptyCallback.Boolean) {
-		const referenceWaypoint = this.fmc.flightPlanManager.getWaypoint(index);
+		const referenceWaypoint = this.fmc.flightPlanManager.getWaypoint(index - 1);
 		if (referenceWaypoint) {
 			const infos = referenceWaypoint.infos;
 			if (infos instanceof WayPointInfo) {
@@ -303,7 +303,7 @@ class B787_10_FMC_RouteRequestPage {
 										}
 										console.log("add icao:" + icao + " @ " + idx);
 										this.fmc.flightPlanManager.addWaypoint(icao, idx, () => {
-											const waypoint = fmc.flightPlanManager.getWaypoint(idx);
+											const waypoint = this.fmc.flightPlanManager.getWaypoint(idx);
 											waypoint.infos.UpdateAirway(airwayName).then(() => {
 												waypoint.infos.airwayIn = airwayName;
 												if (i < count) {
