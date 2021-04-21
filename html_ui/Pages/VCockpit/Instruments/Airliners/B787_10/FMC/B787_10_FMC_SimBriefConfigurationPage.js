@@ -40,7 +40,7 @@ class B787_10_FMC_SimBriefConfigurationPage{
 
 		this.fmc.onRightInput[0] = () => {
 			let value = this.fmc.inOut;
-			if (value === "DELETE") {
+			if (value === FMCMainDisplay.clrValue) {
 				this.fmc.inOut = "";
 				HeavyDataStorage.set('SIMBRIEF_USERNAME', '');
 			} else if (value.length > 0) {
@@ -52,7 +52,7 @@ class B787_10_FMC_SimBriefConfigurationPage{
 
 		this.fmc.onRightInput[1] = () => {
 			let value = this.fmc.inOut;
-			if (value === "DELETE") {
+			if (value === FMCMainDisplay.clrValue) {
 				this.fmc.inOut = "";
 				HeavyDataStorage.set('SIMBRIEF_USERID', '');
 			} else if (value.length > 0) {
