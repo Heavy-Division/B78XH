@@ -34,7 +34,6 @@ class B787_10_FMC_HeavyPage {
 
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
-		this.testDeparture(fmc);
 		/*
 		            details.holdCourse = course;
             details.holdSpeedType = exports.HoldSpeedType.FAA;
