@@ -245,6 +245,18 @@ class B787_10_FMC_RoutePage {
 				}
 			};
 
+			if (this._fmc.flightPlanManager.getOrigin()) {
+				this._fmc.onLeftInput[1] = () => {
+					let value = this._fmc.inOut;
+					this._fmc.clearUserInput();
+					this._fmc.setOriginRunway(value, (result) => {
+						if (result) {
+							this.update(true);
+						}
+					});
+				};
+			}
+
 			this._fmc.onRightInput[4] = () => {
 				const value = this._fmc.inOut;
 				this._fmc.clearUserInput();
@@ -293,8 +305,8 @@ class B787_10_FMC_RoutePage {
 		};
 
 		this._fmc.onRightInput[5] = () => {
-			if (this._activateCell == 'PERF INIT>') {
-				B787_10_FMC_RoutePage.ShowPage2(this._fmc);
+			if (this._activateCell == '<PERF INIT') {
+				B787_10_FMC_PerfInitPage.ShowPage1(this._fmc);
 			}
 		};
 
@@ -323,7 +335,6 @@ class B787_10_FMC_RoutePage {
 	bindRowEvents(lskIdx) {
 		if (this._currentPage > 0) {
 			this._fmc.onLeftInput[lskIdx] = () => {
-				//this._fmc.setMsg("Working...");
 				const value = this._fmc.inOut;
 				this._fmc.clearUserInput();
 				this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
@@ -384,7 +395,6 @@ class B787_10_FMC_RoutePage {
 						});
 					});
 				} else {
-					/*
 					const pilotWaypoint = this._fmc._pilotWaypoints._pilotWaypointArray.find(w => w.id == value);
 					if (pilotWaypoint) {
 						const pilotWaypointObject = CJ4_FMC_PilotWaypointParser.buildPilotWaypointFromExisting(pilotWaypoint.id, parseFloat(pilotWaypoint.la), parseFloat(pilotWaypoint.lo), this._fmc);
@@ -402,12 +412,6 @@ class B787_10_FMC_RoutePage {
 							}
 						});
 					}
-					 */
-					this._fmc.insertWaypoint(value, wpIdx, (isSuccess) => {
-						if (isSuccess) {
-							this.update(true);
-						}
-					});
 				}
 			} else {
 
@@ -1211,14 +1215,14 @@ class FpRow {
 		} else {
 			row1tmpl = [this._airwayIn, this._ident];
 			if (this._ident === '-----') {
-				row1tmpl[1] = '□□□□□[s-text]';
-				row2tmpl = ['----[s-text]', '----[s-text]', 'DISCONTINUITY[s-text]'];
+				row1tmpl[1] = '□□□□□';
+				row2tmpl = ['----', '----', 'DISCONTINUITY'];
 			}
 		}
 
 		if (this._isActive) {
-			row1tmpl[0] += '[magenta]';
-			row1tmpl[1] += '[magenta]';
+			row1tmpl[0] += '';
+			row1tmpl[1] += '';
 		}
 
 		return [row1tmpl, row2tmpl];
