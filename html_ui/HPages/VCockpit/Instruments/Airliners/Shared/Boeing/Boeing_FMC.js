@@ -36,7 +36,7 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
         };
         this.onDel = () => {
             if (this.inOut.length === 0) {
-                this.inOut = "DELETE";
+                this.inOut = FMCMainDisplay.clrValue;
             }
         };
         this.onClr = () => {
@@ -45,7 +45,7 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
                 this.isDisplayingErrorMessage = false;
             }
             else if (this.inOut.length > 0) {
-                if (this.inOut === "DELETE") {
+                if (this.inOut === FMCMainDisplay.clrValue) {
                     this.inOut = "";
                 }
                 else {
@@ -153,6 +153,7 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
             return;
         }
         SimVar.SetSimVarValue("L:AP_LNAV_ACTIVE", "number", 1);
+        SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 2);
         SimVar.SetSimVarValue("K:AP_NAV1_HOLD_ON", "number", 1);
     }
     deactivateLNAV() {
@@ -578,4 +579,6 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
         }
     }
 }
+
+FMCMainDisplay.clrValue = "DELETE";
 //# sourceMappingURL=Boeing_FMC.js.map
