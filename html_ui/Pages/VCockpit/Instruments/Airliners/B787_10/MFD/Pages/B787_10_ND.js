@@ -4,6 +4,7 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 		this.mapIsCentered = false;
 		this.wxRadarOn = false;
 		this.terrainOn = false;
+		this.trafficOn = false;
 		this.mapRange = 0;
 		this.wantedMapRange = 0;
 		this.mapMode = 0;
@@ -116,6 +117,11 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 				break;
 			case 'TFC':
 				this.map.instrument.showTraffic = !this.map.instrument.showTraffic;
+				if(this.map.instrument.showTraffic){
+					SimVar.SetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number', 0);
+				} else {
+					SimVar.SetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number', 1);
+				}
 				this.navMenu.refresh();
 				break;
 			case 'Range_DEC':
@@ -186,9 +192,11 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 		}
 		var wxRadarOn = SimVar.GetSimVarValue('L:BTN_WX_ACTIVE:' + this.gps.instrumentIndex, 'bool');
 		var terrainOn = SimVar.GetSimVarValue('L:BTN_TERRONND_ACTIVE:' + this.gps.instrumentIndex, 'number');
-		if (this.mapMode != this.wantedMapMode || this.wxRadarOn != wxRadarOn || this.terrainOn != terrainOn || this.wantedMapRange != this.mapRange || this.forceMapUpdate) {
+		const trafficOn = SimVar.GetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number');
+		if (this.mapMode != this.wantedMapMode || this.wxRadarOn != wxRadarOn || this.terrainOn != terrainOn || this.trafficOn != trafficOn || this.wantedMapRange != this.mapRange || this.forceMapUpdate) {
 			this.wxRadarOn = wxRadarOn;
 			this.terrainOn = terrainOn;
+			this.trafficOn = trafficOn;
 			this.mapRange = this.wantedMapRange;
 			this.mapMode = this.wantedMapMode;
 			if (this.mapMode == 0) {
@@ -214,6 +222,11 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 				this.showWeather();
 			} else {
 				this.mapConfigId = 0;
+			}
+
+			if(this.trafficOn){
+				this.compass.showArcRange(true);
+			} else {
 				this.compass.showArcRange(false);
 			}
 			if (this.modeChangeMask) {
