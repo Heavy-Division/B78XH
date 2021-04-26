@@ -7,7 +7,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		super.Init();
 		this.onExec = () => {
 			if (this.onExecPage) {
-				console.log('if this.onExecPage');
+				console.log("if this.onExecPage");
 				this.onExecPage();
 			} else {
 				this._isRouteActivated = false;
@@ -23,7 +23,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 					this._isRouteActivated = false;
 					this._activatingDirectToExisting = false;
 					this.fpHasChanged = false;
-					SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+					SimVar.SetSimVarValue("L:FMC_EXEC_ACTIVE", "number", 0);
 					if (this.refreshPageCallback) {
 						this.refreshPageCallback();
 					}
@@ -37,7 +37,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 						this._activatingDirectToExisting = false;
 						this._activatingDirectTo = false;
 						this.fpHasChanged = false;
-						SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+						SimVar.SetSimVarValue("L:FMC_EXEC_ACTIVE", "number", 0);
 						if (this.refreshPageCallback) {
 							this.refreshPageCallback();
 						}
@@ -46,7 +46,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 			} else {
 				this.fpHasChanged = false;
 				this._isRouteActivated = false;
-				SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+				SimVar.SetSimVarValue("L:FMC_EXEC_ACTIVE", "number", 0);
 				if (this.refreshPageCallback) {
 					this._activatingDirectTo = false;
 					this.fpHasChanged = false;
@@ -54,6 +54,19 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 				}
 			}
 		};
+	}
+
+	// Property for EXEC handling
+	get fpHasChanged() {
+		return this._fpHasChanged;
+	}
+	set fpHasChanged(value) {
+		this._fpHasChanged = value;
+		if (this._fpHasChanged) {
+			SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 1);
+		} else {
+			SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'Number', 0);
+		}
 	}
 
 	activateExecEmissive() {
