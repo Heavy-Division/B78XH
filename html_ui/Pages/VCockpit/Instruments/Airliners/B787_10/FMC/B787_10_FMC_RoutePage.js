@@ -257,7 +257,7 @@ class B787_10_FMC_RoutePage {
 				};
 			}
 
-			this._fmc.onRightInput[4] = () => {
+			this._fmc.onRightInput[1] = () => {
 				const value = this._fmc.inOut;
 				this._fmc.clearUserInput();
 				this._fmc.updateFlightNo(value, (result) => {
@@ -534,6 +534,8 @@ class B787_10_FMC_RoutePage {
 					foundActive = flightPlanManager.getActiveWaypointIndex() <= lastDepartureIdx;
 					allRows.push(new FpRow(lastDepartureWaypoint.ident, lastDepartureIdx + 1, departure.name, undefined, foundActive));
 				}
+			} else {
+				allRows.push(new FpRow());
 			}
 			const fpIndexes = [];
 			const routeWaypoints = flightPlanManager.getEnRouteWaypoints(fpIndexes);
