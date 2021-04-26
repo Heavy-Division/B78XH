@@ -14,6 +14,7 @@
   "waypointIconSize": 20,
 
   "flightPlanWaypointIconSize": 22,
+  "flightPlanWaypointLabelColor": "white",
   "auxWaypointLabelFontSize": 10,
   "auxWaypointIconSize": 16,
   "topOfXWaypointIconSize": 4,

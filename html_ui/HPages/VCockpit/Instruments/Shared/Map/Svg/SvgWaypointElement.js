@@ -129,16 +129,16 @@ class SvgWaypointElement extends SvgMapElement {
             const fpIdx = SimVar.GetSimVarValue("L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN", "number");
             this.isInFpln = FlightPlanManager.DEBUG_INSTANCE.getAllWaypoints(fpIdx).findIndex(x => x.ident == this.source.ident) > -1;
             this._image.setAttribute("isInFpln", this.isInFpln.toString());
-            if (this.ident === "TOD" || this.ident === "DES") {
+            if (this.ident === "T/D" || this.ident === "DES") {
                 this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_TOD.svg");
             } else if (!this.isInFpln) {
                 // console.log("create " + this.source.ident + " " + this.imageFileName());
                 this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + this.imageFileName().replace(".png", ".svg") + "?cb=4");
             } else {
-                this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_FLIGHTPLAN.svg");
+                this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_FLIGHTPLAN.png");
             }
         } else {
-            this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_ACTIVE.svg");
+            this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png");
         }
         this._lastIsInFpln = this.isInFpln;
         this._image.setAttribute("lastIsInFpln", this._lastIsInFpln.toString());
@@ -180,15 +180,15 @@ class SvgWaypointElement extends SvgMapElement {
         if (isActiveWaypoint !== this._lastIsActiveWaypoint || this.isInFpln !== this._lastIsInFpln) {
             if (this._image) {
                 if (!isActiveWaypoint) {
-                    if (this.ident === "TOD" || this.ident === "DES") {
+                    if (this.ident === "T/D" || this.ident === "DES") {
                         this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_TOD.svg");
                     } else if (!this.isInFpln) {
                         this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + this.imageFileName().replace(".png", ".svg") + "?cb=44");
                     } else {
-                        this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_FLIGHTPLAN.svg");
+                        this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_FLIGHTPLAN.png");
                     }
                 } else {
-                    this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_ACTIVE.svg");
+                    this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png");
                 }
             }
             this._image.setAttribute("lastIsInFpln", this.isInFpln.toString());
@@ -365,12 +365,12 @@ class SvgWaypointTextElement extends SvgMapElement {
             context.fillRect(0, 0, this._textWidth + map.config.waypointLabelBackgroundPaddingLeft + map.config.waypointLabelBackgroundPaddingRight, this._textHeight + map.config.waypointLabelBackgroundPaddingTop + map.config.waypointLabelBackgroundPaddingBottom);
         }
         if (!isActiveWaypoint) {
-            if (this.waypointElement.ident === "TOD" || this.waypointElement.ident === "DES") {
+            if (this.waypointElement.ident === "T/D" || this.waypointElement.ident === "DES") {
                 context.fillStyle = "#11d011";
             } else if (this.waypointElement.source.isInMissedAppr === true) {
                 context.fillStyle = "cyan";
             } else if (this.waypointElement.isInFpln === true) {
-                context.fillStyle = map.config.waypointLabelColor;
+                context.fillStyle = map.config.flightPlanWaypointLabelColor;
             } else if (this.waypointElement.source instanceof IntersectionInfo) {
                 context.fillStyle = map.config.intersectionLabelColor;
             } else if (this.waypointElement.source instanceof VORInfo) {

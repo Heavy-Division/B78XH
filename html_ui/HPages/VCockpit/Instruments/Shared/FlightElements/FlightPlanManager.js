@@ -290,7 +290,7 @@ class FlightPlanManager {
                     }
                     this.decelWaypoint.icao = "";
                     this.decelWaypoint.infos.icao = this.decelWaypoint.icao;
-                    this.decelWaypoint.ident = "TOD";
+                    this.decelWaypoint.ident = "T/D";
                     this.decelWaypoint.infos.ident = this.decelWaypoint.ident;
 
                     //added code to make decel waypoint Top of Descent
