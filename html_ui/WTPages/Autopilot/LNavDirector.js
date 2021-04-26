@@ -192,7 +192,6 @@ class LNavDirector {
 
       return this.holdsDirector.state !== HoldsDirectorState.NONE && this.holdsDirector.state !== HoldsDirectorState.EXITED;
     }
-
     return false;
   }
 
@@ -347,7 +346,7 @@ class LNavDirector {
     const armedState = this.navModeSelector.currentLateralArmedState;
     const agl = Simplane.getAltitudeAboveGround();
     if ((armedState === LateralNavModeState.LNAV || (armedState === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV))
-      && !planeState.onGround && agl > 400) {
+      && !planeState.onGround && agl > 50) {
       const xtk = AutopilotMath.crossTrack(legStart, legEnd, planeState.position);
       let activationXtk = 1.9;
 
@@ -362,6 +361,7 @@ class LNavDirector {
           break;
       }
 
+      //this.navModeSelector.queueEvent(NavModeEvent.LNAV_ACTIVE);
       if (Math.abs(xtk) < activationXtk) {
         this.navModeSelector.queueEvent(NavModeEvent.LNAV_ACTIVE);
       }
@@ -419,7 +419,6 @@ class LNavDirector {
     let targetHeading = AutopilotMath.normalizeHeading(degreesTrue - windCorrection);
     targetHeading = GeoMath.correctMagvar(targetHeading, planeState.magVar);
 
-    console.log('Heading: ' + targetHeading);
     Coherent.call("HEADING_BUG_SET", 2, targetHeading);
   }
 
@@ -585,13 +584,13 @@ class LNavDirectorOptions {
      * value is used to avoid swinging towards the active waypoint when the waypoint is close,
      * if the plane is off track.
      */
-    this.minimumTrackingDistance = 1;
+    this.minimumTrackingDistance = 0.2;
 
     /** The maximum bank angle of the aircraft. */
     this.maxBankAngle = 30;
 
     /** The rate of bank in degrees per second. */
-    this.bankRate = 5;
+    this.bankRate = 10;
 
     /** The maximum turn angle in degrees to calculate turn anticipation to. */
     this.maxTurnAnticipationAngle = 110;
