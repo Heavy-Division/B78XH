@@ -76,7 +76,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 		this._fpHasChanged = false;
 		this._activatingDirectTo = false;
-		this._navRadioSystem = new CJ4_NavRadioSystem();
 		this._pilotWaypoints = undefined;
 
 	}
@@ -130,15 +129,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				this._navModeSelector = new B78XHNavModeSelector(this.flightPlanManager, this);
 			}
 
-
-			/*
-						if (!this._navToNavTransfer) {
-							this._navToNavTransfer = new NavToNavTransfer(this.flightPlanManager, this._navRadioSystem, this._navModeSelector);
-						}
-
-						this._navToNavTransfer.update(dt);
-			*/
-
 			//RUN VNAV ALWAYS
 			if (this._vnav === undefined) {
 				this._vnav = new WT_BaseVnav(this.flightPlanManager, this);
@@ -164,30 +154,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 			this._navModeSelector.generateInputDataEvents();
 			this._navModeSelector.processEvents();
-			/*
-						//RUN VERTICAL AP ALWAYS
-						if (this._currentVerticalAutopilot === undefined) {
-							this._currentVerticalAutopilot = new WT_VerticalAutopilot(this._vnav, this._navModeSelector);
-							this._currentVerticalAutopilot.activate();
-						} else {
-							try {
-								this._currentVerticalAutopilot.update();
-							} catch (error) {
-								console.error(error);
-							}
-						}
-
-						// RUN SPEED RESTRICTION OBSERVER
-						if (this._speedObs === undefined) {
-							this._speedObs = new CJ4_SpeedObserver(this.flightPlanManager);
-						} else {
-							try {
-								this._speedObs.update();
-							} catch (error) {
-								console.error(error);
-							}
-						}
-			*/
 
 			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MIN_CALCULATED', 'knots', Simplane.getStallProtectionMinSpeed());
 			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MAX_CALCULATED', 'knots', Simplane.getMaxSpeed(Aircraft.AS01B));
@@ -779,7 +745,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			}
 		}
 
-		this._navRadioSystem.initialize();
 		this._pilotWaypoints = new CJ4_FMC_PilotWaypoint_Manager(this);
 		this._pilotWaypoints.activate();
 		B787_10_FMC_IdentPage.ShowPage1(this);
