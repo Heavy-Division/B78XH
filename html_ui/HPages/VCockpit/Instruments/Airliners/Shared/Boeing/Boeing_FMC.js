@@ -155,20 +155,6 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
             this.onExec();
         }
     }
-    getIsLNAVArmed() {
-        return this._pendingLNAVActivation;
-    }
-    getIsLNAVActive() {
-        return this._isLNAVActive;
-    }
-    toggleLNAV() {
-        if (this.getIsLNAVArmed()) {
-            this.deactivateLNAV();
-        }
-        else {
-            this.activateLNAV();
-        }
-    }
     activateLNAV() {
         if (this.flightPlanManager.getWaypointsCount() === 0) {
             return;
