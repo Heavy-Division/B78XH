@@ -5,7 +5,7 @@ class LNavDirector {
   /**
    * Creates an instance of the LNavDirector.
    * @param {FlightPlanManager} fpm The FlightPlanManager to use with this instance. 
-   * @param {CJ4NavModeSelector} navModeSelector The nav mode selector to use with this instance.
+   * @param {B78XHNavModeSelector} navModeSelector The nav mode selector to use with this instance.
    * @param {LNavDirectorOptions} options The LNAV options to use with this instance.
    */
   constructor(fpm, navModeSelector, options) {
@@ -266,7 +266,6 @@ class LNavDirector {
       if (currentWaypoint && currentWaypoint.endsInDiscontinuity) {
         this.state = LNavState.IN_DISCONTINUITY;
         SimVar.SetSimVarValue("L:WT_CJ4_IN_DISCONTINUITY", "number", 1);
-        MessageService.getInstance().post(FMS_MESSAGE_ID.FPLN_DISCO, () => this.state !== LNavState.IN_DISCONTINUITY);
 
         this.sequencingMode = FlightPlanSequencing.INHIBIT;
         LNavDirector.setCourse(SimVar.GetSimVarValue('PLANE HEADING DEGREES TRUE', 'Radians') * Avionics.Utils.RAD2DEG, planeState);
@@ -320,16 +319,12 @@ class LNavDirector {
 
       switch (this.currentNavSensitivity) {
         case NavSensitivity.TERMINAL:
-          MessageService.getInstance().post(FMS_MESSAGE_ID.TERM, () => this.currentNavSensitivity !== NavSensitivity.TERMINAL);
           break;
         case NavSensitivity.TERMINALLPV:
-          MessageService.getInstance().post(FMS_MESSAGE_ID.TERM_LPV, () => this.currentNavSensitivity !== NavSensitivity.TERMINALLPV);
           break;
         case NavSensitivity.APPROACH:
-          MessageService.getInstance().post(FMS_MESSAGE_ID.APPR, () => this.currentNavSensitivity !== NavSensitivity.APPROACH);
           break;
         case NavSensitivity.APPROACHLPV:
-          MessageService.getInstance().post(FMS_MESSAGE_ID.APPR_LPV, () => this.currentNavSensitivity !== NavSensitivity.APPROACHLPV);
           break;
       }
     }
@@ -361,7 +356,6 @@ class LNavDirector {
           break;
       }
 
-      //this.navModeSelector.queueEvent(NavModeEvent.LNAV_ACTIVE);
       if (Math.abs(xtk) < activationXtk) {
         this.navModeSelector.queueEvent(NavModeEvent.LNAV_ACTIVE);
       }
@@ -584,7 +578,7 @@ class LNavDirectorOptions {
      * value is used to avoid swinging towards the active waypoint when the waypoint is close,
      * if the plane is off track.
      */
-    this.minimumTrackingDistance = 0.2;
+    this.minimumTrackingDistance = 0.5;
 
     /** The maximum bank angle of the aircraft. */
     this.maxBankAngle = 30;

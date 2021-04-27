@@ -4,7 +4,7 @@ class HoldsDirector {
 	/**
 	 * Creates an instance of a HoldsDirector.
 	 * @param {FlightPlanManager} fpm An instance of the flight plan manager.
-	 * @param {CJ4NavModeSelector} navModeSelector The nav mode selector to use with this instance.
+	 * @param {B78XHNavModeSelector} navModeSelector The nav mode selector to use with this instance.
 	 */
 	constructor(fpm, navModeSelector) {
 
@@ -161,9 +161,7 @@ class HoldsDirector {
 		SimVar.SetSimVarValue('L:WT_CJ4_WPT_DISTANCE', 'number', distanceRemaining);
 
 		if (this.isHoldActive()) {
-			MessageService.getInstance().post(FMS_MESSAGE_ID.HOLD, () => {
-				return !this.isHoldActive();
-			});
+			return !this.isHoldActive();
 		}
 	}
 

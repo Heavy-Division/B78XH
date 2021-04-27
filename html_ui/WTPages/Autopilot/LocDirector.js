@@ -4,7 +4,7 @@
 class LocDirector {
   /**
    * Creates an instance of a LocDirector.
-   * @param {CJ4NavModeSelector} navModeSelector The current nav mode selector.
+   * @param {B78XHNavModeSelector} navModeSelector The current nav mode selector.
    */
   constructor(navModeSelector) {
     /** The current director state. */
