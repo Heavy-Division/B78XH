@@ -91,9 +91,6 @@ class B787_10_FMC_LegsPage {
 			} else if (waypoint && waypoint.fix) {
 				const bearing = isFinite(waypoint.fix.bearingInFP) ? waypoint.fix.bearingInFP.toFixed(0).padStart(3, "0") + "°" : "";
 				const prevWaypoint = this._wayPointsToRender[i + offset - 1];
-				this._wayPointsToRender.forEach((w) => {
-					console.log(w.fix.ident);
-				});
 				let distance = 0;
 				//const isFromWpt = (i == 0 && this._currentPage == 1);
 				const isActWpt = (i == 0 && this._currentPage == 1);
