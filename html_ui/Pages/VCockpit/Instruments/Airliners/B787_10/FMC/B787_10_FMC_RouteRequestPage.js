@@ -12,7 +12,7 @@ class B787_10_FMC_RouteRequestPage {
 			[''],
 			['LOAD FP FROM SB'],
 			[''],
-			[''],
+			['LOAD FP FROM GAME'],
 			[''],
 			[''],
 			[''],
@@ -230,6 +230,18 @@ class B787_10_FMC_RouteRequestPage {
 			fp.then((flightPlan) => {
 				this.flightPlan = flightPlan;
 				updateFlightPlan();
+			});
+		};
+
+		this.fmc.onLeftInput[1] = async () => {
+			this.fmc.flightPlanManager.pauseSync();
+			FlightPlanAsoboSync.LoadFromGame(this.fmc.flightPlanManager).catch((err) => {
+				console.log("ERROR " + err);
+				this.fmc.flightPlanManager.resumeSync();
+			}).then(() => {
+				this.fmc.flightPlanManager.resumeSync();
+				this.fmc.flightPlanManager.setActiveWaypointIndex(1);
+				B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 			});
 		};
 	}
