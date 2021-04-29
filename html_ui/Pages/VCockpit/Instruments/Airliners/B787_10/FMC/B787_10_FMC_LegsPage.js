@@ -115,7 +115,7 @@ class B787_10_FMC_LegsPage {
 				// format distance
 				distance = (distance < 100) ? distance.toFixed(1) : distance.toFixed(0);
 
-				let segment = this._fmc.flightPlanManager.getSegmentFromWaypoint(waypoint)
+				let waypointSegment = this._fmc.flightPlanManager.getSegmentFromWaypoint(waypoint.fix);
 
 				if (isActWpt) {
 					if (waypoint.fix.icao === '$DISCO') {
@@ -142,7 +142,7 @@ class B787_10_FMC_LegsPage {
 				}
 
 				if (waypoint.fix.icao !== '$DISCO') {
-					this._rows[2 * i + 1][1] = (SegmentType.Enroute === segment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + "/" + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix));
+					this._rows[2 * i + 1][1] = (SegmentType.Enroute === waypointSegment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + "/" + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix));
 				}
 			}
 
