@@ -566,16 +566,46 @@ class MapInstrument extends ISvgMapRootElement {
             this.flightPlanManager.updateFlightPlan();
 
             if (!this.showConstraints && this.constraints && this.constraints.length > 0) {
+                let constraints = this.getElementsByClassName("constraint-label");
+                Array.from(constraints).forEach((c) => {
+                    c.remove();
+                });
                 this.constraints = [];
             }
             if (this.drawCounter === 45 || (this.showConstraints && (!this.constraints || this.constraints.length === 0))) {
                 if (this.showConstraints) {
                     const wpWithConstraints = this.flightPlanManager.getWaypointsWithAltitudeConstraints();
+                    const activeWaypointIndex = this.flightPlanManager.getActiveWaypointIndex();
+                    let toRender = wpWithConstraints.slice(activeWaypointIndex);
                     this.constraints = [];
-                    for (let i = 0; i < wpWithConstraints.length; i++) {
-                        const svgConstraint = new SvgConstraintElement(wpWithConstraints[i]);
+                    for (let i = 0; i < toRender.length; i++) {
+                        const svgConstraint = new SvgConstraintElement(toRender[i]);
                         this.constraints.push(svgConstraint);
                     }
+
+					/**
+					 * TODO: Hacky...
+					 * This remove all constraint labels when waypoints are updated (Changed SID / STAR / DIRECT TO / DELETED WAYPOINT)
+					 * Extremely hacky
+					 * @type {HTMLCollectionOf<Element>}
+					 */
+					let constraints = this.getElementsByClassName("constraint-label");
+                    Array.from(constraints).forEach((c) => {
+                        let exist = this.constraints.findIndex((rc) => {
+                            if(rc.source){
+                                let ret = "constraint-" + rc.source.ident + "-map-" + 0 + "-text-0";
+                                ret = ret.replace(/[\(\)\$]/g, "-");
+                                return ret == c.getAttribute("id");
+                            } else {
+                                return -1;
+                            }
+                        });
+
+                        if (exist == -1){
+                            c.parentNode.removeChild(c);
+                        }
+                    });
+
                 }
             }
             const lat = SimVar.GetSimVarValue("PLANE LATITUDE", "degree latitude");
@@ -632,7 +662,7 @@ class MapInstrument extends ISvgMapRootElement {
                     this.bingMap.setParams({ lla: this.navMap.lastCenterCoordinates, radius: bingRadius });
                 }
             }
-            if (typeof CJ4_MFD === 'function' && planeLla && (this.drawCounter % 2 === 1)) {
+            if (typeof B787_10_ND === 'function' && planeLla && (this.drawCounter % 2 === 1)) {
                 const centerCoordinates = planeLla;
                 if (this.showAirports) {
                     this.airportLoader.searchLat = centerCoordinates.lat;

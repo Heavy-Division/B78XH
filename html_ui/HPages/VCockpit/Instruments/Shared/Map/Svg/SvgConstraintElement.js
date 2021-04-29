@@ -31,8 +31,9 @@ class SvgConstraintElement extends SvgMapElement {
             ;
         }
         else {
-            return "constraint-" + this.source.ident + "-map-" + map.index;
-            ;
+            let ret = "constraint-" + this.source.ident + "-map-" + map.index;
+            ret = ret.replace(/[\(\)\$]/g, "-");
+            return ret;
         }
     }
     imageFileName() {
@@ -64,6 +65,7 @@ class SvgConstraintElement extends SvgMapElement {
         if (!this._label) {
             this._label = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
             this._label.id = labelId;
+            this._label.setAttribute("class", "constraint-label")
             this._label.setAttribute("width", (this._textWidth + map.config.waypointLabelBackgroundPaddingLeft + map.config.waypointLabelBackgroundPaddingRight).toFixed(0) + "px");
             this._label.setAttribute("height", (this._textHeight * (this.source.speedConstraint > 0 ? 2.2 : 1) + map.config.waypointLabelBackgroundPaddingTop + map.config.waypointLabelBackgroundPaddingBottom).toFixed(0) + "px");
             let canvas = document.createElement("canvas");
@@ -128,10 +130,12 @@ class SvgConstraintElement extends SvgMapElement {
                         this._textWidth = ctx.measureText(text).width;
                         this._textHeight = fontSize * 0.675;
                         this._label = label;
+                        this._label.setAttribute("class", "constraint-label")
                         this.needRepaint = true;
                     }
                 }
                 if (this._label) {
+                    this._label.setAttribute("class", "constraint-label")
                     let textX = (x + map.config.waypointIconSize * 0.5 - this._textWidth * 0.5 + map.config.waypointLabelDistanceX);
                     let textY = y + map.config.waypointLabelDistance + map.config.waypointLabelFontSize + 4;
                     this._label.setAttribute("x", textX + "");
