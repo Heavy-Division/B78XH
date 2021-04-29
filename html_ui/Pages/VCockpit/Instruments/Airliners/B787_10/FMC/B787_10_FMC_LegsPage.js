@@ -603,9 +603,6 @@ class B787_10_FMC_LegsPage {
 				this.update(true);
 			}
 		};
-		if(this._lsk6Field === '<RTE 2 LEGS' && !this._isAddingHold){
-			this._fmc.onLeftInput[5] = undefined;
-		}
 
 		if (this._currentPage == 1) {
 			this._fmc.onRightInput[0] = () => {
