@@ -145,53 +145,62 @@ class B787_10_FMC_LegsPage {
 					this._rows[2 * i + 1][1] = (SegmentType.Enroute === segment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + "/" + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix));
 				}
 			}
-			/*
-						if (this._isMapModePlan) {
-							if(this._rows[2 * this._step + 1][0] === '□□□□□ ----- ROUTE DISCONTINUITY -----'){
-								const dis = this._step;
-								this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + offset + dis - 2;
-								console.log(this._fmc.currentFlightPlanWaypointIndex)
-								this._step++;
-							} else {
-								console.log(this._fmc.currentFlightPlanWaypointIndex)
-								this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + offset + this._step;
-							}
-							if (this._rows[2 * this._step + 1][0] != '') {
-								console.log("Step: " + this._step);
-								if (!this._rows[2 * this._step + 1][1]) {
-									this._rows[2 * this._step + 1][1] = '';
-								}
-								this._rows[2 * this._step + 1][2] = '<CTR>';
-							} else {
-								//return B787_10_FMC_LegsPage.ShowPage1(fmc, 1, 0);
-							}
 
-							this._fmc.onRightInput[5] = () => {
-								let newStep = this._step + 1;
-								let newPage = this._currentPage;
-								if (newStep > 4) {
-									newStep = 0;
-									newPage++;
-								}
-								if (newPage > this._pageCount) {
-									newPage = 1;
-								}
-								console.log("newstep: " + newStep);
-								console.log("newPage: " + newPage);
-								this._step = newStep;
-								this._currentPage = newPage;
-								this.update(true);
-								//B787_10_FMC_LegsPage.ShowPage1(fmc, newPage, newStep);
-							};
+			if (this._isMapModePlan) {
+				this._discoOffset = 0;
+				for(let i = 0; i <= offset + this._step; i++){
+					if(this._wayPointsToRender[i] && this._wayPointsToRender[i].fix.icao === '$DISCO'){
+						this._discoOffset++;
+					}
+				}
+
+				this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + offset + this._step - this._discoOffset;
+/*
+				if(this._rows[2 * this._step + 1][0] === '□□□□□ ----- ROUTE DISCONTINUITY -----'){
+					const dis = this._step;
+					this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + offset + dis - 2;
+					console.log(this._fmc.currentFlightPlanWaypointIndex)
+					this._step++;
+				} else {
+					console.log(this._fmc.currentFlightPlanWaypointIndex)
+					this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + offset + this._step;
+				}
+
+ */
+				if (this._rows[2 * this._step + 1][0] != '') {
+					console.log("Step: " + this._step);
+					if (!this._rows[2 * this._step + 1][1]) {
+						this._rows[2 * this._step + 1][1] = '';
+					}
+					if(this._rows[2 * this._step + 1][0] !== '□□□□□ ----- ROUTE DISCONTINUITY -----'){
+						this._rows[2 * this._step + 1][2] = '<CTR>';
+					}
+				} else {
+					//return B787_10_FMC_LegsPage.ShowPage1(fmc, 1, 0);
+				}
+
+				this._fmc.onRightInput[5] = () => {
+					let newStep = this._step + 1;
+					let newPage = this._currentPage;
+					if (newStep > 4) {
+						newStep = 0;
+						newPage++;
+					}
+					if (newPage > this._pageCount) {
+						newPage = 1;
+					}
+					this._step = newStep;
+					this._currentPage = newPage;
+					this.update(true);
+				};
 
 
-						} else {
+			} else {
+				this._fmc.onRightInput[5] = () => {
+					new B787_10_FMC_RouteDataPage(this._fmc).showPage();
+				};
+			}
 
-							this._fmc.onRightInput[5] = () => {
-								new B787_10_FMC_RouteDataPage(this._fmc).showPage();
-							};
-						}
-			*/
 		}
 	}
 
@@ -203,6 +212,12 @@ class B787_10_FMC_LegsPage {
 			this._lsk6Field = "<ERASE";
 		} else {
 			this._lsk6Field = "<RTE 2 LEGS";
+		}
+
+		if(this._isMapModePlan){
+			this._stepCell = '<STEP';
+		} else {
+			this._stepCell = '<RTE DATA';
 		}
 
 		const modStr = this._fmc.fpHasChanged ? "MOD" : "ACT";
@@ -221,7 +236,7 @@ class B787_10_FMC_LegsPage {
 			[" " + modStr + " RTE 1 LEGS", this._currentPage.toFixed(0) + "/" + Math.max(1, this._pageCount.toFixed(0)) + ""],
 			...this._rows,
 			[`${this._isAddingHold ? '----------------HOLD AT----------------' : holdExiting ? '--------------EXIT ARMED---------------' : '__FMCSEPARATOR'}`],
-			[`${this._isAddingHold ? '□□□□□' : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, "<RTE DATA"]
+			[`${this._isAddingHold ? '□□□□□' : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, this._stepCell]
 		]);
 	}
 
@@ -274,6 +289,9 @@ class B787_10_FMC_LegsPage {
 			const wptRender = this._wayPointsToRender[i + offsetRender];
 			// if its a real fix
 			if (!(this._currentPage === 1 && i === 0) && wptRender && (wptRender.fix.ident !== "$EMPTY" || wptRender.fix.ident !== "$DISCO")) {
+				if(i >= 5){
+					break;
+				}
 				this._fmc.onRightInput[i] = () => {
 					const offset = Math.floor((this._currentPage - 1) * 5);
 					const wptIndex = this._wayPointsToRender[i + offset].index;
@@ -568,11 +586,11 @@ class B787_10_FMC_LegsPage {
 	}
 
 	bindEvents() {
-
+/*
 		this._fmc.onRightInput[5] = () => {
 			new B787_10_FMC_RouteDataPage(this._fmc).showPage();
 		};
-
+*/
 		this._fmc.onLeftInput[5] = () => {
 			let holdActive = false;
 			let holdExiting = false;
@@ -603,19 +621,6 @@ class B787_10_FMC_LegsPage {
 				this.update(true);
 			}
 		};
-
-		if (this._currentPage == 1) {
-			this._fmc.onRightInput[0] = () => {
-				const currentInhibit = undefined //this._fmc._lnav.sequencingMode === FlightPlanSequencing.INHIBIT;
-				if (currentInhibit) {
-					//this._fmc._lnav.setAutoSequencing();
-				} else {
-					//this._fmc._lnav.setInhibitSequencing();
-				}
-
-				this.resetAfterOp();
-			};
-		}
 
 		// EXEC
 		this._fmc.onExecPage = () => {
