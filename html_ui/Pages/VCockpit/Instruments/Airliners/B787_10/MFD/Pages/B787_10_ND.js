@@ -779,6 +779,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 	}
 
 	updateTopOfDescent() {
+		/*
 		let showTopOfDescent = SimVar.GetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number') === 1;
 		if (showTopOfDescent) {
 			if (!this.topOfDescentIcon) {
@@ -797,9 +798,11 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				this.instrument.topOfCurveElements.splice(index, 1);
 			}
 		}
+		 */
 	}
 
 	updateTopOfClimb() {
+		/*
 		let showTopOfClimb = SimVar.GetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_CLIMB', 'number') === 1;
 		if (showTopOfClimb) {
 			if (!this.topOfClimbIcon) {
@@ -818,6 +821,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				this.instrument.topOfCurveElements.splice(index, 1);
 			}
 		}
+		 */
 	}
 
 	updateAltitudeArc(_deltatime) {
@@ -905,7 +909,6 @@ class B787_10_ND_Map extends MapInstrumentElement {
 
 	updateMapIfIrsNotAligned() {
 		this.extendMFDHtmlElementsWithIrsState();
-
 		let irsLState = SimVar.GetSimVarValue('L:B78XH_IRS_L_STATE', 'Number');
 		let irsRState = SimVar.GetSimVarValue('L:B78XH_IRS_R_STATE', 'Number');
 		if ((irsLState > 1 || irsRState > 1)) {
@@ -922,7 +925,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				}
 			});
 
-			let aligns = [this._parent.querySelector('#l-align')];
+			let aligns = this._parent.querySelectorAll('.align-value');
 
 			aligns.forEach((element) => {
 				element.style.visibility = 'hidden';
@@ -950,41 +953,32 @@ class B787_10_ND_Map extends MapInstrumentElement {
 					mode = 2;
 				}
 
+				let setTime = (initTime, toAlign) => {
+					let totalSeconds = (initTime + toAlign) - now;
+					if(totalSeconds < 0){
+						totalSeconds = 0;
+					}
+					let minutes = Math.floor(totalSeconds / 60);
+					let seconds = totalSeconds - minutes * 60;
+					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
+					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
+					aligns.forEach((element) => {
+						element.textContent = minutesString + ':' + secondsString;
+						element.style.visibility = 'visible';
+					})
+				}
+
 
 				if (mode === 3) {
 					if (irsLInitAlignTime + irsLTimeForAlign <= irsRInitAlignTime + irsRTimeForAlign) {
-						let totalSeconds = (irsLInitAlignTime + irsLTimeForAlign) - now;
-						let minutes = Math.floor(totalSeconds / 60);
-						let seconds = totalSeconds - minutes * 60;
-						let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
-						let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
-						aligns[position].textContent = minutesString + ':' + secondsString;
-						aligns[position].style.visibility = 'visible';
+						setTime(irsLInitAlignTime, irsLTimeForAlign);
 					} else {
-						let totalSeconds = (irsRInitAlignTime + irsRTimeForAlign) - now;
-						let minutes = Math.floor(totalSeconds / 60);
-						let seconds = totalSeconds - minutes * 60;
-						let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
-						let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
-						aligns[position].textContent = minutesString + ':' + secondsString;
-						aligns[position].style.visibility = 'visible';
+						setTime(irsRInitAlignTime, irsRTimeForAlign);
 					}
 				} else if (mode === 1) {
-					let totalSeconds = (irsLInitAlignTime + irsLTimeForAlign) - now;
-					let minutes = Math.floor(totalSeconds / 60);
-					let seconds = totalSeconds - minutes * 60;
-					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
-					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
-					aligns[position].textContent = minutesString + ':' + secondsString;
-					aligns[position].style.visibility = 'visible';
+					setTime(irsLInitAlignTime, irsLTimeForAlign);
 				} else if (mode === 2) {
-					let totalSeconds = (irsRInitAlignTime + irsRTimeForAlign) - now;
-					let minutes = Math.floor(totalSeconds / 60);
-					let seconds = totalSeconds - minutes * 60;
-					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
-					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
-					aligns[position].textContent = minutesString + ':' + secondsString;
-					aligns[position].style.visibility = 'visible';
+					setTime(irsRInitAlignTime, irsRTimeForAlign);
 				}
 			}
 		} else {

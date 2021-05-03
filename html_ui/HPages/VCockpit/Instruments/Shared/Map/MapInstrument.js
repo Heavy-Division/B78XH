@@ -784,12 +784,12 @@ class MapInstrument extends ISvgMapRootElement {
                             }
                         }
 
-                        const todDist = SimVar.GetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number");
-                        if (todDist > 0) {
-                            this.updateDesWaypoint();
-                            if (this._desWaypoint && SimVar.GetSimVarValue("L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN", "number") === 0) {
-                                this.navMap.mapElements.push(this._desWaypoint.getSvgElement(this.navMap.index));
-                            }
+                        const showTOD = SimVar.GetSimVarValue("L:AIRLINER_FMS_SHOW_TOP_DSCNT", "number");
+                        if (showTOD === 1) {
+                            //this.updateDesWaypoint();
+                            //if (this._desWaypoint && SimVar.GetSimVarValue("L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN", "number") === 0) {
+                            //    this.navMap.mapElements.push(this._desWaypoint.getSvgElement(this.navMap.index));
+                            //}
 
                             this.updateTodWaypoint();
                             if (this._todWaypoint && SimVar.GetSimVarValue("L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN", "number") === 0) {
@@ -1013,11 +1013,8 @@ class MapInstrument extends ISvgMapRootElement {
     }
 
     updateTodWaypoint() {
-        const pathActive = SimVar.GetSimVarValue("L:WT_VNAV_PATH_STATUS", "number") === 3;
-        const apprActive = SimVar.GetSimVarValue("AUTOPILOT APPROACH HOLD", "number") === 1;
         const todDistanceRemaining = SimVar.GetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number");
-        const advDesActive = SimVar.GetSimVarValue("L:WT_CJ4_ADV_DES_ACTIVE", "number") === 1;
-        if (!pathActive && !advDesActive && !apprActive && todDistanceRemaining > 0.1) {
+        if (todDistanceRemaining > 0.5) {
             if (this._todWaypoint === undefined) {
                 // create it
                 const waypoint = new WayPoint(this._instrument);

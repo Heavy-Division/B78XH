@@ -1,3 +1,4 @@
+Include.addScript('/Heavy/Utils/HeavyDataStorage.js');
 /**
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * Be aware. This class should never be used outside ISFD (SAI).
@@ -35,7 +36,7 @@ class B78XH_Systems {
 	init() {
 		this.initializer.init();
 		this.systems[B78XH_Systems.SYSTEM.APU] = {'instance': new B78XH_APU(), delay: 0};
-		this.systems[B78XH_Systems.SYSTEM.IRS] = {'instance': new B78XH_IRS(), delay: 10000};
+		this.systems[B78XH_Systems.SYSTEM.IRS] = {'instance': new B78XH_IRS(), delay: 500};
 	}
 
 	update(_deltaTime) {

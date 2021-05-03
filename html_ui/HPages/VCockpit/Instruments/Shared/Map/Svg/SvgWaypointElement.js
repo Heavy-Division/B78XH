@@ -103,6 +103,10 @@ class SvgWaypointElement extends SvgMapElement {
         return map.config.waypointLabelFontSize;
     }
 
+    getAuxLabelFontSize(map){
+        return map.config.auxWaypointLabelFontSize
+    }
+
     getLabelElement() {
         return this._label;
     }
@@ -144,7 +148,10 @@ class SvgWaypointElement extends SvgMapElement {
         this._image.setAttribute("lastIsInFpln", this._lastIsInFpln.toString());
         this._lastIsActiveWaypoint = isActiveWaypoint;
         this._image.setAttribute("lastIsActiveWaypoint", isActiveWaypoint.toString());
-        const iconSize = this.getIconSize(map) + 4;
+        let iconSize = this.getIconSize(map) + 4;
+        if (this.ident === "T/D" || this.ident === "DES") {
+            iconSize = this.getIconSize(map) - 5;
+        }
         this._image.setAttribute("width", fastToFixed(iconSize, 0));
         this._image.setAttribute("height", fastToFixed(iconSize, 0));
         this._group.appendChild(this._image);
@@ -198,6 +205,9 @@ class SvgWaypointElement extends SvgMapElement {
         }
         if (isFinite(this.x) && isFinite(this.y)) {
             let iconSize = this.getIconSize(map) + 4;
+            if (this.ident === "T/D" || this.ident === "DES") {
+                iconSize = this.getIconSize(map) - 5;
+            }
             if (this._image && this._lastMinimize !== this.minimize) {
                 if (this.minimize) {
                     this._image.setAttribute("width", fastToFixed(iconSize * 0.5, 0));
@@ -302,7 +312,10 @@ class SvgWaypointTextElement extends SvgMapElement {
     }
 
     createDraw(map) {
-        const fontSize = this.waypointElement.getLabelFontSize(map);
+        let fontSize = this.waypointElement.getLabelFontSize(map);
+        if (this.waypointElement.ident === "T/D" || this.waypointElement.ident === "DES") {
+            fontSize = this.waypointElement.getAuxLabelFontSize(map);
+        }
         const text = this.waypointElement.ident;
         const c = document.createElement("canvas");
         const ctx = c.getContext("2d");
@@ -337,7 +350,10 @@ class SvgWaypointTextElement extends SvgMapElement {
             this._label = label;
             this._needRepaint = true;
         }
-        const fontSize = this.waypointElement.getLabelFontSize(map);
+        let fontSize = this.waypointElement.getLabelFontSize(map);
+        if (this.waypointElement.ident === "T/D" || this.waypointElement.ident === "DES") {
+            fontSize = this.waypointElement.getAuxLabelFontSize(map);
+        }
         const text = this.waypointElement.ident;
         let canvas;
         if (!this._label) {

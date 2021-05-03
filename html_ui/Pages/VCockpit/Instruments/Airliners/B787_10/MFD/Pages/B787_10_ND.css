@@ -502,24 +502,34 @@ b787-10-nd-element[border=right] #Borders {
 
 /** IRS Modeling **/
 
-b787-10-nd-element #align-times {
-    position: absolute;
-    border: none;
-    left: 0%;
-    top: -2%;
-    width: 300px;
-    height: 200px;
-    background-color: black;
-}
-
-b787-10-nd-element[halfsize=true] #align-times {
+b787-10-nd-element[halfsize=true] #align-times:not([irs-state=aligned]) {
+    display: block;
     position: absolute;
     border: none;
     left: 0%;
     top: -2%;
     width: 200px;
-    height: 100px;
+    height: 110px;
     background-color: black;
+}
+
+b787-10-nd-element #align-times {
+    display: none;
+}
+
+b787-10-nd-element #align-times2:not([irs-state=aligned]) {
+    display: block;
+    position: absolute;
+    border: none;
+    left: 0%;
+    top: -2%;
+    width: 400px;
+    height: 200px;
+    background-color: black;
+}
+
+b787-10-nd-element[halfsize=true] #align-times2 {
+    display: none;
 }
 
 b787-10-nd-element #align-times text {
@@ -530,10 +540,26 @@ b787-10-nd-element #align-times text {
     alignment-baseline: central;
 }
 
+b787-10-nd-element #align-times2 text {
+    fill: var(--color-white);
+    font-size: 30px;
+    width: 400px;
+    font-family: Roboto-Light;
+    text-anchor: start;
+    alignment-baseline: central;
+}
+
+
 b787-10-nd-element #align-times text.align {
     fill: var(--color-white);
     font-size: 15px;
     font-family: Roboto-Bold;
+    text-anchor: start;
+    alignment-baseline: central;
+}
+
+b787-10-nd-element #align-times2 text.align {
+    fill: var(--color-white);
     text-anchor: start;
     alignment-baseline: central;
 }
@@ -624,6 +650,7 @@ b787-10-nd-element #FakeMapBox {
     top: -2%;
     width: 100%;
     height: 100%;
+    background-color: transparent;
 }
 
 b787-10-nd-element #FakeMapBox text {
@@ -665,15 +692,15 @@ map-instrument[irs-state=aligned],
     display: block;
 }
 
-#time-to-align[irs-state=aligning]{
+#time-to-align[irs-state=aligning] #time-to-align2[irs-state=aligning]{
     display:block;
 }
 
-#time-to-align[irs-state=off], #time-to-align[irs-state=aligned]{
+#time-to-align[irs-state=off], #time-to-align[irs-state=aligned], #time-to-align2[irs-state=off], #time-to-align2[irs-state=aligned]{
     display:none;
 }
 
-#align-times[irs-state=aligned], #FakeMapBox[irs-state=aligned], #FakeCompassBoxHdg[irs-state=aligned], #FakeCompassBox[irs-state=aligned]{
+#align-times[irs-state=aligned], #align-times2[irs-state=aligned], #FakeMapBox[irs-state=aligned], #FakeCompassBoxHdg[irs-state=aligned], #FakeCompassBox[irs-state=aligned]{
     display: none;
 }
 
@@ -693,11 +720,12 @@ map-instrument[irs-state=aligned],
     display:block;
 }
 
-#l-align[irs-state=aligning], #c-align[irs-state=aligning], #r-align[irs-state=aligning]{
+#l-align[irs-state=aligning], #l-align2[irs-state=aligning], #c-align[irs-state=aligning], #r-align[irs-state=aligning]{
     display: block;
 }
 
 #l-align[irs-state=off], #l-align[irs-state=inited], #l-align[irs-state=aligned],
+#l-align2[irs-state=off], #l-align2[irs-state=inited], #l-align2[irs-state=aligned],
 #c-align[irs-state=off], #c-align[irs-state=inited], #c-align[irs-state=aligned],
 #r-align[irs-state=off], #r-align[irs-state=inited], #r-align[irs-state=aligned] {
     display: none;
