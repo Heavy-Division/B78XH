@@ -107,9 +107,13 @@ class B787_10_FMC_RouteRequestPage {
 			};
 
 			let breakAPartNAT = (navlog) => {
+				const nats = ['NATA', 'NATB', 'NATC', 'NATD', 'NATE', 'NATF', 'NATG', 'NATH', 'NATJ', 'NATK', 'NATL', 'NATM', 'NATN', 'NATP', 'NATQ', 'NATR', 'NATS', 'NATT', 'NATU', 'NATV', 'NATW', 'NATX', 'NATY', 'NATZ']
 				let out = [];
 				navlog.forEach((fix) => {
-					if (fix.via_airway === 'NATZ') {
+					let index = nats.findIndex((nat) => {
+						return nat === fix.via_airway;
+					})
+					if (index !== -1) {
 						fix.via_airway = 'DCT';
 					}
 
