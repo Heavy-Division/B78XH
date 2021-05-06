@@ -68,9 +68,18 @@ class B78XHNavModeSelector {
 
 	handleLNAVPressed() {
 		/**
-		 * Does flight plan exist
+		 * Is possible to ARM LNAV
 		 */
 		if (this.flightPlanManager.getWaypointsCount() === 0) {
+			return;
+		}
+
+		/**
+		 * Disarm LNAV if possible
+		 */
+		if(this.currentLateralArmedState === LateralNavModeState.LNAV && this.currentLateralActiveState !== LateralNavModeState.LNAV){
+			SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 0);
+			this.currentLateralArmedState = LateralNavModeState.NONE;
 			return;
 		}
 
@@ -79,34 +88,41 @@ class B78XHNavModeSelector {
 		 */
 		SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 1);
 		this.currentLateralArmedState = LateralNavModeState.LNAV;
+
+		/**
+		 * Try activate LNAV
+		 */
 		this.queueEvent(NavModeEvent.LNAV_ACTIVE);
 	}
 
 	handleLNAVActive() {
 		/**
-		 * Continue if LNAV is already active
+		 * Is LNAV armed?
 		 */
 		if (this.currentLateralArmedState === LateralNavModeState.LNAV) {
+			/**
+			 * Is possible to engage LNAV?
+			 * @type {number}
+			 */
 			let altitude = Simplane.getAltitudeAboveGround();
 			if (altitude > 50) {
-				if (this.currentLateralArmedState === LateralNavModeState.LNAV) {
-					console.log("STATE: " + this.currentLateralActiveState);
-					switch (this.currentLateralActiveState) {
-						case LateralNavModeState.NONE:
-							this.changeToCorrectLNavForMode(true, false);
-							break;
-						case LateralNavModeState.HDGHOLD:
-							this.changeToCorrectLNavForMode(false, false);
-							break;
-						case LateralNavModeState.HDGSEL:
-							this.changeToCorrectLNavForMode(false, false);
-							break;
-						case LateralNavModeState.TO:
-						case LateralNavModeState.GA:
-							this.changeToCorrectLNavForMode(false, false);
-							break;
-					}
-					this.currentLateralArmedState = LateralNavModeState.NONE;
+				/**
+				 * Handle LNAV activation
+				 */
+				switch (this.currentLateralActiveState) {
+					case LateralNavModeState.NONE:
+						this.changeToCorrectLNavForMode(true, false);
+						break;
+					case LateralNavModeState.HDGHOLD:
+						this.changeToCorrectLNavForMode(false, false);
+						break;
+					case LateralNavModeState.HDGSEL:
+						this.changeToCorrectLNavForMode(false, false);
+						break;
+					case LateralNavModeState.TO:
+					case LateralNavModeState.GA:
+						this.changeToCorrectLNavForMode(false, false);
+						break;
 				}
 			}
 		}
