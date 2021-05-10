@@ -1,0 +1,266 @@
+﻿:root {
+  --bodyHeightScale: 1; }
+
+@keyframes TemporaryShow {
+  0%, 100% {
+    visibility: visible; } }
+
+@keyframes TemporaryHide {
+  0%, 100% {
+    visibility: hidden; } }
+
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden; }
+  html body {
+    -webkit-user-select: none;
+    font-family: var(--font);
+    font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100);
+    color: white;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0; }
+
+#highlight {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 10; }
+
+#Electricity {
+  width: 100%;
+  height: 100%; }
+  #Electricity[state=off] {
+    display: none; }
+
+:root {
+  --eicasWhite: white;
+  --eicasBlack: black;
+  --eicasDarkGrey: #5f5f5f;
+  --eicasLightGrey: #797282;
+  --eicasBlue: #52d3f1;
+  --eicasGreen: #64ec28;
+  --eicasOrange: #db7200;
+  --eicasRed: #e8361f;
+  --eicasMagenta: #fa0afa;
+  --eicasAmber: #feb21d; }
+
+b787-10-eicas-element {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black; }
+  b787-10-eicas-element svg {
+    width: 100%;
+    height: 100%; }
+  b787-10-eicas-element text {
+    fill: var(--eicasWhite);
+    font-size: 45px;
+    text-anchor: start; }
+  b787-10-eicas-element text.label {
+    fill: #52d3f1;
+    font-size: 32px;
+    letter-spacing: -2px;
+    text-anchor: middle; }
+  b787-10-eicas-element text.vlabel {
+    fill: #52d3f1;
+    font-size: 32px;
+    letter-spacing: -12px;
+    glyph-orientation-vertical: 0;
+    writing-mode: vertical-lr; }
+  b787-10-eicas-element text.valueWhite {
+    fill: var(--eicasWhite);
+    text-anchor: end;
+    letter-spacing: -4px; }
+  b787-10-eicas-element text.valueGreen {
+    fill: #64ec28;
+    text-anchor: end;
+    letter-spacing: -4px; }
+  b787-10-eicas-element #TMA_Value {
+    fill: #64ec28;
+    text-anchor: middle;
+    letter-spacing: -1px; }
+  b787-10-eicas-element #GearInfo text {
+    text-anchor: middle; }
+  b787-10-eicas-element #GearInfo rect {
+    stroke-width: 4px;
+    fill: none; }
+  b787-10-eicas-element #GearInfo line {
+    stroke: var(--eicasWhite);
+    stroke-width: 4px;
+    fill: none; }
+  b787-10-eicas-element #GearInfo.down {
+    display: block; }
+    b787-10-eicas-element #GearInfo.down line {
+      display: none; }
+    b787-10-eicas-element #GearInfo.down rect {
+      stroke: #64ec28; }
+    b787-10-eicas-element #GearInfo.down text.down {
+      fill: #64ec28; }
+    b787-10-eicas-element #GearInfo.down text.up {
+      fill: none; }
+  b787-10-eicas-element #GearInfo.transit {
+    display: block; }
+    b787-10-eicas-element #GearInfo.transit line {
+      display: block; }
+    b787-10-eicas-element #GearInfo.transit rect {
+      stroke: var(--eicasWhite); }
+    b787-10-eicas-element #GearInfo.transit text.down {
+      fill: none; }
+    b787-10-eicas-element #GearInfo.transit text.up {
+      fill: none; }
+  b787-10-eicas-element #GearInfo.up {
+    display: block; }
+    b787-10-eicas-element #GearInfo.up line {
+      display: none; }
+    b787-10-eicas-element #GearInfo.up rect {
+      stroke: var(--eicasWhite); }
+    b787-10-eicas-element #GearInfo.up text.down {
+      fill: none; }
+    b787-10-eicas-element #GearInfo.up text.up {
+      fill: var(--eicasWhite); }
+  b787-10-eicas-element #GearInfo.inactive {
+    display: none; }
+  b787-10-eicas-element #FlapsInfo rect.innerBar {
+    fill: #797282; }
+  b787-10-eicas-element #FlapsInfo rect.outerBar {
+    stroke: var(--eicasWhite);
+    stroke-width: 4px;
+    fill: none; }
+  b787-10-eicas-element #FlapsInfo line {
+    stroke-width: 6px;
+    fill: none; }
+  b787-10-eicas-element #FlapsInfo text.value {
+    font-size: 32px; }
+  b787-10-eicas-element #FlapsInfo.static {
+    display: block; }
+    b787-10-eicas-element #FlapsInfo.static line {
+      stroke: #64ec28; }
+    b787-10-eicas-element #FlapsInfo.static text.value {
+      fill: #64ec28; }
+  b787-10-eicas-element #FlapsInfo.transit {
+    display: block; }
+    b787-10-eicas-element #FlapsInfo.transit line {
+      stroke: #fa0afa; }
+    b787-10-eicas-element #FlapsInfo.transit text.value {
+      fill: #fa0afa; }
+  b787-10-eicas-element #FlapsInfo.inactive {
+    display: none; }
+  b787-10-eicas-element .gauge text {
+    text-anchor: end;
+    font-size: 42px;
+    letter-spacing: -4px; }
+  b787-10-eicas-element .gauge line, b787-10-eicas-element .gauge rect, b787-10-eicas-element .gauge path, b787-10-eicas-element .gauge polyline {
+    fill: none;
+    stroke: var(--eicasWhite);
+    stroke-width: 4px; }
+  b787-10-eicas-element .gauge path.mainArc {
+    stroke-width: 2px; }
+  b787-10-eicas-element .gauge .dangerMarker {
+    stroke: #e8361f; }
+  b787-10-eicas-element .gauge .warningMarker {
+    stroke: #db7200; }
+  b787-10-eicas-element .gauge .greenMarker {
+    stroke: #64ec28; }
+  b787-10-eicas-element .gauge .fill {
+    stroke: none;
+    fill: #5f5f5f; }
+  b787-10-eicas-element .gauge text.danger, b787-10-eicas-element .gauge path.danger {
+    fill: #e8361f; }
+  b787-10-eicas-element .gauge text.warning, b787-10-eicas-element .gauge path.warning {
+    fill: #db7200; }
+  b787-10-eicas-element .gauge .cursor {
+    stroke: none;
+    fill: var(--eicasWhite); }
+  b787-10-eicas-element .gauge rect.invert {
+    fill: var(--eicasWhite); }
+  b787-10-eicas-element .gauge text.invert {
+    fill: var(--eicasBlack); }
+  b787-10-eicas-element #Stab text.value, b787-10-eicas-element #Stab text.left, b787-10-eicas-element #Stab text.right, b787-10-eicas-element #Stab text.info, b787-10-eicas-element #Rudder text.value, b787-10-eicas-element #Rudder text.left, b787-10-eicas-element #Rudder text.right, b787-10-eicas-element #Rudder text.info {
+    font-size: 35px;
+    letter-spacing: -3px;
+    text-anchor: middle; }
+  b787-10-eicas-element #Stab text.value, b787-10-eicas-element #Rudder text.value {
+    text-anchor: end; }
+  b787-10-eicas-element #Stab text.takeoff, b787-10-eicas-element #Rudder text.takeoff {
+    font-size: 30px;
+    letter-spacing: -3px;
+    text-anchor: middle;
+    fill: #fa0afa; }
+  b787-10-eicas-element #Stab rect, b787-10-eicas-element #Stab .bar, b787-10-eicas-element #Stab .markers, b787-10-eicas-element #Rudder rect, b787-10-eicas-element #Rudder .bar, b787-10-eicas-element #Rudder .markers {
+    fill: none;
+    stroke: var(--eicasWhite);
+    stroke-width: 4px; }
+  b787-10-eicas-element #Stab .arrow, b787-10-eicas-element #Rudder .arrow {
+    fill: var(--eicasWhite); }
+  b787-10-eicas-element #Stab rect.trimBand, b787-10-eicas-element #Rudder rect.trimBand {
+    fill: #64ec28;
+    stroke: none; }
+  b787-10-eicas-element #Pressure .label {
+    text-anchor: start; }
+  b787-10-eicas-element #Pressure .value, b787-10-eicas-element #Pressure .units {
+    fill: var(--eicasWhite);
+    letter-spacing: -3px;
+    font-size: 35px;
+    text-anchor: end; }
+  b787-10-eicas-element #Pressure #LDGALT_STATE_Value.value {
+    text-anchor: start;
+    letter-spacing: -1px;
+    font-size: 25px; }
+  b787-10-eicas-element #Fuel .label {
+    font-size: 30px;
+    letter-spacing: -3px; }
+  b787-10-eicas-element #Fuel .background {
+    fill: #5f5f5f;
+    stroke: #797282;
+    stroke-width: 3px; }
+  b787-10-eicas-element #Fuel .box {
+    fill: var(--eicasBlack); }
+  b787-10-eicas-element #Fuel .border {
+    stroke: #52d3f1;
+    stroke-width: 3px; }
+  b787-10-eicas-element #Fuel .value, b787-10-eicas-element #Fuel .units {
+    fill: var(--eicasWhite);
+    letter-spacing: -3px;
+    font-size: 35px; }
+  b787-10-eicas-element #Fuel .value {
+    text-anchor: end; }
+  b787-10-eicas-element #Fuel .units {
+    text-anchor: middle; }
+  b787-10-eicas-element #InfoPanel {
+    position: absolute;
+    left: 60%;
+    width: 38%;
+    top: 1%;
+    height: 30%; }
+    b787-10-eicas-element #InfoPanel div {
+      width: 100%;
+      height: 12%;
+      font-size: 24px;
+      text-align: left;
+      color: #e8361f; }
+    b787-10-eicas-element #InfoPanel .InfoIndication {
+      color: white; }
+    b787-10-eicas-element #InfoPanel .InfoCaution {
+      color: #feb21d; }
+    b787-10-eicas-element #InfoPanel .InfoWarning {
+      color: #e8361f; }
+  b787-10-eicas-element[border=left] #Borders {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-left: 2px inset white; }
+  b787-10-eicas-element[border=right] #Borders {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-right: 2px inset white; }
+

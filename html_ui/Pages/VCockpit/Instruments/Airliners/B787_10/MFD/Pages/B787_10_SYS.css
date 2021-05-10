@@ -22,7 +22,7 @@ html {
 
 html body {
     -webkit-user-select: none;
-    font-family: Roboto-Regular;
+    font-family: BoeingEICAS;
     font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100);
     color: white;
     height: 100%;
@@ -50,14 +50,14 @@ html body {
 :root {
     --eicasWhite: white;
     --eicasBlack: black;
-    --eicasDarkGrey: #323232;
-    --eicasLightGrey: #969696;
-    --eicasBlue: #009696;
-    --eicasGreen: green;
+    --eicasDarkGrey: #5f5f5f;
+    --eicasLightGrey: #797282;
+    --eicasBlue: #52d3f1;
+    --eicasGreen: #64ec28;
     --eicasOrange: #db7200;
-    --eicasRed: red;
-    --eicasMagenta: magenta;
-    --eicasAmber: #ffbf00;
+    --eicasRed: #e8361f;
+    --eicasMagenta: #fa0afa;
+    --eicasAmber: #feb21d;
 }
 
 b787-10-sys-element {
@@ -75,8 +75,8 @@ b787-10-sys-element svg {
 }
 
 b787-10-sys-element #PageButtons text {
-    fill: var(--eicasWhite);
-    font-family: Roboto-Light;
+    fill: white;
+    font-family: BoeingEICAS;
     font-size: 36px;
     text-anchor: middle;
 }
@@ -88,7 +88,7 @@ b787-10-sys-element #PageButtons .border {
 }
 
 b787-10-sys-element #PageButtons .inner {
-    fill: #646464;
+    fill: #797282;
     stroke: none;
 }
 
@@ -97,7 +97,7 @@ b787-10-sys-element #PageButtons .topLeftBorder, b787-10-sys-element #PageButton
 }
 
 b787-10-sys-element #PageButtons .page-button-active .inner {
-    fill: #003200;
+    fill: #64ec28;
 }
 
 b787-10-sys-element #PageButtons .page-button-active .topLeftBorder {
@@ -105,15 +105,15 @@ b787-10-sys-element #PageButtons .page-button-active .topLeftBorder {
 }
 
 b787-10-sys-element #PageButtons .page-button-active .bottomRightBorder {
-    fill: #646464;
+    fill: #797282;
 }
 
 b787-10-sys-element #PageButtons .page-button-inactive .inner {
-    fill: #414141;
+    fill: #797282;
 }
 
 b787-10-sys-element #PageButtons .page-button-inactive .topLeftBorder {
-    fill: #646464;
+    fill: #797282;
 }
 
 b787-10-sys-element #PageButtons .page-button-inactive .bottomRightBorder {
@@ -122,24 +122,24 @@ b787-10-sys-element #PageButtons .page-button-inactive .bottomRightBorder {
 
 b787-10-sys-element #PageButtons .page-button-highlight .topLeftBorder,
 b787-10-sys-element #PageButtons .page-button-highlight .bottomRightBorder {
-    fill: magenta;
+    fill: #fa0bfa;
 }
 
 b787-10-sys-element #Pages #FUEL_Page text.label {
     font-size: 30px;
     text-anchor: middle;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #FUEL_Page text.quantity {
     font-size: 38px;
     text-anchor: end;
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #TotalFuelDisplay rect {
     fill: none;
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     stroke-width: 4px;
 }
 
@@ -154,7 +154,7 @@ b787-10-sys-element #Pages #FUEL_Page #TotalFuelDisplay text.quantity {
 b787-10-sys-element #Pages #FUEL_Page #TotalFuelDisplay text.units {
     font-size: 30px;
     text-anchor: middle;
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelTempDisplay .label {
@@ -162,45 +162,45 @@ b787-10-sys-element #Pages #FUEL_Page #FuelTempDisplay .label {
 }
 
 b787-10-sys-element #Pages #FUEL_Page .engineInfo rect, b787-10-sys-element #Pages #FUEL_Page .engineInfo path {
-    fill: var(--eicasDarkGrey);
-    stroke: var(--eicasBlue);
+    fill: #5f5f5f;
+    stroke: #52d3f1;
     stroke-width: 4px;
 }
 
 b787-10-sys-element #Pages #FUEL_Page .engineInfo line {
     fill: none;
     stroke-width: 6px;
-    stroke: var(--eicasWhite);
+    stroke: white;
 }
 
 b787-10-sys-element #Pages #FUEL_Page .engineInfo circle {
-    fill: var(--eicasBlack);
+    fill: black;
     stroke-width: 4px;
 }
 
 b787-10-sys-element #Pages #FUEL_Page .engineInfo .fuelengine-active {
-    stroke: var(--eicasGreen);
+    stroke: #64ec28;
 }
 
 b787-10-sys-element #Pages #FUEL_Page .engineInfo .fuelengine-inactive {
-    stroke: var(--eicasWhite);
+    stroke: white;
 }
 
 b787-10-sys-element #Pages #FUEL_Page .tankInfo rect.background {
-    fill: var(--eicasDarkGrey);
-    stroke: var(--eicasBlue);
+    fill: #5f5f5f;
+    stroke: #52d3f1;
     stroke-width: 4px;
 }
 
 b787-10-sys-element #Pages #FUEL_Page .tankInfo rect.quantity {
-    fill: var(--eicasBlack);
+    fill: black;
     stroke: none;
 }
 
 b787-10-sys-element #Pages #FUEL_Page .fuelFrame {
     fill: none;
     stroke-width: 4px;
-    stroke: var(--eicasWhite);
+    stroke: white;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelPumps {
@@ -209,32 +209,32 @@ b787-10-sys-element #Pages #FUEL_Page #FuelPumps {
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelPumps .fuelpump-switched-active {
-    stroke: var(--eicasGreen);
+    stroke: #64ec28;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelPumps .fuelpump-notswitched-active {
-    stroke: var(--eicasOrange);
+    stroke: #db7200;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelPumps .fuelpump-switched-inactive {
-    stroke: var(--eicasOrange);
+    stroke: #db7200;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelPumps .fuelpump-notswitched-inactive {
-    stroke: var(--eicasWhite);
+    stroke: white;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelValves {
-    fill: var(--eicasBlack);
+    fill: black;
     stroke-width: 4px;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelValves .fuelvalve-open {
-    stroke: var(--eicasGreen);
+    stroke: #64ec28;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelValves .fuelvalve-closing {
-    stroke: var(--eicasOrange);
+    stroke: #db7200;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelValves .fuelvalve-closed {
@@ -242,7 +242,7 @@ b787-10-sys-element #Pages #FUEL_Page #FuelValves .fuelvalve-closed {
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelValves #FuelValve1.fuelvalve-closed, b787-10-sys-element #Pages #FUEL_Page #FuelValves #FuelValve2.fuelvalve-closed, b787-10-sys-element #Pages #FUEL_Page #FuelValves #FuelValve3.fuelvalve-closed {
-    stroke: var(--eicasWhite);
+    stroke: white;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelLines {
@@ -262,7 +262,7 @@ b787-10-sys-element #Pages #FUEL_Page #FuelLines rect {
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active {
-    stroke: var(--eicasGreen);
+    stroke: #64ec28;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active text {
@@ -270,11 +270,11 @@ b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active text {
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active rect {
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
 }
 
 b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active path {
-    fill: var(--eicasGreen);
+    fill: #64ec28;
     stroke: none;
 }
 
@@ -311,7 +311,7 @@ b787-10-sys-element[border=right] #Borders {
 
 
 b787-10-sys-element #Pages #GEAR_Page path#gears-main-path {
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     stroke-width: 6px;
     fill: none;
 }
@@ -319,28 +319,28 @@ b787-10-sys-element #Pages #GEAR_Page path#gears-main-path {
 b787-10-sys-element #Pages #GEAR_Page #door-labels text.door-label {
     font-size: 46px;
     text-anchor: middle;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #GEAR_Page #gears-numbers text.gear-number-label {
     font-size: 46px;
     text-anchor: middle;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #GEAR_Page #tire-pressures text.tire-pressure-label {
-    font-family: Roboto-Light;
+    font-family: BoeingEICAS;
     letter-spacing: -4px;
     font-size: 40px;
     text-anchor: middle;
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #GEAR_Page #brake-temperatures text.brake-temperature-label {
-    font-family: Roboto-Light;
+    font-family: BoeingEICAS;
     letter-spacing: -2px;
     font-size: 40px;
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #GEAR_Page #brake-temperatures text.brake-temperature-label-1, text.brake-temperature-label-5, text.brake-temperature-label-3, text.brake-temperature-label-7 {
@@ -353,12 +353,12 @@ b787-10-sys-element #Pages #GEAR_Page #brake-temperatures text.brake-temperature
 
 b787-10-sys-element #Pages #GEAR_Page #gear-doors #door-rects rect.door-rect {
     fill: none;
-    stroke: var(--eicasWhite);
+    stroke: white;
     stroke-width: 9
 }
 
 b787-10-sys-element #Pages #GEAR_Page #gear-doors #crosshatches path.crosshatch {
-    stroke: var(--eicasWhite);
+    stroke: white;
     stroke-width: 3px;
     visibility: hidden;
 }
@@ -369,10 +369,10 @@ b787-10-sys-element #Pages #GEAR_Page #gear-doors.transit #crosshatches path.cro
 
 
 b787-10-sys-element #Pages #GEAR_Page #gear-doors #door-status-labels text.door-status-label {
-    font-family: Roboto-Light;
+    font-family: BoeingEICAS;
     letter-spacing: -4px;
     font-size: 50px;
-    fill: var(--eicasWhite);
+    fill: white;
     visibility: hidden;
 }
 
@@ -386,45 +386,45 @@ b787-10-sys-element #Pages #GEAR_Page #gear-doors.inactive #door-status-labels t
 b787-10-sys-element #Pages #GEAR_Page #door-labels text.door-label {
     font-size: 46px;
     text-anchor: middle;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #STAT_Page #boxes path.box {
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #STAT_Page #box-labels text.box-label {
     font-size: 40px;
     text-anchor: middle;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #STAT_Page #boxes-content text.box-content-label {
     font-size: 28px;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #STAT_Page #boxes-content text.box-content-value {
-    font-family: Roboto-Light;
+    font-family: BoeingEICAS;
     font-size: 36px;
     text-anchor: middle;
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #STAT_Page #boxes-content tspan.unit {
     font-size: 28px;
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #HYD_Page #boxes-top rect.box {
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     stroke-width: 2px;
 }
 
 b787-10-sys-element #Pages #HYD_Page #texts text {
     font-weight: bold;
     font-size: 28px;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
     text-align: center;
     text-anchor: middle;
 }
@@ -432,31 +432,31 @@ b787-10-sys-element #Pages #HYD_Page #texts text {
 b787-10-sys-element #Pages #HYD_Page #boxes-top-texts text > tspan {
     font-weight: bold;
     font-size: 28px;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
     text-align: center;
     text-anchor: middle;
 }
 
 b787-10-sys-element #Pages #HYD_Page #boxes-qty path.box-qty {
-    fill: var(--eicasLightGrey);
-    stroke: var(--eicasBlue);
+    fill: #797282;
+    stroke: #52d3f1;
     stroke-width: 4;
 }
 
 b787-10-sys-element #Pages #HYD_Page #boxes-qty path.qty-clip {
-    fill: var(--eicasBlack);
+    fill: black;
 }
 
 b787-10-sys-element #Pages #HYD_Page #boxes-qty path.qty-clip {
-    fill: var(--eicasBlack);
+    fill: black;
 }
 
 b787-10-sys-element #Pages #HYD_Page path.greens {
-    fill: var(--eicasGreen);
+    fill: #64ec28;
 }
 
 b787-10-sys-element #Pages #HYD_Page path.whites {
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #HYD_Page path.greens[state=off] {
@@ -470,7 +470,7 @@ b787-10-sys-element #Pages #HYD_Page path.greens[state=on] {
 
 b787-10-sys-element #Pages #DOOR_Page path {
     stroke-width: 3px;
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     fill: none;
 }
 
@@ -478,14 +478,14 @@ b787-10-sys-element #Pages #DOOR_Page text {
     font-size: 36px;
     text-align: end;
     letter-spacing: -1.5px;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #DOOR_Page text.text-left {
     font-size: 36px;
     text-align: end;
     letter-spacing: -1.5px;
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
 }
 
 b787-10-sys-element #Pages #DOOR_Page text.text-right {
@@ -506,105 +506,105 @@ b787-10-sys-element #Pages #DOOR_Page .door {
 }
 
 b787-10-sys-element #Pages #DOOR_Page .door-open {
-    stroke: var(--eicasAmber);
+    stroke: #feb21d;
     stroke-width: 3
 }
 
 b787-10-sys-element #Pages #DOOR_Page path.fuseladge-gray-mask {
-    fill: var(--eicasDarkGrey);
+    fill: #5f5f5f;
     stroke-width: 0;
     stroke: none;
 }
 
 b787-10-sys-element #Pages #DOOR_Page text.entry_a_text {
-    fill: var(--eicasGreen);
+    fill: #64ec28;
 }
 
 b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.vacant {
-    fill: var(--eicasGreen);
+    fill: #64ec28;
 }
 
 b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.occupied {
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #AIR_Page #white-lines path {
     stroke-width: 3;
-    stroke: var(--eicasWhite);
+    stroke: white;
     fill: none;
 }
 
 b787-10-sys-element #Pages #AIR_Page #green-lines path {
     stroke-width: 9;
-    stroke: var(--eicasGreen);
+    stroke: #64ec28;
     fill: none;
 }
 
 b787-10-sys-element #Pages #AIR_Page #green-lines circle {
     stroke-width: 3;
-    stroke: var(--eicasGreen);
-    fill: var(--eicasBlack);
+    stroke: #64ec28;
+    fill: black;
 }
 
 b787-10-sys-element #Pages #AIR_Page #green-lines #r-pack,
 b787-10-sys-element #Pages #AIR_Page #green-lines #l-pack {
     stroke-width: 3;
-    stroke: var(--eicasGreen);
-    fill: var(--eicasBlack)
+    stroke: #64ec28;
+    fill: black
 }
 
 b787-10-sys-element #Pages #AIR_Page #fuselage path {
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     stroke-width: 3px;
     stroke-linecap: butt;
     stroke-linejoin: miter;
-    fill: var(--eicasDarkGrey)
+    fill: #5f5f5f
 }
 
 b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top rect {
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     stroke-width: 3px;
-    fill: var(--eicasBlack);
+    fill: black;
 }
 
 b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top path {
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     stroke-width: 3px;
-    fill: var(--eicasBlack);
+    fill: black;
 }
 
 b787-10-sys-element #Pages #AIR_Page #boxes #boxes-bottom rect {
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     stroke-width: 3px;
-    fill: var(--eicasBlack);
+    fill: black;
 }
 
 b787-10-sys-element #Pages #AIR_Page #boxes #boxes-bottom rect#air-distribution {
-    stroke: var(--eicasGreen);
+    stroke: #64ec28;
     stroke-width: 3px;
-    fill: var(--eicasBlack);
+    fill: black;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts text {
-    fill: var(--eicasGreen);
+    fill: #64ec28;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #titles-blue text {
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
     text-align: center;
     text-anchor: middle;
     font-size: 24px;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #titles-green text {
-    fill: var(--eicasGreen);
+    fill: #64ec28;
     text-align: center;
     text-anchor: middle;
     font-size: 24px;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #load-shed text {
-    fill: var(--eicasWhite);
+    fill: white;
     text-align: center;
     text-anchor: middle;
     font-size: 24px;
@@ -615,25 +615,25 @@ b787-10-sys-element #Pages #AIR_Page #static-texts #temporary-hidden > text {
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #temperatures-selected text {
-    fill: var(--eicasMagenta);
+    fill: #fa0afa;
 
     font-size: 24px;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #temperatures-actual text {
-    fill: var(--eicasWhite);
+    fill: white;
     font-size: 32px;
 }
 
 b787-10-sys-element #Pages #AIR_Page #static-texts #top-texts text {
-    fill: var(--eicasWhite);
+    fill: white;
     text-align: center;
     text-anchor: middle;
     font-size: 32px;
 }
 
 b787-10-sys-element #Pages #FCTL_Page #fuselage path {
-    stroke: var(--eicasBlue);
+    stroke: #52d3f1;
     stroke-width: 3px;
     stroke-linecap: butt;
     stroke-linejoin: miter;
@@ -641,31 +641,31 @@ b787-10-sys-element #Pages #FCTL_Page #fuselage path {
 }
 
 b787-10-sys-element #Pages #FCTL_Page #fuselage-mask path {
-    fill: var(--eicasDarkGrey)
+    fill: #5f5f5f
 }
 
 b787-10-sys-element #Pages #FCTL_Page #positions #pointers path {
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #FCTL_Page #positions #ranges path {
     fill: none;
-    stroke: var(--eicasWhite);
+    stroke: white;
     stroke-width: 3;
 }
 
 b787-10-sys-element #Pages #FCTL_Page #spoilers rect {
-    fill: var(--eicasBlack);
-    stroke: var(--eicasWhite);
+    fill: black;
+    stroke: white;
     stroke-width: 4;
 }
 
 b787-10-sys-element #Pages #FCTL_Page #spoilers rect.spoiler-value {
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #FCTL_Page #elevators path {
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 
@@ -683,26 +683,26 @@ b787-10-sys-element #Pages #FCTL_Page #Stab text.takeoff, b787-10-sys-element #P
     font-size: 30px;
     letter-spacing: -3px;
     text-anchor: middle;
-    fill: var(--eicasMagenta);
+    fill: #fa0afa;
 }
 
 b787-10-sys-element #Pages #FCTL_Page #Stab rect, b787-10-sys-element #Pages #FCTL_Page #Stab .bar, b787-10-sys-element #Pages #FCTL_Page #Stab .markers, b787-10-sys-element #Pages #FCTL_Page #Rudder rect, b787-10-sys-element #Pages #FCTL_Page #Rudder .bar, b787-10-sys-element #Pages #FCTL_Page #Rudder .markers {
     fill: none;
-    stroke: var(--eicasWhite);
+    stroke: white;
     stroke-width: 4px;
 }
 
 b787-10-sys-element #Pages #FCTL_Page #Stab .arrow, b787-10-sys-element #Pages #FCTL_Page #Rudder .arrow {
-    fill: var(--eicasWhite);
+    fill: white;
 }
 
 b787-10-sys-element #Pages #FCTL_Page #Stab rect.trimBand, b787-10-sys-element #Pages #FCTL_Page #Rudder rect.trimBand {
-    fill: var(--eicasGreen);
+    fill: #64ec28;
     stroke: none;
 }
 
 b787-10-sys-element #Pages #FCTL_Page text.vlabel {
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
     font-size: 32px;
     letter-spacing: -12px;
     glyph-orientation-vertical: 0;
@@ -710,22 +710,22 @@ b787-10-sys-element #Pages #FCTL_Page text.vlabel {
 }
 
 b787-10-sys-element #Pages #FCTL_Page text.label {
-    fill: var(--eicasBlue);
+    fill: #52d3f1;
     font-size: 32px;
     letter-spacing: -2px;
     text-anchor: middle; }
 
 b787-10-sys-element #Pages #FCTL_Page #boxes rect {
-    stroke: var(--eicasGreen);
+    stroke: #64ec28;
     stroke-width: 3;
 }
 b787-10-sys-element text {
-    fill: var(--eicasWhite);
+    fill: white;
     font-size: 45px;
     text-anchor: start; }
 
 b787-10-sys-element #Pages #FCTL_Page text.box-label {
-    fill: var(--eicasGreen);
+    fill: #64ec28;
     font-size: 32px;
     letter-spacing: -2px;
     text-anchor: middle;

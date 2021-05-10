@@ -23,7 +23,7 @@ html {
 
 html body {
     -webkit-user-select: none;
-    font-family: Roboto-Regular;
+    font-family: BoeingEICAS;
     font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100);
     color: white;
     height: 100%;
@@ -49,22 +49,8 @@ html body {
 }
 
 @font-face {
-    font-family: "Roboto";
-    src: url("/Fonts/RobotoMono-Medium.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Roboto-Light";
-    src: url("/Fonts/RobotoMono-Light.ttf") format("truetype");
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: "Roboto-Bold";
-    src: url("/Fonts/RobotoMono-Bold.ttf") format("truetype");
+    font-family: "BoeingEICAS";
+    src: url("/Fonts/BoeingEICAS.ttf") format("truetype");
     font-weight: normal;
     font-style: normal;
 }
@@ -82,7 +68,7 @@ b787-10-pfd-element {
     height: 100%;
     display: block;
     background-color: black;
-    font-family: Roboto-Bold;
+    font-family: BoeingEICAS;
     overflow: hidden;
     z-index: 0;
 }
@@ -116,21 +102,21 @@ b787-10-pfd-element #LeftDisplay {
     flex: 0 0 33%;
     /* width: 33%; */
     background: black;
-    border-right: 6px solid #4E4E50;
+    border-right: 4px solid #5f5f5f;
 }
 
 b787-10-pfd-element #LeftDisplay .content {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 100%;
+    max-height: 90%;
     overflow: auto;
 }
 
 b787-10-pfd-element #LeftDisplay .content .element {
-    background-color: #313133;
-    border-left: 2px solid #4E4E50;
-    border-bottom: 3px solid #4E4E50;
+    background-color: #5f5f5f;
+    border-left: 2px solid #5f5f5f;
+    border-bottom: 1px solid white;
 }
 
 b787-10-pfd-element #LeftDisplay .content #PlaneInfo {
@@ -143,19 +129,19 @@ b787-10-pfd-element #LeftDisplay .content #PlaneInfo #PlaneInfo_Fields {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 20%;
-    color: deepskyblue;
-    font-family: Roboto-Light;
-    font-size: 18px;
+    width: 15%;
+    color: #52d3f1;
+    font-family: BoeingEICAS;
+    font-size: 16px;
 }
 
 b787-10-pfd-element #LeftDisplay .content #PlaneInfo #PlaneInfo_Values {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-    width: 60%;
+    width: 65%;
     color: white;
-    font-family: Roboto-Light;
+    font-family: BoeingEICAS;
     font-size: 20px;
 }
 
@@ -170,8 +156,8 @@ b787-10-pfd-element #LeftDisplay .content #PlaneInfo #Watch #Digital {
     position: relative;
     left: 21%;
     top: 80%;
-    font-family: Roboto-Light;
-    font-size: 20px;
+    font-family: BoeingEICAS;
+    font-size: 22px;
 }
 
 b787-10-pfd-element #LeftDisplay #DayInfo {
@@ -183,8 +169,8 @@ b787-10-pfd-element #LeftDisplay #DayInfo #DayInfo_Fields {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    color: deepskyblue;
-    font-family: Roboto-Light;
+    color: #52d3f1;
+    font-family: BoeingEICAS;
     font-size: 16px;
     width: 95%;
     margin-left: 3%;
@@ -195,15 +181,15 @@ b787-10-pfd-element #LeftDisplay #DayInfo #DayInfo_Values {
     flex-direction: row;
     justify-content: space-around;
     color: white;
-    font-family: Roboto-Light;
-    font-size: 19px;
+    font-family: BoeingEICAS;
+    font-size: 20px;
     width: 95%;
     margin-left: -3%;
 }
 
 b787-10-pfd-element #RightDisplay {
     transform: rotateX(0);
-    flex: 0 0 66%;
+    flex: 0 0 67.5%;
     display: flex;
     flex-direction: column;
 }
@@ -211,7 +197,7 @@ b787-10-pfd-element #RightDisplay {
 b787-10-pfd-element #RightDisplay > .top {
     transform: rotateX(0);
     position: relative;
-    flex: 0 0 65%;
+    flex: 0 0 67.5%;
     background: black;
     overflow: hidden;
 }

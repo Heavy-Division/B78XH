@@ -1,6 +1,6 @@
 ﻿:root {
     --bodyHeightScale: 1;
-    --colorAmber: #ffbf00;
+    --colorAmber: #feb21d;
 }
 
 @keyframes TemporaryShow {
@@ -23,7 +23,7 @@ html {
 
 html body {
     -webkit-user-select: none;
-    font-family: Roboto-Regular;
+    font-family: BoeingEICAS;
     font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100);
     color: white;
     height: 100%;
@@ -51,13 +51,13 @@ html body {
 :root {
     --eicasWhite: white;
     --eicasBlack: black;
-    --eicasDarkGrey: #323232;
-    --eicasLightGrey: #969696;
-    --eicasBlue: #009696;
-    --eicasGreen: green;
+    --eicasDarkGrey: #504b6d;
+    --eicasLightGrey: #797282;
+    --eicasBlue: #69c4ef;
+    --eicasGreen: #64ec28;
     --eicasOrange: #db7200;
-    --eicasRed: red;
-    --eicasMagenta: magenta;
+    --eicasRed: #e8361f;
+    --eicasMagenta: #fa0afa;
 }
 
 b787-10-nd-element {
@@ -85,11 +85,11 @@ b787-10-nd-element #NavPanel .border {
 }
 
 b787-10-nd-element #NavPanel .inner {
-    fill: #414141;
+    fill: #797282;
 }
 
 b787-10-nd-element #NavPanel .topLeftBorder {
-    fill: #646464;
+    fill: #797282;
 }
 
 b787-10-nd-element #NavPanel .bottomRightBorder {
@@ -97,7 +97,7 @@ b787-10-nd-element #NavPanel .bottomRightBorder {
 }
 
 b787-10-nd-element #NavPanel .active .inner {
-    fill: #004b00;
+    fill: #1b9110;
 }
 
 b787-10-nd-element #NavPanel .active .topLeftBorder {
@@ -105,11 +105,11 @@ b787-10-nd-element #NavPanel .active .topLeftBorder {
 }
 
 b787-10-nd-element #NavPanel .active .bottomRightBorder {
-    fill: #646464;
+    fill: #797282;
 }
 
 b787-10-nd-element #NavPanel .highlight .border {
-    stroke: magenta;
+    stroke: #fa0bfa;
 }
 
 b787-10-nd-element #NavPanel #Button_Map {
@@ -118,8 +118,8 @@ b787-10-nd-element #NavPanel #Button_Map {
 
 b787-10-nd-element #NavPanel #Button_Map text {
     fill: var(--eicasWhite);
-    font-family: Roboto-Light;
-    font-size: 36px;
+    font-family: BoeingEICAS;
+    font-size: 26px;
     text-anchor: middle;
 }
 
@@ -129,8 +129,8 @@ b787-10-nd-element #NavPanel #Button_Plan {
 
 b787-10-nd-element #NavPanel #Button_Plan text {
     fill: var(--eicasWhite);
-    font-family: Roboto-Light;
-    font-size: 36px;
+    font-family: BoeingEICAS;
+    font-size: 26px;
     text-anchor: middle;
 }
 
@@ -140,8 +140,8 @@ b787-10-nd-element #NavPanel #Button_Menu {
 
 b787-10-nd-element #NavPanel #Button_Menu text {
     fill: var(--eicasWhite);
-    font-family: Roboto-Light;
-    font-size: 36px;
+    font-family: BoeingEICAS;
+    font-size: 26px;
     text-anchor: middle;
 }
 
@@ -279,41 +279,41 @@ b787-10-nd-element #NDInfo #TopBox svg {
 b787-10-nd-element #NDInfo #TopBox text {
     width: 100%;
     height: 100%;
-    font-family: Roboto-Light;
+    font-family: BoeingEICAS;
 }
 
 b787-10-nd-element #NDInfo #TopBox text.Value {
-    font-size: 38px;
+    font-size: 25px;
     fill: white;
 }
 
 b787-10-nd-element #NDInfo #TopBox text.ValueVor {
-    font-size: 38px;
-    fill: cyan;
+    font-size: 258px;
+    fill: #fa0afa;
 }
 
 b787-10-nd-element #NDInfo #TopBox text.ValueIls {
-    font-size: 38px;
-    fill: #ff00ff;
+    font-size: 25px;
+    fill: #fa0afa;
 }
 
 b787-10-nd-element #NDInfo #TopBox text.Small {
-    font-size: 30px;
+    font-size: 25px;
     fill: white;
 }
 
 b787-10-nd-element #NDInfo #TopBox text.Large {
-    font-size: 38px;
+    font-size: 25px;
     fill: white;
 }
 
 b787-10-nd-element #NDInfo #TopBox text.Units {
-    font-size: 30px;
-    fill: cyan;
+    font-size: 25px;
+    fill: white;
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids {
-    font-family: Roboto-Light;
+    font-family: BoeingEICAS;
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids div {
@@ -347,40 +347,40 @@ b787-10-nd-element #NDInfo #VORDMENavaids #VORDMENavaid_Right #Unit {
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids #State {
-    font-size: 30px;
-    fill: white;
+    font-size: 20px;
+    fill: #64ec28;
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids #ID {
-    font-size: 30px;
-    fill: white;
+    font-size: 20px;
+    fill: #64ec28;
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids #Mode {
-    font-size: 30px;
-    fill: white;
+    font-size: 20px;
+    fill: #64ec28;
     text-decoration: underline;
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids #Distance {
-    font-size: 30px;
-    fill: white;
+    font-size: 20px;
+    fill: #64ec28;
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids #Unit {
-    font-size: 30px;
-    fill: cyan;
+    font-size: 20px;
+    fill: #64ec28;
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids #ArrowVor {
     fill: none;
-    stroke: green;
+    stroke: #64ec28;
     stroke-width: 4px;
 }
 
 b787-10-nd-element #NDInfo #VORDMENavaids #ArrowAdf {
     fill: none;
-    stroke: cyan;
+    stroke: #00fcfc;
     stroke-width: 4px;
 }
 
@@ -400,17 +400,17 @@ b787-10-nd-element #NDInfo #Symbols svg {
 b787-10-nd-element #NDInfo #Symbols text {
     width: 100%;
     height: 100%;
-    font-family: Roboto-Bold;
+    font-family: BoeingEICAS;
 }
 
 b787-10-nd-element #NDInfo #Symbols text.Small {
     font-size: 28px;
-    fill: #009696;
+    fill: #00fcfc;
 }
 
 b787-10-nd-element #NDInfo #Symbols text.Large {
     font-size: 36px;
-    fill: #009696;
+    fill: #00fcfc;
 }
 
 b787-10-nd-element[mapstyle=rose] #Compass {
@@ -430,31 +430,43 @@ b787-10-nd-element[mapstyle=plan] #Map {
 }
 
 b787-10-nd-element[halfsize=true] #NavPanel {
-    top: 1%;
+    top: -0.5%;
+    left: -62%;
+    width: 200%;
+    height: 200%;
+}
+
+b787-10-nd-element[halfsize=true] #NavPanel #Button_Menu {
+    transform: translate(71%, 0.5%);
+}
+
+b787-10-nd-element[halfsize=true] #NavPanel #Map_Menu {
+    transform: translate(67.5%, 3.5%);
 }
 
 b787-10-nd-element[halfsize=true][mapstyle=arc] #Compass {
-    top: -36%;
+    top: -32%;
     left: -51.6%;
     width: 183%;
     height: 183%;
 }
 
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox #Speed {
-    top: 15%;
+    top: 45%;
     width: 39%;
     height: 60%;
 }
 
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox #Speed #WindArrowContainer {
-    transform: translate(18px, 90px) scale(0.5);
+    transform: translate(18px, 100px) scale(0.5);
 }
 
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox #Approach,
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox #Waypoint {
-    top: 40%;
+    top: 45%;
     height: 50%;
 }
+
 
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox text.Value,
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox text.ValueVor,
