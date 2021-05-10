@@ -360,15 +360,75 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 					if (isFinite(cruiseAltitude)) {
 						let destination = this.flightPlanManager.getDestination();
 						if (destination) {
-							let descentDuration = Math.abs(destination.altitudeinFP - cruiseAltitude) / vSpeed / 60;
+							let totalDistance = 0;
+							const destinationElevation = parseFloat(destination.infos.oneWayRunways[0].elevation) * 3.28
+							const descentAltitudeDelta = Math.abs(destinationElevation - cruiseAltitude) / 100;
+							const todDistance = descentAltitudeDelta / 3.3;
+							const indicatedSpeed = Simplane.getIndicatedSpeed();
+							let speedToLose = 0;
+							if(indicatedSpeed > 210){
+								speedToLose = indicatedSpeed - 210;
+							}
+
+							const distanceForSpeedReducing = speedToLose / 10
+
+							totalDistance = todDistance + distanceForSpeedReducing;
+
+							let todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(totalDistance);
+							let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
+							let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates);
+
+
+							SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", distanceToTOD);
+							SimVar.SetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number", totalDistance);
+
+							if (distanceToTOD < 50) {
+								if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
+									SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
+									SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+								}
+							}
+
+							if (distanceToTOD > 1) {
+								showTopOfDescent = true;
+							} else {
+								showTopOfDescent = false;
+								let lastFlightPhase = this.currentFlightPhase;
+								this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
+								Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+								if (lastFlightPhase !== FlightPhase.FLIGHT_PHASE_DESCENT) {
+									SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+								}
+							}
+
+							if (showTopOfDescent) {
+								SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 1);
+							} else {
+								SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
+							}
+
+
+
+
+
+
+							/*
+							let destinationElevation = parseFloat(destination.infos.oneWayRunways[0].elevation) * 3.28
+							let descentDuration = Math.abs(destinationElevation - cruiseAltitude) / vSpeed / 60;
+							console.log("DESTINATION ELEVATION: " + destinationElevation);
+							console.log("Cruise altitude: " + cruiseAltitude);
+							console.log("duration: " + descentDuration);
 							let descentDistance = descentDuration * groundSpeed;
+							console.log("DES distance:" + descentDistance)
 							todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(descentDistance);
 							let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
 							let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates);
 
-							SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", distanceToTOD);
+							//SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", distanceToTOD);
+							SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", 200);
 							SimVar.SetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number", descentDistance);
 
+							console.log(distanceToTOD)
 							if (distanceToTOD < 50) {
 								if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
 									SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
@@ -381,6 +441,7 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 									showTopOfDescent = true;
 								}
 							} else {
+								showTopOfDescent = true;
 								let lastFlightPhase = this.currentFlightPhase;
 								this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
 								Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
@@ -388,12 +449,8 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 									SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 								}
 							}
+							 */
 						}
-					}
-					if (showTopOfDescent) {
-						SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 1);
-					} else {
-						SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
 					}
 			}
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT) {
