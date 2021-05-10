@@ -1029,7 +1029,7 @@ class MapInstrument extends ISvgMapRootElement {
             }
 
             const todDist = SimVar.GetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number");
-            const todLLA = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(todDist);
+            const todLLA = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(todDist, true);
             this._todWaypoint.infos.coordinates = todLLA;
         } else {
             this._todWaypoint = undefined;
