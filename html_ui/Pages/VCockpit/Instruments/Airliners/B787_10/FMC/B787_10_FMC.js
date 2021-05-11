@@ -642,6 +642,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		super.Init();
 		this.aircraftType = Aircraft.AS01B;
 		if (this.urlConfig.index == 1) {
+			SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", 0);
+			SimVar.SetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number", 0);
 			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 			this._thrustTakeOffTemp = Math.ceil(oat / 10) * 10;
 			this.onInit = () => {
