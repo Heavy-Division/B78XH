@@ -129,30 +129,25 @@ class HoldsDirector {
 		const planeState = LNavDirector.getAircraftState();
 		switch (this.state) {
 			case HoldsDirectorState.ENTRY_DIRECT_INBOUND:
-				console.log("ENTRY DIRECT HOLD")
 				this.handleDirectEntry(planeState);
 				break;
 			case HoldsDirectorState.ENTRY_TEARDROP_INBOUND:
 			case HoldsDirectorState.ENTRY_TEARDROP_OUTBOUND:
 			case HoldsDirectorState.ENTRY_TEARDROP_TURNING:
-				console.log("ENTRY TEARDROP HOLD")
 				this.handleTeardropEntry(planeState);
 				break;
 			case HoldsDirectorState.ENTRY_PARALLEL_INBOUND:
 			case HoldsDirectorState.ENTRY_PARALLEL_OUTBOUND:
 			case HoldsDirectorState.ENTRY_PARALLEL_TURNING:
-				console.log("ENTRY PARALLEL HOLD")
 				this.handleParallelEntry(planeState);
 				break;
 			case HoldsDirectorState.INBOUND:
 			case HoldsDirectorState.TURNING_OUTBOUND:
 			case HoldsDirectorState.OUTBOUND:
 			case HoldsDirectorState.TURNING_INBOUND:
-				console.log("IN HOLD")
 				this.handleInHold(planeState);
 				break;
 			case HoldsDirectorState.EXITING:
-				console.log("EXITING HOLD")
 				this.handleExitingHold(planeState);
 				break;
 		}
@@ -170,20 +165,15 @@ class HoldsDirector {
 	 * @param {AircraftState} planeState The current aircraft state.
 	 */
 	handleDirectEntry(planeState) {
-		console.log('HANDLE DIRECT ENTRY');
 		const dtk = AutopilotMath.desiredTrack(this.prevFixCoords, this.fixCoords, planeState.position);
 
-		console.log("DTK: " + dtk);
-
 		if (this.isAbeam(dtk, planeState.position, this.fixCoords)) {
-			console.log('ABEAM TRUE');
 			this.recalculateHold(planeState);
 			this.cancelAlert();
 
 			SimVar.SetSimVarValue('L:WT_NAV_HOLD_INDEX', 'number', this.holdWaypointIndex);
 			this.state = HoldsDirectorState.TURNING_OUTBOUND;
 		} else {
-			console.log('ABEAM FALSE');
 			this.alertIfClose(planeState, this.fixCoords);
 			this.trackLeg(this.prevFixCoords, this.fixCoords, planeState);
 		}
@@ -247,7 +237,6 @@ class HoldsDirector {
 	 * @param {AircraftState} planeState The current aircraft state.
 	 */
 	handleInHold(planeState) {
-		console.log('HANDLE IN HOLD');
 		if (this.state === HoldsDirectorState.TURNING_OUTBOUND) {
 			const dtk = AutopilotMath.desiredTrack(this.outboundLeg[0], this.outboundLeg[1], planeState.position);
 
@@ -397,8 +386,6 @@ class HoldsDirector {
 	isAbeam(dtk, planePosition, fixCoords) {
 		const planeToFixTrack = Avionics.Utils.computeGreatCircleHeading(planePosition, fixCoords);
 		const trackDiff = Math.abs(Avionics.Utils.angleDiff(dtk, planeToFixTrack));
-		console.log("PLANE TO FIX: " + planeToFixTrack);
-		console.log('TRACK DIFF: ' + trackDiff);
 		return trackDiff > 91;
 	}
 

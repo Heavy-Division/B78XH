@@ -1014,7 +1014,7 @@ class MapInstrument extends ISvgMapRootElement {
 
     updateTodWaypoint() {
         const todDistanceRemaining = SimVar.GetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number");
-        if (todDistanceRemaining > 0.5) {
+        if (todDistanceRemaining > 1) {
             if (this._todWaypoint === undefined) {
                 // create it
                 const waypoint = new WayPoint(this._instrument);

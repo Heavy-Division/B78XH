@@ -413,7 +413,6 @@ class B787_10_FMC_PayloadManagerPage {
 							B787_10_FMC_PayloadManagerPage.isPayloadManagerExecuted = false;
 						});
 					}
-					console.log("exit");
 					this.showPage();
 				});
 			};

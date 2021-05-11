@@ -76,19 +76,14 @@ class B78XH_IRS {
 		this.checkAlignStates();
 
 		if (this.shouldBeIRSDeInited()) {
-			console.log("IRS DEINIT")
 			this.executeIRSDeinit()
 		} else {
-			console.log("IRS INIT")
 			this.executeInit();
 		}
 
 		if (this.shouldIRSStartAlign()) {
-			console.log("IRS SHOULD START ALIGN")
 			this.executeIRSAlign();
 		}
-
-		console.log("IRS UPDATE END")
 	}
 
 	executeInit() {

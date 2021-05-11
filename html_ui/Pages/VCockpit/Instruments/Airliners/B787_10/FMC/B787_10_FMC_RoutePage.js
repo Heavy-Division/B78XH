@@ -58,7 +58,6 @@ class B787_10_FMC_RoutePage {
 		if (this._activeWptIndex != actWptIndex) {
 			this._activeWptIndex = actWptIndex;
 			this._isDirty = true;
-			// console.log("active wpt changed");
 		}
 
 		if (this._isDirty || forceUpdate) {
@@ -172,7 +171,6 @@ class B787_10_FMC_RoutePage {
 	}
 
 	render() {
-		// console.log("render");
 		if (this._currentPage == 0) {
 			this.renderMainPage();
 		} else {

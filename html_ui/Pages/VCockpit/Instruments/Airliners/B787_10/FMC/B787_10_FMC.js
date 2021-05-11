@@ -297,7 +297,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 							 * Descent new implementation
 							 */
 
-							let nextAltitude = (isFinite(nextWaypoint.legAltitude1) ? Math.round(nextWaypoint.legAltitude1) : (isFinite(nextWaypoint.altitudeinFP) ? Math.round(nextWaypoint.altitudeinFP) : NaN));
+							let nextAltitude = this.getNextDescentAltitude();
 							let selectedAltitude = altitude;
 							this._selectedAltitude = altitude;
 							let shouldEnableLevelOff = null;
@@ -334,11 +334,11 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 							if (Simplane.getAutoPilotAltitudeLockActive()) {
 								if (shouldEnableLevelOff) {
-									SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number', 1);
+									SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number', 1);
 								}
 							}
 
-							let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number');
+							let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number');
 
 							if (!isLevelOffActive || altitudeInterventionPushed) {
 								if (isFinite(targetAltitude) && needUpdateAltitude) {
@@ -480,6 +480,46 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			}
 			this.updateAutopilotCooldown = this._apCooldown;
 		}
+	}
+
+	getNextDescentAltitude(){
+		let fp = this.flightPlanManager.getCurrentFlightPlan();
+		let allWaypoints = fp.waypoints.slice(fp.activeWaypointIndex);
+
+		for(let i = 0; i <= allWaypoints.length - 1; i++){
+			if(allWaypoints[i].legAltitudeDescription === 0){
+				continue;
+			}
+			if(allWaypoints[i].legAltitudeDescription === 1 && isFinite(allWaypoints[i].legAltitude1)){
+				return Math.round(allWaypoints[i].legAltitude1);
+			}
+
+			if(allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)){
+				return Math.round(allWaypoints[i].legAltitude1);
+			}
+
+			if(allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)){
+				return Math.round(allWaypoints[i].legAltitude1);
+			}
+
+			if(allWaypoints[i].legAltitudeDescription === 4 && isFinite(allWaypoints[i].legAltitude1) && isFinite(allWaypoints[i].legAltitude2)){
+				if(allWaypoints[i].legAltitude1 === allWaypoints[i].legAltitude2){
+					return Math.round(allWaypoints[i].legAltitude1);
+				}
+
+				if(allWaypoints[i].legAltitude1 < allWaypoints[i].legAltitude2){
+					let middle = (allWaypoints[i].legAltitude2 - allWaypoints[i].legAltitude1) / 2;
+					return Math.round(allWaypoints[i].legAltitude1 + middle);
+				}
+
+				if(allWaypoints[i].legAltitude1 > allWaypoints[i].legAltitude2){
+					let middle = (allWaypoints[i].legAltitude1 - allWaypoints[i].legAltitude2) / 2;
+					return Math.round(allWaypoints[i].legAltitude2 + middle);
+				}
+			}
+		}
+
+		return NaN;
 	}
 
 	/**
@@ -1246,7 +1286,13 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				return;
 			}
 
-			if (SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number')) {
+			if (SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number') && !shouldOverrideCruiseAltitude) {
+				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number', 0);
+				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				return;
+			}
+
+			if (SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number') || SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number')) {
 				SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 				return;
 			}

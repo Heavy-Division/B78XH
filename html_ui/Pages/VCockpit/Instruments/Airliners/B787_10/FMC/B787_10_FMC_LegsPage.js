@@ -423,7 +423,6 @@ class B787_10_FMC_LegsPage {
 							// console.log("scratchPadWaypointIndex: " + scratchPadWaypointIndex);
 
 							this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
-								console.log("SET ACTIVE WAYPOINT Y111")
 								this._fmc.flightPlanManager.setActiveWaypointIndex(scratchPadWaypointIndex + 1, () => {
 									this._fmc.activateRoute(false, () => {
 										this.resetAfterOp();

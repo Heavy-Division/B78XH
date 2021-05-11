@@ -350,12 +350,7 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 				/**
 				 * Basic TOD to destination
 				 */
-					let vSpeed = 3000;
 					let cruiseAltitude = SimVar.GetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number')
-					let cruiseFlightLevel = this.cruiseFlightLevel * 100;
-					let groundSpeed = Simplane.getGroundSpeed();
-					groundSpeed = Math.min(groundSpeed, 220);
-					let todCoordinates;
 					let showTopOfDescent = false;
 					if (isFinite(cruiseAltitude)) {
 						let destination = this.flightPlanManager.getDestination();
@@ -374,7 +369,7 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 
 							totalDistance = todDistance + distanceForSpeedReducing;
 
-							let todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(totalDistance);
+							let todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(totalDistance, true);
 							let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
 							let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates);
 

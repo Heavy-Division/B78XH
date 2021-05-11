@@ -187,28 +187,23 @@ class B78XHNavModeSelector {
 			if (!arm) {
 				SimVar.SetSimVarValue("L:AP_HEADING_HOLD_ACTIVE", "number", 0);
 				if (SimVar.GetSimVarValue("AUTOPILOT APPROACH HOLD", "boolean")) {
-					console.log("LNAV APPROACH HOLD: TRUE")
 					return;
 				}
-				console.log("LNAV ACTIVATE: TRUE")
 				SimVar.SetSimVarValue("L:AP_LNAV_ACTIVE", "number", 1);
 				SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 2);
 				SimVar.SetSimVarValue("K:AP_NAV1_HOLD_ON", "number", 1);
 				SimVar.SetSimVarValue("L:AP_HEADING_HOLD_ACTIVE", "number", 0);
 
 				if (activateHeadingHold) {
-					console.log("LNAV ACTIVATE HEADING HOLD: TRUE")
 					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
 				}
 
 				this.currentLateralActiveState = LateralNavModeState.LNAV;
 				this.currentLateralArmedState = LateralNavModeState.NONE;
 			} else {
-				console.log("LNAV ARM: TRUE")
 				this.currentLateralArmedState = LateralNavModeState.LNAV;
 			}
 		} else {
-			console.log("LNAV MODE IS NOT FMS");
 			SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
 			if (this.lNavModeState === LNavModeState.NAV1) {
 				SimVar.SetSimVarValue('K:AP_NAV_SELECT_SET', 'number', 1);
