@@ -581,19 +581,19 @@ class LNavDirectorOptions {
     this.minimumTrackingDistance = 0.2;
 
     /** The maximum bank angle of the aircraft. */
-    this.maxBankAngle = 25;
+    this.maxBankAngle = 30;
 
     /** The rate of bank in degrees per second. */
-    this.bankRate = 2;
+    this.bankRate = 2.5;
 
     /** The maximum turn angle in degrees to calculate turn anticipation to. */
     this.maxTurnAnticipationAngle = 110;
 
     /** A function that returns the maximum turn anticipation distance. */
-    this.maxTurnAnticipationDistance = (planeState) => planeState.trueAirspeed < 350 ? 7 : 10;
+    this.maxTurnAnticipationDistance = (planeState) => planeState.trueAirspeed < 350 ? 7 : 13;
 
     /** The number of degrees left in the turn that turn completion will stop and rollout/tracking will begin. */
-    this.degreesRollout = 25;
+    this.degreesRollout = 5;
   }
 }
 
