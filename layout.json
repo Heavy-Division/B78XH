@@ -102,8 +102,8 @@
         },
         {
             "path": "html_ui/WTPages/Autopilot/LNavDirector.js",
-            "size": 27623,
-            "date": 132645649564037100
+            "size": 27625,
+            "date": 132652437174625100
         },
         {
             "path": "html_ui/WTPages/Autopilot/LocDirector.js",
@@ -691,11 +691,6 @@
             "date": 132581952839997470
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.svg",
-            "size": 2414,
-            "date": 132581952839997470
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_NDB_WAYPOINT.png",
             "size": 982,
             "date": 132581952840007440
@@ -704,6 +699,11 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_NDB_WAYPOINT.svg",
             "size": 909,
             "date": 132581952840007440
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.svg",
+            "size": 2414,
+            "date": 132581952839997470
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_PLANE.png",
