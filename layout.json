@@ -173,7 +173,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Core/VCockpit.html",
             "size": 1420,
-            "date": 132652131196590880
+            "date": 132652235524797600
         },
         {
             "path": "SimObjects/Airplanes/Asobo_B787_10/TEXTURE/787_10_COCKPIT_MAINPANEL_ALBD.PNG.DDS",
@@ -393,7 +393,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js",
             "size": 55245,
-            "date": 132652099059235820
+            "date": 132652204041770220
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ApproachPage.js",
@@ -417,8 +417,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyConfigurationPage.js",
-            "size": 1478,
-            "date": 132652128300400560
+            "size": 2076,
+            "date": 132652227156756020
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyIRSPage.js",
@@ -454,6 +454,11 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PayloadManagerPage.js",
             "size": 16352,
             "date": 132652103610853140
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PerfInitPage.js",
+            "size": 3428,
+            "date": 132652234935069460
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RouteDataPage.js",
