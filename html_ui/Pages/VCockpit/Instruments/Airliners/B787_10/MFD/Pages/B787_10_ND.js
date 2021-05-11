@@ -1,3 +1,5 @@
+Include.addScript('/Heavy/Utils/HeavyDataStorage.js');
+
 class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 	constructor() {
 		super(...arguments);
