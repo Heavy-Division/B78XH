@@ -138,6 +138,8 @@ class B787_10_FMC_ProgressPage {
 			[''],
 			['<POS REPORT', '<POS REF']
 		]);
+
+		fmc.updateSideButtonActiveStatus();
 	}
 
 	static computeEtaToWaypoint(distance, groundSpeed){
