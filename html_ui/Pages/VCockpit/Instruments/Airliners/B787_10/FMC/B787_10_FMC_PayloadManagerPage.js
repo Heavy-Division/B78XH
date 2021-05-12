@@ -82,11 +82,10 @@ class B787_10_FMC_PayloadManagerPage {
 
 	static get getMaxFuel() {
 		let maxGallons = SimVar.GetSimVarValue('FUEL TOTAL CAPACITY', 'Gallons');
-		console.log('MAX GALLONS: ' + maxGallons);
 		if(B787_10_FMC_HeavyConfigurationPage.useImperial()) {
 			return maxGallons;
 		}
-		return (maxGallons * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms')).toFixed(2); //33384
+		return (maxGallons * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms')).toFixed(2);
 	}
 
 	static get getMinFuel(){
