@@ -83,6 +83,12 @@ class B787_10_FMC_ProgressPage {
 			destinationCell = destination.ident;
 			destinationDistance = destination.cumulativeDistanceInFP;
 			if (waypointActive) {
+				const missed = fmc.flightPlanManager.getCurrentFlightPlan().approach;
+				const mWayipoints = missed.waypoints;
+				if(mWayipoints.length > 0){
+					const cumulativeToApproach = mWayipoints[mWayipoints.length - 1].cumulativeDistanceInFP;
+					destinationDistance = cumulativeToApproach;
+				}
 				destinationDistance -= waypointActive.cumulativeDistanceInFP;
 				destinationDistance += fmc.flightPlanManager.getDistanceToActiveWaypoint();
 				if (isFinite(destinationDistance)) {
