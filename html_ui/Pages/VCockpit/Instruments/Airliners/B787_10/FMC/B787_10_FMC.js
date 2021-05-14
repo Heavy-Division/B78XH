@@ -1069,13 +1069,13 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let dCI = this.getCostIndexFactor();
 		let speed = 280 * (1 - dCI) + 300 * dCI;
 		if (this.overSpeedLimitThreshold) {
-			if (Simplane.getAltitude() < 9800) {
-				speed = Math.min(speed, 250);
+			if (Simplane.getAltitude() < 10700) {
+				speed = Math.min(speed, 240);
 				this.overSpeedLimitThreshold = false;
 			}
 		} else if (!this.overSpeedLimitThreshold) {
-			if (Simplane.getAltitude() < 10000) {
-				speed = Math.min(speed, 250);
+			if (Simplane.getAltitude() < 10700) {
+				speed = Math.min(speed, 240);
 			} else {
 				this.overSpeedLimitThreshold = true;
 			}
