@@ -350,32 +350,35 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 				/**
 				 * Basic TOD to destination
 				 */
-					let cruiseAltitude = SimVar.GetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number')
-					let showTopOfDescent = false;
-					if (isFinite(cruiseAltitude)) {
-						let destination = this.flightPlanManager.getDestination();
-						if (destination) {
+				let cruiseAltitude = SimVar.GetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number');
+				let showTopOfDescent = false;
+				if (isFinite(cruiseAltitude)) {
+					let destination = this.flightPlanManager.getDestination();
+					if (destination) {
+						let firstTODWaypoint = this.getWaypointForTODCalculation();
+						if(firstTODWaypoint){
 							let totalDistance = 0;
-							const destinationElevation = parseFloat(destination.infos.oneWayRunways[0].elevation) * 3.28
+
+							const destinationElevation = firstTODWaypoint.targetAltitude;
 							const descentAltitudeDelta = Math.abs(destinationElevation - cruiseAltitude) / 100;
 							const todDistance = descentAltitudeDelta / 3.3;
 							const indicatedSpeed = Simplane.getIndicatedSpeed();
 							let speedToLose = 0;
-							if(indicatedSpeed > 210){
-								speedToLose = indicatedSpeed - 210;
+							if (indicatedSpeed > 220) {
+								speedToLose = indicatedSpeed - 220;
 							}
 
-							const distanceForSpeedReducing = speedToLose / 10
+							const distanceForSpeedReducing = speedToLose / 10;
 
-							totalDistance = todDistance + distanceForSpeedReducing;
+							totalDistance = todDistance + distanceForSpeedReducing + firstTODWaypoint.distanceFromDestinationToWaypoint;
 
 							let todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(totalDistance, true);
 							let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
 							let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates);
 
 
-							SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", distanceToTOD);
-							SimVar.SetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number", totalDistance);
+							SimVar.SetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number', distanceToTOD);
+							SimVar.SetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number', totalDistance);
 
 							if (distanceToTOD < 50) {
 								if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
@@ -401,52 +404,9 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 							} else {
 								SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
 							}
-
-
-
-
-
-
-							/*
-							let destinationElevation = parseFloat(destination.infos.oneWayRunways[0].elevation) * 3.28
-							let descentDuration = Math.abs(destinationElevation - cruiseAltitude) / vSpeed / 60;
-							console.log("DESTINATION ELEVATION: " + destinationElevation);
-							console.log("Cruise altitude: " + cruiseAltitude);
-							console.log("duration: " + descentDuration);
-							let descentDistance = descentDuration * groundSpeed;
-							console.log("DES distance:" + descentDistance)
-							todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(descentDistance);
-							let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
-							let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates);
-
-							//SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", distanceToTOD);
-							SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", 200);
-							SimVar.SetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number", descentDistance);
-
-							console.log(distanceToTOD)
-							if (distanceToTOD < 50) {
-								if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
-									SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
-									SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
-								}
-							}
-
-							if (distanceToTOD > 1) {
-								if (todCoordinates) {
-									showTopOfDescent = true;
-								}
-							} else {
-								showTopOfDescent = true;
-								let lastFlightPhase = this.currentFlightPhase;
-								this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
-								Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
-								if (lastFlightPhase !== FlightPhase.FLIGHT_PHASE_DESCENT) {
-									SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
-								}
-							}
-							 */
 						}
 					}
+				}
 			}
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT) {
 				SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
@@ -480,5 +440,82 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 			SimVar.SetSimVarValue('L:AIRLINER_FLIGHT_PHASE', 'number', this.currentFlightPhase);
 			this.onFlightPhaseChanged();
 		}
+	}
+
+	getWaypointForTODCalculation() {
+		let getWaypoint = (allWaypoints) => {
+			let onlyNonStrict = true;
+			for (let i = 0; i <= allWaypoints.length - 1; i++) {
+				if (allWaypoints[i].legAltitudeDescription === 0) {
+					continue;
+				}
+				if (allWaypoints[i].legAltitudeDescription === 1 && isFinite(allWaypoints[i].legAltitude1)) {
+					return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+				}
+
+				if (allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)) {
+					continue;
+					//return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+				}
+
+				if (allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)) {
+					return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+				}
+
+				if (allWaypoints[i].legAltitudeDescription === 4 && isFinite(allWaypoints[i].legAltitude1) && isFinite(allWaypoints[i].legAltitude2)) {
+					if (allWaypoints[i].legAltitude1 === allWaypoints[i].legAltitude2) {
+						return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+					}
+
+					if (allWaypoints[i].legAltitude1 < allWaypoints[i].legAltitude2) {
+						let middle = (allWaypoints[i].legAltitude2 - allWaypoints[i].legAltitude1) / 2;
+						return {
+							fix: allWaypoints[i],
+							targetAltitude: Math.round(allWaypoints[i].legAltitude1 + middle)
+						};
+					}
+
+					if (allWaypoints[i].legAltitude1 > allWaypoints[i].legAltitude2) {
+						let middle = (allWaypoints[i].legAltitude1 - allWaypoints[i].legAltitude2) / 2;
+						return {
+							fix: allWaypoints[i],
+							targetAltitude: Math.round(allWaypoints[i].legAltitude2 + middle)
+						};
+					}
+				}
+			}
+			return undefined;
+		};
+		let waypoint = undefined;
+
+		let destination = this.flightPlanManager.getDestination();
+		if (destination) {
+			let arrivalSegment = this.flightPlanManager.getCurrentFlightPlan().arrival;
+			let approachSegment = this.flightPlanManager.getCurrentFlightPlan().approach;
+
+			waypoint = getWaypoint(arrivalSegment.waypoints);
+
+			if (!waypoint) {
+				waypoint = getWaypoint(approachSegment.waypoints);
+			}
+
+			if (!waypoint) {
+				waypoint = {
+					fix: destination,
+					targetAltitude: Math.round(parseFloat(destination.infos.oneWayRunways[0].elevation) * 3.28)
+				};
+			}
+
+			if(waypoint){
+				if(approachSegment.waypoints.length > 0){
+					const cumulativeToApproach = approachSegment.waypoints[approachSegment.waypoints.length - 1].cumulativeDistanceInFP;
+					waypoint.distanceFromDestinationToWaypoint = cumulativeToApproach - waypoint.fix.cumulativeDistanceInFP
+				} else {
+					waypoint.distanceFromDestinationToWaypoint = destination.cumulativeDistanceInFP - waypoint.fix.cumulativeDistanceInFP;
+				}
+			}
+		}
+
+		return waypoint;
 	}
 }
