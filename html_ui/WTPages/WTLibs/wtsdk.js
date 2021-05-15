@@ -825,13 +825,14 @@
                 });
             });
         }
-        static SaveToGame(fpln) {
+
+        static SaveToGameForce(fpln , force = true){
             return __awaiter(this, void 0, void 0, function* () {
                 // eslint-disable-next-line no-async-promise-executor
                 return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                     FlightPlanAsoboSync.init();
                     const plan = fpln.getCurrentFlightPlan();
-                    if (WTDataStore.get('WT_CJ4_FPSYNC', 0) !== 0 && (plan.checksum !== this.fpChecksum)) {
+                    if (WTDataStore.get('WT_CJ4_FPSYNC', 0) !== 0 && ((plan.checksum !== this.fpChecksum) || force === true)) {
                         // await Coherent.call("CREATE_NEW_FLIGHTPLAN");
                         yield Coherent.call("SET_CURRENT_FLIGHTPLAN_INDEX", 0).catch(console.log);
                         yield Coherent.call("CLEAR_CURRENT_FLIGHT_PLAN").catch(console.log);
@@ -843,29 +844,49 @@
                                 yield Coherent.call("SET_DESTINATION", plan.destinationAirfield.icao, false);
                             }
                             let coIndex = 1;
-                            for (let i = 0; i < plan.enroute.waypoints.length; i++) {
-                                const wpt = plan.enroute.waypoints[i];
+                            let waypointsToSync = [];
+                            waypointsToSync = [...plan.departure.waypoints, ...plan.enroute.waypoints, ...plan.arrival.waypoints, ...plan.approach.waypoints]
+                            let directIndex = waypointsToSync.findIndex((w) => {
+                                return w.ident === '$DIR';
+                            });
+
+                            if(directIndex !== -1){
+                                waypointsToSync.splice(0, directIndex + 1);
+                            }
+
+                            for (let i = 0; i < waypointsToSync.length; i++) {
+                                const wpt = waypointsToSync[i];
+                                console.log("To SYNC: " + wpt.icao)
+                                console.log("To SYNC: " + wpt.ident)
                                 if (wpt.icao.trim() !== "") {
                                     yield Coherent.call("ADD_WAYPOINT", wpt.icao, coIndex, false);
                                     coIndex++;
                                 }
                             }
                             yield Coherent.call("SET_ORIGIN_RUNWAY_INDEX", plan.procedureDetails.originRunwayIndex).catch(console.log);
+                            /*
                             yield Coherent.call("SET_DEPARTURE_RUNWAY_INDEX", plan.procedureDetails.departureRunwayIndex);
                             yield Coherent.call("SET_DEPARTURE_PROC_INDEX", plan.procedureDetails.departureIndex);
                             yield Coherent.call("SET_DEPARTURE_ENROUTE_TRANSITION_INDEX", plan.procedureDetails.departureTransitionIndex);
+                            */
                             yield Coherent.call("SET_ARRIVAL_RUNWAY_INDEX", plan.procedureDetails.arrivalRunwayIndex);
+                            /*
                             yield Coherent.call("SET_ARRIVAL_PROC_INDEX", plan.procedureDetails.arrivalIndex);
                             yield Coherent.call("SET_ARRIVAL_ENROUTE_TRANSITION_INDEX", plan.procedureDetails.arrivalTransitionIndex);
                             yield Coherent.call("SET_APPROACH_INDEX", plan.procedureDetails.approachIndex).then(() => {
                                 Coherent.call("SET_APPROACH_TRANSITION_INDEX", plan.procedureDetails.approachTransitionIndex);
                             });
+                            */
                         }
                         this.fpChecksum = plan.checksum;
                     }
                     Coherent.call("RECOMPUTE_ACTIVE_WAYPOINT_INDEX");
                 }));
             });
+        }
+
+        static SaveToGame(fpln) {
+            this.SaveToGameForce(fpln, false);
         }
     }
     FlightPlanAsoboSync.fpChecksum = 0;

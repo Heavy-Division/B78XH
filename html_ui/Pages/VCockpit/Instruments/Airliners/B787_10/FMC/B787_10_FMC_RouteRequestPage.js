@@ -42,6 +42,7 @@ class B787_10_FMC_RouteRequestPage {
 				updateFlightNumber();
 				updateCostIndex();
 				updateCruiseAltitude();
+				this.fmc.flightPlanManager.pauseSync();
 				updateRoute();
 			};
 
@@ -178,16 +179,19 @@ class B787_10_FMC_RouteRequestPage {
 					protection++;
 					if (protection > 400) {
 						iterator = 20000;
+						this.fmc.flightPlanManager.resumeSync();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 						return;
 					}
 					if (!this.waypoints[iterator]) {
 						iterator = 20000;
+						this.fmc.flightPlanManager.resumeSync();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 						return;
 					}
 
 					if (iterator >= this.waypoints.length) {
+						this.fmc.flightPlanManager.resumeSync();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}
 

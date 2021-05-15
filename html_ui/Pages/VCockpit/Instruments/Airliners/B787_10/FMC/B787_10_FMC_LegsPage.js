@@ -376,6 +376,7 @@ class B787_10_FMC_LegsPage {
 								this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
 									this._fmc.flightPlanManager.activateDirectToByIndex(scratchPadWaypointIndex, () => {
 										this._fmc.activateRoute(true, () => {
+
 											this.resetAfterOp();
 										});
 									});
@@ -514,6 +515,7 @@ class B787_10_FMC_LegsPage {
 												if (isDirectTo) {
 													this._fmc.flightPlanManager.activateDirectToByIndex(selectedWpIndex, () => {
 														this._fmc.activateRoute(true, () => {
+															FlightPlanAsoboSync.SaveToGameForce(this._fmc.flightPlanManager);
 															this.resetAfterOp();
 														});
 													});
@@ -609,6 +611,7 @@ class B787_10_FMC_LegsPage {
 					this._fmc.fpHasChanged = false;
 					this._fmc.selectMode = B787_10_FMC_LegsPage.SELECT_MODE.NONE;
 					this._fmc.eraseTemporaryFlightPlan(() => {
+						FlightPlanAsoboSync.SaveToGameForce(this._fmc.flightPlanManager);
 						this.resetAfterOp();
 					});
 				}
