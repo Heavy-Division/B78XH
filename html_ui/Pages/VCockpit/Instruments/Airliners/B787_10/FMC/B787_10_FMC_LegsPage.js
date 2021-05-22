@@ -418,7 +418,7 @@ class B787_10_FMC_LegsPage {
 									});
 								}
 							}
-						} else if (i == 0 && this._currentPage == 1) {
+						}/* else if (i == 0 && this._currentPage == 1) {
 							const scratchPadWaypointIndex = this._fmc.selectedWaypoint.index;
 							// console.log("modifying from line");
 							// console.log("scratchPadWaypointIndex: " + scratchPadWaypointIndex);
@@ -430,7 +430,7 @@ class B787_10_FMC_LegsPage {
 									});
 								});
 							});
-						}
+						}*/
 						break;
 					}
 					case B787_10_FMC_LegsPage.SELECT_MODE.NEW: {
