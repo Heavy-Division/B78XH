@@ -856,8 +856,8 @@
 
                             for (let i = 0; i < waypointsToSync.length; i++) {
                                 const wpt = waypointsToSync[i];
-                                console.log("To SYNC: " + wpt.icao)
-                                console.log("To SYNC: " + wpt.ident)
+                                //console.log("To SYNC: " + wpt.icao)
+                                //console.log("To SYNC: " + wpt.ident)
                                 if (wpt.icao.trim() !== "") {
                                     yield Coherent.call("ADD_WAYPOINT", wpt.icao, coIndex, false);
                                     coIndex++;
