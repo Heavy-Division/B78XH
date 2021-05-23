@@ -833,7 +833,9 @@
                     FlightPlanAsoboSync.init();
                     const plan = fpln.getCurrentFlightPlan();
                     if (WTDataStore.get('WT_CJ4_FPSYNC', 0) !== 0 && ((plan.checksum !== this.fpChecksum) || force === true)) {
-                        // await Coherent.call("CREATE_NEW_FLIGHTPLAN");
+                        if(force === true){
+                            yield Coherent.call("CREATE_NEW_FLIGHTPLAN");
+                        }
                         yield Coherent.call("SET_CURRENT_FLIGHTPLAN_INDEX", 0).catch(console.log);
                         yield Coherent.call("CLEAR_CURRENT_FLIGHT_PLAN").catch(console.log);
                         if (plan.hasOrigin && plan.hasDestination) {
@@ -856,8 +858,7 @@
 
                             for (let i = 0; i < waypointsToSync.length; i++) {
                                 const wpt = waypointsToSync[i];
-                                //console.log("To SYNC: " + wpt.icao)
-                                //console.log("To SYNC: " + wpt.ident)
+                                //console.log("To SYNC: " + wpt.icao + "To SYNC: " + wpt.ident)
                                 if (wpt.icao.trim() !== "") {
                                     yield Coherent.call("ADD_WAYPOINT", wpt.icao, coIndex, false);
                                     coIndex++;

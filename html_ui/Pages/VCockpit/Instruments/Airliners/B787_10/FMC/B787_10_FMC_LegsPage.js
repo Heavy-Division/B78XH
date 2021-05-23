@@ -434,7 +434,7 @@ class B787_10_FMC_LegsPage {
 						break;
 					}
 					case B787_10_FMC_LegsPage.SELECT_MODE.NEW: {
-						if ((i >= 1 && this._currentPage == 1) || this._currentPage > 1) {
+						if ((i >= 0 && this._currentPage == 1) || this._currentPage > 1) {
 
 							if (waypoint && waypoint.fix) {
 								if (waypoint.fix.icao === "$EMPTY") {
@@ -515,7 +515,6 @@ class B787_10_FMC_LegsPage {
 												if (isDirectTo) {
 													this._fmc.flightPlanManager.activateDirectToByIndex(selectedWpIndex, () => {
 														this._fmc.activateRoute(true, () => {
-															FlightPlanAsoboSync.SaveToGameForce(this._fmc.flightPlanManager);
 															this.resetAfterOp();
 														});
 													});
@@ -536,14 +535,14 @@ class B787_10_FMC_LegsPage {
 									});
 								}
 							}
-						} else if (i == 0 && this._currentPage == 1) {
+						}/* else if (i == 0 && this._currentPage == 1) {
 							this._fmc.showErrorMessage("UNABLE ADD FROM WPT");
-						}
+						}*/
 						break;
 					}
 					case B787_10_FMC_LegsPage.SELECT_MODE.DELETE: {
 						// DELETE WAYPOINT
-						if ((i > 1 && this._currentPage == 1) || this._currentPage > 1) {
+						if ((i >= 0 && this._currentPage == 1) || this._currentPage > 1) {
 
 							this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
 								if (waypoint.fix.icao === '$DISCO') {
