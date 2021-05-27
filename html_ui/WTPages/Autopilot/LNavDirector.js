@@ -578,22 +578,22 @@ class LNavDirectorOptions {
      * value is used to avoid swinging towards the active waypoint when the waypoint is close,
      * if the plane is off track.
      */
-    this.minimumTrackingDistance = 0.2;
+    this.minimumTrackingDistance = 1.5;
 
     /** The maximum bank angle of the aircraft. */
-    this.maxBankAngle = 30;
+    this.maxBankAngle = 25;
 
     /** The rate of bank in degrees per second. */
-    this.bankRate = 2.5;
+    this.bankRate = 1.5;
 
     /** The maximum turn angle in degrees to calculate turn anticipation to. */
     this.maxTurnAnticipationAngle = 110;
 
     /** A function that returns the maximum turn anticipation distance. */
-    this.maxTurnAnticipationDistance = (planeState) => planeState.trueAirspeed < 350 ? 7 : 13;
+    this.maxTurnAnticipationDistance = (planeState) => planeState.trueAirspeed < 350 ? 7 : 10;
 
     /** The number of degrees left in the turn that turn completion will stop and rollout/tracking will begin. */
-    this.degreesRollout = 5;
+    this.degreesRollout = 15;
   }
 }
 
