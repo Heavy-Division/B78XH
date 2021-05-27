@@ -987,7 +987,7 @@
          * @returns The hold entry type for a given set of courses.
          */
         static calculateEntryType(holdCourse, inboundCourse, turnDirection) {
-            const courseDiff = Avionics.Utils.angleDiff(inboundCourse, holdCourse);
+            const courseDiff = Avionics.Utils.diffAngle(inboundCourse, holdCourse);
             if (turnDirection === exports.HoldTurnDirection.Right) {
                 if (courseDiff >= -130 && courseDiff <= 70) {
                     return exports.HoldEntry.Direct;
@@ -2047,7 +2047,7 @@
             const groundSpeed = SimVar.GetSimVarValue("GPS GROUND SPEED", "knots");
             const planeHeading = SimVar.GetSimVarValue("PLANE HEADING DEGREES TRUE", "Radians") * Avionics.Utils.RAD2DEG;
             const headingToFix = Avionics.Utils.computeGreatCircleHeading(planeCoords, waypoint.infos.coordinates);
-            const angleDiff = Math.abs(Avionics.Utils.angleDiff(planeHeading, headingToFix));
+            const angleDiff = Math.abs(Avionics.Utils.diffAngle(planeHeading, headingToFix));
             const turnDurationSeconds = (angleDiff / 3) + 6;
             const interceptDistance = (groundSpeed / 60 / 60) * turnDurationSeconds * 1.25;
             const createInterceptPoint = (coords) => {
@@ -3140,9 +3140,9 @@
                 if (runways && runways.length > 0) {
                     const direction = Simplane.getHeadingMagnetic();
                     let bestRunway = runways[0];
-                    let bestDeltaAngle = Math.abs(Avionics.Utils.angleDiff(direction, bestRunway.direction));
+                    let bestDeltaAngle = Math.abs(Avionics.Utils.diffAngle(direction, bestRunway.direction));
                     for (let i = 1; i < runways.length; i++) {
-                        const deltaAngle = Math.abs(Avionics.Utils.angleDiff(direction, runways[i].direction));
+                        const deltaAngle = Math.abs(Avionics.Utils.diffAngle(direction, runways[i].direction));
                         if (deltaAngle < bestDeltaAngle) {
                             bestDeltaAngle = deltaAngle;
                             bestRunway = runways[i];
