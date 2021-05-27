@@ -401,7 +401,7 @@ class B787_10_FMC_LegsPage {
 								if (isMovable) {
 									const removeWaypointForLegsMethod = (callback = EmptyCallback.Void) => {
 										if (lskWaypointIndex < scratchPadWaypointIndex) {
-											this._fmc.flightPlanManager.removeWaypoint(lskWaypointIndex - 1, false, () => {
+											this._fmc.flightPlanManager.removeWaypoint(lskWaypointIndex, false, () => {
 												scratchPadWaypointIndex--;
 												removeWaypointForLegsMethod(callback);
 											});
