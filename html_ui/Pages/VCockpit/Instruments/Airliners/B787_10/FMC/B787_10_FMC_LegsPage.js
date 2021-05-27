@@ -376,6 +376,7 @@ class B787_10_FMC_LegsPage {
 								this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
 									this._fmc.flightPlanManager.activateDirectToByIndex(scratchPadWaypointIndex, () => {
 										this._fmc.activateRoute(true, () => {
+
 											this.resetAfterOp();
 										});
 									});
@@ -400,7 +401,7 @@ class B787_10_FMC_LegsPage {
 								if (isMovable) {
 									const removeWaypointForLegsMethod = (callback = EmptyCallback.Void) => {
 										if (lskWaypointIndex < scratchPadWaypointIndex) {
-											this._fmc.flightPlanManager.removeWaypoint(lskWaypointIndex - 1, false, () => {
+											this._fmc.flightPlanManager.removeWaypoint(lskWaypointIndex, false, () => {
 												scratchPadWaypointIndex--;
 												removeWaypointForLegsMethod(callback);
 											});
@@ -417,7 +418,7 @@ class B787_10_FMC_LegsPage {
 									});
 								}
 							}
-						} else if (i == 0 && this._currentPage == 1) {
+						}/* else if (i == 0 && this._currentPage == 1) {
 							const scratchPadWaypointIndex = this._fmc.selectedWaypoint.index;
 							// console.log("modifying from line");
 							// console.log("scratchPadWaypointIndex: " + scratchPadWaypointIndex);
@@ -429,11 +430,11 @@ class B787_10_FMC_LegsPage {
 									});
 								});
 							});
-						}
+						}*/
 						break;
 					}
 					case B787_10_FMC_LegsPage.SELECT_MODE.NEW: {
-						if ((i >= 1 && this._currentPage == 1) || this._currentPage > 1) {
+						if ((i >= 0 && this._currentPage == 1) || this._currentPage > 1) {
 
 							if (waypoint && waypoint.fix) {
 								if (waypoint.fix.icao === "$EMPTY") {
@@ -534,14 +535,14 @@ class B787_10_FMC_LegsPage {
 									});
 								}
 							}
-						} else if (i == 0 && this._currentPage == 1) {
+						}/* else if (i == 0 && this._currentPage == 1) {
 							this._fmc.showErrorMessage("UNABLE ADD FROM WPT");
-						}
+						}*/
 						break;
 					}
 					case B787_10_FMC_LegsPage.SELECT_MODE.DELETE: {
 						// DELETE WAYPOINT
-						if ((i > 1 && this._currentPage == 1) || this._currentPage > 1) {
+						if ((i >= 0 && this._currentPage == 1) || this._currentPage > 1) {
 
 							this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
 								if (waypoint.fix.icao === '$DISCO') {
@@ -609,6 +610,7 @@ class B787_10_FMC_LegsPage {
 					this._fmc.fpHasChanged = false;
 					this._fmc.selectMode = B787_10_FMC_LegsPage.SELECT_MODE.NONE;
 					this._fmc.eraseTemporaryFlightPlan(() => {
+						FlightPlanAsoboSync.SaveToGameForce(this._fmc.flightPlanManager);
 						this.resetAfterOp();
 					});
 				}
