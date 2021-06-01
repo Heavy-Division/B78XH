@@ -1,6 +1,6 @@
 # B78XH (B787-10 Heavy)
 
-[![Discord](https://img.shields.io/discord/808476259016769546?color=7289da&logoColor=ffffff&labelColor=99aab5&logo=discord&label=)](https://discord.gg/Hh84CanyHt)
+[![Discord](https://img.shields.io/discord/808476259016769546?color=7289da&logoColor=ffffff&labelColor=99aab5&logo=discord&label=)](https://discord.gg/CfHuVbWfpQ)
 
 ## About
 
