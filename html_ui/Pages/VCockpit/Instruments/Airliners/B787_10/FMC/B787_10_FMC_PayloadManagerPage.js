@@ -316,6 +316,31 @@ class B787_10_FMC_PayloadManagerPage {
 		 * "100000 lbs" -> "lbs 100000"
 		 * "lbs 100000" => "lbs 100000"
 		 */
+		let weightPerGallon;
+		let units;
+		let payloadModifier;
+		let useImperial = B787_10_FMC_HeavyConfigurationPage.useImperial();
+		if(useImperial){
+			weightPerGallon = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'pounds');
+			units = 'Pounds';
+			payloadModifier = 1.0;
+		} else {
+			weightPerGallon = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms');
+			units = 'Kg';
+			payloadModifier = 0.45359237;
+		}
+
+		const totalFuel = this.getTotalFuel() * weightPerGallon;
+		const fobToRender = totalFuel.toFixed(2);
+		const fobReqToRender = (B787_10_FMC_PayloadManagerPage.requestedFuel ? (B787_10_FMC_PayloadManagerPage.requestedFuel * weightPerGallon).toFixed(2) : fobToRender);
+
+		const totalPayload = this.getTotalPayload(useImperial);
+
+		const payloadToRender = totalPayload.toFixed(0);
+		const payloadReqToRender = (B787_10_FMC_PayloadManagerPage.requestedPayload ? (B787_10_FMC_PayloadManagerPage.requestedPayload * payloadModifier).toFixed(0) : payloadToRender);
+
+
+		(B787_10_FMC_PayloadManagerPage.requestedFuel ? B787_10_FMC_PayloadManagerPage.requestedFuel.toFixed(2) : this.getTotalFuel().toFixed(2));
 
 		rows[0][0] = 'PAYLOAD MANAGER';
 		rows[1][0] = 'REQ VALUES';
@@ -324,14 +349,14 @@ class B787_10_FMC_PayloadManagerPage {
 		rows[3][1] = 'CG';
 		rows[4][0] = (B787_10_FMC_PayloadManagerPage.requestedCenterOfGravity ? B787_10_FMC_PayloadManagerPage.requestedCenterOfGravity.toFixed(2) + '%' : B787_10_FMC_PayloadManagerPage.centerOfGravity.toFixed(2) + '%');
 		rows[4][1] = this.getCenterOfGravity().toFixed(2) + '%';
-		rows[5][0] = 'FOB (Gallons)';
-		rows[5][1] = '(FOB (Gallons';
-		rows[6][0] = (B787_10_FMC_PayloadManagerPage.requestedFuel ? B787_10_FMC_PayloadManagerPage.requestedFuel.toFixed(2) : this.getTotalFuel().toFixed(2));
-		rows[6][1] = this.getTotalFuel().toFixed(2);
-		rows[7][0] = 'PAYLOAD (Pounds)';
-		rows[7][1] = '(PAYLOAD (Pounds';
-		rows[8][0] = (B787_10_FMC_PayloadManagerPage.requestedPayload ? B787_10_FMC_PayloadManagerPage.requestedPayload.toFixed(0) : this.getTotalPayload(true).toFixed(0));
-		rows[8][1] = this.getTotalPayload(true).toFixed(0);
+		rows[5][0] = 'FOB (' + units + ')';
+		rows[5][1] = '(FOB (' + units + '';
+		rows[6][0] = fobReqToRender;
+		rows[6][1] = fobToRender;
+		rows[7][0] = 'PAYLOAD (' + units + ')';
+		rows[7][1] = '(PAYLOAD (' + units + '';
+		rows[8][0] = payloadReqToRender;
+		rows[8][1] = payloadToRender;
 		rows[9][0] = (B787_10_FMC_PayloadManagerPage.remainingPayload ? 'REMAINING PAYLOAD' : '');
 		rows[10][0] = (B787_10_FMC_PayloadManagerPage.remainingPayload ? B787_10_FMC_PayloadManagerPage.remainingPayload + ' lb' : '');
 
@@ -357,8 +382,18 @@ class B787_10_FMC_PayloadManagerPage {
 
 		this.fmc.onLeftInput[2] = () => {
 			if(isFinite(parseFloat(this.fmc.inOut))){
-				if(parseFloat(this.fmc.inOut) > B787_10_FMC_PayloadManagerPage.getMinFuel && parseFloat(this.fmc.inOut) < B787_10_FMC_PayloadManagerPage.getMaxFuel){
-					B787_10_FMC_PayloadManagerPage.requestedFuel = parseFloat(this.fmc.inOut);
+				let useImperial = B787_10_FMC_HeavyConfigurationPage.useImperial();
+				let requestedInGallons;
+				let weightPerGallon
+				if(useImperial){
+					weightPerGallon = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'pounds');
+				} else {
+					weightPerGallon = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms');
+				}
+
+				requestedInGallons = this.fmc.inOut / weightPerGallon
+				if(parseFloat(requestedInGallons) > B787_10_FMC_PayloadManagerPage.getMinFuel && parseFloat(requestedInGallons) < B787_10_FMC_PayloadManagerPage.getMaxFuel){
+					B787_10_FMC_PayloadManagerPage.requestedFuel = parseFloat(requestedInGallons);
 					this.fmc.clearUserInput();
 					this.showPage();
 				} else {
@@ -373,8 +408,19 @@ class B787_10_FMC_PayloadManagerPage {
 
 		this.fmc.onLeftInput[3] = () => {
 			if(isFinite(parseFloat(this.fmc.inOut))){
-				if(parseFloat(this.fmc.inOut) > B787_10_FMC_PayloadManagerPage.getMinPayload && parseFloat(this.fmc.inOut) < B787_10_FMC_PayloadManagerPage.getMaxPayload){
-					B787_10_FMC_PayloadManagerPage.requestedPayload = parseFloat(this.fmc.inOut);
+				let useImperial = B787_10_FMC_HeavyConfigurationPage.useImperial();
+				let requestedInPounds;
+				let payloadModifier
+				if(useImperial){
+					payloadModifier = 1.0;
+				} else {
+					payloadModifier = 2.20462262;
+				}
+
+				requestedInPounds = this.fmc.inOut * payloadModifier;
+
+				if(parseFloat(requestedInPounds) > B787_10_FMC_PayloadManagerPage.getMinPayload && parseFloat(requestedInPounds) < B787_10_FMC_PayloadManagerPage.getMaxPayload){
+					B787_10_FMC_PayloadManagerPage.requestedPayload = parseFloat(requestedInPounds);
 					this.fmc.clearUserInput();
 					this.showPage();
 				} else {
