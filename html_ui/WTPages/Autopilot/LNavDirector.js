@@ -578,13 +578,13 @@ class LNavDirectorOptions {
      * value is used to avoid swinging towards the active waypoint when the waypoint is close,
      * if the plane is off track.
      */
-    this.minimumTrackingDistance = 1.5;
+    this.minimumTrackingDistance = 1;
 
     /** The maximum bank angle of the aircraft. */
-    this.maxBankAngle = 25;
+    this.maxBankAngle = 35;
 
     /** The rate of bank in degrees per second. */
-    this.bankRate = 1.5;
+    this.bankRate = 1.95;
 
     /** The maximum turn angle in degrees to calculate turn anticipation to. */
     this.maxTurnAnticipationAngle = 110;
