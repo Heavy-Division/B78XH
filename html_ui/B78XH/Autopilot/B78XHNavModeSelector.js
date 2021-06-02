@@ -86,20 +86,40 @@ class B78XHNavModeSelector {
 		/**
 		 * ARM LNAV
 		 */
-		SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 1);
+		this.activateLNAV();
 		this.currentLateralArmedState = LateralNavModeState.LNAV;
 
 		/**
 		 * Try activate LNAV
 		 */
 		this.queueEvent(NavModeEvent.LNAV_ACTIVE);
+		this.activateLNAV();
 	}
-
 	handleLNAVActive() {
 		/**
 		 * Is LNAV armed?
 		 */
 		if (this.currentLateralArmedState === LateralNavModeState.LNAV) {
+			/**
+			 * Is possible to engage LNAV?
+			 * @type {number}
+			 */
+			let altitude = Simplane.getAltitudeAboveGround();
+			if (altitude > 50) {
+				this.doActivateLNAV();
+				this.currentLateralActiveState = LateralNavModeState.LNAV;
+				this.currentLateralArmedState = LateralNavModeState.NONE;
+			}
+		}
+	}
+
+	handleLNAVActiveBackUp() {
+		/**
+		 * Is LNAV armed?
+		 */
+		if (this.currentLateralArmedState === LateralNavModeState.LNAV) {
+			console.log('test');
+			SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 0);
 			/**
 			 * Is possible to engage LNAV?
 			 * @type {number}
@@ -117,9 +137,10 @@ class B78XHNavModeSelector {
 						this.changeToCorrectLNavForMode(false, false);
 						break;
 					case LateralNavModeState.HDGSEL:
-						this.changeToCorrectLNavForMode(false, false);
+						this.changeToCorrectLNavForMode(true, false);
 						break;
 					case LateralNavModeState.TO:
+						this.changeToCorrectLNavForMode(true, false);
 					case LateralNavModeState.GA:
 						this.changeToCorrectLNavForMode(false, false);
 						break;
@@ -132,13 +153,22 @@ class B78XHNavModeSelector {
 		/**
 		 * JUST BYPASS for now
 		 */
+		/*
 		if (this.currentLateralActiveState !== LateralNavModeState.HDGHOLD) {
 			this.currentLateralArmedState = LateralNavModeState.HDGHOLD;
 			this.queueEvent(NavModeEvent.HDG_HOLD_ACTIVE);
 		}
+		*/
+		this.queueEvent(NavModeEvent.HDG_HOLD_ACTIVE);
 	}
 
 	handleHDGHoldActive(){
+		this.activateHeadingHold();
+		this.currentLateralArmedState = LateralNavModeState.NONE
+		this.currentLateralActiveState = LateralNavModeState.HDGHOLD
+	}
+
+	handleHDGHoldActiveBackUp(){
 		/**
 		 * Deactive LNAV
 		 */
@@ -164,23 +194,93 @@ class B78XHNavModeSelector {
 		/**
 		 * JUST BYPASS for now
 		 */
+		/*
 		if (this.currentLateralActiveState !== LateralNavModeState.HDGSEL) {
 			this.currentLateralArmedState = LateralNavModeState.HDGSEL;
 			this.queueEvent(NavModeEvent.HDG_SEL_ACTIVE);
 		}
+*/
+		this.queueEvent(NavModeEvent.HDG_SEL_ACTIVE);
 	}
 
 	handleHDGSelActive(){
+		this.activateHeadingSel();
+		this.currentLateralArmedState = LateralNavModeState.NONE
+		this.currentLateralActiveState = LateralNavModeState.HDGSEL
+	}
+
+	activateHeadingSel() {
+		this.deactivateHeadingHold();
+		this.deactivateLNAV();
+		SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 1);
+		this.doActivateHeadingSel();
+	}
+
+	doActivateHeadingSel() {
+		if (!SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK", "Boolean")) {
+			SimVar.SetSimVarValue("K:AP_PANEL_HEADING_HOLD", "Number", 1);
+			SimVar.SetSimVarValue('K:AP_HDG_HOLD_ON', 'Number', 1);
+		}
+	}
+
+	activateHeadingHold() {
+		this.deactivateLNAV();
+		if (!SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK", "Boolean")) {
+			SimVar.SetSimVarValue("K:AP_PANEL_HEADING_HOLD", "Number", 1);
+			SimVar.SetSimVarValue('K:AP_HDG_HOLD_ON', 'Number', 1);
+		}
+		SimVar.SetSimVarValue("L:AP_HEADING_HOLD_ACTIVE", "number", 1);
+		const headingHoldValue = Simplane.getHeadingMagnetic();
+		SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 2);
+		Coherent.call("HEADING_BUG_SET", 2, headingHoldValue);
+	}
+
+	deactivateHeadingHold() {
+		SimVar.SetSimVarValue("L:AP_HEADING_HOLD_ACTIVE", "number", 0);
+	}
+
+	activateLNAV() {
+		if (this.flightPlanManager.getWaypointsCount() === 0) {
+			return;
+		}
+		SimVar.SetSimVarValue("L:AP_LNAV_ARMED", "number", 1);
+		this.deactivateHeadingHold();
+	}
+
+	doActivateLNAV() {
+		if (SimVar.GetSimVarValue("AUTOPILOT APPROACH HOLD", "boolean")) {
+			return;
+		}
+		if (SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK", "Boolean")) {
+			SimVar.SetSimVarValue('K:AP_HDG_HOLD_ON', 'Number', 1);
+		}
+		SimVar.SetSimVarValue("L:AP_LNAV_ACTIVE", "number", 1);
+		SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 2);
+		SimVar.SetSimVarValue("K:AP_NAV1_HOLD_ON", "number", 1);
+		SimVar.SetSimVarValue('K:AP_HDG_HOLD_ON', 'Number', 1);
+	}
+
+	deactivateLNAV() {
+		SimVar.SetSimVarValue("L:AP_LNAV_ARMED", "number", 0);
+		SimVar.SetSimVarValue("L:AP_LNAV_ACTIVE", "number", 0);
+	}
+
+
+	handleHDGSelActiveBackUp(){
+		console.log("HDG_SEL");
 		SimVar.SetSimVarValue("L:AP_HEADING_HOLD_ACTIVE", "number", 0);
 		SimVar.SetSimVarValue("L:AP_LNAV_ARMED", "number", 0);
 		SimVar.SetSimVarValue("L:AP_LNAV_ACTIVE", "number", 0);
 		SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 1);
-		if (!SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK", "Boolean")) {
-			SimVar.SetSimVarValue("K:AP_PANEL_HEADING_HOLD", "Number", 1);
+		if (SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK", "Boolean")) {
+			SimVar.SetSimVarValue('K:AP_HDG_HOLD_OFF', 'Number', 1);
 		}
+
+		SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 0);
 		this.currentLateralArmedState = LateralNavModeState.NONE
 		this.currentLateralActiveState = LateralNavModeState.HDGSEL
 	}
+
 
 	changeToCorrectLNavForMode(activateHeadingHold, arm) {
 		if (this.lNavModeState === LNavModeState.FMS) {
@@ -193,10 +293,14 @@ class B78XHNavModeSelector {
 				SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 2);
 				SimVar.SetSimVarValue("K:AP_NAV1_HOLD_ON", "number", 1);
 				SimVar.SetSimVarValue("L:AP_HEADING_HOLD_ACTIVE", "number", 0);
-
 				if (activateHeadingHold) {
 					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
 				}
+
+				if (!SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK", "Boolean")) {
+					SimVar.SetSimVarValue('K:AP_HDG_HOLD_ON', 'Number', 1);
+				}
+
 
 				this.currentLateralActiveState = LateralNavModeState.LNAV;
 				this.currentLateralArmedState = LateralNavModeState.NONE;
