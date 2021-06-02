@@ -113,20 +113,23 @@ class B787_10_FMC_ProgressPage {
 		let toTODCell = '';
 		let todDistanceCell = '';
 		let todETACell = '';
-		const distanceToTOD = SimVar.GetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number");
+		const showTOD = SimVar.GetSimVarValue("L:AIRLINER_FMS_SHOW_TOP_DSCNT", "number");
+		if(showTOD === 1){
+			const distanceToTOD = SimVar.GetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number");
 
-		if(distanceToTOD){
-			todDistanceCell = distanceToTOD.toFixed(0) + '[size=small]NM[/size]';
+			if(distanceToTOD){
+				todDistanceCell = distanceToTOD.toFixed(0) + '[size=small]NM[/size]';
 
-			let eta = undefined;
-			eta = (B787_10_FMC_ProgressPage.computeEtaToWaypoint(distanceToTOD, speed) + currentTime) % 86400
-			if (isFinite(eta)) {
-				let etaHours = Math.floor(eta / 3600);
-				let etaMinutes = Math.floor((eta - etaHours * 3600) / 60);
-				todETACell = etaHours.toFixed(0).padStart(2, "0") + etaMinutes.toFixed(0).padStart(2, "0") + '[size=small]Z[/size]';
+				let eta = undefined;
+				eta = (B787_10_FMC_ProgressPage.computeEtaToWaypoint(distanceToTOD, speed) + currentTime) % 86400
+				if (isFinite(eta)) {
+					let etaHours = Math.floor(eta / 3600);
+					let etaMinutes = Math.floor((eta - etaHours * 3600) / 60);
+					todETACell = etaHours.toFixed(0).padStart(2, "0") + etaMinutes.toFixed(0).padStart(2, "0") + '[size=small]Z[/size]';
+				}
+
+				toTODCell = todETACell + '/' + todDistanceCell
 			}
-
-			toTODCell = todETACell + '/' + todDistanceCell
 		}
 
 		fmc.setTemplate([
