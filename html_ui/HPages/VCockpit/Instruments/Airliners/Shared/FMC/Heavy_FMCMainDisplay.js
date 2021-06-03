@@ -522,7 +522,7 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 	setTakeOffFlap(s) {
 		let value = Number.parseInt(s);
 		if (isFinite(value)) {
-			if([5,15,20].indexOf(value) !== -1){
+			if([5,10,15,17,18,20].indexOf(value) !== -1){
 				this._takeOffFlap = value;
 				this.clearVSpeeds();
 				return true;
