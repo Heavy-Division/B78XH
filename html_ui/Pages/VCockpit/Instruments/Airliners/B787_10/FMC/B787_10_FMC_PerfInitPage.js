@@ -86,7 +86,7 @@ class B787_10_FMC_PerfInitPage {
 				['FUEL', 'COST INDEX'],
 				[fuelCell, costIndexCell],
 				['ZFW', 'MIN FUEL TEMP'],
-				[zfwCell, '-37°c'],
+				[zfwCell, '37°c-'],
 				['RESERVES', 'CRZ CG'],
 				[reservesCell, crzCGCell],
 				['DATA LINK', 'STEP SIZE'],
