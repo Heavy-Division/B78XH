@@ -233,7 +233,7 @@ class B787_10_FMC_LegsPage {
 		}
 
 		this._fmc.setTemplate([
-			[" " + modStr + " RTE 1 LEGS", this._currentPage.toFixed(0) + "/" + Math.max(1, this._pageCount.toFixed(0)) + ""],
+			[" " + modStr + " RTE 1 LEGS", this._currentPage.toFixed(0), Math.max(1, this._pageCount.toFixed(0))],
 			...this._rows,
 			[`${this._isAddingHold ? '----------------HOLD AT----------------' : holdExiting ? '--------------EXIT ARMED---------------' : '__FMCSEPARATOR'}`],
 			[`${this._isAddingHold ? '□□□□□' : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, this._stepCell]
