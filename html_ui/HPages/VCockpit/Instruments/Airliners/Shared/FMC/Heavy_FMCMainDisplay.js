@@ -518,4 +518,17 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 
 		return waypoint;
 	}
+
+	setTakeOffFlap(s) {
+		let value = Number.parseInt(s);
+		if (isFinite(value)) {
+			if([5,15,20].indexOf(value) !== -1){
+				this._takeOffFlap = value;
+				this.clearVSpeeds();
+				return true;
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
 }
