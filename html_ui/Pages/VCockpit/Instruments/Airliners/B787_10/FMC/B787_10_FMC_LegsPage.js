@@ -288,7 +288,7 @@ class B787_10_FMC_LegsPage {
 			const offsetRender = Math.floor((this._currentPage - 1) * 5);
 			const wptRender = this._wayPointsToRender[i + offsetRender];
 			// if its a real fix
-			if (!(this._currentPage === 1 && i === 0) && wptRender && (wptRender.fix.ident !== "$EMPTY" || wptRender.fix.ident !== "$DISCO")) {
+			if (wptRender && (wptRender.fix.ident !== "$EMPTY" || wptRender.fix.ident !== "$DISCO")) {
 				if(i >= 5){
 					break;
 				}
