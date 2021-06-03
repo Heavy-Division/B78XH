@@ -23,6 +23,15 @@
 					<ID>2</ID>
 				</UseTemplate>
 			</Case>
+
+			<Case Value="INSTRUMENT_Knob_IRS_2">
+				<UseTemplate Name="HEAVY_B78XH_IRS_Switch_Template">
+					<ID>2</ID>
+				</UseTemplate>
+			</Case>
+
+			<Case Value="TRANSPONDER_Knob_Mode">
+			</Case>
 		</Switch>
 	</Template>
 </ModelBehaviors>
