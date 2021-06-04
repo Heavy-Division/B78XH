@@ -60,7 +60,6 @@ class B78XH_Initializer {
 					checkUnit: 'Boolean',
 					condition: 1
 				},
-				 */
 				{
 					type: 'K',
 					variable: 'TOGGLE_ALTERNATOR1',
@@ -93,7 +92,7 @@ class B78XH_Initializer {
 					checkUnit: 'Boolean',
 					condition: 1
 				}
-
+				*/
 			],
 			// normal config
 			[
