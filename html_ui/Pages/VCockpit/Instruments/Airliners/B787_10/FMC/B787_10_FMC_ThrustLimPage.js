@@ -2,6 +2,15 @@ class B787_10_FMC_ThrustLimPage {
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
 
+		B787_10_FMC_ThrustLimPage._updateCounter = 0;
+		fmc.pageUpdate = () => {
+			if (B787_10_FMC_ThrustLimPage._updateCounter >= 50) {
+				B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
+			} else {
+				B787_10_FMC_ThrustLimPage._updateCounter++;
+			}
+		};
+
 		fmc.refreshPageCallback = () => {
 			B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
 		};
@@ -81,6 +90,11 @@ class B787_10_FMC_ThrustLimPage {
 				toN1CellTitle = 'TO N1';
 		}
 
+		let separator = '__FMCSEPARATOR';
+		if(!fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished && !fmc.fmcPreFlightComplete.thrust.completed){
+			separator = '--------------------------------PRE-FLT';
+		}
+
 		fmc.setTemplate([
 			['THRUST LIM'],
 			['SEL/OAT', toN1CellTitle],
@@ -93,9 +107,17 @@ class B787_10_FMC_ThrustLimPage {
 			['\<-20%', '<CLB 2', (thrustTOMode === 2 ? '<SEL>' : ''), thrustClimbModeCell2],
 			[''],
 			[''], //['\<TO-B'],
-			['__FMCSEPARATOR'],
+			[separator],
 			['\<INDEX', '<TAKEOFF']
 		]);
+
+		if(fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished){
+			let fmsPreFlightElement = document.createElement("div");
+			fmsPreFlightElement.classList.add('fms-preflight');
+			fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;')
+			fmsPreFlightElement.innerText = 'FMC PREFLIGHT COMPLETE';
+			document.body.querySelector('.separator-label').appendChild(fmsPreFlightElement);
+		}
 
 		fmc.onLeftInput[5] = () => {
 			B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
@@ -106,5 +128,7 @@ class B787_10_FMC_ThrustLimPage {
 		fmc.updateSideButtonActiveStatus();
 	}
 }
+
+B787_10_FMC_ThrustLimPage._updateCounter = 0;
 
 //# sourceMappingURL=B787_10_FMC_ThrustLimPage.js.map
