@@ -2210,7 +2210,7 @@ class FMCMainDisplay extends BaseAirliners {
                     this.blockFuel = SimVar.GetSimVarValue("FUEL TOTAL QUANTITY", "gallons") * SimVar.GetSimVarValue("FUEL WEIGHT PER GALLON", "kilograms") / 1000;
                     this.zeroFuelWeight = this._fuelVarsUpdatedGrossWeight - this.blockFuel;
                     this.zeroFuelWeightMassCenter = SimVar.GetSimVarValue("CG PERCENT", "percent");
-                    this.updateVSpeeds();
+                    //this.updateVSpeeds();
                     let waypointsNumber = SimVar.GetSimVarValue("C:fs9gps:FlightPlanWaypointsNumber", "number", this.instrumentIdentifier);
                     if (waypointsNumber > 1) {
                         SimVar.SetSimVarValue("C:fs9gps:FlightPlanWaypointIndex", "number", waypointsNumber - 1).then(() => {

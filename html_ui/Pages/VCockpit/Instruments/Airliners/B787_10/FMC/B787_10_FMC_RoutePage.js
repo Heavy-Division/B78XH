@@ -444,7 +444,7 @@ class B787_10_FMC_RoutePage {
 				if (result) {
 					this._fmc.fpHasChanged = true;
 					SimVar.SetSimVarValue('L:WT_CJ4_INHIBIT_SEQUENCE', 'number', 0);
-					this._fmc.updateVSpeeds();
+					//this._fmc.updateVSpeeds();
 					this._fmc.updateFuelVars();
 					this.update(true);
 				}
