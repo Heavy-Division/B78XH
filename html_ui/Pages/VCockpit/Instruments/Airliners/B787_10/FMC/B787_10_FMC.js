@@ -78,6 +78,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		this._activatingDirectTo = false;
 		this._pilotWaypoints = undefined;
 
+		this._alertingMessages = [];
+
 	}
 
 	get templateID() {
@@ -721,6 +723,12 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				B787_10_FMC_HoldsPage.handleHoldPressed(this);
 			});
 
+			this.getChildById('.fms-clr-msg').addEventListener('mouseup', () => {
+				if(this._alertingMessages.length > 0){
+					this._alertingMessages.pop();
+				}
+			});
+
 			if (!B787_10_FMC_HeavyPage.WITHOUT_MANAGERS) {
 				this.getChildById('.fms-heavy').addEventListener('mouseup', () => {
 					B787_10_FMC_HeavyPage.ShowPage1(this);
@@ -794,6 +802,24 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		}
 		this.updateAutopilot(_deltaTime);
 		this._updateTimeAndDate();
+		this._updateAlertingMessages();
+	}
+
+	_updateAlertingMessages(){
+		if(this._alertingMessages.length > 0){
+			let messageBoxTitle = document.body.querySelector('.fms-message-title');
+			let messageBoxContent = document.body.querySelector('.fms-message-content');
+			let messageBoxCount = document.body.querySelector('.fms-message-count');
+
+			messageBoxTitle.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].title
+			messageBoxContent.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].content
+			messageBoxCount.innerHTML = this._alertingMessages.length.toFixed(0).padStart(2, '0');
+			let messageBox = document.body.querySelector('.fms-message');
+			messageBox.style.display = 'block';
+		} else {
+			let messageBox = document.body.querySelector('.fms-message');
+			messageBox.style.display = 'none';
+		}
 	}
 
 	_updateTimeAndDate() {
