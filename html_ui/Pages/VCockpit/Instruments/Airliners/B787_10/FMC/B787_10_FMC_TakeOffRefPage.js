@@ -141,6 +141,12 @@ class B787_10_FMC_TakeOffRefPage {
 			grWtCell = fmc.getFuelVarsUpdatedGrossWeight(useImperial).toFixed(1) + (useImperial ? ' lb' : ' kg');
 		}
 
+		let separator = '__FMCSEPARATOR';
+		if(!fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished && !fmc.fmcPreFlightComplete.takeoff.completed){
+			separator = '--------------------------------PRE-FLT';
+		}
+
+
 		fmc.setTemplate([
 			['TAKEOFF REF', 1, 2],
 			['FLAPS', 'V1'],
@@ -153,9 +159,18 @@ class B787_10_FMC_TakeOffRefPage {
 			[runwayCell + '/----', '', '', grWtCell],
 			['TAKEOFF DATA', ''],
 			['<REQUEST', '', ''],
-			['__FMCSEPARATOR'],
+			[separator],
 			['\<INDEX', '<THRUST LIM']
 		]);
+
+		if(fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished){
+			let fmsPreFlightElement = document.createElement("div");
+			fmsPreFlightElement.classList.add('fms-preflight');
+			fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;')
+			fmsPreFlightElement.innerText = 'FMC PREFLIGHT COMPLETE';
+			document.body.querySelector('.separator-label').appendChild(fmsPreFlightElement);
+		}
+
 		fmc.onLeftInput[5] = () => {
 			B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
 		};
