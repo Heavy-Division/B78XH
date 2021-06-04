@@ -908,7 +908,31 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let dWeightCoeff = (w - 350) / (560 - 350);
 		dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
 		dWeightCoeff = 0.90 + (1.16 - 0.9) * dWeightCoeff;
-		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+		let flapsHandleIndex;
+		const takeoffFlaps = this.getTakeOffFlap();
+		switch(takeoffFlaps){
+			case 5:
+				flapsHandleIndex = 2;
+				break;
+			case 10:
+				flapsHandleIndex = 3;
+				break;
+			case 15:
+				flapsHandleIndex = 4;
+				break;
+			case 17:
+				flapsHandleIndex = 5;
+				break;
+			case 18:
+				flapsHandleIndex = 6;
+				break;
+			case 20:
+				flapsHandleIndex = 7;
+				break;
+			default:
+				flapsHandleIndex = Simplane.getFlapsHandleIndex();
+				break;
+		}
 		let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 		let index = this._getIndexFromTemp(temp);
 		console.log('Temperature = ' + temp + ' (index ' + index + ')');
@@ -944,7 +968,31 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let dWeightCoeff = (w - 350) / (560 - 350);
 		dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
 		dWeightCoeff = 0.99 + (1.215 - 0.99) * dWeightCoeff;
-		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+		let flapsHandleIndex;
+		const takeoffFlaps = this.getTakeOffFlap();
+		switch(takeoffFlaps){
+			case 5:
+				flapsHandleIndex = 2;
+				break;
+			case 10:
+				flapsHandleIndex = 3;
+				break;
+			case 15:
+				flapsHandleIndex = 4;
+				break;
+			case 17:
+				flapsHandleIndex = 5;
+				break;
+			case 18:
+				flapsHandleIndex = 6;
+				break;
+			case 20:
+				flapsHandleIndex = 7;
+				break;
+			default:
+				flapsHandleIndex = Simplane.getFlapsHandleIndex();
+				break;
+		}
 		let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 		let index = this._getIndexFromTemp(temp);
 		console.log('Temperature = ' + temp + ' (index ' + index + ')');
@@ -980,7 +1028,31 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let dWeightCoeff = (weight - 350) / (560 - 350);
 		dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
 		dWeightCoeff = 1.03 + (1.23 - 1.03) * dWeightCoeff;
-		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+		let flapsHandleIndex;
+		const takeoffFlaps = this.getTakeOffFlap();
+		switch(takeoffFlaps){
+			case 5:
+				flapsHandleIndex = 2;
+				break;
+			case 10:
+				flapsHandleIndex = 3;
+				break;
+			case 15:
+				flapsHandleIndex = 4;
+				break;
+			case 17:
+				flapsHandleIndex = 5;
+				break;
+			case 18:
+				flapsHandleIndex = 6;
+				break;
+			case 20:
+				flapsHandleIndex = 7;
+				break;
+			default:
+				flapsHandleIndex = Simplane.getFlapsHandleIndex();
+				break;
+		}
 		let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 		let index = this._getIndexFromTemp(temp);
 		console.log('Temperature = ' + temp + ' (index ' + index + ')');
