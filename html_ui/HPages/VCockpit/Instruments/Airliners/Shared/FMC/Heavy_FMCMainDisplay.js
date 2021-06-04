@@ -5,6 +5,33 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 		this._shouldBeExecEmisssive = false;
 		this._activeExecHandlers = {};
 
+		this.fmcPreFlightComplete= {
+			completed: false,
+			finished: false,
+			thrust: {
+				completed: false,
+				takeOffTemp: false
+			},
+			takeoff: {
+				completed: false,
+				flaps: false,
+				v1: false,
+				vR: false,
+				v2: false
+			},
+			perfInit: {
+				completed: false,
+				cruiseAltitude: false,
+				costIndex: false,
+				reserves: false
+			},
+			route: {
+				completed: false,
+				origin: false,
+				destination: false,
+				activated: false
+			}
+		}
 		FMCMainDisplay.DEBUG_INSTANCE = this;
 	}
 
@@ -276,9 +303,44 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 		return false;
 	}
 
+	checkfmcPreFlight(){
+		if(!this.fmcPreFlightComplete.finished){
+			this.fmcPreFlightComplete.thrust.takeOffTemp = (!!this.getThrustTakeOffTemp())
+			this.fmcPreFlightComplete.thrust.completed = (this.fmcPreFlightComplete.thrust.takeOffTemp)
+
+			this.fmcPreFlightComplete.takeoff.flaps = (!!this.getTakeOffFlap())
+			this.fmcPreFlightComplete.takeoff.v1 = (!!this.v1Speed)
+			this.fmcPreFlightComplete.takeoff.vR = (!!this.vRSpeed)
+			this.fmcPreFlightComplete.takeoff.v2 = (!!this.v2Speed)
+			this.fmcPreFlightComplete.takeoff.completed = (this.fmcPreFlightComplete.takeoff.v1 && this.fmcPreFlightComplete.takeoff.vR && this.fmcPreFlightComplete.takeoff.v2 && this.fmcPreFlightComplete.takeoff.flaps);
+
+			this.fmcPreFlightComplete.perfInit.cruiseAltitude = (!!this.cruiseFlightLevel)
+			this.fmcPreFlightComplete.perfInit.costIndex = (!!this.costIndex)
+			this.fmcPreFlightComplete.perfInit.reserves = (!!this.getFuelReserves())
+			this.fmcPreFlightComplete.perfInit.completed = (this.fmcPreFlightComplete.perfInit.cruiseAltitude && this.fmcPreFlightComplete.perfInit.costIndex && this.fmcPreFlightComplete.perfInit.reserves)
+
+			this.fmcPreFlightComplete.route.origin = (!!this.flightPlanManager.getOrigin())
+			this.fmcPreFlightComplete.route.destination = (!!this.flightPlanManager.getDestination())
+			this.fmcPreFlightComplete.route.activated = true
+			this.fmcPreFlightComplete.route.completed = (this.fmcPreFlightComplete.route.activated && this.fmcPreFlightComplete.route.destination && this.fmcPreFlightComplete.route.origin)
+
+			this.fmcPreFlightComplete.completed = (this.fmcPreFlightComplete.thrust.completed && this.fmcPreFlightComplete.takeoff.completed && this.fmcPreFlightComplete.perfInit.completed && this.fmcPreFlightComplete.route.completed)
+		}
+	}
+
+	showFMCPreFlightComplete(airspeed){
+		if(this.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF && airspeed < 80){
+			this.checkfmcPreFlight();
+		} else {
+			this.fmcPreFlightComplete.finished = true;
+			let fmcPreFlight = document.body.querySelector('.fms-preflight')
+			fmcPreFlight.style.display = 'none';
+		}
+	}
 
 	checkUpdateFlightPhase() {
 		let airSpeed = SimVar.GetSimVarValue('AIRSPEED TRUE', 'knots');
+		this.showFMCPreFlightComplete(airSpeed);
 		if (airSpeed > 10) {
 			if (this.currentFlightPhase === 0) {
 				this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_TAKEOFF;
