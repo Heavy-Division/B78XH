@@ -333,8 +333,6 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 			this.checkfmcPreFlight();
 		} else {
 			this.fmcPreFlightComplete.finished = true;
-			let fmcPreFlight = document.body.querySelector('.fms-preflight')
-			fmcPreFlight.style.display = 'none';
 		}
 	}
 
