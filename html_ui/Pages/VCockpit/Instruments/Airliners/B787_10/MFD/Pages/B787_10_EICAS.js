@@ -113,7 +113,7 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 			this.infoPanel.update(_deltaTime);
 		}
 		if (this.unitTextSVG) {
-			if (!this.useImperial())
+			if (!HeavyDivision.configuration.useImperial())
 				this.unitTextSVG.textContent = 'KGS X';
 			else
 				this.unitTextSVG.textContent = 'LBS X';
@@ -145,7 +145,7 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 
 	getFFValue(_engine) {
 		let factor = this.gallonToMegapounds;
-		if (!this.useImperial())
+		if (!HeavyDivision.configuration.useImperial())
 			factor = this.gallonToMegagrams;
 		return (SimVar.GetSimVarValue('ENG FUEL FLOW GPH:' + _engine, 'gallons per hour') * factor);
 	}
@@ -160,30 +160,22 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 
 	getMainTankFuelInMegagrams(_index) {
 		let factor = this.gallonToMegapounds;
-		if (!this.useImperial())
+		if (!HeavyDivision.configuration.useImperial())
 			factor = this.gallonToMegagrams;
 		return (SimVar.GetSimVarValue('FUELSYSTEM TANK QUANTITY:' + _index, 'gallons') * factor);
 	}
 
 	getTotalFuelInMegagrams() {
 		let factor = this.gallonToMegapounds;
-		if (!this.useImperial())
+		if (!HeavyDivision.configuration.useImperial())
 			factor = this.gallonToMegagrams;
 		return (SimVar.GetSimVarValue('FUEL TOTAL QUANTITY', 'gallons') * factor);
 	}
 
 	getGrossWeightInMegagrams() {
-		if (!this.useImperial())
+		if (!HeavyDivision.configuration.useImperial())
 			return SimVar.GetSimVarValue('TOTAL WEIGHT', 'kg') * 0.001;
 		return SimVar.GetSimVarValue('TOTAL WEIGHT', 'lbs') * 0.001;
-	}
-
-	useImperial() {
-		const imperial = HeavyDataStorage.get('USE_IMPERIAL', 1);
-		if (imperial == 1) {
-			return true;
-		}
-		return false;
 	}
 
 	getInfoPanelManager() {

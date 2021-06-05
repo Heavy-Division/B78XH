@@ -231,24 +231,16 @@ class B787_10_SYS_Page {
 
 	getTotalFuelInMegagrams() {
 		let factor = this.gallonToMegapounds;
-		if (!this.useImperial())
+		if (!HeavyDivision.configuration.useImperial())
 			factor = this.gallonToMegagrams;
 		return (SimVar.GetSimVarValue('FUEL TOTAL QUANTITY', 'gallons') * factor);
 	}
 
 	getMainTankFuelInMegagrams(_index) {
 		let factor = this.gallonToMegapounds;
-		if (!this.useImperial())
+		if (!HeavyDivision.configuration.useImperial())
 			factor = this.gallonToMegagrams;
 		return (SimVar.GetSimVarValue('FUELSYSTEM TANK QUANTITY:' + _index, 'gallons') * factor);
-	}
-
-	useImperial() {
-		const imperial = HeavyDataStorage.get('USE_IMPERIAL', 1);
-		if(imperial == 1){
-			return true
-		}
-		return false;
 	}
 }
 
@@ -460,7 +452,7 @@ class B787_10_SYS_Page_FUEL extends B787_10_SYS_Page {
 			}
 		}
 		if (this.unitTextSVG) {
-			if (!this.useImperial())
+			if (!HeavyDivision.configuration.useImperial())
 				this.unitTextSVG.textContent = 'KGS X 1000';
 			else
 				this.unitTextSVG.textContent = 'LBS X 1000';

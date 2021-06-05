@@ -6,7 +6,7 @@ class B787_10_FMC_HeavyConfigurationPage {
 
 		let fpSyncCell = (this.isFPSyncActive() ? '<[color=green]ON[/color]←→[size=small]OFF[/size]' : '<[size=small]ON[/size]←→[color=red]OFF[/color]');
 		let simBriefCell = (this.isSimBriefFilled() ? '<[color=green]FILLED[/color]' : '<[color=red]NOT FILLED[/color]');
-		let unitsCell = (this.useImperial() ? '<[color=green]IMPERIAL[/color]←→[size=small]METRIC[/size]' : '<[size=small]IMPERIAL[/size]←→[color=green]METRIC[/color]');
+		let unitsCell = (HeavyDivision.configuration.useImperial() ? '<[color=green]IMPERIAL[/color]←→[size=small]METRIC[/size]' : '<[size=small]IMPERIAL[/size]←→[color=green]METRIC[/color]');
 		fmc.setTemplate([
 			['HEAVY CONFIGURATION'],
 			['', 'SimBrief'],
@@ -47,7 +47,7 @@ class B787_10_FMC_HeavyConfigurationPage {
 		};
 
 		fmc.onRightInput[2] = () => {
-			if (this.useImperial()) {
+			if (HeavyDivision.configuration.useImperial()) {
 				HeavyDataStorage.set('USE_IMPERIAL', '0');
 			} else {
 				HeavyDataStorage.set('USE_IMPERIAL', '1');
@@ -65,13 +65,5 @@ class B787_10_FMC_HeavyConfigurationPage {
 
 	static isFPSyncActive() {
 		return (!!WTDataStore.get('WT_CJ4_FPSYNC', 0));
-	}
-
-	static useImperial() {
-		const imperial = HeavyDataStorage.get('USE_IMPERIAL', 1);
-		if(imperial == 1){
-			return true
-		}
-		return false;
 	}
 }

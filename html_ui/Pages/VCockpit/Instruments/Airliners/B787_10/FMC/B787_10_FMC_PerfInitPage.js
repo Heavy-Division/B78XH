@@ -2,7 +2,7 @@ class B787_10_FMC_PerfInitPage {
 	static ShowPage1(fmc) {
 		fmc.updateFuelVars().then(() => {
 			fmc.clearDisplay();
-			const useImperial = B787_10_FMC_HeavyConfigurationPage.useImperial();
+			const useImperial = HeavyDivision.configuration.useImperial();
 			B787_10_FMC_PerfInitPage._timer = 0;
 			fmc.pageUpdate = () => {
 				B787_10_FMC_PerfInitPage._timer++;

@@ -319,7 +319,7 @@ class B787_10_FMC_PayloadManagerPage {
 		let weightPerGallon;
 		let units;
 		let payloadModifier;
-		let useImperial = B787_10_FMC_HeavyConfigurationPage.useImperial();
+		let useImperial = HeavyDivision.configuration.useImperial();
 		if(useImperial){
 			weightPerGallon = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'pounds');
 			units = 'Pounds';
@@ -382,7 +382,7 @@ class B787_10_FMC_PayloadManagerPage {
 
 		this.fmc.onLeftInput[2] = () => {
 			if(isFinite(parseFloat(this.fmc.inOut))){
-				let useImperial = B787_10_FMC_HeavyConfigurationPage.useImperial();
+				let useImperial = HeavyDivision.configuration.useImperial();
 				let requestedInGallons;
 				let weightPerGallon
 				if(useImperial){
@@ -408,7 +408,7 @@ class B787_10_FMC_PayloadManagerPage {
 
 		this.fmc.onLeftInput[3] = () => {
 			if(isFinite(parseFloat(this.fmc.inOut))){
-				let useImperial = B787_10_FMC_HeavyConfigurationPage.useImperial();
+				let useImperial = HeavyDivision.configuration.useImperial();
 				let requestedInPounds;
 				let payloadModifier
 				if(useImperial){
