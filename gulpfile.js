@@ -49,6 +49,29 @@ const _updateManifest = () => {
 	console.log('manifest.json updated.');
 };
 
+const copyPackageVersion = () => {
+	let originalManifest = fs.readFileSync('manifest.json').toString();
+	let manifestJson = JSON.parse(originalManifest);
+	let version = {};
+	version.package_version = manifestJson.package_version;
+	let versionChunks = manifestJson.package_version.replace(/\./g, '-').split('-');
+	let versionChunks2 = versionChunks;
+	if (versionChunks.length < 4) {
+		versionChunks.push('STA');
+		versionChunks2.push('BAK');
+	}
+	versionChunks[0] = String(versionChunks[0]).padStart(3, '0');
+
+	const versionString = versionChunks.join('-');
+	const version2String = versionChunks.join('-');
+	version.fms_man_version = 'HD-P' + versionString;
+	version.fms_bak_version = 'HD-C' + version2String;
+
+	fs.writeFile('./html_ui/b78xh/b78xh.json', JSON.stringify(version, null, 4), () => {
+		console.log('version copied successfully.');
+	});
+};
+
 function defaultTask(callback) {
 	callback();
 }
@@ -99,20 +122,27 @@ function deleteReleaseCache(callback) {
 	callback();
 }
 
-function bumpTask() {
+function bumpTask(callback) {
 	return gulp.src('./manifest.json')
 	.pipe(bump())
-	.pipe(gulp.dest('./'));
+	.pipe(gulp.dest('./')).on('end', function () {
+		copyPackageVersion();
+	});
 }
 
-function preBumpTask() {
+function preBumpTask(callback) {
 	return gulp.src('./manifest.json')
 	.pipe(bump({type: 'prerelease'}))
-	.pipe(gulp.dest('./'));
+	.pipe(gulp.dest('./')).on('finish', function () {
+		console.log('Release done.');
+		callback();
+	}).on('end', function () {
+		copyPackageVersion();
+	});
 }
 
 exports.release = gulp.series(deleteReleaseCache, buildTask, copyFilesForReleaseToCache, releaseTask, deleteReleaseCache);
 exports.default = buildTask;
 exports.build = buildTask;
 exports.bump = bumpTask;
-exports.preBump = preBumpTask;
+exports.prebump = preBumpTask;
