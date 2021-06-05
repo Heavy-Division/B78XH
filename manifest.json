@@ -1,4 +1,5 @@
 {
+    "package_version": "0.1.9-0",
     "dependencies": [
         {
             "name": "asobo-aircraft-b787-10",
@@ -13,7 +14,6 @@
     "title": "B787-10 Heavy",
     "manufacturer": "Boeing",
     "creator": "Asobo Studio, Heavy Division",
-    "package_version": "0.1.0",
     "minimum_game_version": "1.13.9",
     "release_notes": {
         "neutral": {
@@ -21,5 +21,5 @@
             "OlderHistory": ""
         }
     },
-    "total_package_size": "00000000000018846547"
+    "total_package_size": "00000000000018847741"
 }
