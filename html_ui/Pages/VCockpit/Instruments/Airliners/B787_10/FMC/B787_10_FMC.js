@@ -80,6 +80,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 		this._alertingMessages = [];
 
+		this.fmcManVersion = 'AW-P010-0-0';
+		this.fmcBakVersion = 'AW-C010-0-0';
 	}
 
 	get templateID() {
@@ -109,7 +111,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 		if (this.updateAutopilotCooldown < 0) {
 
-			const currentApMasterStatus = SimVar.GetSimVarValue("AUTOPILOT MASTER", "boolean");
+			const currentApMasterStatus = SimVar.GetSimVarValue('AUTOPILOT MASTER', 'boolean');
 			if (currentApMasterStatus != this._apMasterStatus) {
 				this._apMasterStatus = currentApMasterStatus;
 				this._forceNextAltitudeUpdate = true;
@@ -484,37 +486,37 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		}
 	}
 
-	getNextDescentAltitude(){
+	getNextDescentAltitude() {
 		let fp = this.flightPlanManager.getCurrentFlightPlan();
 		let allWaypoints = fp.waypoints.slice(fp.activeWaypointIndex);
 
-		for(let i = 0; i <= allWaypoints.length - 1; i++){
-			if(allWaypoints[i].legAltitudeDescription === 0){
+		for (let i = 0; i <= allWaypoints.length - 1; i++) {
+			if (allWaypoints[i].legAltitudeDescription === 0) {
 				continue;
 			}
-			if(allWaypoints[i].legAltitudeDescription === 1 && isFinite(allWaypoints[i].legAltitude1)){
+			if (allWaypoints[i].legAltitudeDescription === 1 && isFinite(allWaypoints[i].legAltitude1)) {
 				return Math.round(allWaypoints[i].legAltitude1);
 			}
 
-			if(allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)){
+			if (allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)) {
 				return Math.round(allWaypoints[i].legAltitude1);
 			}
 
-			if(allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)){
+			if (allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)) {
 				return Math.round(allWaypoints[i].legAltitude1);
 			}
 
-			if(allWaypoints[i].legAltitudeDescription === 4 && isFinite(allWaypoints[i].legAltitude1) && isFinite(allWaypoints[i].legAltitude2)){
-				if(allWaypoints[i].legAltitude1 === allWaypoints[i].legAltitude2){
+			if (allWaypoints[i].legAltitudeDescription === 4 && isFinite(allWaypoints[i].legAltitude1) && isFinite(allWaypoints[i].legAltitude2)) {
+				if (allWaypoints[i].legAltitude1 === allWaypoints[i].legAltitude2) {
 					return Math.round(allWaypoints[i].legAltitude1);
 				}
 
-				if(allWaypoints[i].legAltitude1 < allWaypoints[i].legAltitude2){
+				if (allWaypoints[i].legAltitude1 < allWaypoints[i].legAltitude2) {
 					let middle = (allWaypoints[i].legAltitude2 - allWaypoints[i].legAltitude1) / 2;
 					return Math.round(allWaypoints[i].legAltitude1 + middle);
 				}
 
-				if(allWaypoints[i].legAltitude1 > allWaypoints[i].legAltitude2){
+				if (allWaypoints[i].legAltitude1 > allWaypoints[i].legAltitude2) {
 					let middle = (allWaypoints[i].legAltitude1 - allWaypoints[i].legAltitude2) / 2;
 					return Math.round(allWaypoints[i].legAltitude2 + middle);
 				}
@@ -643,9 +645,14 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	Init() {
 		super.Init();
 		this.aircraftType = Aircraft.AS01B;
+		Utils.loadFile('coui://html_UI/b78xh/b78xh.json', (content) => {
+			const miscFile = JSON.parse(content);
+			this.fmcManVersion = miscFile.fms_man_version;
+			this.fmcBakVersion = miscFile.fms_bak_version;
+		});
 		if (this.urlConfig.index == 1) {
-			SimVar.SetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number", 0);
-			SimVar.SetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number", 0);
+			SimVar.SetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number', 0);
+			SimVar.SetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number', 0);
 			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 			this._thrustTakeOffTemp = Math.ceil(oat / 10) * 10;
 			this.onInit = () => {
@@ -724,7 +731,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			});
 
 			this.getChildById('.fms-clr-msg').addEventListener('mouseup', () => {
-				if(this._alertingMessages.length > 0){
+				if (this._alertingMessages.length > 0) {
 					this._alertingMessages.pop();
 				}
 			});
@@ -805,14 +812,14 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		this._updateAlertingMessages();
 	}
 
-	_updateAlertingMessages(){
-		if(this._alertingMessages.length > 0){
+	_updateAlertingMessages() {
+		if (this._alertingMessages.length > 0) {
 			let messageBoxTitle = document.body.querySelector('.fms-message-title');
 			let messageBoxContent = document.body.querySelector('.fms-message-content');
 			let messageBoxCount = document.body.querySelector('.fms-message-count');
 
-			messageBoxTitle.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].title
-			messageBoxContent.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].content
+			messageBoxTitle.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].title;
+			messageBoxContent.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].content;
 			messageBoxCount.innerHTML = this._alertingMessages.length.toFixed(0).padStart(2, '0');
 			let messageBox = document.body.querySelector('.fms-message');
 			messageBox.style.display = 'block';
@@ -936,7 +943,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		dWeightCoeff = 0.90 + (1.16 - 0.9) * dWeightCoeff;
 		let flapsHandleIndex;
 		const takeoffFlaps = this.getTakeOffFlap();
-		switch(takeoffFlaps){
+		switch (takeoffFlaps) {
 			case 5:
 				flapsHandleIndex = 2;
 				break;
@@ -996,7 +1003,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		dWeightCoeff = 0.99 + (1.215 - 0.99) * dWeightCoeff;
 		let flapsHandleIndex;
 		const takeoffFlaps = this.getTakeOffFlap();
-		switch(takeoffFlaps){
+		switch (takeoffFlaps) {
 			case 5:
 				flapsHandleIndex = 2;
 				break;
@@ -1056,7 +1063,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		dWeightCoeff = 1.03 + (1.23 - 1.03) * dWeightCoeff;
 		let flapsHandleIndex;
 		const takeoffFlaps = this.getTakeOffFlap();
-		switch(takeoffFlaps){
+		switch (takeoffFlaps) {
 			case 5:
 				flapsHandleIndex = 2;
 				break;
