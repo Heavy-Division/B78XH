@@ -135,7 +135,7 @@ class B787_10_FMC_TakeOffRefPage {
 				});
 			};
 		}
-		const useImperial = B787_10_FMC_HeavyConfigurationPage.useImperial();
+		const useImperial = HeavyDivision.configuration.useImperial();
 		let grWtCell = '□□□.□';
 		if (isFinite(fmc.getFuelVarsUpdatedGrossWeight(useImperial))) {
 			grWtCell = fmc.getFuelVarsUpdatedGrossWeight(useImperial).toFixed(1) + (useImperial ? ' lb' : ' kg');
