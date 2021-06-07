@@ -832,7 +832,7 @@
                 return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                     FlightPlanAsoboSync.init();
                     const plan = fpln.getCurrentFlightPlan();
-                    if (WTDataStore.get('WT_CJ4_FPSYNC', 0) !== 0 && ((plan.checksum !== this.fpChecksum) || force === true)) {
+                    if (HeavyDivision.configuration.isFlightPlanSynchronizationActive() && ((plan.checksum !== this.fpChecksum) || HeavyDivision.configuration.isFlightPlanSynchronizationActive() && force === true)) {
                         if(force === true){
                             yield Coherent.call("CREATE_NEW_FLIGHTPLAN");
                         }
@@ -2446,7 +2446,7 @@
                         plan.setParentInstrument(_parentInstrument);
                         this._flightPlans = [];
                         this._flightPlans.push(plan);
-                        if (WTDataStore.get('WT_CJ4_FPSYNC', 0) !== 0) {
+                        if (HeavyDivision.configuration.isFlightPlanSynchronizationActive()) {
                             this.pauseSync();
                             yield FlightPlanAsoboSync.LoadFromGame(this);
                         }

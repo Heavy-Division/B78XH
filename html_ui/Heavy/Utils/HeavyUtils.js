@@ -15,6 +15,7 @@ let HeavyDivision;
 		 * @returns {boolean}
 		 */
 		const isFlightPlanSynchronizationActive = function () {
+			return false;
 			return (!!parseInt(WTDataStore.get('WT_CJ4_FPSYNC', 0)));
 		};
 		configuration.isFlightPlanSynchronizationActive = isFlightPlanSynchronizationActive;

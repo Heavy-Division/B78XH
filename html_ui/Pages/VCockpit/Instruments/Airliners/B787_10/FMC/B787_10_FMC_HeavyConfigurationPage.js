@@ -4,7 +4,7 @@ class B787_10_FMC_HeavyConfigurationPage {
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
 
-		let fpSyncCell = (this.isFPSyncActive() ? '<[color=green]ON[/color]←→[size=small]OFF[/size]' : '<[size=small]ON[/size]←→[color=red]OFF[/color]');
+		let fpSyncCell = (HeavyDivision.configuration.isFlightPlanSynchronizationActive() ? '<[color=green]ON[/color]←→[size=small]OFF[/size]' : '<[size=small]ON[/size]←→[color=red]OFF[/color]');
 		let simBriefCell = (this.isSimBriefFilled() ? '<[color=green]FILLED[/color]' : '<[color=red]NOT FILLED[/color]');
 		let unitsCell = (HeavyDivision.configuration.useImperial() ? '<[color=green]IMPERIAL[/color]←→[size=small]METRIC[/size]' : '<[size=small]IMPERIAL[/size]←→[color=green]METRIC[/color]');
 		fmc.setTemplate([
@@ -37,6 +37,7 @@ class B787_10_FMC_HeavyConfigurationPage {
 			new B787_10_FMC_SimBriefConfigurationPage(fmc).showPage();
 		};
 
+		/*
 		fmc.onRightInput[1] = () => {
 			if (this.isFPSyncActive()) {
 				WTDataStore.set('WT_CJ4_FPSYNC', 0);
@@ -45,6 +46,7 @@ class B787_10_FMC_HeavyConfigurationPage {
 			}
 			B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
 		};
+		*/
 
 		fmc.onRightInput[2] = () => {
 			if (HeavyDivision.configuration.useImperial()) {
@@ -61,9 +63,5 @@ class B787_10_FMC_HeavyConfigurationPage {
 		let userid = HeavyDataStorage.get('SIMBRIEF_USERID', '');
 
 		return (username !== '' || userid !== '');
-	}
-
-	static isFPSyncActive() {
-		return (!!WTDataStore.get('WT_CJ4_FPSYNC', 0));
 	}
 }
