@@ -252,13 +252,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					SimVar.SetSimVarValue('K:AP_PANEL_ALTITUDE_HOLD', 'Number', 1);
 				}
 			}
-			let currentAltitude = Simplane.getAltitude();
-			let groundSpeed = Simplane.getGroundSpeed();
-			let apTargetAltitude = Simplane.getAutoPilotAltitudeLockValue('feet');
-			let planeHeading = Simplane.getHeadingMagnetic();
-			let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
 			if (this.getIsVNAVActive()) {
-				let prevWaypoint = this.flightPlanManager.getPreviousActiveWaypoint();
 				let nextWaypoint = this.flightPlanManager.getActiveWaypoint();
 				if (nextWaypoint && (nextWaypoint.legAltitudeDescription === 3 || nextWaypoint.legAltitudeDescription === 4)) {
 					let selectedAltitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
@@ -380,21 +374,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MIN_CALCULATED', 'knots', Simplane.getStallProtectionMinSpeed());
 			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MAX_CALCULATED', 'knots', Simplane.getMaxSpeed(Aircraft.AS01B));
 
-			/**
-			 * Commented out. This is ASOBO implementation and we could not find any information about this behavior in FCOM.
-			 * This cause overriding CRZ altitude by MCP everytime when you touch altitude knob.
-			 * Normal behavior should be wait for pushing Altitude Intervention and then override CRZ altitude.
-			 */
-			/*
-			if (this.getIsVNAVActive()) {
-				let altitude = Simplane.getAltitude();
-				let targetAltitude = Simplane.getAutoPilotAltitudeLockValue('feet');
-				let delta = Math.abs(targetAltitude - altitude);
-				if (delta > 400) {
-					this.activateAltitudeSel();
-				}
-			}
-			*/
 			if (this.currentFlightPhase > FlightPhase.FLIGHT_PHASE_CLIMB) {
 				let altitude = Simplane.getAltitudeAboveGround();
 				if (altitude < 20) {
@@ -474,14 +453,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					}
 				}
 			}
-			/** Default ASOBO implementation */
-			//this._execLight.style.backgroundColor = this.getIsRouteActivated() ? '#00ff00' : 'black';
-			/** Heavy implementation (left exec and FMC exec are synchronized) */
-			if (this.getIsRouteActivated()) {
-				this._execLight.style.backgroundColor = '#00ff00';
-			} else {
-				this._execLight.style.backgroundColor = 'black';
-			}
+			this._execLight.style.backgroundColor = this.getIsRouteActivated() ? '#00ff00' : 'black';
 			this.updateAutopilotCooldown = this._apCooldown;
 		}
 	}
