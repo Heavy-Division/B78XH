@@ -197,9 +197,25 @@ class B787_10_FMC_TakeOffRefPage {
 			}
 		};
 
+		let accelHtCell = '';
+		if (isFinite(fmc.accelerationHeight)) {
+			accelHtCell = fmc.accelerationHeight.toFixed(0);
+		} else {
+			accelHtCell = '---';
+		}
+		accelHtCell = fmc.makeSettable(accelHtCell);
+		accelHtCell = 'FT' + accelHtCell;
+		fmc.onRightInput[1] = () => {
+			let value = fmc.inOut;
+			fmc.clearUserInput();
+			if (fmc.trySetAccelerationHeight(value)) {
+				B787_10_FMC_TakeOffRefPage.ShowPage2(fmc);
+			}
+		};
+
 		let thrRedCell = '';
-		if (isFinite(fmc.thrustReductionAltitude)) {
-			thrRedCell = fmc.thrustReductionAltitude.toFixed(0);
+		if (isFinite(fmc.thrustReductionHeight)) {
+			thrRedCell = fmc.thrustReductionHeight.toFixed(0);
 		} else {
 			thrRedCell = '---';
 		}
@@ -208,7 +224,7 @@ class B787_10_FMC_TakeOffRefPage {
 		fmc.onRightInput[2] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
-			if (fmc.trySetThrustReductionAccelerationAltitude(value)) {
+			if (fmc.trySetThrustReductionHeight(value)) {
 				B787_10_FMC_TakeOffRefPage.ShowPage2(fmc);
 			}
 		};
@@ -218,7 +234,7 @@ class B787_10_FMC_TakeOffRefPage {
 			['', 'EO ACCEL HT'],
 			['', '1500FT'],
 			['', 'ACCEL HT'],
-			['', '1500FT'],
+			['', accelHtCell],
 			['WIND', 'THR REDUCTION'],
 			['000°/0KT', thrRedCell],
 			['RWY WIND', 'LIM TOGW'],

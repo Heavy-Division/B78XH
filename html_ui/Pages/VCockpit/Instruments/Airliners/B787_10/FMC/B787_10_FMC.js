@@ -165,6 +165,12 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				let n1 = this.getThrustTakeOffLimit() / 100;
 				SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
 			}
+
+			if (this.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_CLIMB) {
+				let n1 = this.getThrustClimbLimit() / 100;
+				SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
+			}
+
 			if (this._apHasActivated) {
 				if (!this.getIsVNAVArmed() && !this.getIsVNAVActive()) {
 					this.activateSPD();
@@ -392,14 +398,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				if (this.getIsVNAVActive()) {
 					let speed = this.determineClimbSpeed();
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-					let altitude = Simplane.getAltitudeAboveGround();
-					let n1 = 100;
-					if (altitude < this.thrustReductionAltitude) {
-						n1 = this.getThrustTakeOffLimit() / 100;
-					} else {
-						n1 = this.getThrustClimbLimit() / 100;
-					}
-					SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
 				} else {
 					this._fmcCommandClimbSpeedType = null;
 					this._lastFmcCommandClimbSpeedType = null;
@@ -413,16 +411,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 				if (this.getIsVNAVActive()) {
 					let speed = this.determineCruiseSpeed();
-					let altitude = Simplane.getAltitudeAboveGround();
-
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-					let n1 = 100;
-					if (altitude < this.thrustReductionAltitude) {
-						n1 = this.getThrustTakeOffLimit() / 100;
-					} else {
-						n1 = this.getThrustClimbLimit() / 100;
-					}
-					SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
 				} else {
 					this._fmcCommandCruiseSpeedType = null;
 					this._lastFmcCommandCruiseSpeedType = null;
@@ -1381,6 +1370,12 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	}
 
 	determineClimbSpeed() {
+		if(isFinite(this.v2Speed)){
+			if(this.accelerationAltitude > Simplane.getAltitude()){
+				return this.v2Speed + 20;
+			}
+		}
+
 		let speed = {
 			SPEED_RESTRICTION: (this.climbSpeedRestriction && this.shouldFMCCommandSpeedRestriction() ? this.climbSpeedRestriction.speed : null),
 			SPEED_TRANSITION: (!this._climbSpeedTransitionDeleted ? this.getCrzManagedSpeed() : null),

@@ -32,6 +32,14 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 				activated: false
 			}
 		}
+
+		this.thrustReductionAltitude = NaN;
+		this.thrustReductionHeight = NaN;
+		this.isThrustReductionAltitudeCustomValue = false;
+		this.accelerationAltitude = NaN;
+		this.accelerationHeight = NaN;
+		this.isAccelerationAltitudeCustomValue = false;
+
 		FMCMainDisplay.DEBUG_INSTANCE = this;
 	}
 
@@ -345,9 +353,9 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 			}
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_TAKEOFF) {
 				let enterClimbPhase = false;
-				let agl = Simplane.getAltitude();
+				let msl = Simplane.getAltitude();
 				let altValue = isFinite(this.thrustReductionAltitude) ? this.thrustReductionAltitude : 1500;
-				if (agl > altValue) {
+				if (msl > altValue) {
 					this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CLIMB;
 					enterClimbPhase = true;
 					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
@@ -590,5 +598,94 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 		}
 		this.showErrorMessage(this.defaultInputErrorMessage);
 		return false;
+	}
+
+	trySetThrustReductionHeight(s) {
+		let thrustReductionHeight = parseInt(s);
+		let origin = this.flightPlanManager.getOrigin()
+		if(origin){
+			if (isFinite(thrustReductionHeight)) {
+				let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+				let roundedHeight = Math.round(thrustReductionHeight / 100) * 100;
+				if(this.trySetThrustReductionAltitude(roundedHeight + elevation)){
+					this.thrustReductionHeight = roundedHeight;
+					this.isThrustReductionAltitudeCustomValue = true;
+					return true;
+				}
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	trySetThrustReductionAltitude(s) {
+		let thrustReductionHeight = parseInt(s);
+		if (isFinite(thrustReductionHeight)) {
+			this.thrustReductionAltitude = thrustReductionHeight;
+			SimVar.SetSimVarValue("L:AIRLINER_THR_RED_ALT", "Number", this.thrustReductionAltitude);
+			return true;
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	trySetAccelerationHeight(s) {
+		let accelerationHeight = parseInt(s);
+		let origin = this.flightPlanManager.getOrigin()
+		if(origin){
+			if (isFinite(accelerationHeight)) {
+				let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+				let roundedHeight = Math.round(accelerationHeight / 100) * 100;
+				if(this.trySetAccelerationAltitude(roundedHeight + elevation)){
+					this.accelerationHeight = roundedHeight;
+					this.isAccelerationAltitudeCustomValue = true;
+					return true;
+				}
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	trySetAccelerationAltitude(s) {
+		let accelerationHeight = parseInt(s);
+		if (isFinite(accelerationHeight)) {
+			this.accelerationAltitude = accelerationHeight;
+			SimVar.SetSimVarValue("L:AIRLINER_ACC_ALT", "Number", this.accelerationAltitude);
+			this.isAccelerationAltitudeCustomValue = true;
+			return true;
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	recalculateTHRRedAccTransAlt() {
+		let origin = this.flightPlanManager.getOrigin();
+		if (origin) {
+			if (origin.infos instanceof AirportInfo) {
+				if(isFinite(origin.infos.transitionAltitude)){
+					this.transitionAltitude = origin.infos.transitionAltitude;
+				}
+			}
+			let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+			if(!this.isThrustReductionAltitudeCustomValue){
+				this.thrustReductionAltitude = elevation + 1500;
+				this.thrustReductionHeight = 1500;
+				SimVar.SetSimVarValue("L:AIRLINER_THR_RED_ALT", "Number", this.thrustReductionAltitude);
+			}
+			if(!this.isAccelerationAltitudeCustomValue){
+				this.accelerationAltitude = elevation + 1500;
+				this.accelerationHeight = 1500;
+				SimVar.SetSimVarValue("L:AIRLINER_ACC_ALT", "Number", this.accelerationAltitude);
+			}
+		}
+		let destination = this.flightPlanManager.getDestination();
+		if (destination) {
+			if (destination.infos instanceof AirportInfo) {
+				if(isFinite(destination.infos.transitionAltitude)){
+					this.perfApprTransAlt = destination.infos.transitionAltitude;
+				}
+			}
+		}
 	}
 }
