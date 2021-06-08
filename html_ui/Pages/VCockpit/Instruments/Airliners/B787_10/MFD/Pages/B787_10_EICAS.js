@@ -23,6 +23,7 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 
 	initChild() {
 		this.unitTextSVG = this.querySelector('#UNITS_Value');
+		this.tmaValue = this.querySelector('#TMA_Value');
 		this.allValueComponents.push(new Airliners.DynamicValueComponent(this.querySelector('#TAT_Value'), Simplane.getTotalAirTemperature, 0, Airliners.DynamicValueComponent.formatValueToPosNegTemperature));
 		this.allValueComponents.push(new Airliners.DynamicValueComponent(this.querySelector('#THROTTLE1_Value'), Simplane.getEngineThrottleCommandedN1.bind(this, 0), 1, Airliners.DynamicValueComponent.formatValueToThrottleDisplay));
 		this.allValueComponents.push(new Airliners.DynamicValueComponent(this.querySelector('#THROTTLE2_Value'), Simplane.getEngineThrottleCommandedN1.bind(this, 1), 1, Airliners.DynamicValueComponent.formatValueToThrottleDisplay));
@@ -118,10 +119,20 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 			else
 				this.unitTextSVG.textContent = 'LBS X';
 		}
+
+		/**
+		 * TODO: Make component for texts
+		 */
+
+		this.tmaValue.textContent = this.getThrustMode();
 	}
 
 	onEvent(_event) {
 		switch (_event) {
+			case 'TAKEOFF_MODES_UPDATED':
+				this.thrustTakeOffMode = SimVar.GetSimVarValue('L:B78XH_THRUST_TAKEOFF_MODE', 'Number')
+				this.thrustClimbMode = SimVar.GetSimVarValue('L:B78XH_THRUST_CLIMB_MODE', 'Number')
+				break;
 			case 'ENG':
 				this.secondaryEngineVisible = !this.secondaryEngineVisible;
 				for (let i = 0; i < this.secondaryEngine.length; i++) {
@@ -141,6 +152,41 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 
 	getN3Value(_engine) {
 		return 0;
+	}
+
+	getThrustMode(){
+		const flightPhase = Simplane.getCurrentFlightPhase();
+		switch(flightPhase){
+			case FlightPhase.FLIGHT_PHASE_TAKEOFF:
+				switch (this.thrustTakeOffMode){
+					case 0:
+						return 'TO';
+					case 1:
+						return 'TO 1';
+					case 2:
+						return 'TO 2';
+					default:
+						return '';
+				}
+			case FlightPhase.FLIGHT_PHASE_CLIMB:
+				switch (this.thrustClimbMode){
+					case 0:
+						return 'CLB';
+					case 1:
+						return 'CLB 1';
+					case 2:
+						return 'CLB 2';
+					default:
+						return '';
+				}
+			case FlightPhase.FLIGHT_PHASE_CRUISE:
+				return "CRZ"
+
+			case FlightPhase.FLIGHT_PHASE_DESCENT:
+				return "DES"
+			default:
+				return '';
+		}
 	}
 
 	getFFValue(_engine) {

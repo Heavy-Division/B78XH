@@ -616,6 +616,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			SimVar.SetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number', 0);
 			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 			this._thrustTakeOffTemp = Math.ceil(oat / 10) * 10;
+			this.setThrustTakeOffMode(this._thrustTakeOffMode);
+			this.setThrustCLBMode(this._thrustCLBMode);
 			this.onInit = () => {
 				B787_10_FMC_InitRefIndexPage.ShowPage1(this);
 			};
@@ -1276,6 +1278,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	setThrustTakeOffMode(m) {
 		if (m >= 0 && m <= 2) {
+			SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
+			SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
+			SimVar.SetSimVarValue('L:B78XH_THRUST_TAKEOFF_MODE', 'Number', m);
 			this._thrustTakeOffMode = m;
 		}
 	}
@@ -1286,6 +1291,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	setThrustCLBMode(m) {
 		if (m >= 0 && m <= 2) {
+			SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
+			SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
+			SimVar.SetSimVarValue('L:B78XH_THRUST_CLIMB_MODE', 'Number', m);
 			this._thrustCLBMode = m;
 		}
 	}
@@ -1370,8 +1378,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	}
 
 	determineClimbSpeed() {
-		if(isFinite(this.v2Speed)){
-			if(this.accelerationAltitude > Simplane.getAltitude()){
+		if (isFinite(this.v2Speed)) {
+			if (this.accelerationAltitude > Simplane.getAltitude()) {
 				return this.v2Speed + 20;
 			}
 		}
