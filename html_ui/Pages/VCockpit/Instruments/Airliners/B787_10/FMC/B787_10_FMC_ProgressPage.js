@@ -9,6 +9,15 @@ class B787_10_FMC_ProgressPage {
 			}
 		};
 
+		let useImperial = HeavyDivision.configuration.useImperial();
+		let fuelModifier;
+		if(useImperial){
+			fuelModifier = 1.0;
+		} else {
+			fuelModifier = 0.45359237;
+		}
+
+
 		let speed = Simplane.getGroundSpeed();
 		let currentTime = SimVar.GetGlobalVarValue("ZULU TIME", "seconds");
 		let currentFuel = SimVar.GetSimVarValue("FUEL TOTAL QUANTITY", "gallons") * SimVar.GetSimVarValue("FUEL WEIGHT PER GALLON", "pounds") / 1000;
@@ -38,7 +47,7 @@ class B787_10_FMC_ProgressPage {
 
 				let fuelLeft = fmc.computeFuelLeft(waypointActiveDistance, speed, currentFuel, currentFuelFlow);
 				if (isFinite(fuelLeft)) {
-					waypointActiveFuelCell = fuelLeft.toFixed(1);
+					waypointActiveFuelCell = (fuelLeft * fuelModifier).toFixed(1);
 				}
 			}
 		}
@@ -67,7 +76,7 @@ class B787_10_FMC_ProgressPage {
 						}
 						let fuelLeft = fmc.computeFuelLeft(waypointActiveNextDistance, speed, currentFuel, currentFuelFlow);
 						if (isFinite(fuelLeft)) {
-							waypointActiveNextFuelCell = fuelLeft.toFixed(1);
+							waypointActiveNextFuelCell = (fuelLeft * fuelModifier).toFixed(1);
 						}
 					}
 				}
@@ -104,7 +113,7 @@ class B787_10_FMC_ProgressPage {
 
 					let fuelLeft = fmc.computeFuelLeft(destinationDistance, speed, currentFuel, currentFuelFlow);
 					if (isFinite(fuelLeft)) {
-						destinationFuelCell = fuelLeft.toFixed(1);
+						destinationFuelCell = (fuelLeft * fuelModifier).toFixed(1);
 					}
 				}
 			}
