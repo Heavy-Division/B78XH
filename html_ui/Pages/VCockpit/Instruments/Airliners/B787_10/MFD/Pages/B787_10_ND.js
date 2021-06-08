@@ -255,23 +255,6 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 				}
 				break;
 		}
-
-		/**
-		 * TODO: Preparation for executable DIRECT TO preview
-		 */
-
-
-		if (SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO', 'number')) {
-			if (!this.map.instrument.tmpDirectToElement) {
-				this.map.instrument.tmpDirectToElement = new SvgBackOnTrackElement('yellow');
-			}
-			this.map.instrument.tmpDirectToElement.llaRequested = new LatLongAlt(SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LAT_0', 'number'), SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LONG_0', 'number'));
-			this.map.instrument.tmpDirectToElement.targetLla = new LatLongAlt(SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LAT_1', 'number'), SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LONG_1', 'number'));
-			this.map.instrument.tmpDirectToElement.planeHeading = SimVar.GetSimVarValue('PLANE HEADING DEGREES TRUE', 'degree');
-		} else {
-			this.map.instrument.tmpDirectToElement = undefined;
-		}
-
 	}
 
 	onNavButton(_button) {
