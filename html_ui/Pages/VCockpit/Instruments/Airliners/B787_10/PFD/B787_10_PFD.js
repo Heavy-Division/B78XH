@@ -342,11 +342,11 @@ class B787_10_PFD_Altimeter extends NavSystemElement {
 				this.altimeter.showMTRS(this.isMTRSActive);
 				break;
 			case 'Mins_INC':
-				this.minimumReference += 50;
+				this.minimumReference += 10;
 				this.altimeter.minimumReferenceValue = this.minimumReference;
 				break;
 			case 'Mins_DEC':
-				this.minimumReference -= 50;
+				this.minimumReference -= 10;
 				this.altimeter.minimumReferenceValue = this.minimumReference;
 				break;
 			case 'Mins_Press':
