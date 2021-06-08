@@ -40,6 +40,14 @@ class B787_10_FMC_RouteDataPage {
 		let flightPlanManagerWaypoints = this.fmc.flightPlanManager.getWaypoints();
 
 		if (flightPlanManagerWaypoints) {
+			let useImperial = HeavyDivision.configuration.useImperial();
+			let fuelModifier;
+			if(useImperial){
+				fuelModifier = 1.0;
+			} else {
+				fuelModifier = 0.45359237;
+			}
+
 			let currentTime = SimVar.GetGlobalVarValue("ZULU TIME", "seconds");
 			let currentFuel = SimVar.GetSimVarValue("FUEL TOTAL QUANTITY", "gallons") * SimVar.GetSimVarValue("FUEL WEIGHT PER GALLON", "pounds") / 1000;
 			let currentFuelFlow = SimVar.GetSimVarValue("TURB ENG FUEL FLOW PPH:1", "pound per hour") + SimVar.GetSimVarValue("TURB ENG FUEL FLOW PPH:2", "pound per hour") + SimVar.GetSimVarValue("TURB ENG FUEL FLOW PPH:3", "pound per hour") + SimVar.GetSimVarValue("TURB ENG FUEL FLOW PPH:4", "pound per hour");
@@ -94,7 +102,7 @@ class B787_10_FMC_RouteDataPage {
 
 						let fuelLeft = this.fmc.computeFuelLeft(distance, speed, currentFuel, currentFuelFlow);
 						if (isFinite(fuelLeft)) {
-							fuelCell = fuelLeft.toFixed(1);
+							fuelCell = (fuelLeft * fuelModifier).toFixed(1);
 						}
 
 						rows[2 * i] = [etaCell, '<', waypoint.ident, fuelCell];
