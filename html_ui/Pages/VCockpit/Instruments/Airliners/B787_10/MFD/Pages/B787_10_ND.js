@@ -120,9 +120,9 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 			case 'TFC':
 				this.map.instrument.showTraffic = !this.map.instrument.showTraffic;
 				if(this.map.instrument.showTraffic){
-					SimVar.SetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number', 0);
-				} else {
 					SimVar.SetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number', 1);
+				} else {
+					SimVar.SetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number', 0);
 				}
 				this.navMenu.refresh();
 				break;
