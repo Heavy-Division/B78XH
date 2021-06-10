@@ -96,6 +96,70 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		return true;
 	}
 
+	prepareForTurnAround(callback){
+		this._thrustTakeOffMode = 1;
+		this._thrustCLBMode = 1;
+		this._thrustTakeOffTemp = NaN;
+		this._lastUpdateAPTime = NaN;
+		this.refreshFlightPlanCooldown = 0;
+		this.updateAutopilotCooldown = 0;
+		this._hasSwitchedToHoldOnTakeOff = false;
+		this._previousApMasterStatus = false;
+		this._apMasterStatus = false;
+		this._apHasDeactivated = false;
+		this._apHasActivated = false;
+		this._previousAThrStatus = false;
+		this._aThrStatus = false;
+		this._aThrHasActivated = false;
+		this._hasReachedTopOfDescent = false;
+		this._apCooldown = 500;
+
+		this._lastFMCCommandSpeedRestrictionValue = null;
+		this._lastFMCCommandSelectedClimbSpeedValue = null;
+		this._fmcCommandClimbSpeedType = null;
+		this._lastFmcCommandClimbSpeedType = null;
+		this._fmcCommandCruiseSpeedType = null;
+		this._lastFmcCommandCruiseSpeedType = null;
+
+		this._fpHasChanged = false;
+		this._activatingDirectTo = false;
+		this._pilotWaypoints = undefined;
+
+		this._alertingMessages = [];
+		this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_TAKEOFF;
+		this.Init();
+		this.clearVSpeeds();
+		this.fmcPreFlightComplete= {
+			completed: false,
+			finished: false,
+			thrust: {
+				completed: false,
+				takeOffTemp: false
+			},
+			takeoff: {
+				completed: false,
+				flaps: false,
+				v1: false,
+				vR: false,
+				v2: false
+			},
+			perfInit: {
+				completed: false,
+				cruiseAltitude: false,
+				costIndex: false,
+				reserves: false
+			},
+			route: {
+				completed: false,
+				origin: false,
+				destination: false,
+				activated: false
+			}
+		}
+
+		callback();
+	}
+
 	/**
 	 * WT Integration
 	 */

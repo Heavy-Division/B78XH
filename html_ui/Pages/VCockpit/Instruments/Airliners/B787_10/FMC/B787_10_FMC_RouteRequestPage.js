@@ -37,6 +37,9 @@ class B787_10_FMC_RouteRequestPage {
 			/**
 			 * Callback hell
 			 */
+			if(!Simplane.getIsGrounded()){
+				return;
+			}
 
 			let updateFlightPlan = () => {
 				updateFlightNumber();
@@ -51,9 +54,40 @@ class B787_10_FMC_RouteRequestPage {
 			};
 
 			let updateOrigin = () => {
-				this.fmc.updateRouteOrigin(this.flightPlan.origin['icao_code'], () => {
-					updateDestination();
-				});
+
+				if(Simplane.getIsGrounded()){
+					if(this.fmc.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF){
+						this.fmc.tmpDestination = undefined;
+						this.fmc.flightPlanManager.createNewFlightPlan(() => {
+							this.fmc.updateRouteOrigin(this.flightPlan.origin['icao_code'], (result) => {
+								if (result) {
+									this.fmc.fpHasChanged = true;
+									SimVar.SetSimVarValue('L:WT_CJ4_INHIBIT_SEQUENCE', 'number', 0);
+									this.fmc.updateFuelVars();
+									updateDestination();
+								}
+							});
+						});
+					} else {
+						this.fmc.clearUserInput();
+						this.fmc.prepareForTurnAround(() => {
+							this.fmc.tmpDestination = undefined;
+							this.fmc.flightPlanManager.createNewFlightPlan(() => {
+								this.fmc.updateRouteOrigin(this.flightPlan.origin['icao_code'], (result) => {
+									if (result) {
+										this.fmc.fpHasChanged = true;
+										SimVar.SetSimVarValue('L:WT_CJ4_INHIBIT_SEQUENCE', 'number', 0);
+										this.fmc.updateFuelVars();
+										updateDestination();
+									}
+								});
+							});
+						});
+					}
+				} else {
+					this.fmc.showErrorMessage('NOT ON GROUND');
+					return;
+				}
 			};
 
 			let updateDestination = () => {

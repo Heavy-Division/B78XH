@@ -226,8 +226,17 @@ class B787_10_FMC_RoutePage {
 						this._fmc.inOut = this._fmc.flightPlanManager.getOrigin().ident;
 					}
 				} else {
-					this._fmc.clearUserInput();
-					this.setOrigin(value.padEnd(4));
+					if(Simplane.getIsGrounded()){
+						if(this._fmc.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF){
+							this._fmc.clearUserInput();
+							this.setOrigin(value.padEnd(4));
+						} else {
+							this._fmc.clearUserInput();
+							this._fmc.prepareForTurnAround(() => {
+								this.setOrigin(value.padEnd(4));
+							});
+						}
+					}
 				}
 			};
 
