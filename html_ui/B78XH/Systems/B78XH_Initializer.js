@@ -25,6 +25,7 @@ class B78XH_Initializer {
 			 */
 			// Cold & Dark config
 			[
+				{type: 'L', variable: 'B78XH_THRUST_ASSUMED_TEMPERATURE', value: -1000},
 				{type: 'L', variable: 'B78XH_IRS_L_STATE', value: 0},
 				{type: 'L', variable: 'B78XH_IRS_R_STATE', value: 0},
 				{type: 'L', variable: 'B78XH_IRS_L_SWITCH_STATE', value: 0},
@@ -96,6 +97,7 @@ class B78XH_Initializer {
 			],
 			// normal config
 			[
+				{type: 'L', variable: 'B78XH_THRUST_ASSUMED_TEMPERATURE', value: -1000},
 				{type: 'L', variable: 'B78XH_IRS_L_STATE', value: 2},
 				{type: 'L', variable: 'B78XH_IRS_R_STATE', value: 2},
 				{type: 'L', variable: 'B78XH_IRS_L_SWITCH_STATE', value: 1},

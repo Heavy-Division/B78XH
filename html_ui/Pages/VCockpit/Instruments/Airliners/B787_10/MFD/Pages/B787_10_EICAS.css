@@ -82,7 +82,8 @@ b787-10-eicas-element {
   b787-10-eicas-element #TMA_Value {
     fill: var(--eicasGreen);
     text-anchor: middle;
-    letter-spacing: -1px; }
+    letter-spacing: -4px;
+    word-spacing: -10px;}
   b787-10-eicas-element #GearInfo text {
     text-anchor: middle; }
   b787-10-eicas-element #GearInfo rect {

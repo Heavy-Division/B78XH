@@ -1276,9 +1276,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	setThrustTakeOffMode(m) {
 		if (m >= 0 && m <= 2) {
+			SimVar.SetSimVarValue('L:B78XH_THRUST_TAKEOFF_MODE', 'Number', m);
 			SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
 			SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
-			SimVar.SetSimVarValue('L:B78XH_THRUST_TAKEOFF_MODE', 'Number', m);
 			this._thrustTakeOffMode = m;
 		}
 	}
@@ -1289,9 +1289,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	setThrustCLBMode(m) {
 		if (m >= 0 && m <= 2) {
+			SimVar.SetSimVarValue('L:B78XH_THRUST_CLIMB_MODE', 'Number', m);
 			SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
 			SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
-			SimVar.SetSimVarValue('L:B78XH_THRUST_CLIMB_MODE', 'Number', m);
 			this._thrustCLBMode = m;
 		}
 	}
@@ -1305,6 +1305,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		if (isFinite(v)) {
 			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 			if (v >= oat && v < 80) {
+				SimVar.SetSimVarValue('L:B78XH_THRUST_ASSUMED_TEMPERATURE', 'Number', v);
+				SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
+				SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
 				this._thrustTakeOffTemp = v;
 				return true;
 			}

@@ -24,6 +24,7 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 	initChild() {
 		this.unitTextSVG = this.querySelector('#UNITS_Value');
 		this.tmaValue = this.querySelector('#TMA_Value');
+		this.thrustAssumedTemperatureValue = this.querySelector('#ASSUMEDTEMP_Value');
 		this.allValueComponents.push(new Airliners.DynamicValueComponent(this.querySelector('#TAT_Value'), Simplane.getTotalAirTemperature, 0, Airliners.DynamicValueComponent.formatValueToPosNegTemperature));
 		this.allValueComponents.push(new Airliners.DynamicValueComponent(this.querySelector('#THROTTLE1_Value'), Simplane.getEngineThrottleCommandedN1.bind(this, 0), 1, Airliners.DynamicValueComponent.formatValueToThrottleDisplay));
 		this.allValueComponents.push(new Airliners.DynamicValueComponent(this.querySelector('#THROTTLE2_Value'), Simplane.getEngineThrottleCommandedN1.bind(this, 1), 1, Airliners.DynamicValueComponent.formatValueToThrottleDisplay));
@@ -76,6 +77,9 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 		this.infoPanelsManager.init(this.infoPanel);
 		this.gallonToMegagrams = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilogram') * 0.001;
 		this.gallonToMegapounds = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'lbs') * 0.001;
+		this.thrustAssumedTemperature = -1000;
+		this.thrustTakeOffMode = 1;
+		this.thrustClimbMode = 1;
 	}
 
 	updateChild(_deltaTime) {
@@ -125,6 +129,25 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 		 */
 
 		this.tmaValue.textContent = this.getThrustMode();
+		this.thrustAssumedTemperatureValue.textContent = B787_10_EICAS.formatAssumedTemperature(this.getThrustAssumedTemperature());
+	}
+
+	static formatAssumedTemperature(_value, _dp = 0){
+		if (_value === -1000){
+			return '';
+		}
+		return Airliners.DynamicValueComponent.formatValueToPosNegTemperature(_value, _dp = 0)
+	}
+
+	getThrustAssumedTemperature(){
+		if(this.thrustAssumedTemperature === -1000){
+			return -1000;
+		}
+
+		if(isFinite(this.thrustAssumedTemperature)){
+			return this.thrustAssumedTemperature;
+		}
+		return -1000;
 	}
 
 	onEvent(_event) {
@@ -132,6 +155,7 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 			case 'TAKEOFF_MODES_UPDATED':
 				this.thrustTakeOffMode = SimVar.GetSimVarValue('L:B78XH_THRUST_TAKEOFF_MODE', 'Number')
 				this.thrustClimbMode = SimVar.GetSimVarValue('L:B78XH_THRUST_CLIMB_MODE', 'Number')
+				this.thrustAssumedTemperature = SimVar.GetSimVarValue('L:B78XH_THRUST_ASSUMED_TEMPERATURE', 'Number')
 				break;
 			case 'ENG':
 				this.secondaryEngineVisible = !this.secondaryEngineVisible;
@@ -160,11 +184,11 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 			case FlightPhase.FLIGHT_PHASE_TAKEOFF:
 				switch (this.thrustTakeOffMode){
 					case 0:
-						return 'TO';
+						return (this.getThrustAssumedTemperature() === -1000 ? 'TO' : 'D-TO');
 					case 1:
-						return 'TO 1';
+						return (this.getThrustAssumedTemperature() === -1000 ? 'TO 1' : 'D-TO 1');
 					case 2:
-						return 'TO 2';
+						return (this.getThrustAssumedTemperature() === -1000 ? 'TO 2' : 'D-TO 2');
 					default:
 						return '';
 				}
@@ -183,7 +207,7 @@ class B787_10_EICAS extends B787_10_CommonMFD.MFDTemplateElement {
 				return "CRZ"
 
 			case FlightPhase.FLIGHT_PHASE_DESCENT:
-				return "DES"
+				return "CRZ"
 			default:
 				return '';
 		}

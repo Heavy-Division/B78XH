@@ -28,6 +28,9 @@ class B787_10_FMC_ThrustLimPage {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
 			if(value === 'DELETE'){
+				SimVar.SetSimVarValue('L:B78XH_THRUST_ASSUMED_TEMPERATURE', 'Number', -1000);
+				SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
+				SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
 				fmc._thrustTakeOffTemp = NaN;
 				B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
 				return;
