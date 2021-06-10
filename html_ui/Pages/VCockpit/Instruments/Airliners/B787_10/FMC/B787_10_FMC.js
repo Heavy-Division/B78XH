@@ -52,7 +52,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		this._takeOffN1TempRow = [70, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0, -10, -20, -30, -40, -50];
 		this._thrustTakeOffMode = 1;
 		this._thrustCLBMode = 1;
-		this._thrustTakeOffTemp = 20;
+		this._thrustTakeOffTemp = NaN;
 		this._lastUpdateAPTime = NaN;
 		this.refreshFlightPlanCooldown = 0;
 		this.updateAutopilotCooldown = 0;
@@ -614,8 +614,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		if (this.urlConfig.index == 1) {
 			SimVar.SetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number', 0);
 			SimVar.SetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number', 0);
-			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
-			this._thrustTakeOffTemp = Math.ceil(oat / 10) * 10;
 			this.setThrustTakeOffMode(this._thrustTakeOffMode);
 			this.setThrustCLBMode(this._thrustCLBMode);
 			this.onInit = () => {
@@ -1321,7 +1319,14 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let airport = this.flightPlanManager.getOrigin();
 		if (airport) {
 			let altitude = airport.infos.coordinates.alt;
-			return this.getTakeOffThrustN1(this.getThrustTakeOffTemp(), altitude) - this.getThrustTakeOffMode() * 10;
+			const assumedTemp = this.getThrustTakeOffTemp();
+			let temp;
+			if(assumedTemp){
+				temp = assumedTemp
+			} else {
+				temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
+			}
+			return this.getTakeOffThrustN1(temp, altitude) - this.getThrustTakeOffMode() * 10;
 		}
 		return 100;
 	}

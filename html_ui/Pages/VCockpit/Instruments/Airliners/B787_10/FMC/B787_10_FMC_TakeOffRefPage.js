@@ -72,10 +72,14 @@ class B787_10_FMC_TakeOffRefPage {
 			}
 		};
 
-
-		const selectedTemp = fmc.getThrustTakeOffTemp();
-		let selectedTempCell = '[settable]' + selectedTemp + '[/settable]';
-		selectedTempCell = selectedTempCell + '°C';
+		let selectedTempCell;
+		let selectedTemp = fmc.getThrustTakeOffTemp();
+		if(selectedTemp){
+			selectedTempCell = '[settable]' + selectedTemp + '[/settable]';
+		} else {
+			selectedTempCell = '[settable]--[/settable]';
+		}
+		selectedTempCell = selectedTempCell + '°';
 
 		let thrustTOMode = fmc.getThrustTakeOffMode();
 		if(thrustTOMode === 0){

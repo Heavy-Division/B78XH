@@ -15,7 +15,14 @@ class B787_10_FMC_ThrustLimPage {
 			B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
 		};
 
-		let selectedTempCell = '[settable]' + fmc.getThrustTakeOffTemp() + '[/settable]';
+
+		let selectedTempCell;
+		let selectedTemp = fmc.getThrustTakeOffTemp();
+		if(selectedTemp){
+			selectedTempCell = '[settable]' + selectedTemp + '[/settable]';
+		} else {
+			selectedTempCell = '[settable]--[/settable]';
+		}
 		selectedTempCell = selectedTempCell + '°';
 		fmc.onLeftInput[0] = () => {
 			let value = fmc.inOut;

@@ -3,7 +3,7 @@
         {
             "path": "html_ui/B78XH/b78xh.json",
             "size": 119,
-            "date": 132676633749085310
+            "date": 132678152281541580
         },
         {
             "path": "ModelBehaviorDefs/Heavy/Index.xml",
@@ -51,6 +51,36 @@
             "date": 132586805143032560
         },
         {
+            "path": "html_ui/Heavy/Utils/HeavyDataStorage.js",
+            "size": 1254,
+            "date": 132583866569842750
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyInputUtils.js",
+            "size": 331,
+            "date": 132580488123794800
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyInputChecks.js",
+            "size": 3114,
+            "date": 132585902126714080
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyUpdateDelayer.js",
+            "size": 894,
+            "date": 132572192650230000
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyUtils.js",
+            "size": 1229,
+            "date": 132675498945617300
+        },
+        {
+            "path": "html_ui/Heavy/Utils/UpdateDelayer.js",
+            "size": 1484,
+            "date": 132652103610743440
+        },
+        {
             "path": "html_ui/Heavy/SimBrief/SimBrief.js",
             "size": 897,
             "date": 132612142370977220
@@ -69,36 +99,6 @@
             "path": "html_ui/Heavy/SimBrief/SimBriefOceanicWaypointConverter.js",
             "size": 326,
             "date": 132612205841210500
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyInputChecks.js",
-            "size": 3114,
-            "date": 132585902126714080
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyDataStorage.js",
-            "size": 1254,
-            "date": 132583866569842750
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyInputUtils.js",
-            "size": 331,
-            "date": 132580488123794800
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyUpdateDelayer.js",
-            "size": 894,
-            "date": 132572192650230000
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyUtils.js",
-            "size": 1229,
-            "date": 132675498945617300
-        },
-        {
-            "path": "html_ui/Heavy/Utils/UpdateDelayer.js",
-            "size": 1484,
-            "date": 132652103610743440
         },
         {
             "path": "html_ui/WTPages/Autopilot/AutopilotMath.js",
@@ -183,7 +183,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Core/VCockpit.html",
             "size": 1420,
-            "date": 132676610055141250
+            "date": 132678152375727870
         },
         {
             "path": "SimObjects/Airplanes/Asobo_B787_10/TEXTURE/787_10_COCKPIT_MAINPANEL_ALBD.PNG.DDS",
@@ -306,14 +306,14 @@
             "date": 132642076127608110
         },
         {
-            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgFuelRingElement.js",
-            "size": 13788,
-            "date": 132629717594529250
-        },
-        {
             "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgFlightPlanElement.js",
             "size": 10163,
             "date": 132643996995926780
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgFuelRingElement.js",
+            "size": 13788,
+            "date": 132629717594529250
         },
         {
             "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgLabeledRingElement.js",
@@ -407,8 +407,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js",
-            "size": 56971,
-            "date": 132676545655027360
+            "size": 57022,
+            "date": 132678152023154770
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ApproachPage.js",
@@ -512,13 +512,13 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_TakeOffRefPage.js",
-            "size": 7638,
-            "date": 132675766660359280
+            "size": 7743,
+            "date": 132678143609666380
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ThrustLimPage.js",
-            "size": 4368,
-            "date": 132673099723896960
+            "size": 4516,
+            "date": 132678143691400480
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_VNAVPage.js",
@@ -621,14 +621,14 @@
             "date": 132581952839917680
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT8.png",
-            "size": 3683,
-            "date": 132581952839917680
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_HELIPORT_PINK.png",
             "size": 3683,
             "date": 132581952839927650
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT8.png",
+            "size": 3683,
+            "date": 132581952839917680
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_NON_TOWERED_NON_SERVICED_PINK.png",
