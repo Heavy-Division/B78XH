@@ -93,6 +93,11 @@ class B787_10_FMC_TakeOffRefPage {
 		fmc.onLeftInput[1] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
+			if(value === 'DELETE'){
+				fmc._thrustTakeOffTemp = NaN;
+				B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
+				return;
+			}
 			if (fmc.setThrustTakeOffTemp(value)) {
 				B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
 			}

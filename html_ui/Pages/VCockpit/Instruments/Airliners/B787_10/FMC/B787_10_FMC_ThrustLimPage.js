@@ -27,6 +27,11 @@ class B787_10_FMC_ThrustLimPage {
 		fmc.onLeftInput[0] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
+			if(value === 'DELETE'){
+				fmc._thrustTakeOffTemp = NaN;
+				B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
+				return;
+			}
 			if (fmc.setThrustTakeOffTemp(value)) {
 				B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
 			}
