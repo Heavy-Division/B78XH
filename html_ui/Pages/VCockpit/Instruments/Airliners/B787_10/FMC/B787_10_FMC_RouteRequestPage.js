@@ -14,7 +14,7 @@ class B787_10_FMC_RouteRequestPage {
 			[''],
 			['LOAD FP FROM GAME'],
 			[''],
-			[''],
+			['LOAD FP FROM PFPX'],
 			[''],
 			[''],
 			[''],
@@ -284,6 +284,294 @@ class B787_10_FMC_RouteRequestPage {
 				this.fmc.flightPlanManager.resumeSync();
 				this.fmc.flightPlanManager.setActiveWaypointIndex(1);
 				B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+			});
+		};
+
+
+		/**
+		 * TODO: Refactor this... It is same as SimBrief just parsing log is different
+		 */
+		this.fmc.onLeftInput[2] = () => {
+			/**
+			 * Callback hell
+			 */
+			if(!Simplane.getIsGrounded()){
+				return;
+			}
+
+			let updateFlightPlan = () => {
+				//updateFlightNumber();
+				//updateCostIndex();
+				updateCruiseAltitude();
+				this.fmc.flightPlanManager.pauseSync();
+				updateRoute();
+			};
+
+			let updateRoute = () => {
+				updateOrigin();
+			};
+
+			let updateOrigin = () => {
+
+				if(Simplane.getIsGrounded()){
+					if(this.fmc.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF){
+						this.fmc.tmpDestination = undefined;
+						this.fmc.flightPlanManager.createNewFlightPlan(() => {
+							this.fmc.updateRouteOrigin(this.flightPlan.origin['icao_code'], (result) => {
+								if (result) {
+									this.fmc.fpHasChanged = true;
+									SimVar.SetSimVarValue('L:WT_CJ4_INHIBIT_SEQUENCE', 'number', 0);
+									this.fmc.updateFuelVars();
+									updateDestination();
+								}
+							});
+						});
+					} else {
+						this.fmc.clearUserInput();
+						this.fmc.prepareForTurnAround(() => {
+							this.fmc.tmpDestination = undefined;
+							this.fmc.flightPlanManager.createNewFlightPlan(() => {
+								this.fmc.updateRouteOrigin(this.flightPlan.origin['icao_code'], (result) => {
+									if (result) {
+										this.fmc.fpHasChanged = true;
+										SimVar.SetSimVarValue('L:WT_CJ4_INHIBIT_SEQUENCE', 'number', 0);
+										this.fmc.updateFuelVars();
+										updateDestination();
+									}
+								});
+							});
+						});
+					}
+				} else {
+					this.fmc.showErrorMessage('NOT ON GROUND');
+					return;
+				}
+			};
+
+			let updateDestination = () => {
+				this.fmc.updateRouteDestination(this.flightPlan.destination['icao_code'], () => {
+					//parseNavlog();
+					updateWaypoints();
+				});
+			};
+
+			let updateFlightNumber = () => {
+				this.fmc.updateFlightNo(this.flightPlan.general['flight_number']);
+			};
+
+			let updateCostIndex = () => {
+				this.fmc.tryUpdateCostIndex(this.flightPlan.general['cruise_profile'].replace('CI', ''));
+			};
+
+			let updateCruiseAltitude = () => {
+				this.fmc.setCruiseFlightLevelAndTemperature(this.flightPlan.general['initial_altitude']);
+			};
+
+			let removeOriginAndDestination = (navlog) => {
+				let out = [];
+
+				navlog.forEach((fix) => {
+					if (fix.ident !== this.flightPlan.origin.icao_code && fix.ident !== this.flightPlan.destination.icao_code) {
+						out.push(fix);
+					}
+				});
+				return out;
+			};
+
+			let removeSidAndStar = (navlog) => {
+				let out = [];
+				let sid = (navlog[0].via_airway !== 'DCT' ? navlog[0].via_airway : '');
+				let star = (this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length - 1].via_airway !== 'DCT' ? this.flightPlan.navlog.fix[this.flightPlan.navlog.fix.length - 1].via_airway : '');
+				navlog.forEach((fix) => {
+					if ((fix.via_airway !== sid && fix.via_airway !== star) || fix.via_airway === 'DCT') {
+						out.push(fix);
+					}
+				});
+				return out;
+			};
+			let removeTocAndTod = (navlog) => {
+				let out = [];
+				navlog.forEach((fix) => {
+					if (fix.ident !== 'TOD' && fix.ident !== 'TOC') {
+						out.push(fix);
+					}
+				});
+				return out;
+			};
+
+			let breakAPartNAT = (navlog) => {
+				const nats = ['NATA', 'NATB', 'NATC', 'NATD', 'NATE', 'NATF', 'NATG', 'NATH', 'NATJ', 'NATK', 'NATL', 'NATM', 'NATN', 'NATP', 'NATQ', 'NATR', 'NATS', 'NATT', 'NATU', 'NATV', 'NATW', 'NATX', 'NATY', 'NATZ']
+				let out = [];
+				navlog.forEach((fix) => {
+					let index = nats.findIndex((nat) => {
+						return nat === fix.via_airway;
+					})
+					if (index !== -1) {
+						fix.via_airway = 'DCT';
+					}
+
+					out.push(fix);
+				});
+				return out;
+			};
+
+			let parseNavlog = () => {
+				let navlog = this.flightPlan.navlog.fix;
+				let waypoints = [];
+				let finalWaypoints = [];
+
+				navlog = removeOriginAndDestination(navlog);
+				navlog = removeSidAndStar(navlog);
+				navlog = removeTocAndTod(navlog);
+				navlog = breakAPartNAT(navlog);
+
+				navlog.forEach((fix) => {
+					let ident = SimBriefOceanicWaypointConverter.convert(fix.ident);
+					waypoints.push({
+						ident: ident,
+						airway: fix.via_airway,
+						altitude: fix.altitude_feet,
+						lat: fix.pos_lat,
+						long: fix.pos_long
+					});
+				});
+
+				/**
+				 * SET first waypoint to DCT
+				 */
+
+				waypoints[0].airway = 'DCT';
+
+				/**
+				 * GROUP BY Airway
+				 */
+
+				let lastAirway = '';
+				waypoints.forEach((waypoint) => {
+					if (lastAirway === waypoint.airway && waypoint.airway !== 'DCT') {
+						finalWaypoints.pop();
+					}
+					finalWaypoints.push(waypoint);
+					lastAirway = waypoint.airway;
+				});
+
+				this.waypoints = finalWaypoints;
+
+				this.waypoints.forEach((waypoint) => {
+					this.progress.push([waypoint.airway, waypoint.ident, '', false]);
+				});
+			};
+
+			let updateWaypoints = async () => {
+				let iterator = 0;
+				let protection = 0;
+				parseNavlog();
+
+				let insertWaypoint = async () => {
+					protection++;
+					if (protection > 400) {
+						iterator = 20000;
+						this.fmc.flightPlanManager.resumeSync();
+						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+						return;
+					}
+					if (!this.waypoints[iterator]) {
+						iterator = 20000;
+						this.fmc.flightPlanManager.resumeSync();
+						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+						return;
+					}
+
+					if (iterator >= this.waypoints.length) {
+						this.fmc.flightPlanManager.resumeSync();
+						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+					}
+
+					this.updateProgress(iterator);
+					if (this.waypoints[iterator].airway !== 'DCT') {
+						let lastWaypoint = this.fmc.flightPlanManager.getWaypoints()[this.fmc.flightPlanManager.getEnRouteWaypointsLastIndex()];
+						if (lastWaypoint.infos instanceof WayPointInfo) {
+							lastWaypoint.infos.UpdateAirway(this.waypoints[iterator].airway).then(() => {
+								let airway = lastWaypoint.infos.airways.find(a => {
+									return a.name === this.waypoints[iterator].airway;
+								});
+								if (airway) {
+									this.fmc.onLeftInput = [];
+									this.fmc.onRightInput = [];
+									this.fmc.updateSideButtonActiveStatus();
+									this.insertWaypointsAlongAirway(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, this.waypoints[iterator].airway, () => {
+										iterator++;
+										insertWaypoint();
+									});
+								} else {
+									iterator++;
+									insertWaypoint();
+								}
+							});
+						}
+					} else {
+						this.fmc.onLeftInput = [];
+						this.fmc.onRightInput = [];
+						this.fmc.updateSideButtonActiveStatus();
+						this.progress[iterator][2] = this.waypoints[iterator].ident;
+						this.insertWaypoint(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, iterator, () => {
+							iterator++;
+							insertWaypoint();
+						});
+					}
+				};
+
+				await insertWaypoint();
+			};
+
+			let convertPlnToFlightPlan = (callback) => {
+				Utils.loadFile('coui://html_UI/plans/plan.pln', (content) => {
+					let parser = new DOMParser();
+					let object = parser.parseFromString(content,"text/xml");
+					let crzAltitude = object.getElementsByTagName("CruisingAlt")[0].textContent;
+					let origin = object.getElementsByTagName("DepartureID")[0].textContent;
+					let destination = object.getElementsByTagName("DestinationID")[0].textContent;
+					let output = {};
+
+					output.general = {
+						initial_altitude: crzAltitude,
+					}
+					output.origin = {
+						icao_code: origin
+					}
+					output.destination = {
+						icao_code: destination
+					}
+
+					let finalWaypoints = [];
+
+					let waypoints = object.getElementsByTagName("ATCWaypoint");
+					for (let item of waypoints) {
+						let waypoint = {};
+						waypoint.ident = item.id;
+						for (let airway of item.getElementsByTagName('ATCAirway')) {
+							waypoint.via_airway = airway.textContent;
+							break;
+						}
+						if(!waypoint.via_airway){
+							waypoint.via_airway = 'DCT';
+						}
+						waypoint.lat = 0;
+						waypoint.long = 0;
+						finalWaypoints.push(waypoint);
+					}
+
+					output.navlog = {
+						fix: finalWaypoints
+					}
+
+					this.flightPlan = output;
+					callback();
+				});
+			}
+
+			convertPlnToFlightPlan(() => {
+				updateFlightPlan();
 			});
 		};
 	}
