@@ -1449,10 +1449,35 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		super.onEvent(_event);
 	}
 
+	getFlapProtectionMaxSpeed(handleIndex){
+		switch (handleIndex){
+			case 0:
+				return 360;
+			case 1:
+				return 255;
+			case 2:
+				return 235;
+			case 3:
+				return 215;
+			case 4:
+				return 210;
+			case 5:
+				return 210;
+			case 6:
+				return 205;
+			case 7:
+				return 185;
+			case 8:
+				return 175;
+		}
+		return 360;
+	}
+
 	determineClimbSpeed() {
+		let maxSpeed = Infinity;
 		if (isFinite(this.v2Speed)) {
 			if (this.accelerationAltitude > Simplane.getAltitude()) {
-				return this.v2Speed + 20;
+				maxSpeed =  this.v2Speed + 20;
 			}
 		}
 
@@ -1474,7 +1499,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
 		}
 
-		return speed[commandedSpeedKey];
+		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+
+		return Math.min(speed[commandedSpeedKey], maxSpeed, this.getFlapProtectionMaxSpeed(flapsHandleIndex));
 	}
 
 	determineCruiseSpeed() {
