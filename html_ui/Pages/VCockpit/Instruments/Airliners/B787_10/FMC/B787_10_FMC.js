@@ -1217,6 +1217,36 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		if (isNaN(flapsHandleIndex)) {
 			flapsHandleIndex = Simplane.getFlapsHandleIndex();
 		}
+
+		let min = 198;
+		let max = 250;
+		if (flapsHandleIndex >= 9) {
+			min = 119;
+			max = 171;
+		} else if (flapsHandleIndex >= 8) {
+			min = 119;
+			max = 174;
+		} else if (flapsHandleIndex >= 7) {
+			min = 138;
+			max = 182;
+		} else if (flapsHandleIndex >= 4) {
+			min = 138;
+			max = 182;
+		} else if (flapsHandleIndex >= 2) {
+			min = 158;
+			max = 210;
+		} else if (flapsHandleIndex >= 1) {
+			min = 173;
+			max = 231;
+		}
+
+		return Math.round(((max - min) / (557 - 298.7) * (this.getWeight(true) - 298.7)) + min);
+	}
+
+	getVRefOld(flapsHandleIndex = NaN) {
+		if (isNaN(flapsHandleIndex)) {
+			flapsHandleIndex = Simplane.getFlapsHandleIndex();
+		}
 		let dWeight = (this.getWeight(true) - 200) / (528 - 200);
 		let min = 198;
 		let max = 250;
