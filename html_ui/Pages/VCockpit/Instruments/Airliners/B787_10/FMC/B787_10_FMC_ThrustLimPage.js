@@ -18,7 +18,7 @@ class B787_10_FMC_ThrustLimPage {
 
 		let selectedTempCell;
 		let selectedTemp = fmc.getThrustTakeOffTemp();
-		if(selectedTemp){
+		if (selectedTemp) {
 			selectedTempCell = '[settable]' + selectedTemp + '[/settable]';
 		} else {
 			selectedTempCell = '[settable]--[/settable]';
@@ -27,16 +27,26 @@ class B787_10_FMC_ThrustLimPage {
 		fmc.onLeftInput[0] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
-			if(value === 'DELETE'){
+			if (value === 'DELETE') {
 				SimVar.SetSimVarValue('L:B78XH_THRUST_ASSUMED_TEMPERATURE', 'Number', -1000);
 				SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
 				SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
 				fmc._thrustTakeOffTemp = NaN;
 				B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
-				return;
-			}
-			if (fmc.setThrustTakeOffTemp(value)) {
-				B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
+			} else if (value === '') {
+				let origin = fmc.flightPlanManager.getOrigin();
+				if (origin) {
+					let oatValue = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
+					let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+					let assumendTemp = Math.round(((((15 - (elevation / 1000 * 1.98)) + oatValue) * 1.25) - 1));
+					if (fmc.setThrustTakeOffTemp(assumendTemp)) {
+						B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
+					}
+				}
+			}else{
+				if (fmc.setThrustTakeOffTemp(value)) {
+					B787_10_FMC_ThrustLimPage.ShowPage1(fmc);
+				}
 			}
 		};
 		let toN1Cell = fmc.getThrustTakeOffLimit().toFixed(1) + '%';
@@ -93,20 +103,20 @@ class B787_10_FMC_ThrustLimPage {
 		let thrustClimbModeCell2 = '';
 		switch (thrustClimbMode) {
 			case 0:
-				thrustClimbModeCell0 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>')
+				thrustClimbModeCell0 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>');
 				break;
 			case 1:
-				thrustClimbModeCell1 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>')
+				thrustClimbModeCell1 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>');
 				break;
 			case 2:
-				thrustClimbModeCell2 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>')
+				thrustClimbModeCell2 = (fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB ? '<SEL>' : '<ARM>');
 				break;
 			default:
 				toN1CellTitle = 'TO N1';
 		}
 
 		let separator = '__FMCSEPARATOR';
-		if(!fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished && !fmc.fmcPreFlightComplete.thrust.completed){
+		if (!fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished && !fmc.fmcPreFlightComplete.thrust.completed) {
 			separator = '--------------------------------PRE-FLT';
 		}
 
@@ -126,10 +136,10 @@ class B787_10_FMC_ThrustLimPage {
 			['\<INDEX', '<TAKEOFF']
 		]);
 
-		if(fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished){
-			let fmsPreFlightElement = document.createElement("div");
+		if (fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished) {
+			let fmsPreFlightElement = document.createElement('div');
 			fmsPreFlightElement.classList.add('fms-preflight');
-			fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;')
+			fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;');
 			fmsPreFlightElement.innerText = 'FMC PREFLIGHT COMPLETE';
 			document.body.querySelector('.separator-label').appendChild(fmsPreFlightElement);
 		}
