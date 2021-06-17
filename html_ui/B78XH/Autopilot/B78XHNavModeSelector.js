@@ -33,6 +33,9 @@ class B78XHNavModeSelector {
 		/** The current LNav mode state. */
 		this.lNavModeState = LNavModeState.FMS;
 
+		/** The currently selected approach type. */
+		this.approachMode = WT_ApproachType.NONE;
+
 		/**
 		 * The queue of state change events to process.
 		 * @type {string[]}
@@ -47,10 +50,9 @@ class B78XHNavModeSelector {
 			//selectedAlt1: new ValueStateTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet'), () => NavModeEvent.SELECTED_ALT1_CHANGED),
 			//selectedAlt2: new ValueStateTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:2', 'feet'), () => NavModeEvent.SELECTED_ALT2_CHANGED),
 			//navmode: new ValueStateTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'), () => NavModeEvent.NAV_MODE_CHANGED),
-			//hdg_lock: new ValueStateTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'), () => NavModeEvent.HDG_LOCK_CHANGED),
-			//toga: new ValueStateTracker(() => Simplane.getAutoPilotTOGAActive(), () => NavModeEvent.TOGA_CHANGED),
-			//grounded: new ValueStateTracker(() => Simplane.getIsGrounded(), () => NavModeEvent.GROUNDED),
-			//autopilot: new ValueStateTracker(() => Simplane.getAutoPilotActive(), () => NavModeEvent.AP_CHANGED)
+			hdg_lock: new ValueStateTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'), () => NavModeEvent.HDG_LOCK_CHANGED),
+			toga: new ValueStateTracker(() => Simplane.getAutoPilotTOGAActive(), () => NavModeEvent.TOGA_CHANGED),
+			autopilot: new ValueStateTracker(() => Simplane.getAutoPilotActive(), () => NavModeEvent.AP_CHANGED)
 		};
 
 		/** The event handlers for each event type. */
@@ -60,11 +62,119 @@ class B78XHNavModeSelector {
 			[`${NavModeEvent.HDG_HOLD_PRESSED}`]: this.handleHDGHoldPressed.bind(this),
 			[`${NavModeEvent.HDG_HOLD_ACTIVE}`]: this.handleHDGHoldActive.bind(this),
 			[`${NavModeEvent.HDG_SEL_PRESSED}`]: this.handleHDGSelPressed.bind(this),
-			[`${NavModeEvent.HDG_SEL_ACTIVE}`]: this.handleHDGSelActive.bind(this)
+			[`${NavModeEvent.HDG_SEL_ACTIVE}`]: this.handleHDGSelActive.bind(this),
+
+			/**
+			 * Additional handlers
+			 */
+			[`${NavModeEvent.HDG_LOCK_CHANGED}`]: this.handleHeadingLockChanged.bind(this),
+			//[`${NavModeEvent.TOGA_CHANGED}`]: this.handleTogaChanged.bind(this),
+			//[`${NavModeEvent.AP_CHANGED}`]: this.handleAPChanged.bind(this),
 		};
 
 		this.initialize();
 	}
+
+	/**
+	 * Additional handlers
+	 */
+
+	/**
+	 * Handles when autopilot heading lock changes.
+	 */
+	handleHeadingLockChanged() {
+		const isLocked = this._inputDataStates.hdg_lock.state;
+		if (!isLocked) {
+			switch (this.currentLateralActiveState) {
+				case LateralNavModeState.APPR:
+					if (this.approachMode === WT_ApproachType.RNAV || this.approachMode === WT_ApproachType.VISUAL) {
+						SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+					}
+					break;
+				case LateralNavModeState.LNAV:
+					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+					break;
+				case LateralNavModeState.HDG:
+					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+					break;
+			}
+		}
+	}
+
+	/**
+	 * Handles when the autopilot turns on or off.
+	 */
+	handleAPChanged() {
+		if (this._inputDataStates.autopilot.state) {
+			if (this.currentLateralActiveState === LateralNavModeState.TO || this.currentLateralActiveState === LateralNavModeState.GA
+				|| this.currentVerticalActiveState === VerticalNavModeState.TO || this.currentVerticalActiveState === VerticalNavModeState.GA) {
+				SimVar.SetSimVarValue("K:AUTO_THROTTLE_TO_GA", "number", 0);
+			}
+		}
+	}
+
+	/**
+	 * Handles when the pitch ref changes in the sim.
+	 */
+	handleTogaChanged() {
+
+		if (this._inputDataStates.toga.state) {
+			const flightDirector = SimVar.GetSimVarValue("AUTOPILOT FLIGHT DIRECTOR ACTIVE", "Boolean") == 1;
+			if (!flightDirector) {
+				SimVar.SetSimVarValue("K:TOGGLE_FLIGHT_DIRECTOR", "number", 1);
+			}
+			if (Simplane.getIsGrounded()) { //PLANE IS ON THE GROUND?
+				this.currentVerticalActiveState = VerticalNavModeState.TO;
+
+				//SET LATERAL
+				SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 2);
+				SimVar.SetSimVarValue("K:AP_PANEL_HEADING_HOLD", "number", 1);
+				Coherent.call("HEADING_BUG_SET", 2, SimVar.GetSimVarValue('PLANE HEADING DEGREES MAGNETIC', 'Degrees'));
+				this.currentLateralActiveState = LateralNavModeState.TO;
+			} else {
+				if (this.isVNAVOn) {
+					this.isVNAVOn = false;
+					SimVar.SetSimVarValue("L:WT_CJ4_VNAV_ON", "number", 0);
+					SimVar.SetSimVarValue("K:ALTITUDE_SLOT_INDEX_SET", "number", 2);
+					SimVar.SetSimVarValue("K:VS_SLOT_INDEX_SET", "number", 1);
+				}
+				this.currentVerticalActiveState = VerticalNavModeState.GA;
+
+				//SET LATERAL
+				if (SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK", "number") != 1) {
+					SimVar.SetSimVarValue("K:AP_PANEL_HEADING_HOLD", "number", 1);
+				}
+				SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 2);
+				Coherent.call("HEADING_BUG_SET", 2, SimVar.GetSimVarValue('PLANE HEADING DEGREES MAGNETIC', 'Degrees'));
+				this.currentLateralActiveState = LateralNavModeState.GA;
+
+				const activeWaypoint = this.flightPlanManager.getActiveWaypoint();
+				if (activeWaypoint && activeWaypoint.isRunway) {
+					this.flightPlanManager.setActiveWaypointIndex(this.flightPlanManager.getActiveWaypointIndex() + 1);
+				}
+			}
+
+		} else {
+			//SET LATERAL
+			if (this.currentLateralActiveState === LateralNavModeState.TO || this.currentLateralActiveState === LateralNavModeState.GA) {
+				if (SimVar.GetSimVarValue("L:WT_CJ4_HDG_ON", "number") == 1) {
+					SimVar.SetSimVarValue("L:WT_CJ4_HDG_ON", "number", 0);
+				}
+				if (SimVar.GetSimVarValue("AUTOPILOT HEADING LOCK", "number") == 1) {
+					SimVar.SetSimVarValue("K:AP_PANEL_HEADING_HOLD", "number", 0);
+					SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 1);
+				}
+				//this.currentLateralActiveState = LateralNavModeState.ROLL;
+			}
+			//SET VERTICAL
+			if (this.currentVerticalActiveState === VerticalNavModeState.TO || this.currentVerticalActiveState === VerticalNavModeState.GA) {
+				this.currentVerticalActiveState = VerticalNavModeState.PTCH;
+			}
+		}
+		//this.setProperAltitudeArmedState();
+	}
+
+
 
 	handleLNAVPressed() {
 		/**
