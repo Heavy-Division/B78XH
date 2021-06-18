@@ -136,8 +136,16 @@ class SvgWaypointElement extends SvgMapElement {
             if (this.ident === "T/D" || this.ident === "DES") {
                 this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_TOD.svg");
             } else if (!this.isInFpln) {
-                // console.log("create " + this.source.ident + " " + this.imageFileName());
-                this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + this.imageFileName().replace(".png", ".svg") + "?cb=4");
+                let filename = this.imageFileName();
+                console.log("create " + this.source.ident + " " + filename);
+                /**
+                 * TODO: Hack -> create SVGs or make the check better
+                 */
+                if(filename == 'ICON_MAP_AIRPORT_UNKNOWN_PINK.png' || filename ==  'ICON_MAP_INTERSECTION.png'){
+                    this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + filename + "?cb=4");
+                } else {
+                    this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + filename.replace(".png", ".svg") + "?cb=4");
+                }
             } else {
                 this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_FLIGHTPLAN.png");
             }
@@ -190,7 +198,15 @@ class SvgWaypointElement extends SvgMapElement {
                     if (this.ident === "T/D" || this.ident === "DES") {
                         this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_TOD.svg");
                     } else if (!this.isInFpln) {
-                        this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + this.imageFileName().replace(".png", ".svg") + "?cb=44");
+                        /**
+                        * TODO: Hack -> create SVGs or make the check better
+                        */
+                        let filename = this.imageFileName();
+                        if(filename == 'ICON_MAP_AIRPORT_UNKNOWN_PINK.png' || filename ==  'ICON_MAP_INTERSECTION.png'){
+                            this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + filename + "?cb=44");
+                        } else {
+                            this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + filename.replace(".png", ".svg") + "?cb=4");
+                        }
                     } else {
                         this._image.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.config.imagesDir + "ICON_MAP_INTERSECTION_FLIGHTPLAN.png");
                     }

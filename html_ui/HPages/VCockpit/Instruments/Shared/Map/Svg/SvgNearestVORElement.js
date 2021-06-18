@@ -28,17 +28,23 @@ class SvgNearestVORElement extends SvgWaypointElement {
         else {
             switch (this.vorType) {
                 case 1:
-                    fName = "ICON_MAP_VOR.svg";
+                    fName = 'ICON_MAP_VOR';
+                    break;
                 case 2:
-                    fName = "ICON_MAP_VOR_DME.svg";
+                    fName = 'ICON_MAP_VOR_DME';
+                    break;
                 case 3:
-                    fName = "ICON_MAP_VOR_DME.svg";
+                    fName = 'ICON_MAP_VOR_DME';
+                    break;
                 case 4:
-                    fName = "ICON_MAP_VOR_TACAN.svg";
+                    fName = 'ICON_MAP_VOR_TACAN';
+                    break;
                 case 5:
-                    fName = "ICON_MAP_VOR_VORTAC.svg";
+                    fName = 'ICON_MAP_VOR_VORTAC';
+                    break;
                 case 6:
-                    fName = "ICON_MAP_VOR.svg";
+                    fName = 'ICON_MAP_VOR';
+                    break;
             }
         }
         if (BaseInstrument.useSvgImages) {
