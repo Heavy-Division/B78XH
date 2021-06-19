@@ -50,7 +50,7 @@ class B78XHNavModeSelector {
 			//selectedAlt1: new ValueStateTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet'), () => NavModeEvent.SELECTED_ALT1_CHANGED),
 			//selectedAlt2: new ValueStateTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:2', 'feet'), () => NavModeEvent.SELECTED_ALT2_CHANGED),
 			//navmode: new ValueStateTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'), () => NavModeEvent.NAV_MODE_CHANGED),
-			hdg_lock: new ValueStateTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'), () => NavModeEvent.HDG_LOCK_CHANGED),
+			//hdg_lock: new ValueStateTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'), () => NavModeEvent.HDG_LOCK_CHANGED),
 			toga: new ValueStateTracker(() => Simplane.getAutoPilotTOGAActive(), () => NavModeEvent.TOGA_CHANGED),
 			autopilot: new ValueStateTracker(() => Simplane.getAutoPilotActive(), () => NavModeEvent.AP_CHANGED)
 		};
@@ -67,7 +67,7 @@ class B78XHNavModeSelector {
 			/**
 			 * Additional handlers
 			 */
-			[`${NavModeEvent.HDG_LOCK_CHANGED}`]: this.handleHeadingLockChanged.bind(this),
+			//[`${NavModeEvent.HDG_LOCK_CHANGED}`]: this.handleHeadingLockChanged.bind(this),
 			//[`${NavModeEvent.TOGA_CHANGED}`]: this.handleTogaChanged.bind(this),
 			//[`${NavModeEvent.AP_CHANGED}`]: this.handleAPChanged.bind(this),
 		};
