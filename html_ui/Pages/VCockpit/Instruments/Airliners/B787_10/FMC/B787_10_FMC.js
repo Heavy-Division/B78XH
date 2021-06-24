@@ -165,6 +165,15 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	 */
 
 	updateAutopilot(dt) {
+
+		console.log('ELECTRICAL BATTERY BUS AMPS: ' + SimVar.GetSimVarValue('ELECTRICAL BATTERY BUS AMPS', 'Amperes'));
+		console.log('ELECTRICAL BATTERY BUS VOLTAGE: ' + SimVar.GetSimVarValue('ELECTRICAL BATTERY BUS VOLTAGE', 'Volts'));
+		console.log('ELECTRICAL BATTERY LOAD: ' + SimVar.GetSimVarValue('ELECTRICAL BATTERY LOAD', 'Amperes'));
+		console.log('ELECTRICAL BATTERY VOLTAGE: ' + SimVar.GetSimVarValue('ELECTRICAL BATTERY VOLTAGE', 'Volts'));
+		console.log('ELECTRICAL HOT BATTERY BUS AMPS: ' + SimVar.GetSimVarValue('ELECTRICAL HOT BATTERY BUS AMPS', 'Amperes'));
+		console.log('ELECTRICAL HOT BATTERY BUS VOLTAGE: ' + SimVar.GetSimVarValue('ELECTRICAL HOT BATTERY BUS VOLTAGE', 'Volts'));
+		console.log('ELECTRICAL MASTER BATTERY: ' + SimVar.GetSimVarValue('ELECTRICAL MASTER BATTERY', 'Bool'));
+
 		if (isFinite(dt)) {
 			this.updateAutopilotCooldown -= dt;
 		}
