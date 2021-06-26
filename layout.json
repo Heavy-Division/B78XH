@@ -131,13 +131,13 @@
             "date": 132639563413479280
         },
         {
-            "path": "html_ui/WTPages/WTLibs/DataStore.js",
-            "size": 4219,
+            "path": "html_ui/WTPages/WTLibs/LzUtf8.js",
+            "size": 32045,
             "date": 132629717594678850
         },
         {
-            "path": "html_ui/WTPages/WTLibs/LzUtf8.js",
-            "size": 32045,
+            "path": "html_ui/WTPages/WTLibs/DataStore.js",
+            "size": 4219,
             "date": 132629717594678850
         },
         {
@@ -192,13 +192,13 @@
         },
         {
             "path": "SimObjects/Airplanes/Asobo_B787_10/engines.cfg",
-            "size": 6987,
-            "date": 132690062622748290
+            "size": 7197,
+            "date": 132692092789470240
         },
         {
             "path": "html_ui/Pages/VCockpit/Core/VCockpit.html",
-            "size": 1485,
-            "date": 132690050257881700
+            "size": 1420,
+            "date": 132692093411845040
         },
         {
             "path": "SimObjects/Airplanes/Asobo_B787_10/TEXTURE/787_10_COCKPIT_MAINPANEL_ALBD.PNG.DDS",
@@ -422,8 +422,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js",
-            "size": 61014,
-            "date": 132690050073237200
+            "size": 60293,
+            "date": 132692090236357650
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ApproachPage.js",
@@ -641,6 +641,11 @@
             "date": 132581952839917680
         },
         {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_HELIPORT_PINK.png",
+            "size": 3683,
+            "date": 132581952839927650
+        },
+        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_NON_TOWERED_NON_SERVICED_PINK.png",
             "size": 3683,
             "date": 132581952839927650
@@ -649,11 +654,6 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_NON_TOWERED_SEAPLANE_CIV_PINK.png",
             "size": 3683,
             "date": 132581952839937650
-        },
-        {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_HELIPORT_PINK.png",
-            "size": 3683,
-            "date": 132581952839927650
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_NON_TOWERED_SERVICED_PINK.png",

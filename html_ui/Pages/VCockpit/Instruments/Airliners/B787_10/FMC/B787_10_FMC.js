@@ -166,14 +166,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	updateAutopilot(dt) {
 
-		console.log('ELECTRICAL BATTERY BUS AMPS: ' + SimVar.GetSimVarValue('ELECTRICAL BATTERY BUS AMPS', 'Amperes'));
-		console.log('ELECTRICAL BATTERY BUS VOLTAGE: ' + SimVar.GetSimVarValue('ELECTRICAL BATTERY BUS VOLTAGE', 'Volts'));
-		console.log('ELECTRICAL BATTERY LOAD: ' + SimVar.GetSimVarValue('ELECTRICAL BATTERY LOAD', 'Amperes'));
-		console.log('ELECTRICAL BATTERY VOLTAGE: ' + SimVar.GetSimVarValue('ELECTRICAL BATTERY VOLTAGE', 'Volts'));
-		console.log('ELECTRICAL HOT BATTERY BUS AMPS: ' + SimVar.GetSimVarValue('ELECTRICAL HOT BATTERY BUS AMPS', 'Amperes'));
-		console.log('ELECTRICAL HOT BATTERY BUS VOLTAGE: ' + SimVar.GetSimVarValue('ELECTRICAL HOT BATTERY BUS VOLTAGE', 'Volts'));
-		console.log('ELECTRICAL MASTER BATTERY: ' + SimVar.GetSimVarValue('ELECTRICAL MASTER BATTERY', 'Bool'));
-
+		console.log(SimVar.GetSimVarValue('max_pitch', 'Number'));
 		if (isFinite(dt)) {
 			this.updateAutopilotCooldown -= dt;
 		}
@@ -1501,16 +1494,18 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			case 2:
 				return 235;
 			case 3:
-				return 215;
+				return 235;
 			case 4:
-				return 210;
+				return 215;
 			case 5:
 				return 210;
 			case 6:
-				return 205;
+				return 210;
 			case 7:
-				return 185;
+				return 205;
 			case 8:
+				return 185;
+			case 9:
 				return 175;
 		}
 		return 360;
