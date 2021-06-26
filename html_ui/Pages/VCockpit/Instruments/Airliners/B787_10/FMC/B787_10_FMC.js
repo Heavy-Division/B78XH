@@ -165,6 +165,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	 */
 
 	updateAutopilot(dt) {
+
+		console.log(SimVar.GetSimVarValue('max_pitch', 'Number'));
 		if (isFinite(dt)) {
 			this.updateAutopilotCooldown -= dt;
 		}
@@ -1492,16 +1494,18 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			case 2:
 				return 235;
 			case 3:
-				return 215;
+				return 235;
 			case 4:
-				return 210;
+				return 215;
 			case 5:
 				return 210;
 			case 6:
-				return 205;
+				return 210;
 			case 7:
-				return 185;
+				return 205;
 			case 8:
+				return 185;
+			case 9:
 				return 175;
 		}
 		return 360;

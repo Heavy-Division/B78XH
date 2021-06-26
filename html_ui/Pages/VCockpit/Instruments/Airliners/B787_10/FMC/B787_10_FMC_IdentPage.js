@@ -18,7 +18,7 @@ class B787_10_FMC_IdentPage {
 		fmc.setTemplate([
 			['IDENT'],
 			['MODEL', 'ENGINES'],
-			['787-10', 'GEnx-2B67B'],
+			['787-10', 'GEnx-1B76'],
 			['NAV DATA', 'ACTIVE'],
 			['AIRAC', date.toString()],
 			['DRAG/FF'],
