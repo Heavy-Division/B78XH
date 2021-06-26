@@ -1494,7 +1494,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			case 2:
 				return 235;
 			case 3:
-				return 235;
+				return 225;
 			case 4:
 				return 215;
 			case 5:
