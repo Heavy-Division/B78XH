@@ -55,6 +55,24 @@ let HeavyDivision;
 			return (!!parseInt(HeavyDataStorage.get('SIMBRIEF_ROUTE_ONLY', 0)));
 		};
 		simbrief.importRouteOnly = importRouteOnly;
+
+		/**
+		 * Should FMC import route with sid from SimBrief
+		 * @returns {boolean}
+		 */
+		const importSid = function () {
+			return (!!parseInt(HeavyDataStorage.get('SIMBRIEF_WITH_SID', 0)));
+		};
+		simbrief.importSid = importSid;
+
+		/**
+		 * Should FMC import route with star from SimBrief
+		 * @returns {boolean}
+		 */
+		const importStar = function () {
+			return (!!parseInt(HeavyDataStorage.get('SIMBRIEF_WITH_STAR', 0)));
+		};
+		simbrief.importStar = importStar;
 	})(simbrief || (simbrief = {}));
 
 	HeavyDivision.simbrief = simbrief;

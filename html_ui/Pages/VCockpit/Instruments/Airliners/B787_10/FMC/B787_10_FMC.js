@@ -165,8 +165,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	 */
 
 	updateAutopilot(dt) {
-
-		console.log(SimVar.GetSimVarValue('max_pitch', 'Number'));
 		if (isFinite(dt)) {
 			this.updateAutopilotCooldown -= dt;
 		}

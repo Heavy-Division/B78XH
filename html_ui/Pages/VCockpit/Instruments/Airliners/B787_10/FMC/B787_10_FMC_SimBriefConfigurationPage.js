@@ -12,15 +12,17 @@ class B787_10_FMC_SimBriefConfigurationPage {
 		let simBriefUsernameCell = this.getSimBriefUsernameCell();
 		let simBriefUserIdCell = this.getSimBriefUserIdCell();
 		let routeOnlyCell = (HeavyDivision.simbrief.importRouteOnly() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
+		let withSidCell = (HeavyDivision.simbrief.importSid() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
+		let withStarCell = (HeavyDivision.simbrief.importStar() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
 
 		this.fmc.setTemplate([
 			['SIMBRIEF CONFIGURATION'],
 			['Route Only', 'Username'],
 			[routeOnlyCell, simBriefUsernameCell],
-			['', 'UserID'],
-			['', simBriefUserIdCell],
-			[''],
-			[''],
+			['With SID', 'UserID'],
+			[withSidCell, simBriefUserIdCell],
+			['With STAR'],
+			[withStarCell],
 			[''],
 			[''],
 			[''],
@@ -69,6 +71,24 @@ class B787_10_FMC_SimBriefConfigurationPage {
 				HeavyDataStorage.set('SIMBRIEF_ROUTE_ONLY', '0');
 			} else {
 				HeavyDataStorage.set('SIMBRIEF_ROUTE_ONLY', '1');
+			}
+			this.showPage();
+		};
+
+		this.fmc.onLeftInput[1] = () => {
+			if (HeavyDivision.simbrief.importSid()) {
+				HeavyDataStorage.set('SIMBRIEF_WITH_SID', '0');
+			} else {
+				HeavyDataStorage.set('SIMBRIEF_WITH_SID', '1');
+			}
+			this.showPage();
+		};
+
+		this.fmc.onLeftInput[2] = () => {
+			if (HeavyDivision.simbrief.importStar()) {
+				HeavyDataStorage.set('SIMBRIEF_WITH_STAR', '0');
+			} else {
+				HeavyDataStorage.set('SIMBRIEF_WITH_STAR', '1');
 			}
 			this.showPage();
 		};
