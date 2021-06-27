@@ -45,11 +45,13 @@ class B787_10_FMC_RouteRequestPage {
 				updateFlightNumber();
 				updateCostIndex();
 				updateCruiseAltitude();
-				updatePayload();
-				updateBlock();
+				if(!HeavyDivision.simbrief.importRouteOnly()){
+					updatePayload();
+					updateBlock();
+				}
 				this.fmc.flightPlanManager.pauseSync();
 				updateRoute();
-			};;
+			};
 
 			let updatePayload = () => {
 				let emptyWeight = 298700;

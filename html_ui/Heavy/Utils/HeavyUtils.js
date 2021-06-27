@@ -41,6 +41,24 @@ let HeavyDivision;
 
 	HeavyDivision.configuration = configuration;
 
+
+	/**
+	 * Heavy configuration
+	 */
+	let simbrief;
+	(function (simbrief) {
+		/**
+		 * Should FMC import route only from SimBrief
+		 * @returns {boolean}
+		 */
+		const importRouteOnly = function () {
+			return (!!parseInt(HeavyDataStorage.get('SIMBRIEF_ROUTE_ONLY', 0)));
+		};
+		simbrief.importRouteOnly = importRouteOnly;
+	})(simbrief || (simbrief = {}));
+
+	HeavyDivision.simbrief = simbrief;
+
 	/**
 	 * Heavy log
 	 */
