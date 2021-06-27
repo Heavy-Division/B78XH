@@ -54,7 +54,10 @@ class B787_10_FMC_RouteRequestPage {
 			let updatePayload = () => {
 				let emptyWeight = 298700;
 				let payload = this.flightPlan.weights['payload'];
-				let x = ( emptyWeight + parseInt(payload)) / 1000;
+				if(this.flightPlan.params['units'] == 'kgs'){
+					payload = payload * 2.20462262;
+				}
+
 				SimVar.SetSimVarValue('FUEL TANK CENTER QUANTITY', 'Pounds', 0)
 				SimVar.SetSimVarValue('FUEL TANK LEFT MAIN QUANTITY', 'Pounds', 0)
 				SimVar.SetSimVarValue('FUEL TANK RIGHT MAIN QUANTITY', 'Pounds', 0)
@@ -79,6 +82,10 @@ class B787_10_FMC_RouteRequestPage {
 
 				let fuel = this.flightPlan.fuel['plan_ramp'];
 				let reserve = this.flightPlan.fuel['reserve'];
+				if(this.flightPlan.params['units'] == 'kgs'){
+					fuel = fuel * 2.20462262;
+					reserve = reserve * 2.20462262;
+				}
 				fuel = Math.round(fuel / SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'Pounds'));
 				let remainingFuel = 0;
 				let tanksCapacity = (leftCap * 2);
