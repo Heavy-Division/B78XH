@@ -67,7 +67,7 @@ class B787_10_FMC_PerfInitPage {
 				}
 			};
 			let reservesCell = '□□□.□';
-			let reserves = fmc.getFuelReserves();
+			let reserves = fmc.getFuelReserves(useImperial);
 			if (isFinite(reserves)) {
 				reservesCell = reserves.toFixed(1) + (useImperial ? ' lb' : ' kg');
 			}

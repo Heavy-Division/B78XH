@@ -1376,14 +1376,20 @@ class FMCMainDisplay extends BaseAirliners {
         this.showErrorMessage(this.defaultInputErrorMessage);
         return false;
     }
-    getFuelReserves() {
+    getFuelReserves(useLbs = false) {
+        if (useLbs) {
+            return this._fuelReserves * 2.204623;
+        }
         return this._fuelReserves;
     }
     setFuelReserves(s, useLbs = false) {
         let value = parseFloat(s);
+        if (useLbs) {
+            value = value / 2.204623;
+        }
         if (isFinite(value)) {
             if (value >= 0) {
-                if (value < this.getBlockFuel(useLbs)) {
+                if (value < this.getBlockFuel(false)) {
                     this._fuelReserves = value;
                     return true;
                 }

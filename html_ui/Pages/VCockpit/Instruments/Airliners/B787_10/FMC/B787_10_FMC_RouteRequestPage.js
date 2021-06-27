@@ -45,8 +45,78 @@ class B787_10_FMC_RouteRequestPage {
 				updateFlightNumber();
 				updateCostIndex();
 				updateCruiseAltitude();
+				updatePayload();
+				updateBlock();
 				this.fmc.flightPlanManager.pauseSync();
 				updateRoute();
+			};;
+
+			let updatePayload = () => {
+				let emptyWeight = 298700;
+				let payload = this.flightPlan.weights['payload'];
+				let x = ( emptyWeight + parseInt(payload)) / 1000;
+				SimVar.SetSimVarValue('FUEL TANK CENTER QUANTITY', 'Pounds', 0)
+				SimVar.SetSimVarValue('FUEL TANK LEFT MAIN QUANTITY', 'Pounds', 0)
+				SimVar.SetSimVarValue('FUEL TANK RIGHT MAIN QUANTITY', 'Pounds', 0)
+				SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:1', 'Pounds', 200);
+				SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:2', 'Pounds', 200);
+				SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:3', 'Pounds', 0);
+				SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:4', 'Pounds', 0);
+				SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:5', 'Pounds', 0);
+				SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:6', 'Pounds', 0);
+				SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:7', 'Pounds', 0);
+				this.fmc.trySetBlockFuel(0, true)
+				this.fmc.setZeroFuelWeight(( emptyWeight + parseInt(payload)) / 1000, EmptyCallback.Void, true)
+			};
+
+			let updateBlock = () => {
+				let centerCap = 22244;
+				let leftCap = 5570;
+				let rightCap = 5570;
+				let leftToSet = 0;
+				let rightToSet = 0;
+				let centerToSet = 0;
+
+				let fuel = this.flightPlan.fuel['plan_ramp'];
+				let reserve = this.flightPlan.fuel['reserve'];
+				fuel = Math.round(fuel / SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'Pounds'));
+				let remainingFuel = 0;
+				let tanksCapacity = (leftCap * 2);
+
+				if (fuel > tanksCapacity) {
+					remainingFuel = fuel - tanksCapacity;
+					fuel = tanksCapacity;
+				}
+
+				let reminder = fuel % 2;
+				let quotient = (fuel - reminder) / 2;
+
+				leftToSet = quotient;
+				rightToSet = quotient;
+
+				if (reminder) {
+					leftToSet++;
+					reminder--;
+				}
+				if (reminder) {
+					rightToSet++;
+					reminder--;
+				}
+
+
+				if (remainingFuel >= centerCap) {
+					centerToSet = centerCap;
+				} else {
+					centerToSet = remainingFuel
+				}
+
+				SimVar.SetSimVarValue('FUEL TANK CENTER QUANTITY', 'Gallons', centerToSet)
+				SimVar.SetSimVarValue('FUEL TANK LEFT MAIN QUANTITY', 'Gallons', leftToSet)
+				SimVar.SetSimVarValue('FUEL TANK RIGHT MAIN QUANTITY', 'Gallons', rightToSet)
+				let total = centerToSet + leftToSet + rightToSet;
+
+				this.fmc.trySetBlockFuel(total * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'Pounds'), true)
+				this.fmc.setFuelReserves(reserve / 1000, true);
 			};
 
 			let updateRoute = () => {
