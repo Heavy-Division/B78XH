@@ -1,5 +1,6 @@
 ﻿:root {
     --bodyHeightScale: 1;
+    --colorAmber: #ffbf00;
 }
 
 @keyframes TemporaryShow {
@@ -113,6 +114,7 @@ b787-10-pfd-element #MainFrame {
 b787-10-pfd-element #LeftDisplay {
     transform: rotateX(0);
     flex: 0 0 33%;
+    /* width: 33%; */
     background: black;
     border-right: 6px solid #4E4E50;
 }
@@ -350,6 +352,7 @@ b787-10-pfd-element #RightDisplay > .bottom #Map bing-map {
 }
 
 b787-10-pfd-element #RightDisplay > .bottom #Compass {
+    display: block;
     transform: rotateX(0);
     position: absolute;
     top: 0%;
@@ -462,11 +465,35 @@ jet-pfd-vspeed-indicator[irs-state=aligned] {
     display: none;
 }
 
-#AttBox[irs-state=off], #AttText[irs-state=off] {
+#AttBox[irs-state=off], #AttText[irs-state=off], #AttBox[irs-state=aligning], #AttText[irs-state=aligning]{
     display: block;
 }
 
-#AttBox[irs-state=aligning], #AttBox[irs-state=aligned], #AttText[irs-state=aligning], #AttText[irs-state=aligned] {
+#AttBox[irs-state=aligned], #AttText[irs-state=aligned] {
+    display: none;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom > #FakeHdgSvg > rect {
+    stroke-width: 1;
+    stroke: var(--colorAmber);
+    fill: none;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom > #FakeHdgSvg > text {
+    fill: var(--colorAmber);
+    font-size: 14px;
+    font-family: Roboto-Bold;
+    text-anchor: middle;
+    letter-spacing: normal;
+    alignment-baseline: central;
+}
+
+#FakeHdgSvg[irs-state=off], #FakeHdgSvg[irs-state=aligning]{
+    display: block;
+    position: absolute;
+}
+
+#FakeHdgSvg[irs-state=aligned] {
     display: none;
 }
 
@@ -484,4 +511,12 @@ jet-pfd-vspeed-indicator[irs-state=aligned] {
 
 #GroundLineGroup[irs-state=aligned] {
     display: block;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Compass:not([irs-state=aligned]) {
+    display: none;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #CompassInfos:not([irs-state=aligned]) {
+    display: none;
 }

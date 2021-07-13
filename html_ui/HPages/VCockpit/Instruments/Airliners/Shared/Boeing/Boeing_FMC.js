@@ -36,7 +36,7 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
         };
         this.onDel = () => {
             if (this.inOut.length === 0) {
-                this.inOut = "DELETE";
+                this.inOut = FMCMainDisplay.clrValue;
             }
         };
         this.onClr = () => {
@@ -45,7 +45,7 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
                 this.isDisplayingErrorMessage = false;
             }
             else if (this.inOut.length > 0) {
-                if (this.inOut === "DELETE") {
+                if (this.inOut === FMCMainDisplay.clrValue) {
                     this.inOut = "";
                 }
                 else {
@@ -59,43 +59,80 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
             this._takeOffFlap = flapAngles[flapIndex];
         }
     }
+
+    /**
+     *  Events
+	 	NavModeEvent.ALT_LOCK_CHANGED = 'alt_lock_changed';
+		NavModeEvent.ALT_CAPTURED = 'alt_captured';
+		NavModeEvent.NAV_PRESSED = 'NAV_PRESSED';
+		NavModeEvent.NAV_MODE_CHANGED = 'nav_mode_changed_to_nav';
+		NavModeEvent.NAV_MODE_CHANGED_TO_FMS = 'nav_mode_changed_to_fms';
+		NavModeEvent.HDG_PRESSED = 'HDG_PRESSED';
+		NavModeEvent.APPR_PRESSED = 'APPR_PRESSED';
+		NavModeEvent.FLC_PRESSED = 'FLC_PRESSED';
+		NavModeEvent.VS_PRESSED = 'VS_PRESSED';
+		NavModeEvent.BC_PRESSED = 'BC_PRESSED';
+		NavModeEvent.VNAV_PRESSED = 'VNAV_PRESSED';
+		NavModeEvent.ALT_SLOT_CHANGED = 'alt_slot_changed';
+		NavModeEvent.SELECTED_ALT1_CHANGED = 'selected_alt1_changed';
+		NavModeEvent.SELECTED_ALT2_CHANGED = 'selected_alt2_changed';
+		NavModeEvent.APPROACH_CHANGED = 'approach_changed';
+		NavModeEvent.VNAV_REQUEST_SLOT_1 = 'vnav_request_slot_1';
+		NavModeEvent.VNAV_REQUEST_SLOT_2 = 'vnav_request_slot_2';
+		NavModeEvent.HDG_LOCK_CHANGED = 'hdg_lock_changed';
+		NavModeEvent.TOGA_CHANGED = 'toga_changed';
+		NavModeEvent.GROUNDED = 'grounded';
+		NavModeEvent.PATH_NONE = 'path_none';
+		NavModeEvent.PATH_ARM = 'path_arm';
+		NavModeEvent.PATH_ACTIVE = 'path_active';
+		NavModeEvent.GP_NONE = 'gp_none';
+		NavModeEvent.GP_ARM = 'gp_arm';
+		NavModeEvent.GP_ACTIVE = 'gp_active';
+		NavModeEvent.GS_NONE = 'gs_none';
+		NavModeEvent.GS_ARM = 'gs_arm';
+		NavModeEvent.GS_ACTIVE = 'gs_active';
+		NavModeEvent.AP_CHANGED = 'ap_changed';
+		NavModeEvent.LOC_ACTIVE = 'loc_active';
+		NavModeEvent.LNAV_ACTIVE = 'lnav_active';
+		NavModeEvent.FD_TOGGLE = 'FD_TOGGLE';
+		NavModeEvent.ALT_PRESSED = 'ALT_PRESSED';
+     */
+
     onEvent(_event) {
         super.onEvent(_event);
         console.log("B747_8_FMC_MainDisplay onEvent " + _event);
         if (_event.indexOf("AP_LNAV") != -1) {
-            this.toggleLNAV();
+            //this.toggleLNAV();
+            this._navModeSelector.onNavChangedEvent('LNAV_PRESSED');
         }
         else if (_event.indexOf("AP_VNAV") != -1) {
+            //this._navModeSelector.onNavChangedEvent('VNAV_PRESSED');
             this.toggleVNAV();
         }
         else if (_event.indexOf("AP_FLCH") != -1) {
+            //this._navModeSelector.onNavChangedEvent('FLC_PRESSED');
             this.toggleFLCH();
         }
         else if (_event.indexOf("AP_HEADING_HOLD") != -1) {
-            this.toggleHeadingHold();
+            //this.toggleHeadingHold();
+            this._navModeSelector.onNavChangedEvent('HDG_HOLD_PRESSED');
         }
         else if (_event.indexOf("AP_HEADING_SEL") != -1) {
-            this.activateHeadingSel();
+            this._navModeSelector.onNavChangedEvent('HDG_SEL_PRESSED');
+            //this.activateHeadingSel();
         }
         else if (_event.indexOf("AP_SPD") != -1) {
-            if (this.aircraftType === Aircraft.AS01B) {
-                if (SimVar.GetSimVarValue("AUTOPILOT THROTTLE ARM", "Bool")) {
-                    this.activateSPD();
-                }
-                else {
-                    this.deactivateSPD();
-                }
-            }
-            else {
-                if ((this.getIsAltitudeHoldActive() || this.getIsVSpeedActive()) && this.getIsTHRActive()) {
-                    this.toggleSPD();
-                }
+            if (SimVar.GetSimVarValue("AUTOPILOT THROTTLE ARM", "Bool")) {
+                this.activateSPD();
+            } else {
+                this.deactivateSPD();
             }
         }
         else if (_event.indexOf("AP_SPEED_INTERVENTION") != -1) {
             this.toggleSpeedIntervention();
         }
         else if (_event.indexOf("AP_VSPEED") != -1) {
+            //this._navModeSelector.onNavChangedEvent('VS_PRESSED');
             this.toggleVSpeed();
         }
         else if (_event.indexOf("AP_ALT_INTERVENTION") != -1) {
@@ -116,20 +153,6 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
         }
         else if (_event.indexOf("EXEC") != -1) {
             this.onExec();
-        }
-    }
-    getIsLNAVArmed() {
-        return this._pendingLNAVActivation;
-    }
-    getIsLNAVActive() {
-        return this._isLNAVActive;
-    }
-    toggleLNAV() {
-        if (this.getIsLNAVArmed()) {
-            this.deactivateLNAV();
-        }
-        else {
-            this.activateLNAV();
         }
     }
     activateLNAV() {
@@ -153,6 +176,7 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
             return;
         }
         SimVar.SetSimVarValue("L:AP_LNAV_ACTIVE", "number", 1);
+        SimVar.SetSimVarValue("K:HEADING_SLOT_INDEX_SET", "number", 2);
         SimVar.SetSimVarValue("K:AP_NAV1_HOLD_ON", "number", 1);
     }
     deactivateLNAV() {
@@ -578,4 +602,6 @@ class Boeing_FMC extends Heavy_FMCMainDisplay {
         }
     }
 }
+
+FMCMainDisplay.clrValue = "DELETE";
 //# sourceMappingURL=Boeing_FMC.js.map

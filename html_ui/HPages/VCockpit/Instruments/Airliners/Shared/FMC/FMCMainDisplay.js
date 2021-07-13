@@ -1376,14 +1376,20 @@ class FMCMainDisplay extends BaseAirliners {
         this.showErrorMessage(this.defaultInputErrorMessage);
         return false;
     }
-    getFuelReserves() {
+    getFuelReserves(useLbs = false) {
+        if (useLbs) {
+            return this._fuelReserves * 2.204623;
+        }
         return this._fuelReserves;
     }
     setFuelReserves(s, useLbs = false) {
         let value = parseFloat(s);
+        if (useLbs) {
+            value = value / 2.204623;
+        }
         if (isFinite(value)) {
             if (value >= 0) {
-                if (value < this.getBlockFuel(useLbs)) {
+                if (value < this.getBlockFuel(false)) {
                     this._fuelReserves = value;
                     return true;
                 }
@@ -2159,7 +2165,9 @@ class FMCMainDisplay extends BaseAirliners {
                 this.thrustReductionAltitude = altitude + 1500;
                 this.accelerationAltitude = altitude + 1500;
                 if (origin.infos instanceof AirportInfo) {
-                    this.transitionAltitude = origin.infos.transitionAltitude;
+                    if(isFinite(origin.infos.transitionAltitude)){
+                        this.transitionAltitude = origin.infos.transitionAltitude;
+                    }
                 }
                 SimVar.SetSimVarValue("L:AIRLINER_THR_RED_ALT", "Number", this.thrustReductionAltitude);
                 SimVar.SetSimVarValue("L:AIRLINER_ACC_ALT", "Number", this.accelerationAltitude);
@@ -2168,7 +2176,9 @@ class FMCMainDisplay extends BaseAirliners {
         let destination = this.flightPlanManager.getDestination();
         if (destination) {
             if (destination.infos instanceof AirportInfo) {
-                this.perfApprTransAlt = destination.infos.transitionAltitude;
+                if(isFinite(destination.infos.transitionAltitude)){
+                    this.perfApprTransAlt = destination.infos.transitionAltitude;
+                }
             }
         }
     }
@@ -2206,7 +2216,7 @@ class FMCMainDisplay extends BaseAirliners {
                     this.blockFuel = SimVar.GetSimVarValue("FUEL TOTAL QUANTITY", "gallons") * SimVar.GetSimVarValue("FUEL WEIGHT PER GALLON", "kilograms") / 1000;
                     this.zeroFuelWeight = this._fuelVarsUpdatedGrossWeight - this.blockFuel;
                     this.zeroFuelWeightMassCenter = SimVar.GetSimVarValue("CG PERCENT", "percent");
-                    this.updateVSpeeds();
+                    //this.updateVSpeeds();
                     let waypointsNumber = SimVar.GetSimVarValue("C:fs9gps:FlightPlanWaypointsNumber", "number", this.instrumentIdentifier);
                     if (waypointsNumber > 1) {
                         SimVar.SetSimVarValue("C:fs9gps:FlightPlanWaypointIndex", "number", waypointsNumber - 1).then(() => {

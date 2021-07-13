@@ -17,11 +17,12 @@
   },
   "homepage": "https://github.com/Heavy-Division/B78XHL#readme",
   "devDependencies": {
+    "del": "^6.0.0",
     "gulp": "^4.0.2",
     "gulp-ignore": "^3.0.0",
+    "gulp-update-version": "^1.0.2",
     "gulp-zip": "^5.0.2",
     "mathjs": "^9.2.0",
-    "through2": "^4.0.2",
-    "del": "^6.0.0"
+    "through2": "^4.0.2"
   }
 }

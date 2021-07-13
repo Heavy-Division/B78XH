@@ -101,7 +101,7 @@
                     </div>
 
                     <div class="fms-screen-label-container">
-                        <div class="fms-screen-label col-0">---------------------------------------</div>
+                        <div class="fms-screen-label col-0 separator-label">---------------------------------------</div>
                         <div class="fms-screen-label col-1"></div>
                         <div class="fms-screen-label col-2"></div>
                         <div class="fms-screen-label col-3"></div>
@@ -157,6 +157,18 @@
                     <input class="fms-button page-button fms-next-page active" value="NEXT PAGE" type="button"/>
                     <div class="fms-exec-light"></div>
                 </div>
+
+                <div class="fms-message" style="display: none; position: absolute; height: 200px; width: 70%; left: 15%; bottom: 50px; border: 2px ridge white;">
+                    <div class="fms-message-title" style="padding: 5px 5px 5px 10px; height: 35px;">
+                    </div>
+                    <div  class="fms-message-content" style="background-color: black; padding: 10px 5px 10px 10px; width: 75%; height: 160px;line-height: 95%; font-size: 20px;">
+                    </div>
+                    <div style="position: absolute; width: 25%; height: 160px; bottom: 0px; right: 0px;">
+                        <button style="position: relative; width: 80px; height: 50px; line-height: 95%; margin: 0 auto; left: 14px; top: 0px;" class="fms-button page-button fms-clr-msg active">CLR <br> MSG</button>
+                        <div style="position: relative; width: 100%; height: 80px; line-height: 95%; margin: 0 auto; top: 20px; font-size: 18px; text-align: center; font-weight: bold;"><span class="fms-message-count"></span> TOTAL<br>MESSAGES</div>
+                    </div>
+
+                </div>
             </div>
             <div class="fms-split"></div>
             <svg id="fms-pointer" width="100" height="100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
@@ -169,6 +181,11 @@
 </script>
 
 <script type="text/html" import-script="/JS/SimPlane.js"></script>
+<!-- WT files -->
+<script type="text/html" import-script="/WTPages/WTLibs/WT_SimPlaneMod.js"></script>
+<script type="text/html" import-script="/WTPages/WTLibs/DataStore.js"></script>
+<script type="text/html" import-script="/WTPages/WTLibs/WT_GCMath.js"></script>
+<!-- WT files END -->
 
 <script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/Utils/RadioNav.js"></script>
 
@@ -177,7 +194,16 @@
 <script type="text/html" import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/Waypoint.js"></script>
 <script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/Approach.js"></script>
 <script type="text/html" import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/WaypointLoader.js"></script>
-<script type="text/html" import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/FlightPlanManager.js"></script>
+
+<!-- WT files -->
+<script type="text/html" import-script="/WTPages/WTLibs/LzUtf8.js"></script>
+<script type="text/html" import-script="/WTPages/WTLibs/wtsdk.js"></script>
+<!-- WT files END -->
+
+<!-- Heavy utility files -->
+<script type="text/html" import-script="/Heavy/Utils/HeavyUtils.js"></script>
+<!-- WT  utility END -->
+
 <script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/GeoCalc.js"></script>
 
 <script type="text/html"
@@ -192,6 +218,13 @@
 <script type="text/html" import-script="/HPages/VCockpit/Instruments/Airliners/Shared/Boeing/Heavy_Boeing_FMC.js"></script>
 <script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/FMC/FMCDataManager.js"></script>
 
+<!-- WT files -->
+<script type="text/html" import-script="/B78XH/Autopilot/B78XHNavModeSelector.js"></script>
+<script type="text/html" import-script="/WTPages/Autopilot/AutopilotMath.js"></script>
+<script type="text/html" import-script="/WTPages/Autopilot/HoldsDirector.js"></script>
+<script type="text/html" import-script="/WTPages/Autopilot/LocDirector.js"></script>
+<script type="text/html" import-script="/WTPages/Autopilot/LNavDirector.js"></script>
+<!-- WT files END -->
 <!-- Heavy utils -->
 <script type="text/html" import-script="/Heavy/SimBrief/SimBrief.js"></script>
 <script type="text/html" import-script="/Heavy/Utils/UpdateDelayer.js"></script>
@@ -238,6 +271,10 @@
 <script type="text/html"
         import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ArrivalsPage.js"></script>
 <script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HoldsPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/CJ4_FMC_PilotWaypoint.js"></script>
+<script type="text/html"
         import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyPage.js"></script>
 <script type="text/html"
         import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimBriefConfigurationPage.js"></script>
@@ -247,4 +284,6 @@
         import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PayloadManagerPage.js"></script>
 <script type="text/html"
         import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimRateManagerPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyIRSPage.js"></script>
 <script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js"></script>

@@ -5,6 +5,41 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 		this._shouldBeExecEmisssive = false;
 		this._activeExecHandlers = {};
 
+		this.fmcPreFlightComplete= {
+			completed: false,
+			finished: false,
+			thrust: {
+				completed: false,
+				takeOffTemp: false
+			},
+			takeoff: {
+				completed: false,
+				flaps: false,
+				v1: false,
+				vR: false,
+				v2: false
+			},
+			perfInit: {
+				completed: false,
+				cruiseAltitude: false,
+				costIndex: false,
+				reserves: false
+			},
+			route: {
+				completed: false,
+				origin: false,
+				destination: false,
+				activated: false
+			}
+		}
+
+		this.thrustReductionAltitude = NaN;
+		this.thrustReductionHeight = NaN;
+		this.isThrustReductionAltitudeCustomValue = false;
+		this.accelerationAltitude = NaN;
+		this.accelerationHeight = NaN;
+		this.isAccelerationAltitudeCustomValue = false;
+
 		FMCMainDisplay.DEBUG_INSTANCE = this;
 	}
 
@@ -276,18 +311,51 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 		return false;
 	}
 
+	checkfmcPreFlight(){
+		if(!this.fmcPreFlightComplete.finished){
+			this.fmcPreFlightComplete.thrust.takeOffTemp = (!!this.getThrustTakeOffTemp())
+			this.fmcPreFlightComplete.thrust.completed = (this.fmcPreFlightComplete.thrust.takeOffTemp)
+
+			this.fmcPreFlightComplete.takeoff.flaps = (!!this.getTakeOffFlap())
+			this.fmcPreFlightComplete.takeoff.v1 = (!!this.v1Speed)
+			this.fmcPreFlightComplete.takeoff.vR = (!!this.vRSpeed)
+			this.fmcPreFlightComplete.takeoff.v2 = (!!this.v2Speed)
+			this.fmcPreFlightComplete.takeoff.completed = (this.fmcPreFlightComplete.takeoff.v1 && this.fmcPreFlightComplete.takeoff.vR && this.fmcPreFlightComplete.takeoff.v2 && this.fmcPreFlightComplete.takeoff.flaps);
+
+			this.fmcPreFlightComplete.perfInit.cruiseAltitude = (!!this.cruiseFlightLevel)
+			this.fmcPreFlightComplete.perfInit.costIndex = (!!this.costIndex)
+			this.fmcPreFlightComplete.perfInit.reserves = (!!this.getFuelReserves())
+			this.fmcPreFlightComplete.perfInit.completed = (this.fmcPreFlightComplete.perfInit.cruiseAltitude && this.fmcPreFlightComplete.perfInit.costIndex && this.fmcPreFlightComplete.perfInit.reserves)
+
+			this.fmcPreFlightComplete.route.origin = (!!this.flightPlanManager.getOrigin())
+			this.fmcPreFlightComplete.route.destination = (!!this.flightPlanManager.getDestination())
+			this.fmcPreFlightComplete.route.activated = true
+			this.fmcPreFlightComplete.route.completed = (this.fmcPreFlightComplete.route.activated && this.fmcPreFlightComplete.route.destination && this.fmcPreFlightComplete.route.origin)
+
+			this.fmcPreFlightComplete.completed = (this.fmcPreFlightComplete.thrust.completed && this.fmcPreFlightComplete.takeoff.completed && this.fmcPreFlightComplete.perfInit.completed && this.fmcPreFlightComplete.route.completed)
+		}
+	}
+
+	showFMCPreFlightComplete(airspeed){
+		if(this.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF && airspeed < 80){
+			this.checkfmcPreFlight();
+		} else {
+			this.fmcPreFlightComplete.finished = true;
+		}
+	}
 
 	checkUpdateFlightPhase() {
 		let airSpeed = SimVar.GetSimVarValue('AIRSPEED TRUE', 'knots');
+		this.showFMCPreFlightComplete(airSpeed);
 		if (airSpeed > 10) {
 			if (this.currentFlightPhase === 0) {
 				this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_TAKEOFF;
 			}
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_TAKEOFF) {
 				let enterClimbPhase = false;
-				let agl = Simplane.getAltitude();
+				let msl = Simplane.getAltitude();
 				let altValue = isFinite(this.thrustReductionAltitude) ? this.thrustReductionAltitude : 1500;
-				if (agl > altValue) {
+				if (msl > altValue) {
 					this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CLIMB;
 					enterClimbPhase = true;
 					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
@@ -350,54 +418,64 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 				/**
 				 * Basic TOD to destination
 				 */
-
-				let vSpeed = 1500;
-				let cruiseFlightLevel = this.cruiseFlightLevel * 100;
-				let groundSpeed = Simplane.getGroundSpeed();
-				let todCoordinates;
+				let cruiseAltitude = SimVar.GetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number');
 				let showTopOfDescent = false;
-
-				if (isFinite(cruiseFlightLevel)) {
+				if (isFinite(cruiseAltitude)) {
 					let destination = this.flightPlanManager.getDestination();
 					if (destination) {
-						let descentDuration = Math.abs(destination.altitudeinFP - this.cruiseFlightLevel * 100) / vSpeed / 60;
-						let descentDistance = descentDuration * groundSpeed;
-						todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(descentDistance);
-						let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
-						let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates.lla);
+						let firstTODWaypoint = this.getWaypointForTODCalculation();
+						if(firstTODWaypoint){
+							let totalDistance = 0;
 
-						if (distanceToTOD < 50) {
-							if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
-								SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
-								SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+							const destinationElevation = firstTODWaypoint.targetAltitude;
+							const descentAltitudeDelta = Math.abs(destinationElevation - cruiseAltitude) / 100;
+							const todDistance = descentAltitudeDelta / 3.3;
+							const indicatedSpeed = Simplane.getIndicatedSpeed();
+							let speedToLose = 0;
+							if (indicatedSpeed > 220) {
+								speedToLose = indicatedSpeed - 220;
 							}
-						}
 
-						if (distanceToTOD > 1) {
-							if (todCoordinates) {
+							const distanceForSpeedReducing = speedToLose / 10;
+
+							totalDistance = todDistance + distanceForSpeedReducing + firstTODWaypoint.distanceFromDestinationToWaypoint;
+
+							let todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(totalDistance, true);
+							let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
+							let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todCoordinates);
+
+
+							SimVar.SetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number', distanceToTOD);
+							SimVar.SetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number', totalDistance);
+
+							if (distanceToTOD < 50) {
+								if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
+									SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
+									SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+								}
+							}
+
+							if (distanceToTOD > 1) {
 								showTopOfDescent = true;
+							} else {
+								showTopOfDescent = false;
+								let lastFlightPhase = this.currentFlightPhase;
+								this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
+								Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+								if (lastFlightPhase !== FlightPhase.FLIGHT_PHASE_DESCENT) {
+									SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+								}
 							}
-						} else {
-							let lastFlightPhase = this.currentFlightPhase;
-							this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
-							Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
-							if (lastFlightPhase !== FlightPhase.FLIGHT_PHASE_DESCENT) {
-								SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+
+							if (showTopOfDescent) {
+								SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 1);
+							} else {
+								SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
 							}
 						}
 					}
 				}
-
-				if (showTopOfDescent) {
-					SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 1);
-					SimVar.SetSimVarValue('L:AIRLINER_FMS_LAT_TOP_DSCNT', 'number', todCoordinates.lla.lat);
-					SimVar.SetSimVarValue('L:AIRLINER_FMS_LONG_TOP_DSCNT', 'number', todCoordinates.lla.long);
-				} else {
-					SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
-				}
-
 			}
-
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT) {
 				SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
 			}
@@ -429,6 +507,185 @@ class Heavy_FMCMainDisplay extends FMCMainDisplay {
 		if (SimVar.GetSimVarValue('L:AIRLINER_FLIGHT_PHASE', 'number') != this.currentFlightPhase) {
 			SimVar.SetSimVarValue('L:AIRLINER_FLIGHT_PHASE', 'number', this.currentFlightPhase);
 			this.onFlightPhaseChanged();
+		}
+	}
+
+	getWaypointForTODCalculation() {
+		let getWaypoint = (allWaypoints) => {
+			let onlyNonStrict = true;
+			for (let i = 0; i <= allWaypoints.length - 1; i++) {
+				if (allWaypoints[i].legAltitudeDescription === 0) {
+					continue;
+				}
+				if (allWaypoints[i].legAltitudeDescription === 1 && isFinite(allWaypoints[i].legAltitude1)) {
+					return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+				}
+
+				if (allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)) {
+					continue;
+					//return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+				}
+
+				if (allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)) {
+					return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+				}
+
+				if (allWaypoints[i].legAltitudeDescription === 4 && isFinite(allWaypoints[i].legAltitude1) && isFinite(allWaypoints[i].legAltitude2)) {
+					if (allWaypoints[i].legAltitude1 === allWaypoints[i].legAltitude2) {
+						return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+					}
+
+					if (allWaypoints[i].legAltitude1 < allWaypoints[i].legAltitude2) {
+						let middle = (allWaypoints[i].legAltitude2 - allWaypoints[i].legAltitude1) / 2;
+						return {
+							fix: allWaypoints[i],
+							targetAltitude: Math.round(allWaypoints[i].legAltitude1 + middle)
+						};
+					}
+
+					if (allWaypoints[i].legAltitude1 > allWaypoints[i].legAltitude2) {
+						let middle = (allWaypoints[i].legAltitude1 - allWaypoints[i].legAltitude2) / 2;
+						return {
+							fix: allWaypoints[i],
+							targetAltitude: Math.round(allWaypoints[i].legAltitude2 + middle)
+						};
+					}
+				}
+			}
+			return undefined;
+		};
+		let waypoint = undefined;
+
+		let destination = this.flightPlanManager.getDestination();
+		if (destination) {
+			let arrivalSegment = this.flightPlanManager.getCurrentFlightPlan().arrival;
+			let approachSegment = this.flightPlanManager.getCurrentFlightPlan().approach;
+
+			waypoint = getWaypoint(arrivalSegment.waypoints);
+
+			if (!waypoint) {
+				waypoint = getWaypoint(approachSegment.waypoints);
+			}
+
+			if (!waypoint) {
+				waypoint = {
+					fix: destination,
+					targetAltitude: Math.round(parseFloat(destination.infos.oneWayRunways[0].elevation) * 3.28)
+				};
+			}
+
+			if(waypoint){
+				if(approachSegment.waypoints.length > 0){
+					const cumulativeToApproach = approachSegment.waypoints[approachSegment.waypoints.length - 1].cumulativeDistanceInFP;
+					waypoint.distanceFromDestinationToWaypoint = cumulativeToApproach - waypoint.fix.cumulativeDistanceInFP
+				} else {
+					waypoint.distanceFromDestinationToWaypoint = destination.cumulativeDistanceInFP - waypoint.fix.cumulativeDistanceInFP;
+				}
+			}
+		}
+
+		return waypoint;
+	}
+
+	setTakeOffFlap(s) {
+		let value = Number.parseInt(s);
+		if (isFinite(value)) {
+			if([5,10,15,17,18,20].indexOf(value) !== -1){
+				this._takeOffFlap = value;
+				this.clearVSpeeds();
+				return true;
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	trySetThrustReductionHeight(s) {
+		let thrustReductionHeight = parseInt(s);
+		let origin = this.flightPlanManager.getOrigin()
+		if(origin){
+			if (isFinite(thrustReductionHeight)) {
+				let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+				let roundedHeight = Math.round(thrustReductionHeight / 100) * 100;
+				if(this.trySetThrustReductionAltitude(roundedHeight + elevation)){
+					this.thrustReductionHeight = roundedHeight;
+					this.isThrustReductionAltitudeCustomValue = true;
+					return true;
+				}
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	trySetThrustReductionAltitude(s) {
+		let thrustReductionHeight = parseInt(s);
+		if (isFinite(thrustReductionHeight)) {
+			this.thrustReductionAltitude = thrustReductionHeight;
+			SimVar.SetSimVarValue("L:AIRLINER_THR_RED_ALT", "Number", this.thrustReductionAltitude);
+			return true;
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	trySetAccelerationHeight(s) {
+		let accelerationHeight = parseInt(s);
+		let origin = this.flightPlanManager.getOrigin()
+		if(origin){
+			if (isFinite(accelerationHeight)) {
+				let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+				let roundedHeight = Math.round(accelerationHeight / 100) * 100;
+				if(this.trySetAccelerationAltitude(roundedHeight + elevation)){
+					this.accelerationHeight = roundedHeight;
+					this.isAccelerationAltitudeCustomValue = true;
+					return true;
+				}
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	trySetAccelerationAltitude(s) {
+		let accelerationHeight = parseInt(s);
+		if (isFinite(accelerationHeight)) {
+			this.accelerationAltitude = accelerationHeight;
+			SimVar.SetSimVarValue("L:AIRLINER_ACC_ALT", "Number", this.accelerationAltitude);
+			this.isAccelerationAltitudeCustomValue = true;
+			return true;
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	recalculateTHRRedAccTransAlt() {
+		let origin = this.flightPlanManager.getOrigin();
+		if (origin) {
+			if (origin.infos instanceof AirportInfo) {
+				if(isFinite(origin.infos.transitionAltitude)){
+					this.transitionAltitude = origin.infos.transitionAltitude;
+				}
+			}
+			let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+			if(!this.isThrustReductionAltitudeCustomValue){
+				this.thrustReductionAltitude = elevation + 1500;
+				this.thrustReductionHeight = 1500;
+				SimVar.SetSimVarValue("L:AIRLINER_THR_RED_ALT", "Number", this.thrustReductionAltitude);
+			}
+			if(!this.isAccelerationAltitudeCustomValue){
+				this.accelerationAltitude = elevation + 1500;
+				this.accelerationHeight = 1500;
+				SimVar.SetSimVarValue("L:AIRLINER_ACC_ALT", "Number", this.accelerationAltitude);
+			}
+		}
+		let destination = this.flightPlanManager.getDestination();
+		if (destination) {
+			if (destination.infos instanceof AirportInfo) {
+				if(isFinite(destination.infos.transitionAltitude)){
+					this.perfApprTransAlt = destination.infos.transitionAltitude;
+				}
+			}
 		}
 	}
 }

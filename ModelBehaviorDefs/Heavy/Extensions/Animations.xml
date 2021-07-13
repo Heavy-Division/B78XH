@@ -1,0 +1,26 @@
+<ModelBehaviors>
+    <Template Name="ASOBO_GT_Anim_Setup">
+        <DefaultTemplateParameters>
+            <NODE_ID>#ANIM_NAME#</NODE_ID>
+            <ANIM_LENGTH>100</ANIM_LENGTH>
+        </DefaultTemplateParameters>
+        <Switch Param="ANIM_NAME">
+            <Default>
+                <Component ID="#NODE_ID#" Node="NODE_ID">
+                    <UseTemplate Name="ASOBO_GT_Anim_Code_Base">
+                        <ANIM_CODE>#PERCENT#</ANIM_CODE>
+                    </UseTemplate>
+                </Component>
+            </Default>
+            <!--
+            ____________________________________________________________________________________
+            OVERRIDE SECTION START
+
+            This section replace default animation setting
+            ____________________________________________________________________________________
+            -->
+            <Case Value="INSTRUMENT_Knob_IRS_1"></Case>
+            <Case Value="INSTRUMENT_Knob_IRS_2"></Case>
+        </Switch>
+    </Template>
+</ModelBehaviors>

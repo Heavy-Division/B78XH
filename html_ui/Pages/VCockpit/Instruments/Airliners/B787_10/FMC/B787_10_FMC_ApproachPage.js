@@ -8,7 +8,8 @@ class B787_10_FMC_ApproachPage {
 		let flaps20VRefCell = '';
 		let flaps25VRefCell = '';
 		let flaps30VRefCell = '';
-		let landingWeight = fmc.getWeight(true);
+		const useImperial = HeavyDivision.configuration.useImperial();
+		let landingWeight = fmc.getWeight(useImperial);
 		if (isFinite(landingWeight)) {
 			landingWeightCell = landingWeight.toFixed(1);
 			flaps20Cell = '20°';

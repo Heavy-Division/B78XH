@@ -342,11 +342,11 @@ class B787_10_PFD_Altimeter extends NavSystemElement {
 				this.altimeter.showMTRS(this.isMTRSActive);
 				break;
 			case 'Mins_INC':
-				this.minimumReference += 50;
+				this.minimumReference += 10;
 				this.altimeter.minimumReferenceValue = this.minimumReference;
 				break;
 			case 'Mins_DEC':
-				this.minimumReference -= 50;
+				this.minimumReference -= 10;
 				this.altimeter.minimumReferenceValue = this.minimumReference;
 				break;
 			case 'Mins_Press':
@@ -487,9 +487,9 @@ class B787_10_PFD_Compass extends NavSystemElement {
 			this.infos.simWindDir = Simplane.getWindDirection();
 			this.infos.simWindSpeed = Simplane.getWindStrength();
 			this.infos.simPlaneAngle = Simplane.getHeadingMagnetic();
-			this.infos.simWaypointName = SimVar.GetSimVarValue('GPS WP NEXT ID', 'string');
-			this.infos.simWaypointETA = (SimVar.GetSimVarValue('E:ZULU TIME', 'seconds') + SimVar.GetSimVarValue('GPS WP ETE', 'seconds')) % (24 * 3600);
-			this.infos.simWaypointDistance = SimVar.GetSimVarValue('GPS WP DISTANCE', 'nautical miles');
+			this.infos.simWaypointName = Simplane.getNextWaypointName();
+			this.infos.simWaypointETA = (SimVar.GetSimVarValue('E:ZULU TIME', 'seconds') + Simplane.getNextWaypointETA()) % (24 * 3600);
+			this.infos.simWaypointDistance = Simplane.getNextWaypointDistance();
 		}
 	}
 

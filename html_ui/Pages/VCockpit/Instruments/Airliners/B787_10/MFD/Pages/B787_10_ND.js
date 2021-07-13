@@ -1,9 +1,12 @@
+Include.addScript('/Heavy/Utils/HeavyDataStorage.js');
+
 class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 	constructor() {
 		super(...arguments);
 		this.mapIsCentered = false;
 		this.wxRadarOn = false;
 		this.terrainOn = false;
+		this.trafficOn = false;
 		this.mapRange = 0;
 		this.wantedMapRange = 0;
 		this.mapMode = 0;
@@ -116,6 +119,11 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 				break;
 			case 'TFC':
 				this.map.instrument.showTraffic = !this.map.instrument.showTraffic;
+				if(this.map.instrument.showTraffic){
+					SimVar.SetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number', 1);
+				} else {
+					SimVar.SetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number', 0);
+				}
 				this.navMenu.refresh();
 				break;
 			case 'Range_DEC':
@@ -186,9 +194,11 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 		}
 		var wxRadarOn = SimVar.GetSimVarValue('L:BTN_WX_ACTIVE:' + this.gps.instrumentIndex, 'bool');
 		var terrainOn = SimVar.GetSimVarValue('L:BTN_TERRONND_ACTIVE:' + this.gps.instrumentIndex, 'number');
-		if (this.mapMode != this.wantedMapMode || this.wxRadarOn != wxRadarOn || this.terrainOn != terrainOn || this.wantedMapRange != this.mapRange || this.forceMapUpdate) {
+		const trafficOn = SimVar.GetSimVarValue('L:BTN_TFCONND_ACTIVE:' + this.gps.instrumentIndex, 'number');
+		if (this.mapMode != this.wantedMapMode || this.wxRadarOn != wxRadarOn || this.terrainOn != terrainOn || this.trafficOn != trafficOn || this.wantedMapRange != this.mapRange || this.forceMapUpdate) {
 			this.wxRadarOn = wxRadarOn;
 			this.terrainOn = terrainOn;
+			this.trafficOn = trafficOn;
 			this.mapRange = this.wantedMapRange;
 			this.mapMode = this.wantedMapMode;
 			if (this.mapMode == 0) {
@@ -214,6 +224,11 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 				this.showWeather();
 			} else {
 				this.mapConfigId = 0;
+			}
+
+			if(this.trafficOn){
+				this.compass.showArcRange(true);
+			} else {
 				this.compass.showArcRange(false);
 			}
 			if (this.modeChangeMask) {
@@ -240,23 +255,6 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 				}
 				break;
 		}
-
-		/**
-		 * TODO: Preparation for executable DIRECT TO preview
-		 */
-
-
-		if (SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO', 'number')) {
-			if (!this.map.instrument.tmpDirectToElement) {
-				this.map.instrument.tmpDirectToElement = new SvgBackOnTrackElement('yellow');
-			}
-			this.map.instrument.tmpDirectToElement.llaRequested = new LatLongAlt(SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LAT_0', 'number'), SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LONG_0', 'number'));
-			this.map.instrument.tmpDirectToElement.targetLla = new LatLongAlt(SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LAT_1', 'number'), SimVar.GetSimVarValue('L:B78XH_PREVIEW_DIRECT_TO_LONG_1', 'number'));
-			this.map.instrument.tmpDirectToElement.planeHeading = SimVar.GetSimVarValue('PLANE HEADING DEGREES TRUE', 'degree');
-		} else {
-			this.map.instrument.tmpDirectToElement = undefined;
-		}
-
 	}
 
 	onNavButton(_button) {
@@ -745,6 +743,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				this.instrument.zoomRanges = (this._fullscreen) ? this.getAdaptiveRanges(1.95) : this.getAdaptiveRanges(1.42);
 				break;
 		}
+		this.instrument.resize(0,0)
 	}
 
 	showWeather() {
@@ -765,6 +764,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 	}
 
 	updateTopOfDescent() {
+		/*
 		let showTopOfDescent = SimVar.GetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number') === 1;
 		if (showTopOfDescent) {
 			if (!this.topOfDescentIcon) {
@@ -783,9 +783,11 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				this.instrument.topOfCurveElements.splice(index, 1);
 			}
 		}
+		 */
 	}
 
 	updateTopOfClimb() {
+		/*
 		let showTopOfClimb = SimVar.GetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_CLIMB', 'number') === 1;
 		if (showTopOfClimb) {
 			if (!this.topOfClimbIcon) {
@@ -804,6 +806,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				this.instrument.topOfCurveElements.splice(index, 1);
 			}
 		}
+		 */
 	}
 
 	updateAltitudeArc(_deltatime) {
@@ -891,7 +894,6 @@ class B787_10_ND_Map extends MapInstrumentElement {
 
 	updateMapIfIrsNotAligned() {
 		this.extendMFDHtmlElementsWithIrsState();
-
 		let irsLState = SimVar.GetSimVarValue('L:B78XH_IRS_L_STATE', 'Number');
 		let irsRState = SimVar.GetSimVarValue('L:B78XH_IRS_R_STATE', 'Number');
 		if ((irsLState > 1 || irsRState > 1)) {
@@ -908,7 +910,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 				}
 			});
 
-			let aligns = [this._parent.querySelector('#l-align')];
+			let aligns = this._parent.querySelectorAll('.align-value');
 
 			aligns.forEach((element) => {
 				element.style.visibility = 'hidden';
@@ -936,41 +938,32 @@ class B787_10_ND_Map extends MapInstrumentElement {
 					mode = 2;
 				}
 
+				let setTime = (initTime, toAlign) => {
+					let totalSeconds = (initTime + toAlign) - now;
+					if(totalSeconds < 0){
+						totalSeconds = 0;
+					}
+					let minutes = Math.floor(totalSeconds / 60);
+					let seconds = totalSeconds - minutes * 60;
+					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
+					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
+					aligns.forEach((element) => {
+						element.textContent = minutesString + ':' + secondsString;
+						element.style.visibility = 'visible';
+					})
+				}
+
 
 				if (mode === 3) {
 					if (irsLInitAlignTime + irsLTimeForAlign <= irsRInitAlignTime + irsRTimeForAlign) {
-						let totalSeconds = (irsLInitAlignTime + irsLTimeForAlign) - now;
-						let minutes = Math.floor(totalSeconds / 60);
-						let seconds = totalSeconds - minutes * 60;
-						let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
-						let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
-						aligns[position].textContent = minutesString + ':' + secondsString;
-						aligns[position].style.visibility = 'visible';
+						setTime(irsLInitAlignTime, irsLTimeForAlign);
 					} else {
-						let totalSeconds = (irsRInitAlignTime + irsRTimeForAlign) - now;
-						let minutes = Math.floor(totalSeconds / 60);
-						let seconds = totalSeconds - minutes * 60;
-						let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
-						let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
-						aligns[position].textContent = minutesString + ':' + secondsString;
-						aligns[position].style.visibility = 'visible';
+						setTime(irsRInitAlignTime, irsRTimeForAlign);
 					}
 				} else if (mode === 1) {
-					let totalSeconds = (irsLInitAlignTime + irsLTimeForAlign) - now;
-					let minutes = Math.floor(totalSeconds / 60);
-					let seconds = totalSeconds - minutes * 60;
-					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
-					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
-					aligns[position].textContent = minutesString + ':' + secondsString;
-					aligns[position].style.visibility = 'visible';
+					setTime(irsLInitAlignTime, irsLTimeForAlign);
 				} else if (mode === 2) {
-					let totalSeconds = (irsRInitAlignTime + irsRTimeForAlign) - now;
-					let minutes = Math.floor(totalSeconds / 60);
-					let seconds = totalSeconds - minutes * 60;
-					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
-					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
-					aligns[position].textContent = minutesString + ':' + secondsString;
-					aligns[position].style.visibility = 'visible';
+					setTime(irsRInitAlignTime, irsRTimeForAlign);
 				}
 			}
 		} else {

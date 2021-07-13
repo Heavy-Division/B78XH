@@ -347,3 +347,7 @@
     border-right: 4px ridge white;
     pointer-events: none;
 }
+
+.fms-message {
+    background-color: #36c8d2;
+}

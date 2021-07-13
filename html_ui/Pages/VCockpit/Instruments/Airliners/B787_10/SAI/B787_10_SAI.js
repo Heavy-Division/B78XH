@@ -29,9 +29,9 @@ class B787_10_SAI extends BaseAirliners {
 		 * This workaround also allow you to "restart" B78XH systems without resetting flight
 		 */
 
-		if(!this.B78XHSystems){
-			this.B78XHSystems = new B78XH_Systems();
-		}
+		//if(!this.B78XHSystems){
+		//	this.B78XHSystems = new B78XH_Systems();
+		//}
 
 		if(this.B78XHSystems){
 			this.B78XHSystems.update(_deltaTime);

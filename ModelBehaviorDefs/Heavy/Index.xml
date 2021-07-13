@@ -1,0 +1,4 @@
+<ModelBehaviors>
+    <Include RelativeFile="Airliner\Index.xml"/>
+    <Include RelativeFile="Extensions\Index.xml"/>
+</ModelBehaviors>

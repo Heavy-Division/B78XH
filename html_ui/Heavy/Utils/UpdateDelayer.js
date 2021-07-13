@@ -64,7 +64,6 @@ class UpdateDelayer {
 	shouldUpdate() {
 		if (this.rate + this.updateOffset < this.deltaTimeSum + this.updateOffset) {
 			this.resetDeltaTime();
-			console.log("update true")
 			return true;
 		} else {
 			return false;

@@ -1,0 +1,6 @@
+<ModelBehaviors>
+	<Include RelativeFile="Interactions.xml"/>
+	<Include RelativeFile="Animations.xml"/>
+	<Include RelativeFile="Emissive.xml"/>
+	<Include RelativeFile="PushButton.xml"/>
+</ModelBehaviors>
