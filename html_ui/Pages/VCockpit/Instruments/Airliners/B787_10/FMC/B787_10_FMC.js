@@ -508,6 +508,118 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 						}
 					}
 				}
+/*
+				if(this.autoland){
+					this.pitch = undefined;
+					/*
+					this.landPitch = SimVar.GetSimVarValue("PLANE PITCH DEGREES", "Radians");
+					let target = 0.0
+					if(this.landPitch < target){
+						//let coef = 0.001;
+						let coef = 0.004;
+						if(target - 1 < this.landPitch){
+							coef = 0.004
+						}
+						this.landPitch = this.landPitch + coef;
+						if(this.landPitch > target){
+							this.landPitch = target;
+						}
+					}
+					 */
+				/*
+					let altitude = Simplane.getAltitudeAboveGround(true);
+
+					if(this.autolandTimer < -400 && SimVar.GetSimVarValue('SIM ON GROUND', 'Boolean')){
+						SimVar.SetSimVarValue("YOKE Y POSITION", "Position", -0.2);
+					} else if(this.autolandTimer < -200 && SimVar.GetSimVarValue('SIM ON GROUND', 'Boolean')){
+						SimVar.SetSimVarValue("YOKE Y POSITION", "Position", -0.2);
+					} else {
+						if (altitude < 5){
+							SimVar.SetSimVarValue("A:GENERAL ENG THROTTLE LEVER POSITION:1", "Percent", 0);
+							SimVar.SetSimVarValue("A:GENERAL ENG THROTTLE LEVER POSITION:2", "Percent", 0);
+							//SimVar.SetSimVarValue("YOKE Y POSITION", "Position", -0.06);
+						}else if (altitude < 20){
+							SimVar.SetSimVarValue("A:GENERAL ENG THROTTLE LEVER POSITION:1", "Percent", 0);
+							SimVar.SetSimVarValue("A:GENERAL ENG THROTTLE LEVER POSITION:2", "Percent", 0);
+							//SimVar.SetSimVarValue("YOKE Y POSITION", "Position", -0.03);
+							//SimVar.SetSimVarValue("YOKE Y POSITION", "Position", -0.1);
+							SimVar.SetSimVarValue("YOKE Y POSITION", "Position", 0.1);
+						} else if(altitude < 30){
+							//SimVar.SetSimVarValue("YOKE Y POSITION", "Position", -0.01);
+							//SimVar.SetSimVarValue("YOKE Y POSITION", "Position", 0.1);
+						} else if(altitude < 45){
+							//SimVar.SetSimVarValue("YOKE Y POSITION", "Position", 0.18);
+						}
+					}
+
+					if(!this.autolandTimer){
+						this.autolandTimer = 0;
+					}
+
+					this.autolandTimer -= 50;
+
+					if(this.autolandTimer < -600){
+						this.autoland = false;
+					}
+
+				} else {
+					if(this.pitch){
+						this.pitch = SimVar.GetSimVarValue("PLANE PITCH DEGREES", "Radians");
+						*/
+						/*
+												this.pitch = SimVar.GetSimVarValue("PLANE PITCH DEGREES", "Radians");
+
+												let altitude = Simplane.getAltitudeAboveGround();
+												if (altitude < 25){
+													let target = -0.01
+													if(this.pitch < target){
+														let coef = 0.001;
+														if(target + 1 < this.pitch){
+															//coef = 0.0005
+														}
+														this.pitch = this.pitch + coef;
+														if(this.pitch > target){
+															this.pitch = target;
+														}
+													}
+												} else {
+													let target = -0.05
+													if(this.pitch > target){
+														let coef = 0.001;
+														if(target + 1 < this.pitch){
+															//coef = 0.0005
+														}
+														this.pitch = this.pitch - coef;
+														if(this.pitch < target){
+															this.pitch = target;
+														}
+													}
+
+													if(this.pitch < target){
+														let coef = 0.001;
+														if(target - 1 > this.pitch){
+															//coef = 0.001
+														}
+														this.pitch = this.pitch + coef;
+														if(this.pitch > target){
+															this.pitch = target;
+														}
+													}
+												}
+						*/
+/*
+						//SimVar.SetSimVarValue("PLANE PITCH DEGREES", "Radians", this.pitch);
+						let altitude = Simplane.getAltitudeAboveGround();
+						if(altitude < 60){
+							this.autoland = true;
+							//this.flare = true
+							SimVar.SetSimVarValue("YOKE Y POSITION", "Position", 0.2);
+							SimVar.SetSimVarValue("A:GENERAL ENG THROTTLE LEVER POSITION:1", "Percent", 0);
+							SimVar.SetSimVarValue("A:GENERAL ENG THROTTLE LEVER POSITION:2", "Percent", 0);
+						}
+					}
+				}
+				*/
 
 				if(this.autoland){
 					this.pitch = undefined;
