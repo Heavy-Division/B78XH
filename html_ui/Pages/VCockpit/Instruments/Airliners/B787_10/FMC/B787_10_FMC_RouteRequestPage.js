@@ -440,6 +440,12 @@ class B787_10_FMC_RouteRequestPage {
 			}).then(() => {
 				this.fmc.flightPlanManager.resumeSync();
 				this.fmc.flightPlanManager.setActiveWaypointIndex(1);
+				/*
+				Coherent.call("SET_ACTIVE_WAYPOINT_INDEX", 1);
+				Coherent.call("CREATE_NEW_FLIGHTPLAN");
+				Coherent.call("CLEAR_CURRENT_FLIGHT_PLAN").catch(console.log);
+				console.log("CREATE_NEW_FLIGHTPLAN");
+				 */
 				B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 			});
 		};

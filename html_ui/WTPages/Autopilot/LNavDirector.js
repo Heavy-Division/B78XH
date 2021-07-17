@@ -306,9 +306,11 @@ class LNavDirector {
 
 				this.state = LNavState.TURN_COMPLETING;
 				this.fpm.setActiveWaypointIndex(this.activeFlightPlan.activeWaypointIndex + 1);
+				//Coherent.call("SET_ACTIVE_WAYPOINT_INDEX", this.activeFlightPlan.activeWaypointIndex + 1);
 			} else {
 				this.state = LNavState.TURN_COMPLETING;
 				this.fpm.setActiveWaypointIndex(this.activeFlightPlan.activeWaypointIndex + 1);
+				//Coherent.call("SET_ACTIVE_WAYPOINT_INDEX", this.activeFlightPlan.activeWaypointIndex + 1);
 			}
 		}
 	}
@@ -326,6 +328,7 @@ class LNavDirector {
 
 			this.fpm.setActiveWaypointIndex(nextWaypointIndex);
 			this.fpm.clearDiscontinuity(nextWaypointIndex - 1);
+			//Coherent.call("SET_ACTIVE_WAYPOINT_INDEX", nextWaypointIndex);
 		}
 
 		this.sequencingMode = FlightPlanSequencing.AUTO;

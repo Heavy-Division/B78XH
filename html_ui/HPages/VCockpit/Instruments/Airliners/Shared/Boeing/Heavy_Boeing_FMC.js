@@ -8,6 +8,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		this.onExec = () => {
 			if (this.onExecPage) {
 				console.log("if this.onExecPage");
+				// FlightPlanAsoboSync.SaveToGameForce(this.flightPlanManager)
 				this.onExecPage();
 			} else {
 				this._isRouteActivated = false;

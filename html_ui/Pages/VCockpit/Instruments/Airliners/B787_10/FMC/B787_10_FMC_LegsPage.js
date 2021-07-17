@@ -610,7 +610,7 @@ class B787_10_FMC_LegsPage {
 					this._fmc.fpHasChanged = false;
 					this._fmc.selectMode = B787_10_FMC_LegsPage.SELECT_MODE.NONE;
 					this._fmc.eraseTemporaryFlightPlan(() => {
-						FlightPlanAsoboSync.SaveToGameForce(this._fmc.flightPlanManager);
+						//FlightPlanAsoboSync.SaveToGameForce(this._fmc.flightPlanManager);
 						this.resetAfterOp();
 					});
 				}

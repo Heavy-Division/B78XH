@@ -832,9 +832,10 @@
                 return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                     FlightPlanAsoboSync.init();
                     const plan = fpln.getCurrentFlightPlan();
-                    if (HeavyDivision.configuration.isFlightPlanSynchronizationActive() && ((plan.checksum !== this.fpChecksum) || HeavyDivision.configuration.isFlightPlanSynchronizationActive() && force === true)) {
+                    const planIndex = fpln.getCurrentFlightPlanIndex();
+                    if ((HeavyDivision.configuration.isFlightPlanSynchronizationActive() && (plan.checksum !== this.fpChecksum) && planIndex === 0) || ((HeavyDivision.configuration.isFlightPlanSynchronizationActive() && force === true && planIndex === 0))) {
                         if(force === true){
-                            yield Coherent.call("CREATE_NEW_FLIGHTPLAN");
+                            //yield Coherent.call("CREATE_NEW_FLIGHTPLAN");
                         }
                         yield Coherent.call("SET_CURRENT_FLIGHTPLAN_INDEX", 0).catch(console.log);
                         yield Coherent.call("CLEAR_CURRENT_FLIGHT_PLAN").catch(console.log);
@@ -846,7 +847,7 @@
                                 yield Coherent.call("SET_DESTINATION", plan.destinationAirfield.icao, false);
                             }
                             let coIndex = 1;
-                            let waypointsToSync = [];
+                            let waypointsToSync = null;
                             waypointsToSync = [...plan.departure.waypoints, ...plan.enroute.waypoints, ...plan.arrival.waypoints, ...plan.approach.waypoints]
                             let directIndex = waypointsToSync.findIndex((w) => {
                                 return w.ident === '$DIR';
@@ -856,9 +857,22 @@
                                 waypointsToSync.splice(0, directIndex + 1);
                             }
 
+                            let newWaypoints = [];
+
                             for (let i = 0; i < waypointsToSync.length; i++) {
-                                const wpt = waypointsToSync[i];
-                                //console.log("To SYNC: " + wpt.icao + "To SYNC: " + wpt.ident)
+                                let exists = newWaypoints.findIndex((w) => {
+                                    return w.ident === waypointsToSync[i].ident;
+                                })
+                                if(exists === -1) {
+                                    console.log("inserting " + waypointsToSync[i].ident)
+                                    newWaypoints.push(waypointsToSync[i]);
+                                }
+                            }
+
+
+                            for (let i = 0; i < newWaypoints.length; i++) {
+                                const wpt = newWaypoints[i];
+                                console.log("To SYNC: " + wpt.icao + "To SYNC: " + wpt.ident)
                                 if (wpt.icao.trim() !== "") {
                                     yield Coherent.call("ADD_WAYPOINT", wpt.icao, coIndex, false);
                                     coIndex++;
@@ -887,7 +901,7 @@
         }
 
         static SaveToGame(fpln) {
-            this.SaveToGameForce(fpln, false);
+            this.SaveToGameForce(fpln, true);
         }
     }
     FlightPlanAsoboSync.fpChecksum = 0;
