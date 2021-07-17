@@ -1,5 +1,5 @@
 {
-    "package_version": "0.1.10-2",
+    "package_version": "0.1.10-3",
     "dependencies": [
         {
             "name": "asobo-aircraft-b787-10",
@@ -21,5 +21,5 @@
             "OlderHistory": ""
         }
     },
-    "total_package_size": "00000000000018899514"
+    "total_package_size": "00000000000018897514"
 }
