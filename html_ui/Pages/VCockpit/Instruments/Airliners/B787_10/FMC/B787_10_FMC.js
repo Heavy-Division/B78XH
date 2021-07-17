@@ -207,6 +207,17 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					console.error(error);
 				}
 			}
+/*
+			if (this._speedDirector === undefined) {
+				this._speedDirector = new SpeedDirector(this);
+			} else {
+				try {
+					this._speedDirector.update();
+				} catch (error) {
+					console.error(error);
+				}
+			}
+ */
 
 			this._navModeSelector.generateInputDataEvents();
 			this._navModeSelector.processEvents();
