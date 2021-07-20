@@ -1430,7 +1430,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	getDesManagedSpeed() {
 		let dCI = this.getCostIndexFactor();
-		let speed = 290 * (1 - dCI) + 210 * dCI;
+		let speed = 290 + 50 * dCI;
 		if (this.overSpeedLimitThreshold) {
 			if (Simplane.getAltitude() < 10700) {
 				speed = Math.min(speed, 240);
