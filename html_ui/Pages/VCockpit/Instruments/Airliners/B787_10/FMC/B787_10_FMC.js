@@ -716,10 +716,57 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			}
 			this._aThrHasActivated = currentAThrMasterStatus && !this._previousAThrStatus;
 			this._previousAThrStatus = currentAThrMasterStatus;
+
+			/**
+			 * WT Stuff begin
+			 */
+
+			if (!this._navModeSelector) {
+				this._navModeSelector = new CJ4NavModeSelector(this.flightPlanManager);
+			}
+
+			//RUN LNAV ALWAYS
+			if (this._lnav === undefined) {
+				this._lnav = new LNavDirector(this.flightPlanManager, this._navModeSelector);
+			} else {
+				try {
+					this._lnav.update();
+				} catch (error) {
+					console.error(error);
+				}
+			}
+
+			this._navModeSelector.generateInputDataEvents();
+			this._navModeSelector.processEvents();
+
+
+			//TAKEOFF MODE HEADING SET (constant update to current heading when on takeoff roll)
+			if (this._navModeSelector.currentLateralActiveState === LateralNavModeState.TO && Simplane.getIsGrounded()) {
+				Coherent.call('HEADING_BUG_SET', 2, SimVar.GetSimVarValue('PLANE HEADING DEGREES MAGNETIC', 'Degrees'));
+			}
+
+			//CHECK FOR ALT set >45000
+			if (SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet') > 45000) {
+				Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, 45000, true);
+			}
+
+			/**
+			 * WT Stuff end
+			 */
+
+			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MIN_CALCULATED', 'knots', Simplane.getStallProtectionMinSpeed());
+			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MAX_CALCULATED', 'knots', Simplane.getMaxSpeed(Aircraft.AS01B));
+
 			if (this.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF) {
 				let n1 = this.getThrustTakeOffLimit() / 100;
 				SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
 			}
+
+			if (this.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_CLIMB) {
+				let n1 = this.getThrustClimbLimit() / 100;
+				SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
+			}
+
 			if (this._apHasActivated) {
 				if (!this.getIsVNAVArmed() && !this.getIsVNAVActive()) {
 					this.activateSPD();
@@ -727,10 +774,15 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				} else {
 					this.activateVNAV();
 				}
-				if (!this.getIsLNAVArmed() && !this.getIsLNAVActive()) {
-					this.activateHeadingHold();
-				} else {
-					this.activateLNAV();
+
+				if (this._navModeSelector.currentLateralArmedState !== LateralNavModeState.LNAV && this._navModeSelector.currentLateralActiveState !== LateralNavModeState.LNAV) {
+					/**
+					 * Enable HDG HOLD
+					 */
+					const headingHoldValue = Simplane.getHeadingMagnetic();
+					SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 2);
+					Coherent.call('HEADING_BUG_SET', 2, headingHoldValue);
+					SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
 				}
 			}
 			if (this._aThrHasActivated) {
@@ -916,8 +968,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					}
 				}
 			}
-			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MIN_CALCULATED', 'knots', Simplane.getStallProtectionMinSpeed());
-			SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MAX_CALCULATED', 'knots', Simplane.getMaxSpeed(Aircraft.AS01B));
+
 			if (this.getIsVNAVActive()) {
 				let altitude = Simplane.getAltitude();
 				let targetAltitude = Simplane.getAutoPilotAltitudeLockValue('feet');
@@ -941,27 +992,11 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				if (this.getIsVNAVActive()) {
 					let speed = this.getClbManagedSpeed();
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-					let altitude = Simplane.getAltitudeAboveGround();
-					let n1 = 100;
-					if (altitude < this.thrustReductionAltitude) {
-						n1 = this.getThrustTakeOffLimit() / 100;
-					} else {
-						n1 = this.getThrustClimbLimit() / 100;
-					}
-					SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
 				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
 				if (this.getIsVNAVActive()) {
 					let speed = this.getCrzManagedSpeed();
 					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-					let altitude = Simplane.getAltitudeAboveGround();
-					let n1 = 100;
-					if (altitude < this.thrustReductionAltitude) {
-						n1 = this.getThrustTakeOffLimit() / 100;
-					} else {
-						n1 = this.getThrustClimbLimit() / 100;
-					}
-					SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
 				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT) {
 				if (this.getIsVNAVActive()) {
