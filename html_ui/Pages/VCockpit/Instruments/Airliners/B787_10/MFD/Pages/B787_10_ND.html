@@ -1,8 +1,9 @@
-﻿<link rel="stylesheet" href="./B787_10_ND.css" />
+﻿<link rel="stylesheet" href="./B787_10_ND.css"/>
 
 <script type="text/html" id="B787_10_ND_Template">
     <div id="Map">
-        <map-instrument id="MapInstrument" map-mode="plan" bing-id="MFD" bing-ref="plane" show-overlay="false" config-path="/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/"></map-instrument>
+        <map-instrument id="MapInstrument" map-mode="plan" bing-id="MFD" bing-ref="plane" show-overlay="false"
+                        config-path="/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/"></map-instrument>
     </div>
     <div id="ModeChangeMask"></div>
     <jet-mfd-nd-compass id="Compass"></jet-mfd-nd-compass>
@@ -18,7 +19,8 @@
                     <text id="Wind_Separator" class="Large" x="14%" y="45%" alignment-baseline="baseline">/</text>
                     <text id="Wind_Strength" class="Value" x="22%" y="45%" alignment-baseline="baseline">--</text>
                     <g id="WindArrowContainer">
-                        <polygon id="Wind_Arrow" points="-3 20, 3 20, 3 -20, 15 -20, 0 -40, -15 -20, -3 -20" fill="white" display="none" />
+                        <polygon id="Wind_Arrow" points="-3 20, 3 20, 3 -20, 15 -20, 0 -40, -15 -20, -3 -20"
+                                 fill="white" display="none"/>
                     </g>
                 </svg>
             </div>
@@ -36,7 +38,8 @@
             <div id="Waypoint">
                 <svg>
                     <text id="WP_Name" class="Large" x="75%" y="20%" alignment-baseline="baseline"></text>
-                    <text id="WP_Track_Value" class="Value" x="100%" y="20%" alignment-baseline="baseline">---&deg</text>
+                    <text id="WP_Track_Value" class="Value" x="100%" y="20%" alignment-baseline="baseline">---&deg
+                    </text>
                     <text id="WP_Distance_Value" class="Value" x="92%" y="45%" alignment-baseline="baseline">-.-</text>
                     <text id="WP_Distance_Units" class="Units" x="100%" y="45%" alignment-baseline="baseline">NM</text>
                     <text id="WP_Time" class="Value" x="100%" y="70%" alignment-baseline="baseline">--:--</text>
@@ -52,8 +55,10 @@
                     <text id="Mode" x="60%" y="46%" alignment-baseline="middle"></text>
                     <text id="Distance" x="37%" y="75%" alignment-baseline="middle">--</text>
                     <text id="Unit" x="40%" y="75%" alignment-baseline="middle">NM</text>
-                    <path id="ArrowVor" d="M60 10 L50 0 L40 10 M50 0 L50 55 M65 45 L35 45" transform="translate(-10 12)" />
-                    <path id="ArrowAdf" d="M60 10 L50 0 L40 10 M50 0 L50 55 M65 45 L35 45" transform="translate(-10 12)" />
+                    <path id="ArrowVor" d="M60 10 L50 0 L40 10 M50 0 L50 55 M65 45 L35 45"
+                          transform="translate(-10 12)"/>
+                    <path id="ArrowAdf" d="M60 10 L50 0 L40 10 M50 0 L50 55 M65 45 L35 45"
+                          transform="translate(-10 12)"/>
                 </svg>
             </div>
 
@@ -64,8 +69,10 @@
                     <text id="Mode" x="40%" y="46%" alignment-baseline="middle"></text>
                     <text id="Distance" x="80%" y="75%" alignment-baseline="middle">--</text>
                     <text id="Unit" x="83%" y="75%" alignment-baseline="middle">NM</text>
-                    <path id="ArrowVor" d="M60 10 L50 0 L40 10 L40 45 L30 45 L30 55 L70 55 L70 45 L60 45 Z" transform="translate(235 12)" />
-                    <path id="ArrowAdf" d="M60 10 L50 0 L40 10 L40 45 L30 45 L30 55 L70 55 L70 45 L60 45 Z" transform="translate(235 12)" />
+                    <path id="ArrowVor" d="M60 10 L50 0 L40 10 L40 45 L30 45 L30 55 L70 55 L70 45 L60 45 Z"
+                          transform="translate(235 12)"/>
+                    <path id="ArrowAdf" d="M60 10 L50 0 L40 10 L40 45 L30 45 L30 55 L70 55 L70 45 L60 45 Z"
+                          transform="translate(235 12)"/>
                 </svg>
             </div>
         </div>
@@ -85,26 +92,26 @@
     <div id="NavPanel">
         <svg viewBox="0 0 1200 1800">
             <g id="Button_Map">
-                <path class="topLeftBorder" d="M0 0 L220 0 l-5 5 L5 50 l-5 5" />
-                <path class="bottomRightBorder" d="M220 55 L220 0 l-5 5 L5 50 l-5 5" />
-                <rect class="border" x="0px" width="220px" y="0px" height="55px" />
-                <rect class="inner" x="5px" width="210px" y="5px" height="45px" />
+                <path class="topLeftBorder" d="M0 0 L220 0 l-5 5 L5 50 l-5 5"/>
+                <path class="bottomRightBorder" d="M220 55 L220 0 l-5 5 L5 50 l-5 5"/>
+                <rect class="border" x="0px" width="220px" y="0px" height="55px"/>
+                <rect class="inner" x="5px" width="210px" y="5px" height="45px"/>
                 <text x="110px" y="40px">MAP</text>
             </g>
 
             <g id="Button_Plan">
-                <path class="topLeftBorder" d="M0 0 L220 0 l-5 5 L5 50 l-5 5" />
-                <path class="bottomRightBorder" d="M220 55 L220 0 l-5 5 L5 50 l-5 5" />
-                <rect class="border" x="0px" width="220px" y="0px" height="55px" />
-                <rect class="inner" x="5px" width="210px" y="5px" height="45px" />
+                <path class="topLeftBorder" d="M0 0 L220 0 l-5 5 L5 50 l-5 5"/>
+                <path class="bottomRightBorder" d="M220 55 L220 0 l-5 5 L5 50 l-5 5"/>
+                <rect class="border" x="0px" width="220px" y="0px" height="55px"/>
+                <rect class="inner" x="5px" width="210px" y="5px" height="45px"/>
                 <text x="110px" y="40px">PLAN</text>
             </g>
 
             <g id="Button_Menu">
-                <path class="topLeftBorder" d="M0 0 L110 0 l-5 5 L5 50 l-5 5" />
-                <path class="bottomRightBorder" d="M110 55 L110 0 l-5 5 L5 50 l-5 5" />
-                <rect class="border" x="0px" width="110px" y="0px" height="55px" />
-                <rect class="inner" x="5px" width="100px" y="5px" height="45px" />
+                <path class="topLeftBorder" d="M0 0 L110 0 l-5 5 L5 50 l-5 5"/>
+                <path class="bottomRightBorder" d="M110 55 L110 0 l-5 5 L5 50 l-5 5"/>
+                <rect class="border" x="0px" width="110px" y="0px" height="55px"/>
+                <rect class="inner" x="5px" width="100px" y="5px" height="45px"/>
                 <text x="55px" y="40px">MENU</text>
             </g>
 

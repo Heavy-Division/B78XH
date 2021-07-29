@@ -1,421 +1,502 @@
 :root {
-  --bodyHeightScale: 1;
+    --bodyHeightScale: 1;
 }
 
 @keyframes TemporaryShow {
-  0%, 100% {
-    visibility: visible;
-  }
+    0%, 100% {
+        visibility: visible;
+    }
 }
+
 @keyframes TemporaryHide {
-  0%, 100% {
-    visibility: hidden;
-  }
+    0%, 100% {
+        visibility: hidden;
+    }
 }
+
 html {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
+
 html body {
-  -webkit-user-select: none;
-  font-family: var(--font);
-  font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100 );
-  color: white;
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+    -webkit-user-select: none;
+    font-family: var(--font);
+    font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100);
+    color: white;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 #highlight {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  z-index: 10;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
 }
 
 #Electricity {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
+
 #Electricity[state=off] {
-  display: none;
+    display: none;
 }
+
 :root {
-  --eicasWhite: white;
-  --eicasBlack: black;
-  --eicasDarkGrey: rgb(50, 50, 50);
-  --eicasLightGrey: rgb(150, 150, 150);
-  --eicasBlue: rgb(0, 150, 150);
-  --eicasGreen: green;
-  --eicasOrange: rgb(219, 114, 0);
-  --eicasRed: red;
-  --eicasMagenta: magenta;
+    --eicasWhite: white;
+    --eicasBlack: black;
+    --eicasDarkGrey: rgb(50, 50, 50);
+    --eicasLightGrey: rgb(150, 150, 150);
+    --eicasBlue: rgb(0, 150, 150);
+    --eicasGreen: green;
+    --eicasOrange: rgb(219, 114, 0);
+    --eicasRed: red;
+    --eicasMagenta: magenta;
 }
 
 b787-10-nd-element {
-  position: absolute;
-  left: 0%;
-  top: 0%;
-  width: 100%;
-  height: 100%;
-  background-color: black;
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
 }
+
 b787-10-nd-element #NavPanel {
-  position: absolute;
-  border: none;
-  left: 0%;
-  top: 0%;
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    border: none;
+    left: 0%;
+    top: 0%;
+    width: 100%;
+    height: 100%;
 }
+
 b787-10-nd-element #NavPanel .border {
-  fill: none;
-  stroke: black;
-  stroke-width: 4px;
+    fill: none;
+    stroke: black;
+    stroke-width: 4px;
 }
+
 b787-10-nd-element #NavPanel .inner {
-  fill: #414141;
+    fill: #414141;
 }
+
 b787-10-nd-element #NavPanel .topLeftBorder {
-  fill: #646464;
+    fill: #646464;
 }
+
 b787-10-nd-element #NavPanel .bottomRightBorder {
-  fill: #1e1e1e;
+    fill: #1e1e1e;
 }
+
 b787-10-nd-element #NavPanel .active .inner {
-  fill: #004b00;
+    fill: #004b00;
 }
+
 b787-10-nd-element #NavPanel .active .topLeftBorder {
-  fill: #1e1e1e;
+    fill: #1e1e1e;
 }
+
 b787-10-nd-element #NavPanel .active .bottomRightBorder {
-  fill: #646464;
+    fill: #646464;
 }
+
 b787-10-nd-element #NavPanel .highlight .border {
-  stroke: magenta;
+    stroke: magenta;
 }
+
 b787-10-nd-element #NavPanel #Button_Map {
-  transform: translate(31.5%, 0.5%);
+    transform: translate(31.5%, 0.5%);
 }
+
 b787-10-nd-element #NavPanel #Button_Map text {
-  fill: var(--eicasWhite);
-  font-family: Roboto-Light;
-  font-size: 36px;
-  text-anchor: middle;
+    fill: var(--eicasWhite);
+    font-family: Roboto-Light;
+    font-size: 36px;
+    text-anchor: middle;
 }
+
 b787-10-nd-element #NavPanel #Button_Plan {
-  transform: translate(50%, 0.5%);
+    transform: translate(50%, 0.5%);
 }
+
 b787-10-nd-element #NavPanel #Button_Plan text {
-  fill: var(--eicasWhite);
-  font-family: Roboto-Light;
-  font-size: 36px;
-  text-anchor: middle;
+    fill: var(--eicasWhite);
+    font-family: Roboto-Light;
+    font-size: 36px;
+    text-anchor: middle;
 }
+
 b787-10-nd-element #NavPanel #Button_Menu {
-  transform: translate(89%, 0.5%);
+    transform: translate(89%, 0.5%);
 }
+
 b787-10-nd-element #NavPanel #Button_Menu text {
-  fill: var(--eicasWhite);
-  font-family: Roboto-Light;
-  font-size: 36px;
-  text-anchor: middle;
+    fill: var(--eicasWhite);
+    font-family: Roboto-Light;
+    font-size: 36px;
+    text-anchor: middle;
 }
+
 b787-10-nd-element #NavPanel #Map_Menu {
-  transform: translate(85.5%, 3.5%);
+    transform: translate(85.5%, 3.5%);
 }
+
 b787-10-nd-element #NavPanel #Map_Menu svg {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
+
 b787-10-nd-element #NavPanel #Map_Menu svg text {
-  text-anchor: start;
+    text-anchor: start;
 }
+
 b787-10-nd-element #Compass {
-  position: absolute;
-  border: none;
-  left: 0%;
-  top: 0%;
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    border: none;
+    left: 0%;
+    top: 0%;
+    width: 100%;
+    height: 100%;
 }
+
 b787-10-nd-element #Map {
-  position: absolute;
-  height: 150%;
-  width: 150%;
-  top: -38%;
-  left: -25%;
-  display: block;
-  /* Map position (left and top) is set in mapConfig.json file (see SvgMapConfig.ts) (makes it editable at runtime) */
-  /* Map position (left and top) is set in mapConfig.json file (see SvgMapConfig.ts) (makes it editable at runtime) */
+    position: absolute;
+    height: 150%;
+    width: 150%;
+    top: -38%;
+    left: -25%;
+    display: block;
+    /* Map position (left and top) is set in mapConfig.json file (see SvgMapConfig.ts) (makes it editable at runtime) */
+    /* Map position (left and top) is set in mapConfig.json file (see SvgMapConfig.ts) (makes it editable at runtime) */
 }
+
 b787-10-nd-element #Map #MapOrientation {
-  position: absolute;
-  top: 0%;
-  right: 0%;
-  width: 10%;
-  height: calc( 3 * 1vh * var(--bodyHeightScale));
-  background-color: #1a1d21;
-  color: white;
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    width: 10%;
+    height: calc(3 * 1vh * var(--bodyHeightScale));
+    background-color: #1a1d21;
+    color: white;
 }
+
 b787-10-nd-element #Map #WindData {
-  position: absolute;
-  top: 0%;
-  width: 7%;
-  right: 10%;
+    position: absolute;
+    top: 0%;
+    width: 7%;
+    right: 10%;
 }
+
 b787-10-nd-element #Map #MapRange {
-  position: absolute;
-  bottom: 0%;
-  right: 0%;
-  width: 7%;
-  height: calc( 3 * 1vh * var(--bodyHeightScale));
-  background-color: #1a1d21;
-  color: #36c8d2;
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+    width: 7%;
+    height: calc(3 * 1vh * var(--bodyHeightScale));
+    background-color: #1a1d21;
+    color: #36c8d2;
 }
+
 b787-10-nd-element #Map #MapSVG, b787-10-nd-element #Map #road-network-canvas {
-  position: absolute;
+    position: absolute;
 }
+
 b787-10-nd-element #Map bing-map {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  width: 100%;
-  height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
 }
+
 b787-10-nd-element #ModeChangeMask {
-  top: 0%;
-  left: 0%;
-  width: 100%;
-  height: 100%;
-  display: none;
-  position: absolute;
-  background-color: black;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    display: none;
+    position: absolute;
+    background-color: black;
 }
+
 b787-10-nd-element #NDInfo #TopBox {
-  top: -3%;
-  left: 2%;
-  width: 96%;
-  height: 20%;
-  position: absolute;
+    top: -3%;
+    left: 2%;
+    width: 96%;
+    height: 20%;
+    position: absolute;
 }
+
 b787-10-nd-element #NDInfo #TopBox #Speed {
-  top: 15%;
-  height: 100%;
-  left: 0%;
-  width: 40%;
-  position: absolute;
+    top: 15%;
+    height: 100%;
+    left: 0%;
+    width: 40%;
+    position: absolute;
 }
+
 b787-10-nd-element #NDInfo #TopBox #Speed #WindArrowContainer {
-  transform: translate(40px, 150px);
+    transform: translate(40px, 150px);
 }
+
 b787-10-nd-element #NDInfo #TopBox #Approach {
-  top: 50%;
-  height: 100%;
-  left: 60%;
-  width: 40%;
-  position: absolute;
+    top: 50%;
+    height: 100%;
+    left: 60%;
+    width: 40%;
+    position: absolute;
 }
+
 b787-10-nd-element #NDInfo #TopBox #Approach text {
-  text-anchor: end;
+    text-anchor: end;
 }
+
 b787-10-nd-element #NDInfo #TopBox #Waypoint {
-  top: 50%;
-  height: 100%;
-  left: 60%;
-  width: 40%;
-  position: absolute;
+    top: 50%;
+    height: 100%;
+    left: 60%;
+    width: 40%;
+    position: absolute;
 }
+
 b787-10-nd-element #NDInfo #TopBox #Waypoint text {
-  text-anchor: end;
+    text-anchor: end;
 }
+
 b787-10-nd-element #NDInfo #TopBox svg {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
+
 b787-10-nd-element #NDInfo #TopBox text {
-  width: 100%;
-  height: 100%;
-  font-family: Roboto-Light;
+    width: 100%;
+    height: 100%;
+    font-family: Roboto-Light;
 }
+
 b787-10-nd-element #NDInfo #TopBox text.Value {
-  font-size: 38px;
-  fill: white;
+    font-size: 38px;
+    fill: white;
 }
+
 b787-10-nd-element #NDInfo #TopBox text.ValueVor {
-  font-size: 38px;
-  fill: cyan;
+    font-size: 38px;
+    fill: cyan;
 }
+
 b787-10-nd-element #NDInfo #TopBox text.ValueIls {
-  font-size: 38px;
-  fill: #ff00ff;
+    font-size: 38px;
+    fill: #ff00ff;
 }
+
 b787-10-nd-element #NDInfo #TopBox text.Small {
-  font-size: 30px;
-  fill: white;
+    font-size: 30px;
+    fill: white;
 }
+
 b787-10-nd-element #NDInfo #TopBox text.Large {
-  font-size: 38px;
-  fill: white;
+    font-size: 38px;
+    fill: white;
 }
+
 b787-10-nd-element #NDInfo #TopBox text.Units {
-  font-size: 30px;
-  fill: cyan;
+    font-size: 30px;
+    fill: cyan;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids {
-  font-family: Roboto-Light;
+    font-family: Roboto-Light;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids div {
-  top: 89%;
-  width: 25%;
-  height: 13%;
-  position: absolute;
+    top: 89%;
+    width: 25%;
+    height: 13%;
+    position: absolute;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids svg {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #VORDMENavaid_Left {
-  left: 2.5%;
-  text-anchor: start;
+    left: 2.5%;
+    text-anchor: start;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #VORDMENavaid_Left #Distance {
-  text-anchor: end;
+    text-anchor: end;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #VORDMENavaid_Right {
-  right: 2.5%;
-  text-anchor: end;
+    right: 2.5%;
+    text-anchor: end;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #VORDMENavaid_Right #Unit {
-  text-anchor: start;
+    text-anchor: start;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #State {
-  font-size: 30px;
-  fill: white;
+    font-size: 30px;
+    fill: white;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #ID {
-  font-size: 30px;
-  fill: white;
+    font-size: 30px;
+    fill: white;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #Mode {
-  font-size: 30px;
-  fill: white;
-  text-decoration: underline;
+    font-size: 30px;
+    fill: white;
+    text-decoration: underline;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #Distance {
-  font-size: 30px;
-  fill: white;
+    font-size: 30px;
+    fill: white;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #Unit {
-  font-size: 30px;
-  fill: cyan;
+    font-size: 30px;
+    fill: cyan;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #ArrowVor {
-  fill: none;
-  stroke: green;
-  stroke-width: 4px;
+    fill: none;
+    stroke: green;
+    stroke-width: 4px;
 }
+
 b787-10-nd-element #NDInfo #VORDMENavaids #ArrowAdf {
-  fill: none;
-  stroke: cyan;
-  stroke-width: 4px;
+    fill: none;
+    stroke: cyan;
+    stroke-width: 4px;
 }
+
 b787-10-nd-element #NDInfo #Symbols {
-  top: 30%;
-  left: 2%;
-  width: 50%;
-  height: 50%;
-  position: absolute;
+    top: 30%;
+    left: 2%;
+    width: 50%;
+    height: 50%;
+    position: absolute;
 }
+
 b787-10-nd-element #NDInfo #Symbols svg {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
+
 b787-10-nd-element #NDInfo #Symbols text {
-  width: 100%;
-  height: 100%;
-  font-family: Roboto-Bold;
+    width: 100%;
+    height: 100%;
+    font-family: Roboto-Bold;
 }
+
 b787-10-nd-element #NDInfo #Symbols text.Small {
-  font-size: 28px;
-  fill: #009696;
+    font-size: 28px;
+    fill: #009696;
 }
+
 b787-10-nd-element #NDInfo #Symbols text.Large {
-  font-size: 36px;
-  fill: #009696;
+    font-size: 36px;
+    fill: #009696;
 }
+
 b787-10-nd-element[mapstyle=rose] #Compass {
-  top: 6%;
+    top: 6%;
 }
+
 b787-10-nd-element[mapstyle=rose] #Map {
-  top: -19%;
+    top: -19%;
 }
+
 b787-10-nd-element[mapstyle=plan] #Compass {
-  top: 3%;
+    top: 3%;
 }
+
 b787-10-nd-element[mapstyle=plan] #Map {
-  top: -22%;
+    top: -22%;
 }
+
 b787-10-nd-element[halfsize=true] #NavPanel {
-  top: 1%;
+    top: 1%;
 }
+
 b787-10-nd-element[halfsize=true][mapstyle=arc] #Compass {
-  top: -36%;
-  left: -51.6%;
-  width: 183%;
-  height: 183%;
+    top: -36%;
+    left: -51.6%;
+    width: 183%;
+    height: 183%;
 }
+
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox #Speed {
-  top: 15%;
-  width: 39%;
-  height: 60%;
+    top: 15%;
+    width: 39%;
+    height: 60%;
 }
+
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox #Speed #WindArrowContainer {
-  transform: translate(18px, 90px) scale(0.5);
+    transform: translate(18px, 90px) scale(0.5);
 }
+
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox #Approach,
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox #Waypoint {
-  top: 40%;
-  height: 50%;
+    top: 40%;
+    height: 50%;
 }
+
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox text.Value,
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox text.ValueVor,
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox text.ValueIls,
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox text.Large {
-  font-size: 18px;
+    font-size: 18px;
 }
+
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox text.Small,
 b787-10-nd-element[halfsize=true] #NDInfo #TopBox text.Units {
-  font-size: 15px;
+    font-size: 15px;
 }
+
 b787-10-nd-element[halfsize=true] #NDInfo #VORDMENavaids svg {
-  width: 200%;
+    width: 200%;
 }
+
 b787-10-nd-element[halfsize=true] #NDInfo #VORDMENavaids #VORDMENavaid_Left {
-  left: -2%;
+    left: -2%;
 }
+
 b787-10-nd-element[halfsize=true] #NDInfo #VORDMENavaids #VORDMENavaid_Right {
-  right: 25%;
+    right: 25%;
 }
+
 b787-10-nd-element[border=left] #Borders {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-left: 2px inset white;
-  pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-left: 2px inset white;
+    pointer-events: none;
 }
+
 b787-10-nd-element[border=right] #Borders {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-right: 2px inset white;
-  pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-right: 2px inset white;
+    pointer-events: none;
 }
 
 /*# sourceMappingURL=B787_10_ND.css.map */

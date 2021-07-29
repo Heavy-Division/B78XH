@@ -1,86 +1,94 @@
 :root {
-  --bodyHeightScale: 1;
+    --bodyHeightScale: 1;
 }
 
 @keyframes TemporaryShow {
-  0%, 100% {
-    visibility: visible;
-  }
+    0%, 100% {
+        visibility: visible;
+    }
 }
+
 @keyframes TemporaryHide {
-  0%, 100% {
-    visibility: hidden;
-  }
+    0%, 100% {
+        visibility: hidden;
+    }
 }
+
 html {
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
+
 html body {
-  -webkit-user-select: none;
-  font-family: var(--font);
-  font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100 );
-  color: white;
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+    -webkit-user-select: none;
+    font-family: var(--font);
+    font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100);
+    color: white;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 #highlight {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  z-index: 10;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
 }
 
 #Electricity {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
+
 #Electricity[state=off] {
-  display: none;
+    display: none;
 }
+
 :root {
-  --eicasWhite: white;
-  --eicasBlack: black;
-  --eicasDarkGrey: rgb(50, 50, 50);
-  --eicasLightGrey: rgb(150, 150, 150);
-  --eicasBlue: rgb(0, 150, 150);
-  --eicasGreen: green;
-  --eicasOrange: rgb(219, 114, 0);
-  --eicasRed: red;
-  --eicasMagenta: magenta;
+    --eicasWhite: white;
+    --eicasBlack: black;
+    --eicasDarkGrey: rgb(50, 50, 50);
+    --eicasLightGrey: rgb(150, 150, 150);
+    --eicasBlue: rgb(0, 150, 150);
+    --eicasGreen: green;
+    --eicasOrange: rgb(219, 114, 0);
+    --eicasRed: red;
+    --eicasMagenta: magenta;
 }
 
 b787-10-info-element {
-  position: absolute;
-  left: 0%;
-  top: 0%;
-  width: 100%;
-  height: 100%;
-  background-color: black;
+    position: absolute;
+    left: 0%;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
 }
+
 b787-10-info-element #title {
-  color: white;
-  font-size: 35px;
+    color: white;
+    font-size: 35px;
 }
+
 b787-10-info-element[border=left] #Borders {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-left: 2px inset white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-left: 2px inset white;
 }
+
 b787-10-info-element[border=right] #Borders {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border-right: 2px inset white;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-right: 2px inset white;
 }
 
 /*# sourceMappingURL=B787_10_INFO.css.map */
