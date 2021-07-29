@@ -2,9 +2,11 @@
 
 <script type="text/html" id="MapInstrumentTemplate">
     <bing-map></bing-map>
-    <canvas id="road-network-canvas" width="1000" height="1000"></canvas>
     <svg id="MapSVG"></svg>
-    <div id="MapRange">80NM</div>
+    <div id="MapRange" state="Active">
+        <div class="range">80</div>
+        <div class="unit">NM</div>
+    </div>
     <div id="MapOrientation">NORTH UP</div>
     <svg id="MapCursor" height="3%" viewBox="0 0 100 100" style="display: none">
         <polygon points="0,0 75,25 60,40 100,80 80,100 40,60 25,75" fill="white" stroke="black"
@@ -66,6 +68,6 @@
         import-script="/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgAltitudeInterceptElement.js"></script>
 <script type="text/html" import-script="/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgMap.js"></script>
 
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/Map/MapInstrument.js"></script>
+<script type="text/html" import-script="/HPages/VCockpit/Instruments/Shared/Map/MapInstrument.js"></script>
 
 
