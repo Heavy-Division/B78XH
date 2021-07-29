@@ -21,11 +21,6 @@
             "date": 132720308928014780
         },
         {
-            "path": "html_ui/WTPages/WTLibs/DataStore.js",
-            "size": 4219,
-            "date": 132719307221690000
-        },
-        {
             "path": "html_ui/WTPages/WTLibs/LzUtf8.js",
             "size": 32045,
             "date": 132719307209830000
@@ -34,6 +29,11 @@
             "path": "html_ui/WTPages/WTLibs/wtsdk.js",
             "size": 256393,
             "date": 132720308862696270
+        },
+        {
+            "path": "html_ui/WTPages/WTLibs/DataStore.js",
+            "size": 4219,
+            "date": 132719307221690000
         },
         {
             "path": "html_ui/WTPages/WTLibs/WT_GCMath.js",
@@ -56,9 +56,139 @@
             "date": 132720313401430720
         },
         {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/MapInstrument.html",
+            "size": 5923,
+            "date": 132720389241052220
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/MapInstrument.css",
+            "size": 2168,
+            "date": 132720381603607710
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/MapInstrument.js",
+            "size": 54044,
+            "date": 132720381550910200
+        },
+        {
             "path": "html_ui/HPages/VCockpit/Instruments/Airliners/Shared/Boeing/Heavy_Boeing_FMC.js",
             "size": 92,
             "date": 132720275576618770
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgAirplaneElement.js",
+            "size": 15748,
+            "date": 132720383517966420
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgAltitudeInterceptElement.js",
+            "size": 5691,
+            "date": 132720383544164820
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgCityElement.js",
+            "size": 9113,
+            "date": 132720383583053920
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgCityManager.js",
+            "size": 11355,
+            "date": 132720383607155420
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgConstraintElement.js",
+            "size": 8454,
+            "date": 132720384185465800
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgFlightPlanElement.js",
+            "size": 9925,
+            "date": 132720384222619020
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgFuelRingElement.js",
+            "size": 12366,
+            "date": 132720384308999660
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgLabeledRingElement.js",
+            "size": 2502,
+            "date": 132720384363980000
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgMap.js",
+            "size": 18597,
+            "date": 132720384405327580
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgMapConfig.js",
+            "size": 9215,
+            "date": 132720384449800960
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgMapElement.js",
+            "size": 2502,
+            "date": 132720384556599600
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgMaskElement.js",
+            "size": 2355,
+            "date": 132720384518772800
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgNearestAirportElement.js",
+            "size": 1946,
+            "date": 132720384629615970
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgNearestIntersectionElement.js",
+            "size": 724,
+            "date": 132720384658594180
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgNearestNDBElement.js",
+            "size": 893,
+            "date": 132720384697153710
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgNearestVORElement.js",
+            "size": 1039,
+            "date": 132720384727450240
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgObstacleElement.js",
+            "size": 2786,
+            "date": 132720384762570240
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgRangeCompassElement.js",
+            "size": 18723,
+            "date": 132720384800891730
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgRangeRingElement.js",
+            "size": 7050,
+            "date": 132720384842096420
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgRoadNetworkElement.js",
+            "size": 19813,
+            "date": 132720384882232080
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgTextManager.js",
+            "size": 11371,
+            "date": 132720384918101740
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgTrackVectorElement.js",
+            "size": 5786,
+            "date": 132720384954667980
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgWaypointElement.js",
+            "size": 14321,
+            "date": 132720384993604660
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.css",
@@ -82,8 +212,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.html",
-            "size": 3873,
-            "date": 132720380200955970
+            "size": 3874,
+            "date": 132720389791073820
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.js",
