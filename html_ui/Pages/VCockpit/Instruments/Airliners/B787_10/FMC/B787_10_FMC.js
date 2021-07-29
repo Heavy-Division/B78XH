@@ -111,6 +111,57 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			this.onVNAV = () => {
 				B787_10_FMC_VNAVPage.ShowPage1(this);
 			};
+
+			this.onExec = () => {
+				if (this.onExecPage) {
+					console.log('if this.onExecPage');
+					this.onExecPage();
+				} else {
+					this._isRouteActivated = false;
+					this.fpHasChanged = false;
+					this._activatingDirectTo = false;
+				}
+			};
+			this.onExecPage = undefined;
+			this.onExecDefault = () => {
+				if (this.getIsRouteActivated() && !this._activatingDirectTo) {
+					this.insertTemporaryFlightPlan(() => {
+						this.copyAirwaySelections();
+						this._isRouteActivated = false;
+						this._activatingDirectToExisting = false;
+						this.fpHasChanged = false;
+						SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+						if (this.refreshPageCallback) {
+							this.refreshPageCallback();
+						}
+					});
+				} else if (this.getIsRouteActivated() && this._activatingDirectTo) {
+					const activeIndex = this.flightPlanManager.getActiveWaypointIndex();
+					this.insertTemporaryFlightPlan(() => {
+						this.flightPlanManager.activateDirectToByIndex(activeIndex, () => {
+							this.copyAirwaySelections();
+							this._isRouteActivated = false;
+							this._activatingDirectToExisting = false;
+							this._activatingDirectTo = false;
+							this.fpHasChanged = false;
+							SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+							if (this.refreshPageCallback) {
+								this.refreshPageCallback();
+							}
+						});
+					});
+				} else {
+					this.fpHasChanged = false;
+					this._isRouteActivated = false;
+					SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+					if (this.refreshPageCallback) {
+						this._activatingDirectTo = false;
+						this.fpHasChanged = false;
+						this.refreshPageCallback();
+					}
+				}
+			};
+
 			this._pointer = this.getChildById('fms-pointer');
 			this._pointer.style.zIndex = '5';
 			this._pointer.style.position = 'fixed';
@@ -210,6 +261,23 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			}
 		}
 		B787_10_FMC_IdentPage.ShowPage1(this);
+	}
+
+	/**
+	 * TODO: Better to use synchronizeTemporaryAndActiveFlightPlanWaypoints in future
+	 * (implementation can be found in source code prior 0.1.10 version)
+	 */
+
+	// Copy airway selections from temporary to active flightplan
+	copyAirwaySelections() {
+		const temporaryFPWaypoints = this.flightPlanManager.getWaypoints(1);
+		const activeFPWaypoints = this.flightPlanManager.getWaypoints(0);
+		for (let i = 0; i < activeFPWaypoints.length; i++) {
+			if (activeFPWaypoints[i].infos && temporaryFPWaypoints[i] && activeFPWaypoints[i].icao === temporaryFPWaypoints[i].icao && temporaryFPWaypoints[i].infos) {
+				activeFPWaypoints[i].infos.airwayIn = temporaryFPWaypoints[i].infos.airwayIn;
+				activeFPWaypoints[i].infos.airwayOut = temporaryFPWaypoints[i].infos.airwayOut;
+			}
+		}
 	}
 
 	onPowerOn() {
