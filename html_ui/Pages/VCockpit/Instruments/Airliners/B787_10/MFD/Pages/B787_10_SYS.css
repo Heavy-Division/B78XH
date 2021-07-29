@@ -1,0 +1,254 @@
+:root {
+  --bodyHeightScale: 1;
+}
+
+@keyframes TemporaryShow {
+  0%, 100% {
+    visibility: visible;
+  }
+}
+@keyframes TemporaryHide {
+  0%, 100% {
+    visibility: hidden;
+  }
+}
+html {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+html body {
+  -webkit-user-select: none;
+  font-family: var(--font);
+  font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100 );
+  color: white;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#highlight {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 10;
+}
+
+#Electricity {
+  width: 100%;
+  height: 100%;
+}
+#Electricity[state=off] {
+  display: none;
+}
+:root {
+  --eicasWhite: white;
+  --eicasBlack: black;
+  --eicasDarkGrey: rgb(50, 50, 50);
+  --eicasLightGrey: rgb(150, 150, 150);
+  --eicasBlue: rgb(0, 150, 150);
+  --eicasGreen: green;
+  --eicasOrange: rgb(219, 114, 0);
+  --eicasRed: red;
+  --eicasMagenta: magenta;
+}
+
+b787-10-sys-element {
+  position: absolute;
+  left: 0%;
+  top: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+}
+b787-10-sys-element svg {
+  width: 100%;
+  height: 100%;
+}
+b787-10-sys-element #PageButtons text {
+  fill: var(--eicasWhite);
+  font-family: Roboto-Light;
+  font-size: 36px;
+  text-anchor: middle;
+}
+b787-10-sys-element #PageButtons .border {
+  fill: none;
+  stroke: black;
+  stroke-width: 4px;
+}
+b787-10-sys-element #PageButtons .inner {
+  fill: #646464;
+  stroke: none;
+}
+b787-10-sys-element #PageButtons .topLeftBorder, b787-10-sys-element #PageButtons .bottomRightBorder {
+  stroke: none;
+}
+b787-10-sys-element #PageButtons .page-button-active .inner {
+  fill: #003200;
+}
+b787-10-sys-element #PageButtons .page-button-active .topLeftBorder {
+  fill: #1e1e1e;
+}
+b787-10-sys-element #PageButtons .page-button-active .bottomRightBorder {
+  fill: #646464;
+}
+b787-10-sys-element #PageButtons .page-button-inactive .inner {
+  fill: #414141;
+}
+b787-10-sys-element #PageButtons .page-button-inactive .topLeftBorder {
+  fill: #646464;
+}
+b787-10-sys-element #PageButtons .page-button-inactive .bottomRightBorder {
+  fill: #1e1e1e;
+}
+b787-10-sys-element #PageButtons .page-button-highlight .topLeftBorder,
+b787-10-sys-element #PageButtons .page-button-highlight .bottomRightBorder {
+  fill: magenta;
+}
+b787-10-sys-element #Pages #FUEL_Page text.label {
+  font-size: 30px;
+  text-anchor: middle;
+  fill: var(--eicasBlue);
+}
+b787-10-sys-element #Pages #FUEL_Page text.quantity {
+  font-size: 38px;
+  text-anchor: end;
+  fill: var(--eicasWhite);
+}
+b787-10-sys-element #Pages #FUEL_Page #TotalFuelDisplay rect {
+  fill: none;
+  stroke: var(--eicasBlue);
+  stroke-width: 4px;
+}
+b787-10-sys-element #Pages #FUEL_Page #TotalFuelDisplay text.label {
+  text-anchor: start;
+}
+b787-10-sys-element #Pages #FUEL_Page #TotalFuelDisplay text.quantity {
+  font-size: 45px;
+}
+b787-10-sys-element #Pages #FUEL_Page #TotalFuelDisplay text.units {
+  font-size: 30px;
+  text-anchor: middle;
+  fill: var(--eicasWhite);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelTempDisplay .label {
+  text-anchor: start;
+}
+b787-10-sys-element #Pages #FUEL_Page .engineInfo rect, b787-10-sys-element #Pages #FUEL_Page .engineInfo path {
+  fill: var(--eicasDarkGrey);
+  stroke: var(--eicasBlue);
+  stroke-width: 4px;
+}
+b787-10-sys-element #Pages #FUEL_Page .engineInfo line {
+  fill: none;
+  stroke-width: 6px;
+  stroke: var(--eicasWhite);
+}
+b787-10-sys-element #Pages #FUEL_Page .engineInfo circle {
+  fill: var(--eicasBlack);
+  stroke-width: 4px;
+}
+b787-10-sys-element #Pages #FUEL_Page .engineInfo .fuelengine-active {
+  stroke: var(--eicasGreen);
+}
+b787-10-sys-element #Pages #FUEL_Page .engineInfo .fuelengine-inactive {
+  stroke: var(--eicasWhite);
+}
+b787-10-sys-element #Pages #FUEL_Page .tankInfo rect.background {
+  fill: var(--eicasDarkGrey);
+  stroke: var(--eicasBlue);
+  stroke-width: 4px;
+}
+b787-10-sys-element #Pages #FUEL_Page .tankInfo rect.quantity {
+  fill: var(--eicasBlack);
+  stroke: none;
+}
+b787-10-sys-element #Pages #FUEL_Page .fuelFrame {
+  fill: none;
+  stroke-width: 4px;
+  stroke: var(--eicasWhite);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelPumps {
+  fill: none;
+  stroke-width: 8px;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelPumps .fuelpump-switched-active {
+  stroke: var(--eicasGreen);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelPumps .fuelpump-notswitched-active {
+  stroke: var(--eicasOrange);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelPumps .fuelpump-switched-inactive {
+  stroke: var(--eicasOrange);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelPumps .fuelpump-notswitched-inactive {
+  stroke: var(--eicasWhite);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelValves {
+  fill: var(--eicasBlack);
+  stroke-width: 4px;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelValves .fuelvalve-open {
+  stroke: var(--eicasGreen);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelValves .fuelvalve-closing {
+  stroke: var(--eicasOrange);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelValves .fuelvalve-closed {
+  stroke: none;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelValves #FuelValve1.fuelvalve-closed, b787-10-sys-element #Pages #FUEL_Page #FuelValves #FuelValve2.fuelvalve-closed, b787-10-sys-element #Pages #FUEL_Page #FuelValves #FuelValve3.fuelvalve-closed {
+  stroke: var(--eicasWhite);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines {
+  fill: none;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines line {
+  stroke-width: 16px;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines polyline {
+  stroke-width: 14px;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines rect {
+  stroke-width: 4px;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active {
+  stroke: var(--eicasGreen);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active text {
+  stroke: none;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active rect {
+  stroke: var(--eicasBlue);
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-active path {
+  fill: var(--eicasGreen);
+  stroke: none;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-inactive {
+  stroke: none;
+  fill: none;
+}
+b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-inactive text, b787-10-sys-element #Pages #FUEL_Page #FuelLines .fuelline-inactive rect {
+  stroke: none;
+  fill: none;
+}
+b787-10-sys-element[border=left] #Borders {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-left: 2px inset white;
+}
+b787-10-sys-element[border=right] #Borders {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-right: 2px inset white;
+}
+
+/*# sourceMappingURL=B787_10_SYS.css.map */
