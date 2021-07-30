@@ -107,7 +107,10 @@ class CJ4NavModeSelector {
 			[`${NavModeEvent.VS_PRESSED}`]: this.handleVSPressed.bind(this),
 			[`${NavModeEvent.NAV_PRESSED}`]: this.handleNAVPressed.bind(this),
 			[`${NavModeEvent.NAV_MODE_CHANGED}`]: this.handleNAVModeChanged.bind(this),
-			[`${NavModeEvent.HDG_PRESSED}`]: this.handleHDGPressed.bind(this),
+			[`${NavModeEvent.HDG_HOLD_PRESSED}`]: this.handleHDGHoldPressed.bind(this),
+			[`${NavModeEvent.HDG_HOLD_ACTIVE}`]: this.handleHDGHoldActive.bind(this),
+			[`${NavModeEvent.HDG_SEL_PRESSED}`]: this.handleHDGSelPressed.bind(this),
+			[`${NavModeEvent.HDG_SEL_ACTIVE}`]: this.handleHDGSelActive.bind(this),
 			[`${NavModeEvent.APPR_PRESSED}`]: this.handleAPPRPressed.bind(this),
 			[`${NavModeEvent.FLC_PRESSED}`]: this.handleFLCPressed.bind(this),
 			[`${NavModeEvent.VNAV_PRESSED}`]: this.handleVNAVPressed.bind(this),
@@ -134,6 +137,145 @@ class CJ4NavModeSelector {
 		};
 
 		this.initialize();
+	}
+
+	handleHDGHoldPressed() {
+		/**
+		 * JUST BYPASS for now
+		 */
+		/*
+		if (this.currentLateralActiveState !== LateralNavModeState.HDGHOLD) {
+			this.currentLateralArmedState = LateralNavModeState.HDGHOLD;
+			this.queueEvent(NavModeEvent.HDG_HOLD_ACTIVE);
+		}
+		*/
+		this.queueEvent(NavModeEvent.HDG_HOLD_ACTIVE);
+	}
+
+	handleHDGHoldActive() {
+		this._headingHoldValue = Simplane.getHeadingMagnetic();
+
+		switch (this.currentLateralActiveState) {
+			case LateralNavModeState.ROLL:
+			case LateralNavModeState.NAV:
+				SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 0);
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
+				SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
+				SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 0);
+				SimVar.SetSimVarValue('L:AP_LNAV_ACTIVE', 'number', 0);
+				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
+				break;
+			case LateralNavModeState.LNAV:
+			case LateralNavModeState.TO:
+			case LateralNavModeState.GA:
+				if (SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'number') == 0) {
+					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+				}
+				SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 0);
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
+				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
+				break;
+			case LateralNavModeState.HDGSEL:
+				if (SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'number') == 1) {
+					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 0);
+				}
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 0);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
+				this.currentLateralActiveState = LateralNavModeState.HDGSEL;
+				break;
+			case LateralNavModeState.APPR:
+				this.cancelApproachMode(false);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
+
+				if (this.approachMode === WT_ApproachType.ILS || this.approachMode === WT_ApproachType.NONE) {
+					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+				}
+
+				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
+				break;
+		}
+
+
+		switch (this.currentLateralActiveState) {
+			case LateralNavModeState.ROLL:
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
+				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
+				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
+				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
+				break;
+			case LateralNavModeState.NAV:
+				SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 0);
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
+				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
+				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
+				SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 0);
+				SimVar.SetSimVarValue('L:AP_LNAV_ACTIVE', 'number', 0);
+				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
+				break;
+			case LateralNavModeState.LNAV:
+			case LateralNavModeState.TO:
+			case LateralNavModeState.GA:
+				if (SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'number') == 0) {
+					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+				}
+				SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 0);
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
+				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
+				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
+				SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 0);
+				SimVar.SetSimVarValue('L:AP_LNAV_ACTIVE', 'number', 0);
+				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
+				break;
+			case LateralNavModeState.HDGHOLD:
+			case LateralNavModeState.HDG:
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
+				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
+				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
+				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
+				break;
+			case LateralNavModeState.APPR:
+				this.cancelApproachMode(false);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
+				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
+				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
+				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
+				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
+
+				if (this.approachMode === WT_ApproachType.ILS || this.approachMode === WT_ApproachType.NONE) {
+					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+				}
+
+				this.currentLateralArmedState = LateralNavModeState.NONE;
+				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
+				break;
+		}
+	}
+
+	handleHDGSelPressed() {
+		/**
+		 * JUST BYPASS for now
+		 */
+		/*
+		if (this.currentLateralActiveState !== LateralNavModeState.HDGSEL) {
+			this.currentLateralArmedState = LateralNavModeState.HDGSEL;
+			this.queueEvent(NavModeEvent.HDG_SEL_ACTIVE);
+		}
+*/
+		this.queueEvent(NavModeEvent.HDG_SEL_ACTIVE);
+	}
+
+	handleHDGSelActive() {
+		this.activateHeadingSel();
+		this.currentLateralArmedState = LateralNavModeState.NONE;
+		this.currentLateralActiveState = LateralNavModeState.HDGSEL;
 	}
 
 	/**
@@ -833,34 +975,36 @@ class CJ4NavModeSelector {
 					SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 1);
 					this.changeToCorrectLNavForMode(true, true);
 					break;
-				case LateralNavModeState.HDG:
+				case LateralNavModeState.HDGHOLD:
+				case LateralNavModeState.HDGSEL:
 				case LateralNavModeState.TO:
 				case LateralNavModeState.GA:
 					SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 1);
 					SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 0);
 					this.changeToCorrectLNavForMode(false, true);
+					SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 1);
+					SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 0);
 					break;
 				case LateralNavModeState.NAV:
 					SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 0);
 					SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
 					SimVar.SetSimVarValue('K:AP_NAV1_HOLD', 'number', 0);
+					SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 0);
 					this.currentLateralActiveState = LateralNavModeState.ROLL;
 					break;
 				case LateralNavModeState.LNAV:
-					SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 0);
-					SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
-					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 0);
-					this.currentLateralActiveState = LateralNavModeState.ROLL;
 					break;
 				case LateralNavModeState.APPR:
 					this.cancelApproachMode(true);
 					this.changeToCorrectLNavForMode(true, false);
 
 					SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 1);
+					SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 1);
 					break;
 			}
 		} else {
 			this.currentLateralArmedState = LateralNavModeState.NONE;
+			SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 0);
 		}
 	}
 
@@ -951,7 +1095,8 @@ class CJ4NavModeSelector {
 			case LateralNavModeState.ROLL:
 				setProperApprState();
 				break;
-			case LateralNavModeState.HDG:
+			case LateralNavModeState.HDGHOLD:
+			case LateralNavModeState.HDGSEL:
 			case LateralNavModeState.TO:
 			case LateralNavModeState.GA:
 				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 0);
@@ -1114,10 +1259,11 @@ class CJ4NavModeSelector {
 					}
 					break;
 				case LateralNavModeState.LNAV:
-					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
-					break;
-				case LateralNavModeState.HDG:
-					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+				case LateralNavModeState.HDGHOLD:
+				case LateralNavModeState.HDGSEL:
+					if (SimVar.GetSimVarValue('AUTOPILOT APPROACH ARM', 'bool') !== 1) {
+						SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
+					}
 					break;
 			}
 		}
@@ -1265,7 +1411,8 @@ class CJ4NavModeSelector {
 			switch (this.currentLateralActiveState) {
 				case LateralNavModeState.ROLL:
 					break;
-				case LateralNavModeState.HDG:
+				case LateralNavModeState.HDGHOLD:
+				case LateralNavModeState.HDGSEL:
 					if (SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'number') == 1) {
 						SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 0);
 					}
@@ -1311,7 +1458,8 @@ LateralNavModeState.NONE = 'NONE';
 LateralNavModeState.ROLL = 'ROLL';
 LateralNavModeState.LNAV = 'LNV1';
 LateralNavModeState.NAV = 'NAV';
-LateralNavModeState.HDG = 'HDG';
+LateralNavModeState.HDGHOLD = 'HDG_HOLD';
+LateralNavModeState.HDGSEL = 'HDG_SEL';
 LateralNavModeState.APPR = 'APPR';
 LateralNavModeState.TO = 'TO';
 LateralNavModeState.GA = 'GA';
@@ -1352,7 +1500,10 @@ NavModeEvent.ALT_CAPTURED = 'alt_captured';
 NavModeEvent.NAV_PRESSED = 'NAV_PRESSED';
 NavModeEvent.NAV_MODE_CHANGED = 'nav_mode_changed_to_nav';
 NavModeEvent.NAV_MODE_CHANGED_TO_FMS = 'nav_mode_changed_to_fms';
-NavModeEvent.HDG_PRESSED = 'HDG_PRESSED';
+NavModeEvent.HDG_HOLD_PRESSED = 'HDG_HOLD_PRESSED';
+NavModeEvent.HDG_HOLD_ACTIVE = 'HDG_HOLD_ACTIVE';
+NavModeEvent.HDG_SEL_PRESSED = 'HDG_SEL_PRESSED';
+NavModeEvent.HDG_SEL_ACTIVE = 'HDG_SEL_ACTIVE';
 NavModeEvent.APPR_PRESSED = 'APPR_PRESSED';
 NavModeEvent.FLC_PRESSED = 'FLC_PRESSED';
 NavModeEvent.VS_PRESSED = 'VS_PRESSED';

@@ -147,4 +147,69 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 			});
 		});
 	}
+
+	toggleLNAV() {
+
+	}
+
+	toggleHeadingHold() {
+
+	}
+
+	activateHeadingSel() {
+
+	}
+
+	onEvent(_event) {
+		super.onEvent(_event);
+		console.log('B747_8_FMC_MainDisplay onEvent ' + _event);
+		if (_event.indexOf('AP_LNAV') != -1) {
+			this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
+			//this.toggleLNAV();
+		} else if (_event.indexOf('AP_VNAV') != -1) {
+			//this._navModeSelector.onNavChangedEvent('VNAV_PRESSED');
+			this.toggleVNAV();
+		} else if (_event.indexOf('AP_FLCH') != -1) {
+			//this._navModeSelector.onNavChangedEvent('FLC_PRESSED');
+			this.toggleFLCH();
+		} else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
+			this._navModeSelector.onNavChangedEvent('HDG_HOLD_PRESSED');
+			//this.toggleHeadingHold();
+		} else if (_event.indexOf('AP_HEADING_SEL') != -1) {
+			this._navModeSelector.onNavChangedEvent('HDG_SEL_PRESSED');
+			//this.activateHeadingSel();
+		} else if (_event.indexOf('AP_SPD') != -1) {
+			if (this.aircraftType === Aircraft.AS01B) {
+				if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
+					this.activateSPD();
+				} else {
+					this.deactivateSPD();
+				}
+			} else {
+				if ((this.getIsAltitudeHoldActive() || this.getIsVSpeedActive()) && this.getIsTHRActive()) {
+					this.toggleSPD();
+				}
+			}
+		} else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
+			this.toggleSpeedIntervention();
+		} else if (_event.indexOf('AP_VSPEED') != -1) {
+			//this._navModeSelector.onNavChangedEvent('VS_PRESSED');
+			this.toggleVSpeed();
+		} else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
+			this.activateAltitudeSel();
+		} else if (_event.indexOf('AP_ALT_HOLD') != -1) {
+			this.toggleAltitudeHold();
+		} else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
+			this.setAPSpeedHoldMode();
+			if (this.aircraftType == Aircraft.AS01B)
+				this.deactivateSPD();
+			this.setThrottleMode(ThrottleMode.TOGA);
+			if (Simplane.getIndicatedSpeed() > 80) {
+				this.deactivateLNAV();
+				this.deactivateVNAV();
+			}
+		} else if (_event.indexOf('EXEC') != -1) {
+			this.onExec();
+		}
+	}
 }

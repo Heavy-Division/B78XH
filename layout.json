@@ -1,6 +1,41 @@
 {
     "content": [
         {
+            "path": "html_ui/WTPages/Autopilot/AutopilotMath.js",
+            "size": 9673,
+            "date": 132720309040395790
+        },
+        {
+            "path": "html_ui/WTPages/Autopilot/CJ4NavModeSelector.js",
+            "size": 52302,
+            "date": 132720770784715230
+        },
+        {
+            "path": "html_ui/WTPages/Autopilot/HoldsDirector.js",
+            "size": 22716,
+            "date": 132720308980887280
+        },
+        {
+            "path": "html_ui/WTPages/Autopilot/LNavDirector.js",
+            "size": 27076,
+            "date": 132720308955212270
+        },
+        {
+            "path": "html_ui/WTPages/Autopilot/LocDirector.js",
+            "size": 4313,
+            "date": 132720308928014780
+        },
+        {
+            "path": "html_ui/WTPages/Autopilot/WT_BaseVnav.js",
+            "size": 42347,
+            "date": 132720717253732700
+        },
+        {
+            "path": "html_ui/WTPages/Autopilot/WT_VnavAutopilot.js",
+            "size": 55092,
+            "date": 132720717229786480
+        },
+        {
             "path": "html_ui/WTPages/WTLibs/DataStore.js",
             "size": 4219,
             "date": 132719307221690000
@@ -24,41 +59,6 @@
             "path": "html_ui/WTPages/WTLibs/WT_SimPlaneMod.js",
             "size": 675,
             "date": 132720308807972300
-        },
-        {
-            "path": "html_ui/WTPages/Autopilot/AutopilotMath.js",
-            "size": 9673,
-            "date": 132720309040395790
-        },
-        {
-            "path": "html_ui/WTPages/Autopilot/CJ4NavModeSelector.js",
-            "size": 55053,
-            "date": 132720430639810000
-        },
-        {
-            "path": "html_ui/WTPages/Autopilot/HoldsDirector.js",
-            "size": 22716,
-            "date": 132720308980887280
-        },
-        {
-            "path": "html_ui/WTPages/Autopilot/LNavDirector.js",
-            "size": 27076,
-            "date": 132720308955212270
-        },
-        {
-            "path": "html_ui/WTPages/Autopilot/LocDirector.js",
-            "size": 4313,
-            "date": 132720308928014780
-        },
-        {
-            "path": "html_ui/WTPages/Autopilot/WT_BaseVnav.js",
-            "size": 50506,
-            "date": 132720430641030000
-        },
-        {
-            "path": "html_ui/WTPages/Autopilot/WT_VnavAutopilot.js",
-            "size": 69011,
-            "date": 132720430641440000
         },
         {
             "path": "html_ui/Pages/VCockpit/Core/VCockpit.html",
@@ -92,8 +92,8 @@
         },
         {
             "path": "html_ui/HPages/VCockpit/Instruments/Airliners/Shared/Boeing/Heavy_Boeing_FMC.js",
-            "size": 5385,
-            "date": 132720623302625520
+            "size": 7471,
+            "date": 132720780197084910
         },
         {
             "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgAirplaneElement.js",
