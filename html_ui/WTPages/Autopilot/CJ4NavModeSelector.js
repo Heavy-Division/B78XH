@@ -200,63 +200,6 @@ class CJ4NavModeSelector {
 		}
 
 
-		switch (this.currentLateralActiveState) {
-			case LateralNavModeState.ROLL:
-				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
-				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
-				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
-				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
-				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
-				break;
-			case LateralNavModeState.NAV:
-				SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 0);
-				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
-				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
-				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
-				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
-				SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 0);
-				SimVar.SetSimVarValue('L:AP_LNAV_ACTIVE', 'number', 0);
-				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
-				break;
-			case LateralNavModeState.LNAV:
-			case LateralNavModeState.TO:
-			case LateralNavModeState.GA:
-				if (SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'number') == 0) {
-					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
-				}
-				SimVar.SetSimVarValue('L:WT_CJ4_NAV_ON', 'number', 0);
-				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
-				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
-				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
-				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
-				SimVar.SetSimVarValue('L:AP_LNAV_ARMED', 'number', 0);
-				SimVar.SetSimVarValue('L:AP_LNAV_ACTIVE', 'number', 0);
-				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
-				break;
-			case LateralNavModeState.HDGHOLD:
-			case LateralNavModeState.HDG:
-				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
-				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
-				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
-				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
-				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
-				break;
-			case LateralNavModeState.APPR:
-				this.cancelApproachMode(false);
-				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
-				SimVar.SetSimVarValue('L:WT_CJ4_HDG_ON', 'number', 1);
-				SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 3);
-				Coherent.call('HEADING_BUG_SET', 3, this._headingHoldValue);
-				SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
-
-				if (this.approachMode === WT_ApproachType.ILS || this.approachMode === WT_ApproachType.NONE) {
-					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
-				}
-
-				this.currentLateralArmedState = LateralNavModeState.NONE;
-				this.currentLateralActiveState = LateralNavModeState.HDGHOLD;
-				break;
-		}
 	}
 
 	handleHDGSelPressed() {
