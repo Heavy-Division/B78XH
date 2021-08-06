@@ -57,6 +57,15 @@ class LNavDirector {
 		}
 
 		if (this.activeFlightPlan) {
+
+			/**
+			 * Only for DEBUG purpose
+			 */
+			if (this.sequencingMode === FlightPlanSequencing.AUTO) {
+				SimVar.SetSimVarValue('L:WT_CJ4_SEQUENCING', 'number', 1);
+			} else {
+				SimVar.SetSimVarValue('L:WT_CJ4_SEQUENCING', 'number', 0);
+			}
 			const previousWaypoint = this.activeFlightPlan.getWaypoint(this.activeFlightPlan.activeWaypointIndex - 1);
 			const activeWaypoint = this.activeFlightPlan.getWaypoint(this.activeFlightPlan.activeWaypointIndex);
 

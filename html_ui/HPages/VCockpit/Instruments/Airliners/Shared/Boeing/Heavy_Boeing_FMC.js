@@ -160,6 +160,10 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 
 	}
 
+	toggleVNAV() {
+
+	}
+
 	onEvent(_event) {
 		super.onEvent(_event);
 		console.log('B747_8_FMC_MainDisplay onEvent ' + _event);
@@ -167,7 +171,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 			this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
 			//this.toggleLNAV();
 		} else if (_event.indexOf('AP_VNAV') != -1) {
-			//this._navModeSelector.onNavChangedEvent('VNAV_PRESSED');
+			this._navModeSelector.onNavChangedEvent('VNAV_PRESSED');
 			this.toggleVNAV();
 		} else if (_event.indexOf('AP_FLCH') != -1) {
 			//this._navModeSelector.onNavChangedEvent('FLC_PRESSED');
@@ -196,7 +200,8 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 			//this._navModeSelector.onNavChangedEvent('VS_PRESSED');
 			this.toggleVSpeed();
 		} else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
-			this.activateAltitudeSel();
+			this._navModeSelector.onNavChangedEvent(NavModeEvent.ALT_INTERVENTION_PRESSED);
+			//this.activateAltitudeSel();
 		} else if (_event.indexOf('AP_ALT_HOLD') != -1) {
 			this.toggleAltitudeHold();
 		} else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
@@ -211,5 +216,44 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		} else if (_event.indexOf('EXEC') != -1) {
 			this.onExec();
 		}
+	}
+
+	/**
+	 * Registers a periodic page refresh with the FMC display.
+	 * @param {number} interval The interval, in ms, to run the supplied action.
+	 * @param {function} action An action to run at each interval. Can return a bool to indicate if the page refresh should stop.
+	 * @param {boolean} runImmediately If true, the action will run as soon as registered, and then after each
+	 * interval. If false, it will start after the supplied interval.
+	 */
+	registerPeriodicPageRefresh(action, interval, runImmediately) {
+		this.unregisterPeriodicPageRefresh();
+
+		const refreshHandler = () => {
+			const isBreak = action();
+			if (isBreak) {
+				return;
+			}
+			this._pageRefreshTimer = setTimeout(refreshHandler, interval);
+		};
+
+		if (runImmediately) {
+			refreshHandler();
+		} else {
+			this._pageRefreshTimer = setTimeout(refreshHandler, interval);
+		}
+	}
+
+	/**
+	 * Unregisters a periodic page refresh with the FMC display.
+	 */
+	unregisterPeriodicPageRefresh() {
+		if (this._pageRefreshTimer) {
+			clearInterval(this._pageRefreshTimer);
+		}
+	}
+
+	clearDisplay() {
+		super.clearDisplay();
+		this.unregisterPeriodicPageRefresh();
 	}
 }

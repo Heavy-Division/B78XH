@@ -289,67 +289,85 @@ class WT_VerticalAutopilot {
 	 * Update data if needed.
 	 */
 	update() {
+		if (this._navModeSelector.altIntervention) {
+			this._navModeSelector.altIntervention = false;
+			this._constraintStatus = ConstraintStatus.OBSERVING_CLIMB;
+			this.setConstraintAltitude(true);
+		}
 		this._vnavState = this.checkVnavState();
 		this._glidepathStatus = this.checkGlidepathStatus();
 		this._glideslopeStatus = this.checkGlideslopeStatus();
-
+		console.log('update 1');
 		switch (this._vnavPathStatus) {
 			case VnavPathStatus.NONE:
+				console.log('update 2');
 				break;
 			case VnavPathStatus.PATH_EXISTS:
 				if (this.canPathArm()) {
+					console.log('update 3');
 					console.log('path arm');
 					this._vnavPathStatus = VnavPathStatus.PATH_ARMED;
 				} else {
+					console.log('update 4');
 					this.checkPreselector();
 				}
 				break;
 			case VnavPathStatus.PATH_ARMED:
 				if (!this.isVNAVOn) {
+					console.log('update 5');
 					this._vnavPathStatus = VnavPathStatus.NONE;
 					break;
 				}
 				if (this.canPathActivate()) {
+					console.log('update 6');
 					console.log('path activate');
 					this._vnavPathStatus = VnavPathStatus.PATH_ACTIVE;
 					this.verticalMode = VerticalNavModeState.PATH;
 					this._pathInterceptStatus = PathInterceptStatus.NONE;
 					if (this._glidepathStatus === GlidepathStatus.GP_ACTIVE) {
+						console.log('update 7');
 						this._glidepathStatus = GlidepathStatus.NONE;
 					}
 				}
 				if (!this.canPathArm()) {
+					console.log('update 8');
 					this.setArmedVnavVerticalState(VerticalNavModeState.NONE);
 					this._vnavPathStatus = VnavPathStatus.PATH_EXISTS;
 					break;
 				}
 				if (this._pathInterceptStatus === PathInterceptStatus.LEVELED) {
+					console.log('update 9');
 					this.manageAltitude();
 				}
 				break;
 			case VnavPathStatus.PATH_ACTIVE:
+				console.log('update 10');
 				if (!this.isVNAVOn) {
+					console.log('update 11');
 					this._vnavPathStatus = VnavPathStatus.NONE;
 					break;
 				}
 				if (this.verticalMode !== VerticalNavModeState.PATH && this._pathInterceptStatus !== PathInterceptStatus.LEVELING
 					&& this._pathInterceptStatus !== PathInterceptStatus.LEVELED) {
+					console.log('update 12');
 					this._vnavPathStatus = VnavPathStatus.NONE;
 					this._pathInterceptStatus = PathInterceptStatus.NONE;
 					break;
 				}
 				if (!this.canPathActivate(true) && this._pathInterceptStatus !== PathInterceptStatus.LEVELING && this._pathInterceptStatus !== PathInterceptStatus.LEVELED) {
+					console.log('update 13');
 					this.setVerticalNavModeState(VerticalNavModeState.PTCH);
 					this._vnavPathStatus = VnavPathStatus.NONE;
 					this.vsSlot = 1;
 					this.currentAltitudeTracking = AltitudeState.SELECTED;
 					this._navModeSelector.engagePitch();
 				}
+				console.log('update 14');
 				this.checkAndSetTrackedAltitude(this._vnavPathStatus);
 				this.followPath();
 				break;
 		}
-
+		console.log('update 15');
 		switch (this._glidepathStatus) {
 			case GlidepathStatus.NONE:
 				break;
@@ -647,6 +665,7 @@ class WT_VerticalAutopilot {
 	}
 
 	manageAltitude() {
+		console.log('MANAGE ALTITUDE');
 		switch (this._pathInterceptStatus) {
 			case PathInterceptStatus.NONE:
 			case PathInterceptStatus.INTERCEPTING:
@@ -711,7 +730,7 @@ class WT_VerticalAutopilot {
 	}
 
 	interceptPath(fpa) {
-		//console.log("interceptPath - status: " + this._pathInterceptStatus);
+		console.log('interceptPath - status: ' + this._pathInterceptStatus);
 		switch (this._pathInterceptStatus) {
 			case PathInterceptStatus.NONE:
 				const desiredVerticalSpeed = AutopilotMath.calculateVerticaSpeed(fpa, this.groundSpeed);
@@ -764,6 +783,7 @@ class WT_VerticalAutopilot {
 	}
 
 	followPath() {
+		console.log('FOLLOW PATH: ' + this._pathInterceptStatus);
 		switch (this._pathInterceptStatus) {
 			case PathInterceptStatus.NONE:
 				console.log('starting intercept');
@@ -881,8 +901,14 @@ class WT_VerticalAutopilot {
 			if (this.indicatedAltitude > this.managedAltitude - 1000) {
 				return true;
 			}
+			if (this.indicatedAltitude > this.selectedAltitude - 1000) {
+				return true;
+			}
 		} else {
 			if (this.indicatedAltitude < this.managedAltitude + 500) {
+				return true;
+			}
+			if (this.indicatedAltitude < this.selectedAltitude + 500) {
 				return true;
 			}
 		}
@@ -920,10 +946,11 @@ class WT_VerticalAutopilot {
 	}
 
 	observeConstraints() {
+		//console.log('CONST STATUS: ' + this._constraintStatus);
 		switch (this._constraintStatus) {
 			case ConstraintStatus.NONE:
 				if (this.constraint.index !== undefined && this.constraint.index >= this._vnav.flightplan.activeWaypointIndex) {
-					this.setConstraintAltitude();
+					this.setConstraintAltitude(true);
 				}
 				break;
 			case ConstraintStatus.OBSERVING_CLIMB:
@@ -936,6 +963,7 @@ class WT_VerticalAutopilot {
 					this.checkAndSetTrackedAltitude(ConstraintStatus.OBSERVING_CLIMB);
 					this.setDonut(0, true);
 				}
+				Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.TOGA);
 				break;
 			case ConstraintStatus.LEVEL_CLIMB:
 				if (this._activeConstraintIndex < this._vnav.flightplan.activeWaypointIndex) {
@@ -950,6 +978,7 @@ class WT_VerticalAutopilot {
 						}
 					}
 				}
+				Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
 				break;
 			case ConstraintStatus.OBSERVING_DESCENT:
 				if (this._activeConstraintIndex < this._vnav.flightplan.activeWaypointIndex) {
@@ -1223,6 +1252,7 @@ class WT_VerticalAutopilot {
 			values.verticalSpeed = this.verticalSpeed > 0 ? 100 * Math.floor(this.verticalSpeed / 100) : 100 * Math.ceil(this.verticalSpeed / 100);
 			this._altInterceptValues = values;
 			this._lastUpdateTime = undefined;
+			console.log('update 30');
 			this._navModeSelector.engageVerticalSpeed(2, this._altInterceptValues.verticalSpeed, false);
 		}
 		if (this.vsSlot != 2) {
@@ -1232,8 +1262,9 @@ class WT_VerticalAutopilot {
 		let now = performance.now();
 		let dt = this._lastUpdateTime != undefined ? now - this._lastUpdateTime : 251;
 		this._lastUpdateTime = now;
-
+		console.log('update 32');
 		if (dt > 250) {
+			console.log('update 31');
 			const deltaAlt = this.indicatedAltitude - altitude;
 			let setVerticalSpeed = 0;
 			const max = Math.abs(this._altInterceptValues.verticalSpeed);
@@ -1245,7 +1276,8 @@ class WT_VerticalAutopilot {
 			} else {
 				setVerticalSpeed = 0;
 			}
-			setVerticalSpeed = 100 * Math.ceil(setVerticalSpeed / 100);
+			console.log('VS');
+			setVerticalSpeed = 100 * Math.ceil(setVerticalSpeed / 100) * 10;
 			this.vsSlot2Value = setVerticalSpeed;
 			if (Math.abs(deltaAlt) < 20) {
 				this._altInterceptValues = false;
@@ -1297,7 +1329,7 @@ class WT_VerticalAutopilot {
 	setPriorVerticalModeState() {
 		if (this._priorVerticalModeState === undefined || this._priorVerticalModeState.mode === undefined) {
 			this.verticalMode = VerticalNavModeState.PTCH;
-			this._navModeSelector.engagePitch;
+			this._navModeSelector.engagePitch();
 			return;
 		} else {
 			switch (this._priorVerticalModeState.mode) {
@@ -1335,6 +1367,7 @@ class WT_VerticalAutopilot {
 				this.simAltSet = -5000;
 			}
 		}
+
 		switch (this.verticalMode) {
 			case VerticalNavModeState.ALT:
 			case VerticalNavModeState.ALTS:
@@ -1411,7 +1444,7 @@ class WT_VerticalAutopilot {
 							if (this.altitudeArmedState !== VerticalNavModeState.ALTV) {
 								this.altitudeArmedState = VerticalNavModeState.ALTV;
 							}
-							if (this.verticalMode === VerticalNavModeState.PATH && this.PathInterceptStatus === PathInterceptStatus.CONTINUOUS) {
+							if (this.verticalMode === VerticalNavModeState.PATH && this._pathInterceptStatus === PathInterceptStatus.CONTINUOUS) {
 								break;
 							}
 							if (isClimb && Math.abs(altCaptureArmed.altitude - this.indicatedAltitude) < interceptMargin) {
@@ -1584,7 +1617,7 @@ class AltitudeCaptureStatus {
 }
 
 AltitudeCaptureStatus.CAPTURING_CLIMB = 'CAPTURING_CLIMB';
-AltitudeCaptureStatus.CAPTURING_DESCENT = 'OCAPTURING_DESCENT';
+AltitudeCaptureStatus.CAPTURING_DESCENT = 'CAPTURING_DESCENT';
 AltitudeCaptureStatus.CAPTURED = 'CAPTURED';
 AltitudeCaptureStatus.LEVEL = 'LEVEL';
 AltitudeCaptureStatus.WATCHING = 'WATCHING';

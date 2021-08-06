@@ -2491,7 +2491,7 @@
 			 */
 			this._flightPlans = [];
 			this._loadFlightPlans();
-			if (_parentInstrument.instrumentIdentifier == 'CJ4_FMC') {
+			if (_parentInstrument.instrumentIdentifier == 'B787_10_FMC_1') {
 				this._isMaster = true;
 				_parentInstrument.addEventListener('FlightStart', function () {
 					return __awaiter(this, void 0, void 0, function* () {

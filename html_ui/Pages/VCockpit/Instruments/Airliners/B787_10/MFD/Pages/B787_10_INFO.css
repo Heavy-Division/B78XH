@@ -73,6 +73,12 @@ b787-10-info-element #title {
     font-size: 35px;
 }
 
+b787-10-info-element .box {
+    margin: 10px;
+    color: white;
+    font-size: 20px;
+}
+
 b787-10-info-element[border=left] #Borders {
     position: absolute;
     top: 0;

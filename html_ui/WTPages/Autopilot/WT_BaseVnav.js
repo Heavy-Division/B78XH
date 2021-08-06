@@ -297,7 +297,7 @@ class WT_BaseVnav {
 
 	cancelVerticalDirectTo() {
 		this._verticalDirectWaypoint = undefined;
-		this._pathExists = buildVerticalFlightPlan();
+		this._pathExists = this.buildVerticalFlightPlan();
 	}
 
 	buildVerticalFlightPlan(verticalDirect = false, vDirectTargetIndex, vDirectAltitude, vDirectFpa) {
