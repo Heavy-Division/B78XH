@@ -22,6 +22,9 @@ class B787_10_FMC_LegsPage {
 
 		this._wayPointsToRender = [];
 
+		this._isMapModePlan = undefined;
+		this._step = undefined;
+
 		this.prepare();
 	}
 
@@ -36,6 +39,14 @@ class B787_10_FMC_LegsPage {
 		const actWptIndex = this._fmc.flightPlanManager.getActiveWaypointIndex();
 		if (this._activeWptIndex != actWptIndex) {
 			this._activeWptIndex = actWptIndex;
+			this._isDirty = true;
+		}
+
+		const isMapModePlan = SimVar.GetSimVarValue('L:B787_MAP_MODE', 'number') === 3;
+
+		if (this._isMapModePlan !== isMapModePlan) {
+			this._isMapModePlan = isMapModePlan;
+			this._step = undefined;
 			this._isDirty = true;
 		}
 
@@ -66,8 +77,6 @@ class B787_10_FMC_LegsPage {
 		const allWaypoints = this._fmc.flightPlanManager.getAllWaypoints();
 		this._wayPointsToRender = this.buildLegs(allWaypoints, this._activeWptIndex);
 		let runwayIndex = undefined;
-		const inhibitSequence = this._fmc._lnav.sequencingMode === FlightPlanSequencing.INHIBIT;
-		const inhibitText = inhibitSequence ? 'AUTO' + '/' + 'INHIBIT' : 'AUTO' + '/' + 'INHIBIT';
 
 		//FIND RUNWAY INDEX
 		if (allWaypoints.length > 1 && allWaypoints[allWaypoints.length - 2].isRunway) {
@@ -81,12 +90,12 @@ class B787_10_FMC_LegsPage {
 
 			//EXISTING ->
 			if (waypoint && waypoint.fix && waypoint.fix.icao === '$EMPTY') {
-				this._rows[2 * i + 1] = ['-----'];
+				this._rows[2 * i + 1] = [''];
 			} else if (waypoint && waypoint.fix) {
 				const bearing = isFinite(waypoint.fix.bearingInFP) ? waypoint.fix.bearingInFP.toFixed(0).padStart(3, '0') + '°' : '';
 				const prevWaypoint = this._wayPointsToRender[i + offset - 1];
 				let distance = 0;
-				const isFromWpt = (i == 0 && this._currentPage == 1);
+				//const isFromWpt = (i == 0 && this._currentPage == 1);
 				const isActWpt = (i == 1 && this._currentPage == 1);
 				if (isActWpt) {
 					distance = this._distanceToActiveWpt;
@@ -95,8 +104,9 @@ class B787_10_FMC_LegsPage {
 				}
 
 				//GET FPA
-				const verticalWaypoint = this._fmc._vnav._verticalFlightPlan[waypoint.index];
-				const waypointFPA = verticalWaypoint ? this._fmc._vnav._verticalFlightPlan[waypoint.index].waypointFPA : undefined;
+				//const verticalWaypoint = this._fmc._vnav._verticalFlightPlan[waypoint.index];
+				//const waypointFPA = verticalWaypoint ? this._fmc._vnav._verticalFlightPlan[waypoint.index].waypointFPA : undefined;
+				const waypointFPA = undefined;
 				let fpaText = '  ';
 
 				if (waypoint.isMissedApproachStart) {
@@ -108,44 +118,79 @@ class B787_10_FMC_LegsPage {
 				// format distance
 				distance = (distance < 100) ? distance.toFixed(1) : distance.toFixed(0);
 
+				let waypointSegment = this._fmc.flightPlanManager.getSegmentFromWaypoint(waypoint.fix);
+
 				if (isActWpt) {
 					if (waypoint.fix.icao === '$DISCO') {
 						this._rows[2 * i] = [' THEN'];
-						this._rows[2 * i + 1] = ['□□□□□ - DISCONTINUITY -'];
+						this._rows[2 * i + 1] = ['□□□□□ ----- ROUTE DISCONTINUITY -----'];
 					} else if (waypoint.fix.hasHold) {
 						this._rows[2 * i] = [' HOLD AT'];
 						this._rows[2 * i + 1] = [`${waypoint.fix.ident != '' ? waypoint.fix.ident : 'USR'}`];
 					} else {
-						this._rows[2 * i] = [' ' + bearing.padStart(3, '0') + ' ' + distance.padStart(4, ' ') + 'NM' + fpaText];
+						this._rows[2 * i] = [' ' + bearing.padStart(3, '0'), '', '', distance.padStart(4, ' ') + 'NM'];
 						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? waypoint.fix.ident + '' : 'USR'];
 					}
 				} else {
 					if (waypoint.fix.icao === '$DISCO') {
 						this._rows[2 * i] = [' THEN'];
-						this._rows[2 * i + 1] = ['□□□□□ - DISCONTINUITY -'];
+						this._rows[2 * i + 1] = ['□□□□□ ----- ROUTE DISCONTINUITY -----'];
 					} else if (waypoint.fix.hasHold) {
 						this._rows[2 * i] = [' HOLD AT'];
 						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? waypoint.fix.ident : 'USR'];
 					} else {
-						this._rows[2 * i] = [' ' + bearing.padStart(3, '0') + ' ' + distance.padStart(4, ' ') + 'NM' + fpaText];
+						this._rows[2 * i] = [' ' + bearing.padStart(3, '0'), '', '', distance.padStart(4, ' ') + 'NM'];
 						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? waypoint.fix.ident : 'USR'];
 					}
 				}
 
 				if (waypoint.fix.icao !== '$DISCO') {
-					this._rows[2 * i + 1][1] = this.getAltSpeedRestriction(waypoint.fix);
+					this._rows[2 * i + 1][1] = (SegmentType.Enroute === waypointSegment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + '/' + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix));
 				}
 			}
-
 		}
 	}
 
 	render() {
-
 		this._lsk6Field = '';
 		if (this._fmc.flightPlanManager.getCurrentFlightPlanIndex() === 1) {
 			this._fmc.fpHasChanged = true;
-			this._lsk6Field = '<CANCEL MOD';
+			this._lsk6Field = '<ERASE';
+		} else {
+			this._lsk6Field = '<RTE 2 LEGS';
+		}
+
+		if (this._isMapModePlan) {
+			this._rsk6Field = '<STEP';
+
+			let canStep = true;
+
+			if (this._step === undefined) {
+				canStep = false;
+				const steps = this.buildSteps();
+				/**
+				 * TODO: Better handling (This should set first step on page and not first step)
+				 */
+				if (steps.length > 0) {
+					const stepIndex = steps.findIndex((step) => {
+						return step.page === this._currentPage;
+					});
+					this._step = steps[stepIndex];
+					this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + this._step.index;
+					canStep = true;
+				}
+			}
+
+			if (canStep === true) {
+				if (this._rows[2 * this._step.position + 1][0] != '') {
+					if (!this._rows[2 * this._step.position + 1][1]) {
+						this._rows[2 * this._step.position + 1][1] = '';
+					}
+					this._rows[2 * this._step.position + 1][2] = '<CTR>';
+				}
+			}
+		} else {
+			this._rsk6Field = '<RTE DATA';
 		}
 
 		const modStr = this._fmc.fpHasChanged ? 'MOD' : 'ACT';
@@ -164,7 +209,7 @@ class B787_10_FMC_LegsPage {
 			[' ' + modStr + ' LEGS', this._currentPage.toFixed(0), Math.max(1, this._pageCount.toFixed(0))],
 			...this._rows,
 			[`${this._isAddingHold ? '---------HOLD AT--------' : holdExiting ? '-------EXIT ARMED-------' : '------------------------'}`],
-			[`${this._isAddingHold ? '□□□□□' : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, 'LEG WIND>']
+			[`${this._isAddingHold ? '□□□□□' : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, this._rsk6Field]
 		]);
 	}
 
@@ -210,13 +255,11 @@ class B787_10_FMC_LegsPage {
 		}
 
 		displayWaypoints.shift();
-		displayWaypoints.push({index: -1, fix: {icao: '$EMPTY'}});
 		return displayWaypoints;
 	}
 
 	bindInputs() {
 		for (let i = 0; i < this._wayPointsToRender.length; i++) {
-
 			const offsetRender = Math.floor((this._currentPage - 1) * 5);
 			const wptRender = this._wayPointsToRender[i + offsetRender];
 			// if its a real fix
@@ -503,7 +546,7 @@ class B787_10_FMC_LegsPage {
 
 			if (this._isAddingHold) {
 				this.addHold();
-			} else if (this._lsk6Field == '<CANCEL MOD') {
+			} else if (this._lsk6Field == '<ERASE') {
 				if (this._fmc.flightPlanManager.getCurrentFlightPlanIndex() === 1) {
 					this._fmc.fpHasChanged = false;
 					this._fmc.selectMode = B787_10_FMC_LegsPage.SELECT_MODE.NONE;
@@ -557,6 +600,74 @@ class B787_10_FMC_LegsPage {
 				this.update(true);
 			}
 		};
+
+		if (this._isMapModePlan) {
+			//this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + offset + this._step - this._discoOffset;
+			const steps = this.buildSteps();
+			if (steps.length > 0) {
+				this._fmc.onRightInput[5] = () => {
+					let nextStep;
+					if (steps[this._step.index + 1]) {
+						nextStep = steps[this._step.index + 1];
+					} else {
+						nextStep = steps[0];
+					}
+					this._step = nextStep;
+					this._currentPage = nextStep.page;
+					this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + nextStep.index;
+					this.update(true);
+				};
+			}
+
+
+		} else {
+			this._fmc.onRightInput[5] = () => {
+				//new B787_10_FMC_RouteDataPage(this._fmc).showPage();
+			};
+		}
+	}
+
+	/**
+	 * Build steps array
+	 * @returns {*[]}
+	 */
+	buildSteps() {
+		let steps = [];
+		for (let i = 0; i < this._wayPointsToRender.length; i++) {
+			/**
+			 * Skip discontinuities
+			 */
+			if (this._wayPointsToRender[i] && this._wayPointsToRender[i].fix.icao === '$DISCO') {
+				continue;
+			}
+
+			/**
+			 * Build step
+			 */
+			const page = Math.ceil((i + 1) / 5);
+			const positionOffset = (page - 1) * 5;
+			const position = i - positionOffset;
+			const index = steps.length;
+			steps.push({
+				/**
+				 * Index of step
+				 */
+				index: index,
+				/**
+				 * Page of step
+				 */
+				page: page,
+				/**
+				 * Position on page
+				 */
+				position: position,
+				/**
+				 * ICAO of waypoint (just for debug purpose)
+				 */
+				icao: this._wayPointsToRender[i].fix.icao
+			});
+		}
+		return steps;
 	}
 
 	addHold() {
