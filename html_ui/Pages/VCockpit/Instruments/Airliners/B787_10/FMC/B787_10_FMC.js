@@ -900,11 +900,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					SimVar.SetSimVarValue('K:AP_PANEL_ALTITUDE_HOLD', 'Number', 1);
 				}
 			}
-			let currentAltitude = Simplane.getAltitude();
-			let groundSpeed = Simplane.getGroundSpeed();
-			let apTargetAltitude = Simplane.getAutoPilotAltitudeLockValue('feet');
-			let planeHeading = Simplane.getHeadingMagnetic();
-			let planeCoordinates = new LatLong(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
 
 			if (this.getIsVNAVActive()) {
 				let nextWaypoint = this.flightPlanManager.getActiveWaypoint();
@@ -927,22 +922,24 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 						}
 					}
 				} else {
-
 					let altitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
 					if (isFinite(altitude)) {
 						/**
 						 * TODO: Temporary level off during climb
 						 */
 
-						let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number');
+						let isLevelOffActive = this._navModeSelector.isLeveledOff;
+						console.log('isLevelOffActive: ' + isLevelOffActive);
 						if ((altitude < this.cruiseFlightLevel * 100 || isLevelOffActive) && this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
 							if (Simplane.getAutoPilotAltitudeLockActive()) {
-								SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number', 1);
-							}
-							if (!isLevelOffActive) {
+								console.log('setting alt var: ' + altitude);
 								Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, altitude, this._forceNextAltitudeUpdate);
 								this._forceNextAltitudeUpdate = false;
 								SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
+							}
+
+							if (Simplane.getAutoPilotAltitudeLockActive() && !isLevelOffActive) {
+								SimVar.SetSimVarValue('L:HEAVY_ALT_LEVEL_OFF', 'Number', 1);
 							}
 						} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT || this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_APPROACH) {
 							/**

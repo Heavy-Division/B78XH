@@ -156,22 +156,17 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 
 	}
 
-	activateHeadingSel() {
-
-	}
-
-	toggleVNAV() {
-
+	activateAltitudeSel() {
 	}
 
 	onEvent(_event) {
 		super.onEvent(_event);
-		console.log('B747_8_FMC_MainDisplay onEvent ' + _event);
+		console.log('B787_10_Heavy_Boeing_FMC onEvent ' + _event);
 		if (_event.indexOf('AP_LNAV') != -1) {
 			this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
 			//this.toggleLNAV();
 		} else if (_event.indexOf('AP_VNAV') != -1) {
-			this._navModeSelector.onNavChangedEvent('VNAV_PRESSED');
+			//this._navModeSelector.onNavChangedEvent('VNAV_PRESSED');
 			this.toggleVNAV();
 		} else if (_event.indexOf('AP_FLCH') != -1) {
 			//this._navModeSelector.onNavChangedEvent('FLC_PRESSED');
