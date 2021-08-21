@@ -1326,7 +1326,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let y = parseInt(this.style.top);
 		for (let i = 0; i < 6; i++) {
 			let lineSelection = this.generateLineSelectionElement(parent);
-			lineSelection.style.top = (y + Math.floor(83 + i * 54)) + 'px';
+			lineSelection.style.top = (y + Math.floor(91 + i * 54)) + 'px';
 			lineSelection.style.left = (x + 4) + 'px';
 			lineSelection.style.opacity = '0';
 			let ii = i;
@@ -1346,7 +1346,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		}
 		for (let i = 0; i < 6; i++) {
 			let lineSelection = this.generateLineSelectionElement(parent, true);
-			lineSelection.style.top = (y + Math.floor(83 + i * 54)) + 'px';
+			lineSelection.style.top = (y + Math.floor(91 + i * 54)) + 'px';
 			lineSelection.style.left = (x + 340) + 'px';
 			lineSelection.style.opacity = '0';
 			let ii = i;
