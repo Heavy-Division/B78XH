@@ -59,6 +59,44 @@ class LNavDirector {
 		if (this.activeFlightPlan) {
 
 			/**
+			 * BANK LIMIT fix
+			 */
+			switch (SimVar.GetSimVarValue('A:AUTOPILOT MAX BANK ID', 'Number')) {
+				case 0:
+					this.options.maxBankAngle = 30;
+					this.options.bankRate = 3;
+					break;
+				case 1:
+					this.options.maxBankAngle = 25;
+					this.options.bankRate = 3;
+					break;
+				case 2:
+					this.options.maxBankAngle = 20;
+					this.options.bankRate = 3;
+					break;
+				case 3:
+					this.options.maxBankAngle = 15;
+					this.options.bankRate = 1.5;
+					break;
+				case 4:
+					this.options.maxBankAngle = 10;
+					this.options.bankRate = 0.5;
+					break;
+				case 5:
+					if (Simplane.getIndicatedSpeed() > 250) {
+						this.options.maxBankAngle = 25;
+						this.options.bankRate = 3;
+					} else {
+						this.options.maxBankAngle = 15;
+						this.options.bankRate = 1.5;
+					}
+					break;
+				default:
+					this.options.maxBankAngle = 30;
+					this.options.bankRate = 3;
+			}
+
+			/**
 			 * Only for DEBUG purpose
 			 */
 			if (this.sequencingMode === FlightPlanSequencing.AUTO) {
