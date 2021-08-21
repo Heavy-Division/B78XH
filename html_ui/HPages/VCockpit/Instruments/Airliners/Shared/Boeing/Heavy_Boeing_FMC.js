@@ -251,4 +251,169 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		super.clearDisplay();
 		this.unregisterPeriodicPageRefresh();
 	}
+
+	/**
+	 * FMC Renderer extensions
+	 * TODO: Standalone rendered should be created.
+	 */
+
+	/**
+	 * Convert text to settable FMC design
+	 * @param content
+	 * @returns {string}
+	 */
+	makeSettable(content) {
+		return '[settable]' + content + '[/settable]';
+	}
+
+	/**
+	 * Convert/set text to colored text
+	 * @param content
+	 * @param color
+	 * @returns {string}
+	 */
+	colorizeContent(content, color) {
+		console.log('colorizing');
+		return '[color=' + color + ']' + content + '[/color]';
+	}
+
+	/**
+	 * Convert/set text size
+	 * @param content
+	 * @param size
+	 * @returns {string}
+	 */
+	resizeContent(content, size) {
+		return '[size=' + size + ']' + content + '[/size]';
+	}
+
+	/**
+	 * setTitle with settable/size/color support
+	 * @param content
+	 */
+	setTitle(content) {
+		if (content !== '') {
+			let re3 = /\[settable\](.*?)\[\/settable\]/g;
+			content = content.replace(re3, '<div class="settable"><span>$1</span></div>');
+
+			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+			content = content.replace(re2, '<tspan class="$1">$2</tspan>');
+
+			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+			content = content.replace(re, '<tspan class="$1">$2</tspan>');
+			let color = content.split('[color]')[1];
+		}
+		let color = content.split('[color]')[1];
+		if (!color) {
+			color = 'white';
+		}
+		this._title = content.split('[color]')[0];
+		this._titleElement.classList.remove('white', 'blue', 'yellow', 'green', 'red');
+		this._titleElement.classList.add(color);
+		this._titleElement.innerHTML = this._title;
+	}
+
+	/**
+	 * setlabel with settable/size/color support
+	 * @param content
+	 */
+	setLabel(label, row, col = -1) {
+		if (col >= this._labelElements[row].length) {
+			return;
+		}
+		if (!this._labels[row]) {
+			this._labels[row] = [];
+		}
+		if (!label) {
+			label = '';
+		}
+		if (col === -1) {
+			for (let i = 0; i < this._labelElements[row].length; i++) {
+				this._labels[row][i] = '';
+				this._labelElements[row][i].textContent = '';
+			}
+			col = 0;
+		}
+		if (label === '__FMCSEPARATOR') {
+			label = '---------------------------------------';
+		}
+		if (label !== '') {
+			label = label.replace('\<', '&lt');
+			let re3 = /\[settable\](.*?)\[\/settable\]/g;
+			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
+			label = label.replace(re3, '<div class="settable"><span>$1</span></div>');
+
+			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+			label = label.replace(re2, '<tspan class="$1">$2</tspan>');
+
+			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+			label = label.replace(re, '<tspan class="$1">$2</tspan>');
+
+			let color = label.split('[color]')[1];
+			if (!color) {
+				color = 'white';
+			}
+			let e = this._labelElements[row][col];
+			e.classList.remove('white', 'blue', 'yellow', 'green', 'red');
+			e.classList.add(color);
+			label = label.split('[color]')[0];
+		}
+		this._labels[row][col] = label;
+		this._labelElements[row][col].innerHTML = label;
+	}
+
+	/**
+	 * setline with settable/size/color support
+	 * @param content
+	 */
+	setLine(content, row, col = -1) {
+		if (col >= this._lineElements[row].length) {
+			return;
+		}
+		if (!content) {
+			content = '';
+		}
+		if (!this._lines[row]) {
+			this._lines[row] = [];
+		}
+		if (col === -1) {
+			for (let i = 0; i < this._lineElements[row].length; i++) {
+				this._lines[row][i] = '';
+				this._lineElements[row][i].textContent = '';
+			}
+			col = 0;
+		}
+		if (content === '__FMCSEPARATOR') {
+			content = '---------------------------------------';
+		}
+		if (content !== '') {
+			content = content.replace('\<', '&lt');
+			if (content.indexOf('[s-text]') !== -1) {
+				content = content.replace('[s-text]', '');
+				this._lineElements[row][col].classList.add('s-text');
+			} else {
+				this._lineElements[row][col].classList.remove('s-text');
+			}
+
+			let re3 = /\[settable\](.*?)\[\/settable\]/g;
+			//content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
+			content = content.replace(re3, '<div class="settable"><span>$1</span></div>');
+
+			let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+			content = content.replace(re2, '<tspan class="$1">$2</tspan>');
+
+			let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+			content = content.replace(re, '<tspan class="$1">$2</tspan>');
+			let color = content.split('[color]')[1];
+			if (!color) {
+				color = 'white';
+			}
+			let e = this._lineElements[row][col];
+			e.classList.remove('white', 'blue', 'yellow', 'green', 'red', 'magenta');
+			e.classList.add(color);
+			content = content.split('[color]')[0];
+		}
+		this._lines[row][col] = content;
+		this._lineElements[row][col].innerHTML = this._lines[row][col];
+	}
 }

@@ -280,4 +280,62 @@
     vertical-align: bottom;
 }
 
+/** FMC line colors */
+
+
+.white {
+    color: white;
+}
+
+.blue {
+    color: #99ceff;
+}
+
+.yellow {
+    color: #f9dd02;
+}
+
+.green {
+    color: #1daa05;
+}
+
+.red {
+    color: #ff886d;
+}
+
+.magenta {
+    color: magenta;
+}
+
+/** FMC line sizes */
+
+.small {
+    font-size: 16px;
+}
+
+.medium-size {
+    font-size: 18px;
+}
+
+/** FMC settable design */
+
+.settable {
+    display: inline-block;
+    border-style: inset;
+    border-width: 3px;
+    border-color: #aaaaaa;
+    background-color: #606060;
+    padding-left: 6px;
+    padding-right: 6px;
+    height: 24px;
+    margin-top: 6px;
+}
+
+.settable > span {
+    display: block;
+    position: relative;
+    padding: 3px 0;
+    line-height: 15px;
+}
+
 /*# sourceMappingURL=B787_10_FMC.css.map */
