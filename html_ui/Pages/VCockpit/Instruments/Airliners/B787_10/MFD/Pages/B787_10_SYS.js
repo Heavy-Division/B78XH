@@ -243,11 +243,37 @@ class B787_10_SYS_Page {
 }
 
 class B787_10_SYS_Page_STAT extends B787_10_SYS_Page {
+	init() {
+		if (this.pageRoot != null) {
+			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-rpm-apu'), this.getApuRPM.bind(this), 1));
+			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-egt-apu-span'), this.getApuEGT.bind(this), 0));
+			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-oil-press-apu-span'), this.getApuOilPress.bind(this), 0));
+			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#box-content-value-oil-temp-apu-span'), this.getApuOilTemp.bind(this), 0));
+		}
+	}
+
 	updateChild(_deltaTime) {
 	}
 
 	getName() {
 		return 'STAT';
+	}
+
+	getApuRPM() {
+		return SimVar.GetSimVarValue(B78XH_LocalVariables.APU.RPM, 'Percent');
+	}
+
+	getApuEGT() {
+		let egt = SimVar.GetSimVarValue(B78XH_LocalVariables.APU.EGT, 'Celsius');
+		return egt || SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'Celsius');
+	}
+
+	getApuOilPress() {
+		return SimVar.GetSimVarValue(B78XH_LocalVariables.APU.OIL_PRESS, 'Number');
+	}
+
+	getApuOilTemp() {
+		return SimVar.GetSimVarValue(B78XH_LocalVariables.APU.OIL_TEMP, 'Number');
 	}
 }
 

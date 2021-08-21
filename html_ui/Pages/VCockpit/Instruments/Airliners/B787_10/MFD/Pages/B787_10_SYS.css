@@ -570,4 +570,35 @@ b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.occupied {
     fill: var(--eicasWhite);
 }
 
+/**
+ * STAT PAGE Definitions
+ */
+
+b787-10-sys-element #Pages #STAT_Page #boxes path.box {
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #STAT_Page #box-labels text.box-label {
+    font-size: 40px;
+    text-anchor: middle;
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #STAT_Page #boxes-content text.box-content-label {
+    font-size: 28px;
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #STAT_Page #boxes-content text.box-content-value {
+    font-family: Roboto-Light;
+    font-size: 36px;
+    text-anchor: middle;
+    fill: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #STAT_Page #boxes-content tspan.unit {
+    font-size: 28px;
+    fill: var(--eicasWhite);
+}
+
 /*# sourceMappingURL=B787_10_SYS.css.map */
