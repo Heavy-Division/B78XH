@@ -342,4 +342,10 @@
     line-height: 15px;
 }
 
+/** FMC alert design */
+
+.fms-message {
+    background-color: #36c8d2;
+}
+
 /*# sourceMappingURL=B787_10_FMC.css.map */

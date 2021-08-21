@@ -150,12 +150,29 @@
                     <input class="fms-button page-button fms-nav-rad active" value="NAV RAD" type="button"/>
                     <input class="fms-button page-button fms-ofst active" value="OFST" type="button"/>
                     <input class="fms-button page-button fms-rta active" value="RTA" type="button"/>
-                    <input class="fms-button page-button fms-empty" value="" type="button"/>
+                    <input class="fms-button page-button fms-heavy active" value="HEAVY" type="button"/>
                     <input class="fms-button page-button fms-empty" value="" type="button"/>
                     <input class="fms-button page-button fms-empty" value="" type="button"/>
                     <input class="fms-button page-button fms-prev-page active" value="PREV PAGE" type="button"/>
                     <input class="fms-button page-button fms-next-page active" value="NEXT PAGE" type="button"/>
                     <div class="fms-exec-light"></div>
+                </div>
+                <div class="fms-message"
+                     style="display: none; position: absolute; height: 200px; width: 70%; left: 15%; bottom: 50px; border: 2px ridge white;">
+                    <div class="fms-message-title" style="padding: 5px 5px 5px 10px; height: 35px;">
+                    </div>
+                    <div class="fms-message-content"
+                         style="background-color: black; padding: 10px 5px 10px 10px; width: 75%; height: 160px;line-height: 95%; font-size: 20px;">
+                    </div>
+                    <div style="position: absolute; width: 25%; height: 160px; bottom: 0px; right: 0px;">
+                        <button style="position: relative; width: 80px; height: 50px; line-height: 95%; margin: 0 auto; left: 14px; top: 0px;"
+                                class="fms-button page-button fms-clr-msg active">CLR <br> MSG
+                        </button>
+                        <div style="position: relative; width: 100%; height: 80px; line-height: 95%; margin: 0 auto; top: 20px; font-size: 18px; text-align: center; font-weight: bold;">
+                            <span class="fms-message-count"></span> TOTAL<br>MESSAGES
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="fms-split"></div>
@@ -247,4 +264,18 @@
         import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SelectWptPage.js"></script>
 <script type="text/html"
         import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_VNAVPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RouteDataPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HoldsPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimBriefConfigurationPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyConfigurationPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PayloadManagerPage.js"></script>
+<script type="text/html"
+        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyIRSPage.js"></script>
 <script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js"></script>

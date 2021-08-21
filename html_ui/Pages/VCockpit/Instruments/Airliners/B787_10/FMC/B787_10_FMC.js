@@ -381,7 +381,26 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					this.onNextPage();
 				}
 			});
+			this.getChildById('.fms-hold').addEventListener('mouseup', () => {
+				B787_10_FMC_HoldsPage.handleHoldPressed(this);
+			});
+			this.getChildById('.fms-clr-msg').addEventListener('mouseup', () => {
+				if (this._alertingMessages.length > 0) {
+					this._alertingMessages.pop();
+				}
+			});
+
+			if (!B787_10_FMC_HeavyPage.WITHOUT_MANAGERS) {
+				this.getChildById('.fms-heavy').addEventListener('mouseup', () => {
+					B787_10_FMC_HeavyPage.ShowPage1(this);
+				});
+			}
 		}
+
+		if (B787_10_FMC_HeavyPage.WITHOUT_MANAGERS) {
+			this.getChildById('.fms-heavy').classList.add('fms-empty');
+		}
+		
 		this._inOutElement = this.getChildById('.fms-io-buffer');
 		this._titleElement = this.getChildById('.fms-screen-title');
 		this._pageCurrentElement = this.getChildById('.fms-screen-page');
@@ -1038,7 +1057,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			 */
 
 			if (!this._navModeSelector) {
-				this._navModeSelector = new CJ4NavModeSelector(this.flightPlanManager);
+				this._navModeSelector = new B78XHNavModeSelector(this.flightPlanManager);
 			}
 
 			//RUN LNAV ALWAYS

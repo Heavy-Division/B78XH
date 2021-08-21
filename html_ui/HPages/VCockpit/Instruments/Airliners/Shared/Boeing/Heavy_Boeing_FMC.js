@@ -57,6 +57,8 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 				activated: false
 			}
 		};
+
+		this._alertingMessages = [];
 	}
 
 	Init() {
