@@ -339,7 +339,11 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			document.body.style.clip = 'auto';
 			document.body.style.position = 'absolute';
 			this.getChildById('.fms-init-ref').addEventListener('mouseup', () => {
-				B787_10_FMC_InitRefIndexPage.ShowPage1(this);
+				if (Simplane.getIsGrounded()) {
+					B787_10_FMC_PerfInitPage.ShowPage1(this);
+				} else {
+					B787_10_FMC_InitRefIndexPage.ShowPage1(this);
+				}
 			});
 			this.getChildById('.fms-rte').addEventListener('mouseup', () => {
 				B787_10_FMC_RoutePage.ShowPage1(this);
