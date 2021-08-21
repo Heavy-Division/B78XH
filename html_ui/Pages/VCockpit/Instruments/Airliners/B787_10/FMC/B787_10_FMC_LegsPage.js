@@ -96,7 +96,7 @@ class B787_10_FMC_LegsPage {
 				const prevWaypoint = this._wayPointsToRender[i + offset - 1];
 				let distance = 0;
 				//const isFromWpt = (i == 0 && this._currentPage == 1);
-				const isActWpt = (i == 1 && this._currentPage == 1);
+				const isActWpt = (i == 0 && this._currentPage == 1);
 				if (isActWpt) {
 					distance = this._distanceToActiveWpt;
 				} else if (prevWaypoint && prevWaypoint.fix.infos && waypoint.fix.infos) {
