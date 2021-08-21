@@ -2,7 +2,7 @@
  * A class that handles state transitions to the different autopilot modes of
  * the CJ4.
  */
-class CJ4NavModeSelector {
+class B78XHNavModeSelector {
 
 	/**
 	 * Creates a new instance of the CJ4NavModeSelector.
