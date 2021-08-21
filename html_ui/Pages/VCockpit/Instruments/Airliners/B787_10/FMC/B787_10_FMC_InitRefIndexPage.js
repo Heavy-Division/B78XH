@@ -4,15 +4,15 @@ class B787_10_FMC_InitRefIndexPage {
 		fmc.setTemplate([
 			['INIT/REF INDEX'],
 			[''],
-			['\<IDENT[color]blue', '<NAV DATA[color]red'],
+			['\<IDENT', '<NAV DATA'],
 			[''],
 			['\<POS'],
 			[''],
-			['\<PERF[color]yellow'],
+			['\<PERF'],
 			[''],
 			['\<THRUST LIM'],
 			[''],
-			['\<TAKEOFF[color]green'],
+			['\<TAKEOFF'],
 			[''],
 			['\<APPROACH', '<MAINT']
 		]);
