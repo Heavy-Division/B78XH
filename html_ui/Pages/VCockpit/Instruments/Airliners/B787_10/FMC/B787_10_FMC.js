@@ -264,6 +264,12 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		this._lastFmcCommandClimbSpeedType = null;
 		this._fmcCommandCruiseSpeedType = null;
 		this._lastFmcCommandCruiseSpeedType = null;
+
+		/**
+		 * Heavy FMC Identification
+		 */
+		this.fmcManVersion = 'HD-XXXX-X-A';
+		this.fmcBakVersion = 'HD-XXXX-X-B';
 	}
 
 	get templateID() {
@@ -292,7 +298,11 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 	Init() {
 		super.Init();
 		this.aircraftType = Aircraft.AS01B;
-		this.cruiseFlightLevel = 100;
+		Utils.loadFile('coui://html_UI/b78xh/b78xh.json', (content) => {
+			const miscFile = JSON.parse(content);
+			this.fmcManVersion = miscFile.fms_man_version;
+			this.fmcBakVersion = miscFile.fms_bak_version;
+		});
 		if (this.urlConfig.index == 1) {
 			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 			this._thrustTakeOffTemp = Math.ceil(oat / 10) * 10;
