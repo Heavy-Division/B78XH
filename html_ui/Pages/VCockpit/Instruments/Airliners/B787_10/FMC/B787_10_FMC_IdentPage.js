@@ -1,10 +1,6 @@
 class B787_10_FMC_IdentPage {
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
-		let model = SimVar.GetSimVarValue('ATC MODEL', 'string', 'FMC');
-		if (!model) {
-			model = 'unkn.';
-		}
 		let date = fmc.getNavDataDateRange();
 		fmc.setTemplate([
 			['IDENT'],
