@@ -1,5 +1,3 @@
-Include.addScript('/Heavy/Utils/HeavyDataStorage.js');
-
 class B787_10_FMC_HeavyConfigurationPage {
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
