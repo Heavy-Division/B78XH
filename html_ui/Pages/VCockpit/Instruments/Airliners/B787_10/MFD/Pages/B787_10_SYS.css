@@ -291,7 +291,7 @@ b787-10-sys-element[border=left] #Borders {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 2px;
     height: 100%;
     border-left: 2px inset white;
 }
@@ -299,8 +299,8 @@ b787-10-sys-element[border=left] #Borders {
 b787-10-sys-element[border=right] #Borders {
     position: absolute;
     top: 0;
-    left: 0;
-    width: 100%;
+    right: 0;
+    width: 2px;
     height: 100%;
     border-right: 2px inset white;
 }
