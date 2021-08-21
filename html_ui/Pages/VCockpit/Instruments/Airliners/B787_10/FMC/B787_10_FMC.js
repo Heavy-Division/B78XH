@@ -572,7 +572,31 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let dWeightCoeff = (w - 350) / (560 - 350);
 		dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
 		dWeightCoeff = 0.90 + (1.16 - 0.9) * dWeightCoeff;
-		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+		let flapsHandleIndex;
+		const takeoffFlaps = this.getTakeOffFlap();
+		switch (takeoffFlaps) {
+			case 5:
+				flapsHandleIndex = 2;
+				break;
+			case 10:
+				flapsHandleIndex = 3;
+				break;
+			case 15:
+				flapsHandleIndex = 4;
+				break;
+			case 17:
+				flapsHandleIndex = 5;
+				break;
+			case 18:
+				flapsHandleIndex = 6;
+				break;
+			case 20:
+				flapsHandleIndex = 7;
+				break;
+			default:
+				flapsHandleIndex = Simplane.getFlapsHandleIndex();
+				break;
+		}
 		let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 		let index = this._getIndexFromTemp(temp);
 		console.log('Temperature = ' + temp + ' (index ' + index + ')');
@@ -606,10 +630,33 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let dWeightCoeff = (w - 350) / (560 - 350);
 		dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
 		dWeightCoeff = 0.99 + (1.215 - 0.99) * dWeightCoeff;
-		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+		let flapsHandleIndex;
+		const takeoffFlaps = this.getTakeOffFlap();
+		switch (takeoffFlaps) {
+			case 5:
+				flapsHandleIndex = 2;
+				break;
+			case 10:
+				flapsHandleIndex = 3;
+				break;
+			case 15:
+				flapsHandleIndex = 4;
+				break;
+			case 17:
+				flapsHandleIndex = 5;
+				break;
+			case 18:
+				flapsHandleIndex = 6;
+				break;
+			case 20:
+				flapsHandleIndex = 7;
+				break;
+			default:
+				flapsHandleIndex = Simplane.getFlapsHandleIndex();
+				break;
+		}
 		let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 		let index = this._getIndexFromTemp(temp);
-		console.log('Temperature = ' + temp + ' (index ' + index + ')');
 		let min = B787_10_FMC._vRs[index][0];
 		let max = B787_10_FMC._vRs[index][1];
 		let vRSpeed = min * (1 - runwayCoef) + max * runwayCoef;
@@ -647,7 +694,31 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let dWeightCoeff = (weight - 350) / (560 - 350);
 		dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
 		dWeightCoeff = 1.03 + (1.23 - 1.03) * dWeightCoeff;
-		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+		let flapsHandleIndex;
+		const takeoffFlaps = this.getTakeOffFlap();
+		switch (takeoffFlaps) {
+			case 5:
+				flapsHandleIndex = 2;
+				break;
+			case 10:
+				flapsHandleIndex = 3;
+				break;
+			case 15:
+				flapsHandleIndex = 4;
+				break;
+			case 17:
+				flapsHandleIndex = 5;
+				break;
+			case 18:
+				flapsHandleIndex = 6;
+				break;
+			case 20:
+				flapsHandleIndex = 7;
+				break;
+			default:
+				flapsHandleIndex = Simplane.getFlapsHandleIndex();
+				break;
+		}
 		let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 		let index = this._getIndexFromTemp(temp);
 		console.log('Temperature = ' + temp + ' (index ' + index + ')');
@@ -677,13 +748,21 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let speed = 310 * (1 - dCI) + 330 * dCI;
 		if (this.overSpeedLimitThreshold) {
 			if (Simplane.getAltitude() < 9800) {
-				speed = Math.min(speed, 250);
+				if (!this._climbSpeedTransitionDeleted) {
+					speed = Math.min(speed, 250);
+				}
 				this.overSpeedLimitThreshold = false;
 			}
 		} else if (!this.overSpeedLimitThreshold) {
 			if (Simplane.getAltitude() < 10000) {
-				speed = Math.min(speed, 250);
+				if (!this._climbSpeedTransitionDeleted) {
+					speed = Math.min(speed, 250);
+				}
 			} else {
+				if (!this._isFmcCurrentPageUpdatedAboveTenThousandFeet) {
+					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+					this._isFmcCurrentPageUpdatedAboveTenThousandFeet = true;
+				}
 				this.overSpeedLimitThreshold = true;
 			}
 		}
@@ -715,13 +794,13 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let dCI = this.getCostIndexFactor();
 		let speed = 280 * (1 - dCI) + 300 * dCI;
 		if (this.overSpeedLimitThreshold) {
-			if (Simplane.getAltitude() < 9800) {
-				speed = Math.min(speed, 250);
+			if (Simplane.getAltitude() < 10700) {
+				speed = Math.min(speed, 240);
 				this.overSpeedLimitThreshold = false;
 			}
 		} else if (!this.overSpeedLimitThreshold) {
-			if (Simplane.getAltitude() < 10000) {
-				speed = Math.min(speed, 250);
+			if (Simplane.getAltitude() < 10700) {
+				speed = Math.min(speed, 240);
 			} else {
 				this.overSpeedLimitThreshold = true;
 			}
@@ -733,7 +812,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		if (isNaN(flapsHandleIndex)) {
 			flapsHandleIndex = Simplane.getFlapsHandleIndex();
 		}
-		let dWeight = (this.getWeight(true) - 200) / (528 - 200);
+
 		let min = 198;
 		let max = 250;
 		if (flapsHandleIndex >= 9) {
@@ -755,7 +834,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			min = 173;
 			max = 231;
 		}
-		return min + (max - min) * dWeight;
+
+		return Math.round(((max - min) / (557 - 298.7) * (this.getWeight(true) - 298.7)) + min);
 	}
 
 	getManagedApproachSpeed(flapsHandleIndex = NaN) {
@@ -819,6 +899,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		super.clearDisplay();
 		this.onPrevPage = EmptyCallback.Void;
 		this.onNextPage = EmptyCallback.Void;
+		this.unregisterPeriodicPageRefresh();
 	}
 
 	getClimbThrustN1(temperature, altitude) {
@@ -855,6 +936,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	setThrustTakeOffMode(m) {
 		if (m >= 0 && m <= 2) {
+			SimVar.SetSimVarValue('L:B78XH_THRUST_TAKEOFF_MODE', 'Number', m);
+			SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
+			SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
 			this._thrustTakeOffMode = m;
 		}
 	}
@@ -865,6 +949,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	setThrustCLBMode(m) {
 		if (m >= 0 && m <= 2) {
+			SimVar.SetSimVarValue('L:B78XH_THRUST_CLIMB_MODE', 'Number', m);
+			SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
+			SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
 			this._thrustCLBMode = m;
 		}
 	}
@@ -878,6 +965,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		if (isFinite(v)) {
 			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 			if (v >= oat && v < 80) {
+				SimVar.SetSimVarValue('L:B78XH_THRUST_ASSUMED_TEMPERATURE', 'Number', v);
+				SimVar.SetSimVarValue('H:AS01B_MFD_1_TAKEOFF_MODES_UPDATED', 'Number', 1);
+				SimVar.SetSimVarValue('H:AS01B_MFD_2_TAKEOFF_MODES_UPDATED', 'Number', 1);
 				this._thrustTakeOffTemp = v;
 				return true;
 			}
@@ -892,8 +982,14 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let airport = this.flightPlanManager.getOrigin();
 		if (airport) {
 			let altitude = airport.infos.coordinates.alt;
-			//console.log(airport.ident + ' altitude = ' + altitude);
-			return this.getTakeOffThrustN1(this.getThrustTakeOffTemp(), altitude) - this.getThrustTakeOffMode() * 10;
+			const assumedTemp = this.getThrustTakeOffTemp();
+			let temp;
+			if (assumedTemp) {
+				temp = assumedTemp;
+			} else {
+				temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
+			}
+			return this.getTakeOffThrustN1(temp, altitude) - this.getThrustTakeOffMode() * 10;
 		}
 		return 100;
 	}
