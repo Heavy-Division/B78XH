@@ -25,6 +25,38 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		 * @private
 		 */
 		this._isMainRouteActivated = false;
+
+		/**
+		 * TODO: This should be moved to custom system class for observing
+		 * @type {{route: {origin: boolean, destination: boolean, completed: boolean, activated: boolean}, takeoff: {flaps: boolean, completed: boolean, v1: boolean, vR: boolean, v2: boolean}, perfInit: {cruiseAltitude: boolean, costIndex: boolean, reserves: boolean, completed: boolean}, thrust: {takeOffTemp: boolean, completed: boolean}, finished: boolean, completed: boolean}}
+		 */
+		this.fmcPreFlightComplete = {
+			completed: false,
+			finished: false,
+			thrust: {
+				completed: false,
+				takeOffTemp: false
+			},
+			takeoff: {
+				completed: false,
+				flaps: false,
+				v1: false,
+				vR: false,
+				v2: false
+			},
+			perfInit: {
+				completed: false,
+				cruiseAltitude: false,
+				costIndex: false,
+				reserves: false
+			},
+			route: {
+				completed: false,
+				origin: false,
+				destination: false,
+				activated: false
+			}
+		};
 	}
 
 	Init() {
