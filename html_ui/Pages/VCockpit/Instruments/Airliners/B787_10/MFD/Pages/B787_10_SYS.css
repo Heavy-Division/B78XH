@@ -1,5 +1,15 @@
 :root {
     --bodyHeightScale: 1;
+    --eicasWhite: white;
+    --eicasBlack: black;
+    --eicasDarkGrey: #323232;
+    --eicasLightGrey: #969696;
+    --eicasBlue: #009696;
+    --eicasGreen: green;
+    --eicasOrange: #db7200;
+    --eicasRed: red;
+    --eicasMagenta: magenta;
+    --eicasAmber: #ffbf00;
 }
 
 @keyframes TemporaryShow {
@@ -303,6 +313,261 @@ b787-10-sys-element[border=right] #Borders {
     width: 2px;
     height: 100%;
     border-right: 2px inset white;
+}
+
+/**
+    AIR PAGE definitions
+ */
+
+b787-10-sys-element #Pages #AIR_Page #white-lines path {
+    stroke-width: 3;
+    stroke: var(--eicasWhite);
+    fill: none;
+}
+
+b787-10-sys-element #Pages #AIR_Page #green-lines path {
+    stroke-width: 9;
+    stroke: var(--eicasGreen);
+    fill: none;
+}
+
+b787-10-sys-element #Pages #AIR_Page #green-lines circle {
+    stroke-width: 3;
+    stroke: var(--eicasGreen);
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #green-lines #r-pack,
+b787-10-sys-element #Pages #AIR_Page #green-lines #l-pack {
+    stroke-width: 3;
+    stroke: var(--eicasGreen);
+    fill: var(--eicasBlack)
+}
+
+b787-10-sys-element #Pages #AIR_Page #fuselage path {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    fill: var(--eicasDarkGrey)
+}
+
+b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top rect {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #boxes #boxes-top path {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #boxes #boxes-bottom rect {
+    stroke: var(--eicasBlue);
+    stroke-width: 3px;
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #boxes #boxes-bottom rect#air-distribution {
+    stroke: var(--eicasGreen);
+    stroke-width: 3px;
+    fill: var(--eicasBlack);
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts text {
+    fill: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #titles-blue text {
+    fill: var(--eicasBlue);
+    text-align: center;
+    text-anchor: middle;
+    font-size: 24px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #titles-green text {
+    fill: var(--eicasGreen);
+    text-align: center;
+    text-anchor: middle;
+    font-size: 24px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #load-shed text {
+    fill: var(--eicasWhite);
+    text-align: center;
+    text-anchor: middle;
+    font-size: 24px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #temporary-hidden > text {
+    visibility: hidden;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #temperatures-selected text {
+    fill: var(--eicasMagenta);
+
+    font-size: 24px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #temperatures-actual text {
+    fill: var(--eicasWhite);
+    font-size: 32px;
+}
+
+b787-10-sys-element #Pages #AIR_Page #static-texts #top-texts text {
+    fill: var(--eicasWhite);
+    text-align: center;
+    text-anchor: middle;
+    font-size: 32px;
+}
+
+/**
+ * GEAR PAGE definitions
+ */
+
+b787-10-sys-element #Pages #GEAR_Page path#gears-main-path {
+    stroke: var(--eicasBlue);
+    stroke-width: 6px;
+    fill: none;
+}
+
+b787-10-sys-element #Pages #GEAR_Page #door-labels text.door-label {
+    font-size: 46px;
+    text-anchor: middle;
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #GEAR_Page #gears-numbers text.gear-number-label {
+    font-size: 46px;
+    text-anchor: middle;
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #GEAR_Page #tire-pressures text.tire-pressure-label {
+    font-family: Roboto-Light;
+    letter-spacing: -4px;
+    font-size: 40px;
+    text-anchor: middle;
+    fill: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #GEAR_Page #brake-temperatures text.brake-temperature-label {
+    font-family: Roboto-Light;
+    letter-spacing: -2px;
+    font-size: 40px;
+    fill: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #GEAR_Page #brake-temperatures text.brake-temperature-label-1, text.brake-temperature-label-5, text.brake-temperature-label-3, text.brake-temperature-label-7 {
+    text-anchor: end;
+}
+
+b787-10-sys-element #Pages #GEAR_Page #brake-temperatures text.brake-temperature-label-2, text.brake-temperature-label-6, text.brake-temperature-label-4, text.brake-temperature-label-8 {
+    text-anchor: start;
+}
+
+b787-10-sys-element #Pages #GEAR_Page #gear-doors #door-rects rect.door-rect {
+    fill: none;
+    stroke: var(--eicasWhite);
+    stroke-width: 9
+}
+
+b787-10-sys-element #Pages #GEAR_Page #gear-doors #crosshatches path.crosshatch {
+    stroke: var(--eicasWhite);
+    stroke-width: 3px;
+    visibility: hidden;
+}
+
+b787-10-sys-element #Pages #GEAR_Page #gear-doors.transit #crosshatches path.crosshatch {
+    visibility: visible;
+}
+
+
+b787-10-sys-element #Pages #GEAR_Page #gear-doors #door-status-labels text.door-status-label {
+    font-family: Roboto-Light;
+    letter-spacing: -4px;
+    font-size: 50px;
+    fill: var(--eicasWhite);
+    visibility: hidden;
+}
+
+
+b787-10-sys-element #Pages #GEAR_Page #gear-doors.up #door-status-labels text.door-status-label,
+b787-10-sys-element #Pages #GEAR_Page #gear-doors.down #door-status-labels text.door-status-label,
+b787-10-sys-element #Pages #GEAR_Page #gear-doors.inactive #door-status-labels text.door-status-label {
+    visibility: visible;
+}
+
+b787-10-sys-element #Pages #GEAR_Page #door-labels text.door-label {
+    font-size: 46px;
+    text-anchor: middle;
+    fill: var(--eicasBlue);
+}
+
+/**
+ * DOOR PAGE definitions
+ */
+
+b787-10-sys-element #Pages #DOOR_Page path {
+    stroke-width: 3px;
+    stroke: var(--eicasBlue);
+    fill: none;
+}
+
+b787-10-sys-element #Pages #DOOR_Page text {
+    font-size: 36px;
+    text-align: end;
+    letter-spacing: -1.5px;
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #DOOR_Page text.text-left {
+    font-size: 36px;
+    text-align: end;
+    letter-spacing: -1.5px;
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #DOOR_Page text.text-right {
+    direction: ltr;
+    text-anchor: end
+}
+
+b787-10-sys-element #Pages #DOOR_Page .static-hidden {
+    visibility: hidden;
+}
+
+b787-10-sys-element #Pages #DOOR_Page .static-visible {
+    visibility: visible;
+}
+
+b787-10-sys-element #Pages #DOOR_Page .door {
+    fill: #000000;
+}
+
+b787-10-sys-element #Pages #DOOR_Page .door-open {
+    stroke: var(--eicasAmber);
+    stroke-width: 3
+}
+
+b787-10-sys-element #Pages #DOOR_Page path.fuseladge-gray-mask {
+    fill: var(--eicasDarkGrey);
+    stroke-width: 0;
+    stroke: none;
+}
+
+b787-10-sys-element #Pages #DOOR_Page text.entry_a_text {
+    fill: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.vacant {
+    fill: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #DOOR_Page text#lavatory-text.occupied {
+    fill: var(--eicasWhite);
 }
 
 /*# sourceMappingURL=B787_10_SYS.css.map */
