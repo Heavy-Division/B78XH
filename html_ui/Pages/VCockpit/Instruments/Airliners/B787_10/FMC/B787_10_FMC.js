@@ -400,7 +400,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		if (B787_10_FMC_HeavyPage.WITHOUT_MANAGERS) {
 			this.getChildById('.fms-heavy').classList.add('fms-empty');
 		}
-		
+
 		this._inOutElement = this.getChildById('.fms-io-buffer');
 		this._titleElement = this.getChildById('.fms-screen-title');
 		this._pageCurrentElement = this.getChildById('.fms-screen-page');
@@ -1066,6 +1066,16 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			} else {
 				try {
 					this._lnav.update();
+				} catch (error) {
+					console.error(error);
+				}
+			}
+
+			if (this._speedDirector === undefined) {
+				this._speedDirector = new SpeedDirector(this);
+			} else {
+				try {
+					this._speedDirector.update(this.currentFlightPhase);
 				} catch (error) {
 					console.error(error);
 				}

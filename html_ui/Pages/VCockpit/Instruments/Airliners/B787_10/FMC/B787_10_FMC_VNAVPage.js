@@ -18,12 +18,6 @@ class B787_10_FMC_VNAVPage {
 
 	getClimbPageTitle() {
 		let cell = '';
-		if (Object.keys(this.fmc._activeExecHandlers).length > 0) {
-			cell = cell + '[settable]MOD[/settable] ';
-		} else {
-			cell = cell + 'ACT ';
-		}
-
 		switch (this.fmc._fmcCommandClimbSpeedType) {
 			case 'SPEED_RESTRICTION':
 				if (this.fmc.climbSpeedRestriction) {

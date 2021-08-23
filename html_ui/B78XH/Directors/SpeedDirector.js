@@ -1,6 +1,10 @@
 class SpeedDirector {
 
 	constructor(fmc) {
+		/**
+		 * TODO: FMC should be removed. All speed related values should be stored directly in SpeedDirector
+		 * @private
+		 */
 		this._fmc = fmc;
 		this._commandedSpeedType = undefined;
 		this._lastCommandedSpeedType = undefined;
@@ -15,7 +19,7 @@ class SpeedDirector {
 		this._initSpeeds();
 	}
 
-	_initSpeeds(){
+	_initSpeeds() {
 		this._climbSpeedRestriction = new ClimbSpeedRestriction(null, null);
 		this._climbSpeedTransition = new SpeedTransition();
 		this._climbSpeedSelected = new ClimbSpeed(null);
@@ -73,7 +77,7 @@ class SpeedDirector {
 			[SpeedType.SPEED_TYPE_RESTRICTION]: (this._climbSpeedRestriction && this._climbSpeedRestriction.isValid(this._planeAltitude) ? this._climbSpeedRestriction.speed : null),
 			[SpeedType.SPEED_TYPE_TRANSITION]: (this._climbSpeedTransition && this._climbSpeedTransition.isValid(this._planeAltitude) ? this._climbSpeedTransition.speed : null),
 			[SpeedType.SPEED_TYPE_SELECTED]: (this._climbSpeedSelected && this._climbSpeedSelected.isValid() ? this._climbSpeedSelected.speed : null),
-			[SpeedType.SPEED_TYPE_ECON]: (this._climbSpeedEcon && this._climbSpeedEcon.isValid() ? this._climbSpeedEcon.speed : null),
+			[SpeedType.SPEED_TYPE_ECON]: (this._climbSpeedEcon && this._climbSpeedEcon.isValid() ? this._climbSpeedEcon.speed : null)
 		};
 
 		this._updateLastCommandedSpeed();
@@ -127,19 +131,19 @@ class SpeedDirector {
 class Speed {
 
 	constructor(speed) {
-		this.speed = speed;
+		this._speed = speed;
 	}
 
 	get speed() {
-		return this.speed;
+		return this._speed;
 	}
 
 	set speed(speed) {
-		this.speed = speed;
+		this._speed = speed;
 	}
 
-	isValid(){
-		if(this.speed && isFinite(this.speed)){
+	isValid() {
+		if (this._speed && isFinite(this._speed)) {
 			return true;
 		}
 		return false;
@@ -175,11 +179,11 @@ class DescentSpeed extends Speed {
 
 class SpeedRestriction extends Speed {
 	get altitude() {
-		return this.altitude;
+		return this._altitude;
 	}
 
 	set altitude(altitude) {
-		this.altitude = altitude;
+		this._altitude = altitude;
 	}
 }
 
@@ -187,13 +191,13 @@ class SpeedRestriction extends Speed {
 class ClimbSpeedRestriction extends SpeedRestriction {
 	constructor(speed, altitude) {
 		super(speed);
-		this.speed = speed;
-		this.altitude = altitude;
+		this._speed = speed;
+		this._altitude = altitude;
 	}
 
-	isValid(planeAltitude){
-		if (this.speed && isFinite(this.speed) && this.altitude && isFinite(this.altitude)) {
-			if (this.altitude > planeAltitude) {
+	isValid(planeAltitude) {
+		if (this._speed && isFinite(this._speed) && this._altitude && isFinite(this._altitude)) {
+			if (this._altitude > planeAltitude) {
 				return true;
 			}
 		}
@@ -204,8 +208,8 @@ class ClimbSpeedRestriction extends SpeedRestriction {
 class DescentSpeedRestriction extends SpeedRestriction {
 	constructor(speed, altitude) {
 		super(speed);
-		this.speed = speed;
-		this.altitude = altitude;
+		this._speed = speed;
+		this._altitude = altitude;
 	}
 
 	/**
@@ -213,7 +217,7 @@ class DescentSpeedRestriction extends SpeedRestriction {
 	 * @param planeAltitude
 	 * @returns {boolean}
 	 */
-	isValid(planeAltitude){
+	isValid(planeAltitude) {
 		return false;
 	}
 }
@@ -222,19 +226,20 @@ class DescentSpeedRestriction extends SpeedRestriction {
 class SpeedTransition extends Speed {
 	constructor(speed = 250, isDeleted = false) {
 		super();
-		this.speed = speed;
-		this.isDeleted = isDeleted;
+		this._speed = speed;
+		this._isDeleted = isDeleted;
 	}
+
 	get isDeleted() {
-		return this.isDeleted;
+		return this._isDeleted;
 	}
 
 	set isDeleted(isDeleted) {
-		this.isDeleted = isDeleted;
+		this._isDeleted = isDeleted;
 	}
 
-	isValid(planeAltitude){
-		if (this.speed && isFinite(this.speed) && !this.isDeleted) {
+	isValid(planeAltitude) {
+		if (this._speed && isFinite(this._speed) && !this._isDeleted) {
 			if (10000 > planeAltitude) {
 				return true;
 			}
