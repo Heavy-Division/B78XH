@@ -276,7 +276,9 @@ class AirportInfo extends WayPointInfo {
 		this.arrivals = [];
 		this.runways = [];
 		this.oneWayRunways = [];
+		this.unsortedOneWayRunways = [];
 		this.airportClass = 0;
+		this.transitionAltitude = 5000;
 		this.privateType = 0;
 		this.radarCoverage = 0;
 		this.needReload = false;
@@ -586,6 +588,22 @@ class AirportInfo extends WayPointInfo {
 				this.departures[i].enRouteTransitions[j].name = this.departures[i].enRouteTransitions[j].legs[legsCount - 1].fixIcao.substr(7, 5);
 			}
 		}
+
+		if (this.departures[0]) {
+			if (this.departures[0].runwayTransitions[0]) {
+				if (this.departures[0].runwayTransitions[0].legs) {
+					let l = this.departures[0].runwayTransitions[0].legs.length;
+					let lastWp = this.departures[0].runwayTransitions[0].legs[l - 1];
+					if (lastWp) {
+						let transAlt = Math.round(lastWp.altitude1 * 3.28084 / 100) * 100;
+						if (transAlt > 1000) {
+							this.transitionAltitude = transAlt;
+						}
+					}
+				}
+			}
+		}
+
 		this.arrivals = data.arrivals;
 		for (let i = 0; i < this.arrivals.length; i++) {
 			for (let j = 0; j < this.arrivals[i].runwayTransitions.length; j++) {

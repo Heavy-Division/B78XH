@@ -364,7 +364,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				B787_10_FMC_LegsPage.ShowPage1(this);
 			});
 			this.getChildById('.fms-vnav').addEventListener('mouseup', () => {
-				B787_10_FMC_VNAVPage.ShowPage1(this);
+				new B787_10_FMC_VNAVPage(this).showPage();
 			});
 			this.getChildById('.fms-exec').addEventListener('mouseup', () => {
 				if (this.onExec) {
@@ -1338,53 +1338,14 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					this.deactivateSPD();
 				}
 			}
+			if (this.getIsVNAVActive() && this.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_TAKEOFF) {
+				this.setAPManagedSpeed(this._speedDirector.speed, Aircraft.AS01B);
+			}
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_TAKEOFF) {
-				if (this.getIsVNAVActive()) {
-					let speed = this.determineClimbSpeed();
-					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-				} else {
-					this._fmcCommandClimbSpeedType = null;
-					this._lastFmcCommandClimbSpeedType = null;
-				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
-				if (this.getIsVNAVActive()) {
-					let speed = this.determineClimbSpeed();
-					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-				} else {
-					this._fmcCommandClimbSpeedType = null;
-					this._lastFmcCommandClimbSpeedType = null;
-				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
-
-				if (this._fmcCommandClimbSpeedType || this._lastFmcCommandClimbSpeedType) {
-					this._fmcCommandClimbSpeedType = null;
-					this._lastFmcCommandClimbSpeedType = null;
-				}
-
-				if (this.getIsVNAVActive()) {
-					let speed = this.determineCruiseSpeed();
-					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-				} else {
-					this._fmcCommandCruiseSpeedType = null;
-					this._lastFmcCommandCruiseSpeedType = null;
-				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT) {
-				if (this._fmcCommandClimbSpeedType || this._lastFmcCommandClimbSpeedType || this._fmcCommandCruiseSpeedType || this._lastFmcCommandCruiseSpeedType) {
-					this._fmcCommandClimbSpeedType = null;
-					this._lastFmcCommandClimbSpeedType = null;
-					this._fmcCommandCruiseSpeedType = null;
-					this._lastFmcCommandCruiseSpeedType = null;
-				}
-
-				if (this.getIsVNAVActive()) {
-					let speed = this.getDesManagedSpeed();
-					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-				}
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_APPROACH) {
-				if (this.getIsVNAVActive()) {
-					let speed = this.getManagedApproachSpeed();
-					this.setAPManagedSpeed(speed, Aircraft.AS01B);
-				}
 				if (Simplane.getAutoPilotThrottleActive()) {
 					let altitude = Simplane.getAltitudeAboveGround();
 					if (altitude < 50) {

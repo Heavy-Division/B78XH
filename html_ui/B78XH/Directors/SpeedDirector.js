@@ -42,11 +42,67 @@ class SpeedDirector {
 
 	}
 
+	get speed() {
+		switch (this.speedPhase) {
+			case SpeedPhase.SPEED_PHASE_CLIMB:
+				switch (this.commandedSpeedType) {
+					case SpeedType.SPEED_TYPE_RESTRICTION:
+						return this._climbSpeedRestriction.speed;
+					case SpeedType.SPEED_TYPE_TRANSITION:
+						return this._climbSpeedTransition.speed;
+					case SpeedType.SPEED_TYPE_SELECTED:
+						return this._climbSpeedSelected.speed;
+					case SpeedType.SPEED_TYPE_ECON:
+						return this._climbSpeedEcon.speed;
+				}
+				break;
+			case SpeedPhase.SPEED_PHASE_CRUISE:
+				switch (this.commandedSpeedType) {
+					case SpeedType.SPEED_TYPE_RESTRICTION:
+					case SpeedType.SPEED_TYPE_TRANSITION:
+					case SpeedType.SPEED_TYPE_ECON:
+						return this._cruiseSpeedEcon.speed;
+					case SpeedType.SPEED_TYPE_SELECTED:
+						return this._cruiseSpeedSelected.speed;
+				}
+				break;
+			case SpeedPhase.SPEED_PHASE_DESCENT:
+				switch (this.commandedSpeedType) {
+					case SpeedType.SPEED_TYPE_RESTRICTION:
+						return this._descentSpeedRestriction.speed;
+					case SpeedType.SPEED_TYPE_TRANSITION:
+						return this._descentSpeedTransition.speed;
+					case SpeedType.SPEED_TYPE_SELECTED:
+						return this._descentSpeedSelected.speed;
+					case SpeedType.SPEED_TYPE_ECON:
+						return this._descentSpeedEcon.speed;
+				}
+				break;
+			case SpeedPhase.SPEED_PHASE_APPROACH:
+				switch (this.commandedSpeedType) {
+					case SpeedType.SPEED_TYPE_RESTRICTION:
+						return this._descentSpeedRestriction.speed;
+					case SpeedType.SPEED_TYPE_TRANSITION:
+						return this._descentSpeedTransition.speed;
+					case SpeedType.SPEED_TYPE_SELECTED:
+						return this._descentSpeedSelected.speed;
+					case SpeedType.SPEED_TYPE_ECON:
+						return this._descentSpeedEcon.speed;
+				}
+				break;
+		}
+	}
+
+	get speedPhase() {
+		return Number(this._speedPhase);
+	}
+
 	get commandedSpeedType() {
-		return this._commandedSpeedType;
+		return Number(this._commandedSpeedType);
 	}
 
 	update(flightPhase) {
+		this._updateAltitude();
 		switch (flightPhase) {
 			case FlightPhase.FLIGHT_PHASE_PREFLIGHT:
 			case FlightPhase.FLIGHT_PHASE_TAXI:
@@ -59,8 +115,9 @@ class SpeedDirector {
 				this._updateCruiseSpeed();
 				break;
 			case FlightPhase.FLIGHT_PHASE_DESCENT:
-			case FlightPhase.FLIGHT_PHASE_APPROACH:
 				this._updateDescentSpeed();
+			case FlightPhase.FLIGHT_PHASE_APPROACH:
+				this._updateApproachSpeed();
 				break;
 		}
 	}
@@ -74,10 +131,10 @@ class SpeedDirector {
 		}
 
 		let speed = {
-			[SpeedType.SPEED_TYPE_RESTRICTION]: (this._climbSpeedRestriction && this._climbSpeedRestriction.isValid(this._planeAltitude) ? this._climbSpeedRestriction.speed : null),
-			[SpeedType.SPEED_TYPE_TRANSITION]: (this._climbSpeedTransition && this._climbSpeedTransition.isValid(this._planeAltitude) ? this._climbSpeedTransition.speed : null),
-			[SpeedType.SPEED_TYPE_SELECTED]: (this._climbSpeedSelected && this._climbSpeedSelected.isValid() ? this._climbSpeedSelected.speed : null),
-			[SpeedType.SPEED_TYPE_ECON]: (this._climbSpeedEcon && this._climbSpeedEcon.isValid() ? this._climbSpeedEcon.speed : null)
+			[SpeedType.SPEED_TYPE_RESTRICTION]: (this._climbSpeedRestriction && this._climbSpeedRestriction.isValid(this._planeAltitude) ? this._climbSpeedRestriction.speed : false),
+			[SpeedType.SPEED_TYPE_TRANSITION]: (this._climbSpeedTransition && this._climbSpeedTransition.isValid(this._planeAltitude) ? this._climbSpeedTransition.speed : false),
+			[SpeedType.SPEED_TYPE_SELECTED]: (this._climbSpeedSelected && this._climbSpeedSelected.isValid() ? this._climbSpeedSelected.speed : false),
+			[SpeedType.SPEED_TYPE_ECON]: (this._climbSpeedEcon && this._climbSpeedEcon.isValid() ? this._climbSpeedEcon.speed : false)
 		};
 
 		this._updateLastCommandedSpeed();
@@ -94,21 +151,36 @@ class SpeedDirector {
 	}
 
 	_updateCruiseSpeed() {
+		let speed = {
+			[SpeedType.SPEED_TYPE_SELECTED]: (this._cruiseSpeedSelected && this._cruiseSpeedSelected.isValid() ? this._cruiseSpeedSelected.speed : null),
+			[SpeedType.SPEED_TYPE_ECON]: (this._cruiseSpeedEcon && this._cruiseSpeedEcon.isValid() ? this._cruiseSpeedEcon.speed : null)
+		};
 
+		this._updateLastCommandedSpeed();
+
+		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+			return speed[value] < speed[accumulator] ? value : accumulator;
+		}, SpeedType.SPEED_TYPE_ECON);
+
+		this._updateCommandedSpeed(commandedSpeedKey, SpeedPhase.SPEED_PHASE_CRUISE);
 	}
 
 	_updateDescentSpeed() {
 
 	}
 
+	_updateApproachSpeed() {
+
+	}
+
 	_updateLastCommandedSpeed() {
 		this._lastCommandedSpeedType = this._commandedSpeedType;
-		this._lastSpeedPhase = this._lastSpeedPhase;
+		this._lastSpeedPhase = this._speedPhase;
 	}
 
 	_updateCommandedSpeed(speedType, speedPhase) {
-		this._commandedSpeedType = speedType;
-		this._speedPhase = speedPhase;
+		this._commandedSpeedType = Number(speedType);
+		this._speedPhase = Number(speedPhase);
 		this._updateFmcIfNeeded();
 	}
 
@@ -117,29 +189,28 @@ class SpeedDirector {
 			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
 		}
 	}
-
-	isClimbSpeedRestrictionValid() {
-		if (this._climbSpeedRestriction.speed && isFinite(this._climbSpeedRestriction.speed) && this._climbSpeedRestriction.altitude && isFinite(this._climbSpeedRestriction.altitude)) {
-			if (this._climbSpeedRestriction.altitude > this._planeAltitude) {
-				return true;
-			}
-		}
-		return false;
-	}
 }
 
 class Speed {
 
 	constructor(speed) {
-		this._speed = speed;
+		this._speed = Number(speed);
 	}
 
+	/**
+	 * Speed getter
+	 * @returns {number}
+	 */
 	get speed() {
-		return this._speed;
+		return Number(this._speed);
 	}
 
+	/**
+	 * Speed setter
+	 * @param speed
+	 */
 	set speed(speed) {
-		this._speed = speed;
+		this._speed = Number(speed);
 	}
 
 	isValid() {
@@ -178,6 +249,12 @@ class DescentSpeed extends Speed {
 }
 
 class SpeedRestriction extends Speed {
+
+	constructor(speed, altitude) {
+		super(speed);
+		this._altitude = altitude;
+	}
+
 	get altitude() {
 		return this._altitude;
 	}
@@ -189,29 +266,21 @@ class SpeedRestriction extends Speed {
 
 
 class ClimbSpeedRestriction extends SpeedRestriction {
-	constructor(speed, altitude) {
-		super(speed);
-		this._speed = speed;
-		this._altitude = altitude;
-	}
-
 	isValid(planeAltitude) {
 		if (this._speed && isFinite(this._speed) && this._altitude && isFinite(this._altitude)) {
 			if (this._altitude > planeAltitude) {
+				console.log('this._altitude: ' + this._altitude);
+				console.log('planeAltitude: ' + planeAltitude);
+				console.log('restruction valid');
 				return true;
 			}
 		}
+		console.log('restriction not valid');
 		return false;
 	}
 }
 
 class DescentSpeedRestriction extends SpeedRestriction {
-	constructor(speed, altitude) {
-		super(speed);
-		this._speed = speed;
-		this._altitude = altitude;
-	}
-
 	/**
 	 * TODO: Not implemented
 	 * @param planeAltitude
@@ -225,8 +294,7 @@ class DescentSpeedRestriction extends SpeedRestriction {
 
 class SpeedTransition extends Speed {
 	constructor(speed = 250, isDeleted = false) {
-		super();
-		this._speed = speed;
+		super(speed);
 		this._isDeleted = isDeleted;
 	}
 
@@ -261,4 +329,5 @@ let SpeedPhase;
 	SpeedPhase[SpeedPhase['SPEED_PHASE_CLIMB'] = 0] = 'SPEED_PHASE_CLIMB';
 	SpeedPhase[SpeedPhase['SPEED_PHASE_CRUISE'] = 1] = 'SPEED_PHASE_CRUISE';
 	SpeedPhase[SpeedPhase['SPEED_PHASE_DESCENT'] = 2] = 'SPEED_PHASE_DESCENT';
+	SpeedPhase[SpeedPhase['SPEED_PHASE_APPROACH'] = 3] = 'SPEED_PHASE_APPROACH';
 })(SpeedPhase || (SpeedPhase = {}));

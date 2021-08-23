@@ -135,6 +135,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 	}
 
 	activateMainRoute() {
+		console.log('activate main route');
 		this._isMainRouteActivated = true;
 		this.activateRoute();
 	}
@@ -449,5 +450,20 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		}
 		this._lines[row][col] = content;
 		this._lineElements[row][col].innerHTML = this._lines[row][col];
+	}
+
+	trySetTransAltitude(s) {
+		if (!/^\d+$/.test(s)) {
+			this.showErrorMessage('FORMAT ERROR');
+			return false;
+		}
+		let v = parseInt(s);
+		if (isFinite(v) && v > 0) {
+			this.transitionAltitude = v;
+			SimVar.SetSimVarValue('L:AIRLINER_TRANS_ALT', 'Number', this.transitionAltitude);
+			return true;
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
 	}
 }
