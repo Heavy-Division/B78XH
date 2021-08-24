@@ -657,7 +657,7 @@ class MapInstrument extends ISvgMapRootElement {
 					this.bingMap.setParams({lla: this.navMap.lastCenterCoordinates, radius: bingRadius});
 				}
 			}
-			if (typeof CJ4_MFD === 'function' && planeLla && (this.drawCounter % 2 === 1)) {
+			if (typeof B787_10_ND === 'function' && planeLla && (this.drawCounter % 2 === 1)) {
 				const centerCoordinates = planeLla;
 				if (this.showAirports) {
 					this.airportLoader.searchLat = centerCoordinates.lat;
@@ -955,9 +955,15 @@ class MapInstrument extends ISvgMapRootElement {
 		const drawDestination = approachSegment.waypoints.length === 0;
 		const drawMissedSegment = missedSegment.waypoints.length > 0 && (this.showMissedAppr || activeIndex >= missedSegment.offset);
 
+		/**
+		 * TODO: Temporary fix to draw missed approach everytime on ND
+		 * @type {boolean}
+		 */
+		const drawMissedSegmentEveryTime = true;
+
 		const l = plan.waypoints.length;
 		let waypointsToDraw = l - (missedSegment.waypoints.length + 1);
-		if (drawMissedSegment) {
+		if (drawMissedSegment || drawMissedSegmentEveryTime) {
 			waypointsToDraw += missedSegment.waypoints.length;
 		}
 
@@ -1024,8 +1030,8 @@ class MapInstrument extends ISvgMapRootElement {
 					waypoint.infos = new WayPointInfo(this._instrument);
 					waypoint.getSvgElement(this.navMap.index);
 					this._todWaypoint = waypoint;
-					this._todWaypoint.ident = 'TOD';
-					this._todWaypoint.infos.ident = 'TOD';
+					this._todWaypoint.ident = 'T/D';
+					this._todWaypoint.infos.ident = 'T/D';
 				}
 
 				const todDist = SimVar.GetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number');
