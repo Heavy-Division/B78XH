@@ -292,6 +292,41 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 	 * TODO: Standalone rendered should be created.
 	 */
 
+	setTemplate(template) {
+		if (template[0]) {
+			this.setTitle(template[0][0]);
+			this.setPageCurrent(template[0][1]);
+			this.setPageCount(template[0][2]);
+		}
+		for (let i = 0; i < 6; i++) {
+			let tIndex = 2 * i + 1;
+			if (template[tIndex]) {
+				if (template[tIndex][1] !== undefined) {
+					this.setLabel(template[tIndex][0], i, 0);
+					this.setLabel(template[tIndex][1], i, 1);
+					this.setLabel(template[tIndex][2], i, 2);
+					this.setLabel(template[tIndex][3], i, 3);
+				} else {
+					this.setLabel(template[tIndex][0], i, -1);
+				}
+			}
+			tIndex = 2 * i + 2;
+			if (template[tIndex]) {
+				if (template[tIndex][1] !== undefined) {
+					this.setLine(template[tIndex][0], i, 0);
+					this.setLine(template[tIndex][1], i, 1);
+					this.setLine(template[tIndex][2], i, 2);
+					this.setLine(template[tIndex][3], i, 3);
+				} else {
+					this.setLine(template[tIndex][0], i, -1);
+				}
+			}
+		}
+		if (template[13]) {
+			this.setInOut(template[13][0]);
+		}
+	}
+
 	/**
 	 * Convert text to settable FMC design
 	 * @param content
@@ -465,5 +500,168 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		}
 		this.showErrorMessage(this.defaultInputErrorMessage);
 		return false;
+	}
+
+	/**
+	 * TODO: Should be moved to SpeedDirector class
+	 * @param s
+	 * @returns {boolean}
+	 */
+	trySetAccelerationHeight(s) {
+		let accelerationHeight = parseInt(s);
+		let origin = this.flightPlanManager.getOrigin();
+		if (origin) {
+			if (isFinite(accelerationHeight)) {
+				let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+				let roundedHeight = Math.round(accelerationHeight / 100) * 100;
+				if (this.trySetAccelerationAltitude(roundedHeight + elevation)) {
+					this._speedDirector._accelerationSpeedRestriction.accelerationHeight = roundedHeight;
+					return true;
+				}
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	/**
+	 * TODO: Should be moved to SpeedDirector class
+	 * @param s
+	 * @returns {boolean}
+	 */
+	trySetAccelerationAltitude(s) {
+		let accelerationHeight = parseInt(s);
+		if (isFinite(accelerationHeight)) {
+			this._speedDirector._accelerationSpeedRestriction.altitude = accelerationHeight;
+			SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', accelerationHeight);
+			return true;
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	/**
+	 * TODO: Should be moved to SpeedDirector/ThrustDirector
+	 * TODO: Probably should be better to make ThrustDirector because thr reduction is not speed thing
+	 * @param s
+	 * @returns {boolean}
+	 */
+	trySetThrustReductionHeight(s) {
+		let thrustReductionHeight = parseInt(s);
+		let origin = this.flightPlanManager.getOrigin();
+		if (origin) {
+			if (isFinite(thrustReductionHeight)) {
+				let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+				let roundedHeight = Math.round(thrustReductionHeight / 100) * 100;
+				if (this.trySetThrustReductionAltitude(roundedHeight + elevation)) {
+					this.thrustReductionHeight = roundedHeight;
+					this.isThrustReductionAltitudeCustomValue = true;
+					return true;
+				}
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	/**
+	 * TODO: Should be moved to SpeedDirector class
+	 * @param s
+	 * @returns {boolean}
+	 */
+	trySetThrustReductionAltitude(s) {
+		let thrustReductionHeight = parseInt(s);
+		if (isFinite(thrustReductionHeight)) {
+			this.thrustReductionAltitude = thrustReductionHeight;
+			SimVar.SetSimVarValue('L:AIRLINER_THR_RED_ALT', 'Number', this.thrustReductionAltitude);
+			return true;
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
+	/**
+	 * TODO: Should be moved to SpeedDirector class or the function should be only bypass for new function in SpeedDirector
+	 */
+	recalculateTHRRedAccTransAlt() {
+		/**
+		 * TODO: HotFix!!! Need to be fixed in future... SpeedDirector is not normally accessible from here
+		 */
+		if (this._speedDirector === undefined) {
+			this._speedDirector = new SpeedDirector(this);
+		}
+
+		let origin = this.flightPlanManager.getOrigin();
+		if (origin) {
+			this._recalculateOriginTransitionAltitude(origin);
+			this._recalculateThrustReductionAltitude(origin);
+			this._recalculateAccelerationAltitude(origin);
+		}
+		let destination = this.flightPlanManager.getDestination();
+		if (destination) {
+			this._recalculateDestinationTransitionAltitude(destination);
+		}
+	}
+
+	/**
+	 * TODO: Should be moved into SpeedDirector/ThrustDirector??
+	 * @param origin
+	 * @private
+	 */
+	_recalculateThrustReductionAltitude(origin) {
+		if (origin) {
+			if (origin.infos instanceof AirportInfo) {
+				if (!this.isThrustReductionAltitudeCustomValue) {
+					const elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+					this.thrustReductionAltitude = elevation + 1500;
+					this.thrustReductionHeight = 1500;
+					SimVar.SetSimVarValue('L:AIRLINER_THR_RED_ALT', 'Number', this.thrustReductionAltitude);
+				}
+			}
+		}
+	}
+
+	/**
+	 * TODO: Should be moved into SpeedDirector
+	 * @param origin
+	 * @private
+	 */
+	_recalculateAccelerationAltitude(origin) {
+		if (origin) {
+			if (origin.infos instanceof AirportInfo) {
+				const elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+				this._speedDirector._accelerationSpeedRestriction.altitude = elevation + this._speedDirector._accelerationSpeedRestriction.accelerationHeight;
+				SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', this._speedDirector._accelerationSpeedRestriction.altitude);
+			}
+		}
+	}
+
+	_recalculateOriginTransitionAltitude(origin) {
+		if (origin) {
+			if (origin.infos instanceof AirportInfo) {
+				if (isFinite(origin.infos.transitionAltitude)) {
+					this.transitionAltitude = origin.infos.transitionAltitude;
+				}
+			}
+		}
+	}
+
+	_recalculateDestinationTransitionAltitude(destination) {
+		if (destination) {
+			if (destination.infos instanceof AirportInfo) {
+				if (isFinite(destination.infos.transitionAltitude)) {
+					this.perfApprTransAlt = destination.infos.transitionAltitude;
+				}
+			}
+		}
+	}
+
+	setAPManagedSpeedMach(_mach, _aircraft) {
+		if (isFinite(_mach)) {
+			if (Simplane.getAutoPilotMachModeActive()) {
+				Coherent.call('AP_MACH_VAR_SET', 2, _mach);
+				SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_ON', 'number', 1);
+			}
+		}
 	}
 }
