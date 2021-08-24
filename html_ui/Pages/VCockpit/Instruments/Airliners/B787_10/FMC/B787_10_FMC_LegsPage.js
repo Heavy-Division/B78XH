@@ -176,7 +176,7 @@ class B787_10_FMC_LegsPage {
 						return step.page === this._currentPage;
 					});
 					this._step = steps[stepIndex];
-					this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + this._step.index;
+					SimVar.SetSimVarValue('L:B78XH_MCDU_CURRENT_FPLN_WAYPOINT', 'number', this._activeWptIndex + this._step.index);
 					canStep = true;
 				}
 			}
@@ -614,7 +614,7 @@ class B787_10_FMC_LegsPage {
 					}
 					this._step = nextStep;
 					this._currentPage = nextStep.page;
-					this._fmc.currentFlightPlanWaypointIndex = this._activeWptIndex + nextStep.index;
+					SimVar.SetSimVarValue('L:B78XH_MCDU_CURRENT_FPLN_WAYPOINT', 'number', this._activeWptIndex + nextStep.index);
 					this.update(true);
 				};
 			}
