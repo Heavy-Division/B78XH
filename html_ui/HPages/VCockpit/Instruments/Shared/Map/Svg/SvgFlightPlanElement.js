@@ -15,7 +15,6 @@ class SvgFlightPlanElement extends SvgMapElement {
 
 	id(map) {
 		return 'flight-plan-' + this.flightPlanIndex + '-map-' + map.index;
-		;
 	}
 
 	appendToMap(map) {
@@ -48,6 +47,11 @@ class SvgFlightPlanElement extends SvgMapElement {
 			context.clearRect(0, 0, 1024, 1024);
 
 			const fplnCount = (SimVar.GetSimVarValue('L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN', 'number') === 1) ? 2 : 1;
+
+			const temporaryPlanStyle = '#00dcf0';
+			const activePlanStyle = 'magenta';
+			const missedPlanStyle = '#ffd700';
+
 			for (let index = 0; index < fplnCount; index++) {
 				const plan = fpm.getFlightPlan(index);
 				if (!plan) {
@@ -71,16 +75,20 @@ class SvgFlightPlanElement extends SvgMapElement {
 
 					//Active leg
 					if (waypoints[activeWaypointIndex] && waypoints[activeWaypointIndex - 1]) {
-						this.buildPathFromWaypoints(waypoints, activeWaypointIndex - 1, activeWaypointIndex + 1, map, '#FF73FF', false);
+						this.buildPathFromWaypoints(waypoints, activeWaypointIndex - 1, activeWaypointIndex + 1, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), (index !== 0));
 					}
 
 					//Missed approach preview
-					if (missedSegment.offset > -1 && CJ4_MapSymbols.hasSymbol(CJ4_MapSymbol.MISSEDAPPR)) {
-						this.buildPathFromWaypoints(waypoints, missedSegment.offset - 1, waypoints.length - 1, map, '#33FFFF', (index !== 0));
+					//if (missedSegment.offset > -1 && CJ4_MapSymbols.hasSymbol(CJ4_MapSymbol.MISSEDAPPR)) {
+					/**
+					 * Show missed segment by force
+					 */
+					if (missedSegment.offset > -1) {
+						this.buildPathFromWaypoints(waypoints, missedSegment.offset - 1, waypoints.length - 1, map, missedPlanStyle, true);
 					}
 
 					//Remainder of plan
-					this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, 'white', (index !== 0));
+					this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), (index !== 0));
 				}
 			}
 		}
@@ -96,10 +104,10 @@ class SvgFlightPlanElement extends SvgMapElement {
 		const context = this._flightPathCanvas.getContext('2d');
 		context.beginPath();
 
-		context.lineWidth = 3;
+		context.lineWidth = 2;
 		context.strokeStyle = style;
 		if (isDashed === true) {
-			context.setLineDash([10, 5]);
+			context.setLineDash([10, 10]);
 		} else {
 			context.setLineDash([]);
 		}
