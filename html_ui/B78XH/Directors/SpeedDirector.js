@@ -10,28 +10,51 @@ class SpeedDirector {
 		this._lastCommandedSpeedType = undefined;
 		this._speedPhase = undefined;
 		this._lastSpeedPhase = undefined;
+		this._machMode = undefined;
+		this._lastMachMode = undefined;
+		this._lastSpeed = undefined;
+		this._speedCheck = undefined;
 		this.Init();
 	}
 
 	Init() {
 		this._updateAltitude();
+		this._updateLastSpeed();
+		this._updateMachMode();
 		this._updateManagedSpeed();
 		this._initSpeeds();
 	}
 
 	_initSpeeds() {
+
+		this._accelerationSpeedRestriction = new AccelerationSpeedRestriction(this._fmc.v2Speed + 10, 1500, 1500);
+		this._overspeedProtection = new OverspeedProtection(null);
+
 		this._climbSpeedRestriction = new ClimbSpeedRestriction(null, null);
 		this._climbSpeedTransition = new SpeedTransition();
 		this._climbSpeedSelected = new ClimbSpeed(null);
 		this._climbSpeedEcon = new ClimbSpeed(this._fmc.getEconClbManagedSpeed());
 
-		this._cruiseSpeedSelected = new CruiseSpeed(null);
-		this._cruiseSpeedEcon = new CruiseSpeed(this._fmc.getEconCrzManagedSpeed());
+		this._cruiseSpeedSelected = new CruiseSpeed(null, null);
+		this._cruiseSpeedEcon = new CruiseSpeed(this._fmc.getEconCrzManagedSpeed(), 0.85);
 
 		this._descentSpeedRestriction = new DescentSpeedRestriction(null, null);
 		this._descentSpeedTransition = new SpeedTransition(240);
 		this._descentSpeedSelected = new DescentSpeed(null);
 		this._descentSpeedEcon = new DescentSpeed(282);
+	}
+
+	get machModeActive() {
+		return this._machMode;
+	}
+
+	_updateMachMode() {
+		this._machMode = Simplane.getAutoPilotMachModeActive();
+		this._updateFmcIfNeeded();
+	}
+
+	_updateLastMachMode() {
+		this._lastMachMode = this._machMode;
 	}
 
 	_updateAltitude() {
@@ -42,18 +65,32 @@ class SpeedDirector {
 
 	}
 
+	_resolveMachKias(speed) {
+		if (this.machModeActive) {
+			const maxMachSpeed = 0.850;
+			const requestedSpeed = SimVar.GetGameVarValue('FROM KIAS TO MACH', 'number', speed.speed);
+			return Math.min(maxMachSpeed, requestedSpeed);
+		} else {
+			return speed.speed;
+		}
+	}
+
 	get speed() {
 		switch (this.speedPhase) {
 			case SpeedPhase.SPEED_PHASE_CLIMB:
 				switch (this.commandedSpeedType) {
 					case SpeedType.SPEED_TYPE_RESTRICTION:
-						return this._climbSpeedRestriction.speed;
+						return this._resolveMachKias(this._climbSpeedRestriction);
 					case SpeedType.SPEED_TYPE_TRANSITION:
-						return this._climbSpeedTransition.speed;
+						return this._resolveMachKias(this._climbSpeedTransition);
 					case SpeedType.SPEED_TYPE_SELECTED:
-						return this._climbSpeedSelected.speed;
+						return this._resolveMachKias(this._climbSpeedSelected);
+					case SpeedType.SPEED_TYPE_ACCELERATION:
+						return this._resolveMachKias(this._accelerationSpeedRestriction);
+					case SpeedType.SPEED_TYPE_PROTECTED:
+						return this._resolveMachKias(this._overspeedProtection);
 					case SpeedType.SPEED_TYPE_ECON:
-						return this._climbSpeedEcon.speed;
+						return this._resolveMachKias(this._climbSpeedEcon);
 				}
 				break;
 			case SpeedPhase.SPEED_PHASE_CRUISE:
@@ -61,9 +98,9 @@ class SpeedDirector {
 					case SpeedType.SPEED_TYPE_RESTRICTION:
 					case SpeedType.SPEED_TYPE_TRANSITION:
 					case SpeedType.SPEED_TYPE_ECON:
-						return this._cruiseSpeedEcon.speed;
+						return (this.machModeActive ? this._cruiseSpeedEcon.speedMach : this._cruiseSpeedEcon.speed);
 					case SpeedType.SPEED_TYPE_SELECTED:
-						return this._cruiseSpeedSelected.speed;
+						return (this.machModeActive ? (this._cruiseSpeedSelected.speedMach ? this._cruiseSpeedSelected.speedMach : this._resolveMachKias(this._cruiseSpeedSelected)) : this._cruiseSpeedSelected.speed);
 				}
 				break;
 			case SpeedPhase.SPEED_PHASE_DESCENT:
@@ -101,8 +138,17 @@ class SpeedDirector {
 		return Number(this._commandedSpeedType);
 	}
 
+	_updateLastSpeed(speed) {
+		this._lastSpeed = Number(speed);
+	}
+
+	_updateCheckSpeed() {
+		this._speedCheck = this.speed;
+	}
+
 	update(flightPhase) {
 		this._updateAltitude();
+		this._updateLastSpeed();
 		switch (flightPhase) {
 			case FlightPhase.FLIGHT_PHASE_PREFLIGHT:
 			case FlightPhase.FLIGHT_PHASE_TAXI:
@@ -120,34 +166,28 @@ class SpeedDirector {
 				this._updateApproachSpeed();
 				break;
 		}
+		this._updateCheckSpeed();
 	}
 
 	_updateClimbSpeed() {
-		let maxSpeed = Infinity;
-		if (isFinite(this._fmc.v2Speed)) {
-			if (this._fmc.accelerationAltitude > Simplane.getAltitude()) {
-				maxSpeed = this._fmc.v2Speed + 20;
-			}
-		}
-
 		let speed = {
 			[SpeedType.SPEED_TYPE_RESTRICTION]: (this._climbSpeedRestriction && this._climbSpeedRestriction.isValid(this._planeAltitude) ? this._climbSpeedRestriction.speed : false),
 			[SpeedType.SPEED_TYPE_TRANSITION]: (this._climbSpeedTransition && this._climbSpeedTransition.isValid(this._planeAltitude) ? this._climbSpeedTransition.speed : false),
+			[SpeedType.SPEED_TYPE_ACCELERATION]: (this._accelerationSpeedRestriction && this._accelerationSpeedRestriction.isValid(this._planeAltitude) ? this._accelerationSpeedRestriction.speed : false),
+			[SpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
 			[SpeedType.SPEED_TYPE_SELECTED]: (this._climbSpeedSelected && this._climbSpeedSelected.isValid() ? this._climbSpeedSelected.speed : false),
 			[SpeedType.SPEED_TYPE_ECON]: (this._climbSpeedEcon && this._climbSpeedEcon.isValid() ? this._climbSpeedEcon.speed : false)
 		};
 
 		this._updateLastCommandedSpeed();
+		this._updateLastMachMode();
 
 		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
 			return speed[value] < speed[accumulator] ? value : accumulator;
 		}, SpeedType.SPEED_TYPE_ECON);
 
 		this._updateCommandedSpeed(commandedSpeedKey, SpeedPhase.SPEED_PHASE_CLIMB);
-
-		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
-
-		return Math.min(speed[commandedSpeedKey], maxSpeed, this._fmc.getFlapProtectionMaxSpeed(flapsHandleIndex));
+		this._updateMachMode();
 	}
 
 	_updateCruiseSpeed() {
@@ -157,12 +197,14 @@ class SpeedDirector {
 		};
 
 		this._updateLastCommandedSpeed();
+		this._updateLastMachMode();
 
 		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
 			return speed[value] < speed[accumulator] ? value : accumulator;
 		}, SpeedType.SPEED_TYPE_ECON);
 
 		this._updateCommandedSpeed(commandedSpeedKey, SpeedPhase.SPEED_PHASE_CRUISE);
+		this._updateMachMode();
 	}
 
 	_updateDescentSpeed() {
@@ -185,7 +227,7 @@ class SpeedDirector {
 	}
 
 	_updateFmcIfNeeded() {
-		if (this._lastCommandedSpeedType !== this._commandedSpeedType || this._lastSpeedPhase !== this._speedPhase) {
+		if (this._lastCommandedSpeedType !== this._commandedSpeedType || this._lastSpeedPhase !== this._speedPhase || this._lastMachMode !== this._machMode || this._lastSpeed !== this._speedCheck) {
 			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
 		}
 	}
@@ -234,8 +276,17 @@ class ClimbSpeed extends Speed {
  * Cruise speed definition
  */
 class CruiseSpeed extends Speed {
-	constructor(speed) {
+	constructor(speed, speedMach) {
 		super(speed);
+		this._speedMach = speedMach;
+	}
+
+	get speedMach() {
+		return Number(this._speedMach);
+	}
+
+	set speedMach(speedMach) {
+		this._speedMach = Number(speedMach);
 	}
 }
 
@@ -245,6 +296,55 @@ class CruiseSpeed extends Speed {
 class DescentSpeed extends Speed {
 	constructor(speed) {
 		super(speed);
+	}
+}
+
+class OverspeedProtection extends Speed {
+	/**
+	 * Speed getter
+	 * @returns {number}
+	 */
+	get speed() {
+		return Number(this.getFlapProtectionMaxSpeed(Simplane.getFlapsHandleIndex()));
+	}
+
+	/**
+	 * Overspeed protection should be always valid
+	 * @returns {boolean}
+	 */
+	isValid() {
+		return true;
+	}
+
+	/**
+	 * Flap protection speeds table
+	 * @param handleIndex
+	 * @returns {number}
+	 */
+	getFlapProtectionMaxSpeed(handleIndex) {
+		switch (handleIndex) {
+			case 0:
+				return 360;
+			case 1:
+				return 255;
+			case 2:
+				return 235;
+			case 3:
+				return 225;
+			case 4:
+				return 215;
+			case 5:
+				return 210;
+			case 6:
+				return 210;
+			case 7:
+				return 205;
+			case 8:
+				return 185;
+			case 9:
+				return 175;
+		}
+		return 360;
 	}
 }
 
@@ -264,18 +364,54 @@ class SpeedRestriction extends Speed {
 	}
 }
 
+class AccelerationSpeedRestriction extends SpeedRestriction {
+
+	constructor(speed, altitude, height) {
+		super(speed, altitude);
+		this._accelerationHeight = Number(height);
+	}
+
+	/**
+	 * Acceleration height setter
+	 * Suggestion: Should be renamed to "height"??
+	 * @param height
+	 */
+	set accelerationHeight(height) {
+		this._accelerationHeight = Number(height);
+	}
+
+	/**
+	 * Returns acceleration height
+	 * Suggestion: Should be renamed to "height"??
+	 * @returns {number}
+	 */
+	get accelerationHeight() {
+		return Number(this._accelerationHeight);
+	}
+
+	/**
+	 * TODO: logic for v2+10 - v2+25 has to be implemented
+	 * @returns {boolean}
+	 */
+	isValid(planeAltitude) {
+		const v2speed = SimVar.GetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots');
+		this.speed = Number(v2speed + 25);
+		if (this._speed && isFinite(this._speed) && this._altitude && isFinite(this._altitude)) {
+			if (this._altitude > planeAltitude) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
 
 class ClimbSpeedRestriction extends SpeedRestriction {
 	isValid(planeAltitude) {
 		if (this._speed && isFinite(this._speed) && this._altitude && isFinite(this._altitude)) {
 			if (this._altitude > planeAltitude) {
-				console.log('this._altitude: ' + this._altitude);
-				console.log('planeAltitude: ' + planeAltitude);
-				console.log('restruction valid');
 				return true;
 			}
 		}
-		console.log('restriction not valid');
 		return false;
 	}
 }
@@ -322,7 +458,8 @@ let SpeedType;
 	SpeedType[SpeedType['SPEED_TYPE_SELECTED'] = 1] = 'SPEED_TYPE_SELECTED';
 	SpeedType[SpeedType['SPEED_TYPE_RESTRICTION'] = 2] = 'SPEED_TYPE_RESTRICTION';
 	SpeedType[SpeedType['SPEED_TYPE_TRANSITION'] = 3] = 'SPEED_TYPE_TRANSITION';
-	SpeedType[SpeedType['SPEED_TYPE_PROTECTED'] = 4] = 'SPEED_TYPE_PROTECTED';
+	SpeedType[SpeedType['SPEED_TYPE_ACCELERATION'] = 4] = 'SPEED_TYPE_ACCELERATION';
+	SpeedType[SpeedType['SPEED_TYPE_PROTECTED'] = 5] = 'SPEED_TYPE_PROTECTED';
 })(SpeedType || (SpeedType = {}));
 
 let SpeedPhase;
