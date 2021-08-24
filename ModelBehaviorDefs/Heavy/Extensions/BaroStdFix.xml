@@ -1,0 +1,41 @@
+<ModelBehaviors>
+    <Template Name="HEAVY_AUTOPILOT_Knob_Baro_Template">
+        <Parameters Type="Default">
+            <ID>1</ID>
+        </Parameters>
+        <UseTemplate Name="ASOBO_GT_Helper_Suffix_ID_Appender">
+            <TEMPLATE_TO_CALL>ASOBO_AUTOPILOT_Knob_Baro_SubTemplate</TEMPLATE_TO_CALL>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="ASOBO_AUTOPILOT_Knob_Baro_Template">
+        <Switch Param="NODE_ID">
+            <Default>
+                <UseTemplate Name="ASOBO_AUTOPILOT_Knob_Baro_Template">
+                    <ID>1</ID>
+                    <AIRLINER_TYPE>PUSH</AIRLINER_TYPE>
+                    <THRESHOLD_INPUT>0.05</THRESHOLD_INPUT>
+                    <THRESHOLD_MOUSE>0.005</THRESHOLD_MOUSE>
+                </UseTemplate>
+            </Default>
+
+            <Case Value="AUTOPILOT_Knob_Baro_1">
+                <UseTemplate Name="HEAVY_AUTOPILOT_Knob_Baro_Template">
+                    <ID>1</ID>
+                    <AIRLINER_TYPE>PUSH</AIRLINER_TYPE>
+                    <THRESHOLD_INPUT>0.05</THRESHOLD_INPUT>
+                    <THRESHOLD_MOUSE>0.005</THRESHOLD_MOUSE>
+                </UseTemplate>
+            </Case>
+
+            <Case Value="AUTOPILOT_Knob_Baro_2">
+                <UseTemplate Name="HEAVY_AUTOPILOT_Knob_Baro_Template">
+                    <ID>2</ID>
+                    <AIRLINER_TYPE>PUSH</AIRLINER_TYPE>
+                    <THRESHOLD_INPUT>0.05</THRESHOLD_INPUT>
+                    <THRESHOLD_MOUSE>0.005</THRESHOLD_MOUSE>
+                </UseTemplate>
+            </Case>
+        </Switch>
+    </Template>
+</ModelBehaviors>
