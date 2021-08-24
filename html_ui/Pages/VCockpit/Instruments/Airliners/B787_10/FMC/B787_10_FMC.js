@@ -465,6 +465,10 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				this._rightKeyElements[i] = rightKeyElement;
 			}
 		}
+
+		this._pilotWaypoints = new CJ4_FMC_PilotWaypoint_Manager(this);
+		this._pilotWaypoints.activate();
+		
 		B787_10_FMC_IdentPage.ShowPage1(this);
 	}
 
