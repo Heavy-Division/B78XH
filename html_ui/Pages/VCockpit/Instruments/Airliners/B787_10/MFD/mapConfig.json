@@ -12,9 +12,16 @@
   "waypointLabelDistanceX": 20,
   "waypointLabelDistance": 20,
   "waypointIconSize": 20,
-
+  "flightPlanWaypointIconSize": 22,
+  "flightPlanWaypointLabelColor": "white",
+  "auxWaypointLabelFontSize": 10,
+  "auxWaypointIconSize": 16,
+  "topOfXWaypointIconSize": 4,
+  "intersectionLabelColor": "#009696",
+  "vorLabelColor": "#009696",
+  "ndbLabelColor": "#009696",
+  "airportLabelColor": "#009696",
   "preventLabelOverlap": false,
-
   "cityLabelFontSize": 24,
   "cityLabelFontFamily": "Consolas",
   "cityLabelColor": "#black",
@@ -27,20 +34,16 @@
   "cityLabelBackgroundPadding": "7 12 0 12",
   "cityLabelDistance": 0.45,
   "cityIconSize": 90,
-
   "airplaneIconSize": 30,
   "airplaneIcon1": "ICON_MAP_PLANE_B747",
   "airplaneIcon2": "ICON_MAP_PLANE_B747_02",
   "airplaneIcon3": "ICON_MAP_PLANE",
-
-  "imagesDir": "/Pages/VCockpit/Instruments/Airliners/Shared/MFD/Images/",
-
+  "imagesDir": "/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/",
   "runwayFillColor": "white",
   "runwayStrokeColor": "gray",
   "runwayStrokeWidth": 3,
   "runwayCornerRadius": 8,
   "runwayMinimalWidth": 16,
-
   "latLonStrokeColor": "gray",
   "latLonStrokeWidth": 1,
   "latLonLabelFontFamily": "Consolas",
@@ -48,7 +51,6 @@
   "latLonLabelColor": "white",
   "latLonLabelStrokeColor": "none",
   "latLonLabelStrokeWidth": 0,
-
   "flightPlanActiveLegColor": "#ff00ff",
   "flightPlanActiveLegWidth": 2,
   "flightPlanActiveLegStrokeColor": "white",
@@ -57,20 +59,16 @@
   "flightPlanNonActiveLegWidth": 2,
   "flightPlanNonActiveLegStrokeColor": "white",
   "flightPlanNonActiveLegStrokeWidth": 0,
-
   "roadMotorWayColor": "#7a7a7a",
   "roadMotorWayWidth": 2,
   "roadTrunkColor": "#7a7a7a",
   "roadTrunkWidth": 1.5,
   "roadPrimaryColor": "#7a7a7a",
   "roadPrimaryWidth": 1,
-
   "railwayStrokeColor": "gray",
   "railwayWidth": 2,
   "railwayDashLength": 6,
-
   "netBingTextureResolution": 1024,
-
   "netBingAltitudeColors1": [],
   "netBingWaterColor1": "#000000",
   "netBingHeightColor1": [
@@ -83,7 +81,6 @@
       "color": "#000000"
     }
   ],
-
   "netBingAltitudeColors2": [],
   "netBingWaterColor2": "#000000",
   "netBingHeightColor2": [
