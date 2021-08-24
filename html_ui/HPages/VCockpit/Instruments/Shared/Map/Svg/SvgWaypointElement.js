@@ -113,6 +113,10 @@ class SvgWaypointElement extends SvgMapElement {
 		return map.config.waypointLabelFontSize;
 	}
 
+	getAuxLabelFontSize(map) {
+		return map.config.auxWaypointLabelFontSize;
+	}
+
 	getLabelElement() {
 		return this._label;
 	}
@@ -139,22 +143,33 @@ class SvgWaypointElement extends SvgMapElement {
 			const fpIdx = SimVar.GetSimVarValue('L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN', 'number');
 			this.isInFpln = FlightPlanManager.DEBUG_INSTANCE.getAllWaypoints(fpIdx).findIndex(x => x.ident == this.source.ident) > -1;
 			this._image.setAttribute('isInFpln', this.isInFpln.toString());
-			if (this.ident === 'TOD' || this.ident === 'DES') {
+			if (this.ident === 'T/D' || this.ident === 'DES') {
 				this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_TOD.svg');
 			} else if (!this.isInFpln) {
-				// console.log("create " + this.source.ident + " " + this.imageFileName());
-				this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + this.imageFileName().replace('.png', '.svg') + '?cb=4');
+				let filename = this.imageFileName();
+				//console.log('create ' + this.source.ident + ' ' + this.imageFileName());
+				/**
+				 * TODO: Hack -> create SVGs or make the check better
+				 */
+				if (filename == 'ICON_MAP_AIRPORT_UNKNOWN_PINK.png' || filename == 'ICON_MAP_INTERSECTION.png') {
+					this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + filename + '?cb=4');
+				} else {
+					this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + filename.replace('.png', '.svg') + '?cb=4');
+				}
 			} else {
-				this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_INTERSECTION_FLIGHTPLAN.svg');
+				this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_INTERSECTION_FLIGHTPLAN.png');
 			}
 		} else {
-			this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_INTERSECTION_ACTIVE.svg');
+			this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png');
 		}
 		this._lastIsInFpln = this.isInFpln;
 		this._image.setAttribute('lastIsInFpln', this._lastIsInFpln.toString());
 		this._lastIsActiveWaypoint = isActiveWaypoint;
 		this._image.setAttribute('lastIsActiveWaypoint', isActiveWaypoint.toString());
-		const iconSize = this.getIconSize(map) + 4;
+		let iconSize = this.getIconSize(map) + 4;
+		if (this.ident === 'T/D' || this.ident === 'DES') {
+			iconSize = this.getIconSize(map) - 5;
+		}
 		this._image.setAttribute('width', fastToFixed(iconSize, 0));
 		this._image.setAttribute('height', fastToFixed(iconSize, 0));
 		this._group.appendChild(this._image);
@@ -190,15 +205,23 @@ class SvgWaypointElement extends SvgMapElement {
 		if (isActiveWaypoint !== this._lastIsActiveWaypoint || this.isInFpln !== this._lastIsInFpln) {
 			if (this._image) {
 				if (!isActiveWaypoint) {
-					if (this.ident === 'TOD' || this.ident === 'DES') {
+					if (this.ident === 'T/D' || this.ident === 'DES') {
 						this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_TOD.svg');
 					} else if (!this.isInFpln) {
-						this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + this.imageFileName().replace('.png', '.svg') + '?cb=44');
+						/**
+						 * TODO: Hack -> create SVGs or make the check better
+						 */
+						let filename = this.imageFileName();
+						if (filename == 'ICON_MAP_AIRPORT_UNKNOWN_PINK.png' || filename == 'ICON_MAP_INTERSECTION.png') {
+							this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + filename + '?cb=44');
+						} else {
+							this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + filename.replace('.png', '.svg') + '?cb=44');
+						}
 					} else {
-						this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_INTERSECTION_FLIGHTPLAN.svg');
+						this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_INTERSECTION_FLIGHTPLAN.png');
 					}
 				} else {
-					this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_INTERSECTION_ACTIVE.svg');
+					this._image.setAttributeNS('http://www.w3.org/1999/xlink', 'href', map.config.imagesDir + 'ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png');
 				}
 			}
 			this._image.setAttribute('lastIsInFpln', this.isInFpln.toString());
@@ -208,6 +231,9 @@ class SvgWaypointElement extends SvgMapElement {
 		}
 		if (isFinite(this.x) && isFinite(this.y)) {
 			let iconSize = this.getIconSize(map) + 4;
+			if (this.ident === 'T/D' || this.ident === 'DES') {
+				iconSize = this.getIconSize(map) - 5;
+			}
 			if (this._image && this._lastMinimize !== this.minimize) {
 				if (this.minimize) {
 					this._image.setAttribute('width', fastToFixed(iconSize * 0.5, 0));
@@ -312,7 +338,10 @@ class SvgWaypointTextElement extends SvgMapElement {
 	}
 
 	createDraw(map) {
-		const fontSize = this.waypointElement.getLabelFontSize(map);
+		let fontSize = this.waypointElement.getLabelFontSize(map);
+		if (this.waypointElement.ident === 'T/D' || this.waypointElement.ident === 'DES') {
+			fontSize = this.waypointElement.getAuxLabelFontSize(map);
+		}
 		const text = this.waypointElement.ident;
 		const c = document.createElement('canvas');
 		const ctx = c.getContext('2d');
@@ -347,7 +376,10 @@ class SvgWaypointTextElement extends SvgMapElement {
 			this._label = label;
 			this._needRepaint = true;
 		}
-		const fontSize = this.waypointElement.getLabelFontSize(map);
+		let fontSize = this.waypointElement.getLabelFontSize(map);
+		if (this.waypointElement.ident === 'T/D' || this.waypointElement.ident === 'DES') {
+			fontSize = this.waypointElement.getAuxLabelFontSize(map);
+		}
 		const text = this.waypointElement.ident;
 		let canvas;
 		if (!this._label) {
@@ -375,12 +407,12 @@ class SvgWaypointTextElement extends SvgMapElement {
 			context.fillRect(0, 0, this._textWidth + map.config.waypointLabelBackgroundPaddingLeft + map.config.waypointLabelBackgroundPaddingRight, this._textHeight + map.config.waypointLabelBackgroundPaddingTop + map.config.waypointLabelBackgroundPaddingBottom);
 		}
 		if (!isActiveWaypoint) {
-			if (this.waypointElement.ident === 'TOD' || this.waypointElement.ident === 'DES') {
-				context.fillStyle = '#5AF25A';
+			if (this.waypointElement.ident === 'T/D' || this.waypointElement.ident === 'DES') {
+				context.fillStyle = '#11d011';
 			} else if (this.waypointElement.source.isInMissedAppr === true) {
-				context.fillStyle = '#33FFFF';
+				context.fillStyle = '#ffd700';
 			} else if (this.waypointElement.isInFpln === true) {
-				context.fillStyle = map.config.waypointLabelColor;
+				context.fillStyle = map.config.flightPlanWaypointLabelColor;
 			} else if (this.waypointElement.source instanceof IntersectionInfo) {
 				context.fillStyle = map.config.intersectionLabelColor;
 			} else if (this.waypointElement.source instanceof VORInfo) {
@@ -393,7 +425,7 @@ class SvgWaypointTextElement extends SvgMapElement {
 				context.fillStyle = map.config.waypointLabelColor;
 			}
 		} else {
-			context.fillStyle = '#FF73FF';
+			context.fillStyle = 'magenta';
 		}
 		context.textAlign = 'start';
 		context.font = fontSize + 'px ' + map.config.waypointLabelFontFamily;
