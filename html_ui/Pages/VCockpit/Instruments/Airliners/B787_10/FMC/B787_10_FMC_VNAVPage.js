@@ -2,9 +2,24 @@ class B787_10_FMC_VNAVPage {
 
 	constructor(fmc) {
 		this.fmc = fmc;
+		this.enforcedPage = null;
 	}
 
 	showPage() {
+
+		switch (this.enforcedPage) {
+			case 1:
+				this.showPage1();
+				return;
+			case 2:
+				this.showPage2();
+				return;
+			case 3:
+				this.showPage3();
+				return;
+		}
+
+
 		if (this.fmc.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_CLIMB) {
 			this.showPage1();
 		} else if (this.fmc.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
@@ -56,7 +71,7 @@ class B787_10_FMC_VNAVPage {
 		}
 
 		if (this.fmc.cruiseFlightLevel) {
-			cell = this.fmc.cruiseFlightLevel + 'FL';
+			cell = 'FL' + this.fmc.cruiseFlightLevel;
 			if (commandedAltitudeCruise && this.fmc.getIsVNAVActive()) {
 				cell = this.fmc.colorizeContent(cell, 'magenta');
 			}
@@ -81,7 +96,7 @@ class B787_10_FMC_VNAVPage {
 		}
 
 		if (speedRestrictionSpeedValue && isFinite(speedRestrictionSpeedValue) && speedRestrictionAltitudeValue && isFinite(speedRestrictionAltitudeValue)) {
-			if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_RESTRICTION) {
+			if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_RESTRICTION && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
 				speedRestrictionSpeedValue = this.fmc.colorizeContent(speedRestrictionSpeedValue, 'magenta');
 			}
 			cell = speedRestrictionSpeedValue + '/' + speedRestrictionAltitudeValue;
@@ -100,7 +115,7 @@ class B787_10_FMC_VNAVPage {
 			cell = fastToFixed(speed, 0);
 		}
 
-		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_TRANSITION) {
+		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_TRANSITION && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
 			cell = this.fmc.colorizeContent(cell, 'magenta');
 		}
 
@@ -120,7 +135,7 @@ class B787_10_FMC_VNAVPage {
 			cell = selectedClimbSpeed + '';
 		}
 
-		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_SELECTED) {
+		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_SELECTED && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
 			cell = this.fmc.colorizeContent(cell, 'magenta');
 		}
 
@@ -136,8 +151,25 @@ class B787_10_FMC_VNAVPage {
 	}
 
 	getEconClimbSpeedCell() {
-		let cell = fastToFixed(this.fmc._speedDirector._climbSpeedEcon.speed, 0);
-		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_ECON) {
+		let cell = '';
+
+		let speedNumber = this.fmc._speedDirector._resolveMachKias(this.fmc._speedDirector._climbSpeedEcon);
+		let isMach = false;
+		if (speedNumber < 1 && speedNumber > 0) {
+			isMach = true;
+		}
+
+		if (isMach) {
+			let mach = fastToFixed(speedNumber, 3);
+			if (mach.charAt(0) === '0') {
+				mach = mach.substring(1);
+			}
+			cell = mach;
+		} else {
+			cell = fastToFixed(speedNumber, 0);
+		}
+
+		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_ECON && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
 			cell = this.fmc.colorizeContent(cell, 'magenta');
 		}
 		if (cell) {
@@ -315,6 +347,7 @@ class B787_10_FMC_VNAVPage {
 			[]
 		]);
 		this.fmc.onNextPage = () => {
+			this.enforcedPage = 2;
 			this.showPage2();
 		};
 		this.fmc.updateSideButtonActiveStatus();
@@ -349,7 +382,7 @@ class B787_10_FMC_VNAVPage {
 		let cell = '□□□□□';
 
 		if (this.fmc.cruiseFlightLevel) {
-			cell = this.fmc.cruiseFlightLevel + 'FL';
+			cell = 'FL' + this.fmc.cruiseFlightLevel;
 			if (this.fmc.getIsVNAVActive()) {
 				cell = this.fmc.colorizeContent(cell, 'magenta');
 			}
@@ -372,7 +405,7 @@ class B787_10_FMC_VNAVPage {
 			cell = selectedCruiseSpeed + '';
 		}
 
-		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_SELECTED) {
+		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_SELECTED && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CRUISE && this.fmc.getIsVNAVActive()) {
 			cell = this.fmc.colorizeContent(cell, 'magenta');
 		}
 
@@ -389,9 +422,17 @@ class B787_10_FMC_VNAVPage {
 	}
 
 	getEconCruiseSpeedCell() {
-		console.log(this.fmc._speedDirector._cruiseSpeedEcon.speed);
-		let cell = fastToFixed(this.fmc._speedDirector._cruiseSpeedEcon.speed, 0);
-		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_ECON) {
+		let cell = '';
+		if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_ECON && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CRUISE && this.fmc.getIsVNAVActive()) {
+			if (Simplane.getAutoPilotMachModeActive()) {
+				let mach = fastToFixed(this.fmc._speedDirector._cruiseSpeedEcon.speedMach, 3);
+				if (mach.charAt(0) === '0') {
+					mach = mach.substring(1);
+				}
+				cell = mach;
+			} else {
+				cell = fastToFixed(this.fmc._speedDirector._cruiseSpeedEcon.speed, 0);
+			}
 			cell = this.fmc.colorizeContent(cell, 'magenta');
 		}
 
@@ -494,9 +535,11 @@ class B787_10_FMC_VNAVPage {
 			['', '<LRC']
 		]);
 		this.fmc.onPrevPage = () => {
+			this.enforcedPage = 1;
 			this.showPage1();
 		};
 		this.fmc.onNextPage = () => {
+			this.enforcedPage = 3;
 			this.showPage3();
 		};
 		this.fmc.updateSideButtonActiveStatus();
@@ -536,6 +579,7 @@ class B787_10_FMC_VNAVPage {
 			['\<OFFPATH DES', descentNowAvailable && !SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_ACTIVATED', 'Number') ? '<DES NOW' : '']
 		]);
 		this.fmc.onPrevPage = () => {
+			this.enforcedPage = 2;
 			this.showPage2();
 		};
 		this.fmc.updateSideButtonActiveStatus();
