@@ -322,6 +322,7 @@ let SpeedType;
 	SpeedType[SpeedType['SPEED_TYPE_SELECTED'] = 1] = 'SPEED_TYPE_SELECTED';
 	SpeedType[SpeedType['SPEED_TYPE_RESTRICTION'] = 2] = 'SPEED_TYPE_RESTRICTION';
 	SpeedType[SpeedType['SPEED_TYPE_TRANSITION'] = 3] = 'SPEED_TYPE_TRANSITION';
+	SpeedType[SpeedType['SPEED_TYPE_PROTECTED'] = 4] = 'SPEED_TYPE_PROTECTED';
 })(SpeedType || (SpeedType = {}));
 
 let SpeedPhase;
