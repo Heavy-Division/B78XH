@@ -404,7 +404,10 @@ class MapInstrument extends ISvgMapRootElement {
 		if (this.eBingMode === EBingMode.VFR || this.eBingMode === EBingMode.CURSOR) {
 			this.bVfrMapPlanePositionReady = false;
 		}
-		SimVar.SetSimVarValue('L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT', 'number', -1);
+		/**
+		 * TODO: Hotfix... This resets current fp waypoint every few seconds. Stepping does not work with this.
+		 */
+		//SimVar.SetSimVarValue('L:B78XH_MCDU_CURRENT_FPLN_WAYPOINT', 'number', -1);
 		if (this.eBingMode !== EBingMode.HORIZON) {
 			this.navMap = new SvgMap(this, {
 				svgElement: this.getElementsByTagName('svg')[0],
@@ -614,7 +617,7 @@ class MapInstrument extends ISvgMapRootElement {
 				if (this.eBingMode === EBingMode.PLANE) {
 					needCenterOnPlane = true;
 					if (this.bEnableCenterOnFplnWaypoint) {
-						const airlinerMcduCurrentFplnWaypointIndex = SimVar.GetSimVarValue('L:AIRLINER_MCDU_CURRENT_FPLN_WAYPOINT', 'number');
+						const airlinerMcduCurrentFplnWaypointIndex = SimVar.GetSimVarValue('L:B78XH_MCDU_CURRENT_FPLN_WAYPOINT', 'number');
 						if (airlinerMcduCurrentFplnWaypointIndex >= 0) {
 							if (this.flightPlanManager) {
 								const airlinerMcduCurrentFplnWaypoint = this.flightPlanManager.getWaypoint(airlinerMcduCurrentFplnWaypointIndex, NaN, true);
