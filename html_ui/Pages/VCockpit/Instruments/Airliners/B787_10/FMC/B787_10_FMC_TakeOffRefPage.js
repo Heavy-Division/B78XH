@@ -207,8 +207,8 @@ class B787_10_FMC_TakeOffRefPage {
 		};
 
 		let accelHtCell = '';
-		if (isFinite(fmc.accelerationHeight)) {
-			accelHtCell = fmc.accelerationHeight.toFixed(0);
+		if (isFinite(fmc._speedDirector._accelerationSpeedRestriction.accelerationHeight)) {
+			accelHtCell = fastToFixed(fmc._speedDirector._accelerationSpeedRestriction.accelerationHeight);
 		} else {
 			accelHtCell = '---';
 		}
