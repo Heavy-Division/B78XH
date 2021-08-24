@@ -1,5 +1,22 @@
 class B787_10_FMC extends Heavy_Boeing_FMC {
 
+	_updateAlertingMessages() {
+		if (this._alertingMessages.length > 0) {
+			let messageBoxTitle = document.body.querySelector('.fms-message-title');
+			let messageBoxContent = document.body.querySelector('.fms-message-content');
+			let messageBoxCount = document.body.querySelector('.fms-message-count');
+
+			messageBoxTitle.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].title;
+			messageBoxContent.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].content;
+			messageBoxCount.innerHTML = this._alertingMessages.length.toFixed(0).padStart(2, '0');
+			let messageBox = document.body.querySelector('.fms-message');
+			messageBox.style.display = 'block';
+		} else {
+			let messageBox = document.body.querySelector('.fms-message');
+			messageBox.style.display = 'none';
+		}
+	}
+
 	/**
 	 * TODO: This should not be here. It should be moved to parent an refactored...
 	 * @param _event
@@ -304,6 +321,11 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			this.fmcBakVersion = miscFile.fms_bak_version;
 		});
 		if (this.urlConfig.index == 1) {
+			/**
+			 * Reset stepping
+			 */
+			SimVar.SetSimVarValue('L:B78XH_MCDU_CURRENT_FPLN_WAYPOINT', 'number', -1);
+
 			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 			this._thrustTakeOffTemp = Math.ceil(oat / 10) * 10;
 			this.onInit = () => {
@@ -477,6 +499,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		}
 		this.updateAutopilot();
 		this._updateTimeAndDate();
+		this._updateAlertingMessages();
 	}
 
 	_updateTimeAndDate() {
@@ -1339,7 +1362,11 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				}
 			}
 			if (this.getIsVNAVActive() && this.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_TAKEOFF) {
-				this.setAPManagedSpeed(this._speedDirector.speed, Aircraft.AS01B);
+				if (this._speedDirector.machModeActive) {
+					this.setAPManagedSpeedMach(this._speedDirector.speed, Aircraft.AS01B);
+				} else {
+					this.setAPManagedSpeed(this._speedDirector.speed, Aircraft.AS01B);
+				}
 			}
 			if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_TAKEOFF) {
 			} else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
