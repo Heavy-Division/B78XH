@@ -157,8 +157,6 @@ class B78XHNavModeSelector {
 			return;
 		}
 		Simplane.setAPLNAVArmed(1);
-		this.lowLevelActivateLNAV();
-		this.lowLevelDeactivateHeadingHold();
 	}
 
 	lowLevelActivateLNAV() {
@@ -172,6 +170,10 @@ class B78XHNavModeSelector {
 	lowLevelDeactivateLNAV() {
 		Simplane.setAPLNAVArmed(0);
 		Simplane.setAPLNAVActive(0);
+	}
+
+	lowLevelDisarmLNAV() {
+		Simplane.setAPLNAVArmed(0);
 	}
 
 	lowLevelActivateHeadingHold() {
@@ -984,6 +986,13 @@ class B78XHNavModeSelector {
 	 * Handles when the NAV button is pressed.
 	 */
 	handleNAVPressed() {
+		/**
+		 * Is possible to ARM LNAV
+		 */
+		if (this.flightPlanManager.getWaypointsCount() === 0) {
+			return;
+		}
+
 		if (this.currentLateralArmedState !== LateralNavModeState.LNAV) {
 			switch (this.currentLateralActiveState) {
 				case LateralNavModeState.ROLL:
@@ -1017,7 +1026,10 @@ class B78XHNavModeSelector {
 					break;
 			}
 		} else {
-			this.currentLateralArmedState = LateralNavModeState.NONE;
+			if (this.currentLateralActiveState !== LateralNavModeState.LNAV) {
+				this.currentLateralArmedState = LateralNavModeState.NONE;
+				this.lowLevelDeactivateLNAV();
+			}
 		}
 	}
 
@@ -1055,7 +1067,7 @@ class B78XHNavModeSelector {
 				if (activateHeadingHold) {
 					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
 				}
-				this.lowLevelArmLNAV();
+				this.lowLevelActivateLNAV();
 				this.currentLateralActiveState = LateralNavModeState.LNAV;
 			} else {
 				this.lowLevelArmLNAV();
