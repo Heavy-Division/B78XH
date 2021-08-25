@@ -31,7 +31,7 @@ class SpeedDirector {
 		this._overspeedProtection = new OverspeedProtection(null);
 
 		this._climbSpeedRestriction = new ClimbSpeedRestriction(null, null);
-		this._climbSpeedTransition = new SpeedTransition();
+		this._climbSpeedTransition = new ClimbSpeedTransition();
 		this._climbSpeedSelected = new ClimbSpeed(null);
 		this._climbSpeedEcon = new ClimbSpeed(this._fmc.getEconClbManagedSpeed());
 
@@ -39,7 +39,7 @@ class SpeedDirector {
 		this._cruiseSpeedEcon = new CruiseSpeed(this._fmc.getEconCrzManagedSpeed(), 0.85);
 
 		this._descentSpeedRestriction = new DescentSpeedRestriction(null, null);
-		this._descentSpeedTransition = new SpeedTransition(240);
+		this._descentSpeedTransition = new DescentSpeedTransition();
 		this._descentSpeedSelected = new DescentSpeed(null);
 		this._descentSpeedEcon = new DescentSpeed(282);
 	}
@@ -101,30 +101,36 @@ class SpeedDirector {
 						return (this.machModeActive ? this._cruiseSpeedEcon.speedMach : this._cruiseSpeedEcon.speed);
 					case SpeedType.SPEED_TYPE_SELECTED:
 						return (this.machModeActive ? (this._cruiseSpeedSelected.speedMach ? this._cruiseSpeedSelected.speedMach : this._resolveMachKias(this._cruiseSpeedSelected)) : this._cruiseSpeedSelected.speed);
+					case SpeedType.SPEED_TYPE_PROTECTED:
+						return this._resolveMachKias(this._overspeedProtection);
 				}
 				break;
 			case SpeedPhase.SPEED_PHASE_DESCENT:
 				switch (this.commandedSpeedType) {
 					case SpeedType.SPEED_TYPE_RESTRICTION:
-						return this._descentSpeedRestriction.speed;
+						return this._resolveMachKias(this._descentSpeedRestriction);
 					case SpeedType.SPEED_TYPE_TRANSITION:
-						return this._descentSpeedTransition.speed;
+						return this._resolveMachKias(this._descentSpeedTransition);
 					case SpeedType.SPEED_TYPE_SELECTED:
-						return this._descentSpeedSelected.speed;
+						return (this.machModeActive ? (this._descentSpeedSelected.speedMach ? this._descentSpeedSelected.speedMach : this._resolveMachKias(this._descentSpeedSelected)) : this._descentSpeedSelected.speed);
 					case SpeedType.SPEED_TYPE_ECON:
-						return this._descentSpeedEcon.speed;
+						return this._resolveMachKias(this._descentSpeedEcon);
+					case SpeedType.SPEED_TYPE_PROTECTED:
+						return this._resolveMachKias(this._overspeedProtection);
 				}
 				break;
 			case SpeedPhase.SPEED_PHASE_APPROACH:
 				switch (this.commandedSpeedType) {
 					case SpeedType.SPEED_TYPE_RESTRICTION:
-						return this._descentSpeedRestriction.speed;
+						return this._resolveMachKias(this._descentSpeedRestriction);
 					case SpeedType.SPEED_TYPE_TRANSITION:
-						return this._descentSpeedTransition.speed;
+						return this._resolveMachKias(this._descentSpeedTransition);
 					case SpeedType.SPEED_TYPE_SELECTED:
-						return this._descentSpeedSelected.speed;
+						return (this.machModeActive ? (this._descentSpeedSelected.speedMach ? this._descentSpeedSelected.speedMach : this._resolveMachKias(this._descentSpeedSelected)) : this._descentSpeedSelected.speed);
 					case SpeedType.SPEED_TYPE_ECON:
-						return this._descentSpeedEcon.speed;
+						return this._resolveMachKias(this._descentSpeedEcon);
+					case SpeedType.SPEED_TYPE_PROTECTED:
+						return this._resolveMachKias(this._overspeedProtection);
 				}
 				break;
 		}
@@ -193,6 +199,7 @@ class SpeedDirector {
 	_updateCruiseSpeed() {
 		let speed = {
 			[SpeedType.SPEED_TYPE_SELECTED]: (this._cruiseSpeedSelected && this._cruiseSpeedSelected.isValid() ? this._cruiseSpeedSelected.speed : null),
+			[SpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
 			[SpeedType.SPEED_TYPE_ECON]: (this._cruiseSpeedEcon && this._cruiseSpeedEcon.isValid() ? this._cruiseSpeedEcon.speed : null)
 		};
 
@@ -208,11 +215,43 @@ class SpeedDirector {
 	}
 
 	_updateDescentSpeed() {
+		let speed = {
+			[SpeedType.SPEED_TYPE_RESTRICTION]: (this._descentSpeedRestriction && this._descentSpeedRestriction.isValid(this._planeAltitude) ? this._descentSpeedRestriction.speed : false),
+			[SpeedType.SPEED_TYPE_TRANSITION]: (this._descentSpeedTransition && this._descentSpeedTransition.isValid(this._planeAltitude) ? this._descentSpeedTransition.speed : false),
+			[SpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+			[SpeedType.SPEED_TYPE_SELECTED]: (this._descentSpeedSelected && this._descentSpeedSelected.isValid() ? this._descentSpeedSelected.speed : false),
+			[SpeedType.SPEED_TYPE_ECON]: (this._descentSpeedEcon && this._descentSpeedEcon.isValid() ? this._descentSpeedEcon.speed : false)
+		};
 
+		this._updateLastCommandedSpeed();
+		this._updateLastMachMode();
+
+		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+			return speed[value] < speed[accumulator] ? value : accumulator;
+		}, SpeedType.SPEED_TYPE_ECON);
+
+		this._updateCommandedSpeed(commandedSpeedKey, SpeedPhase.SPEED_PHASE_DESCENT);
+		this._updateMachMode();
 	}
 
 	_updateApproachSpeed() {
+		let speed = {
+			[SpeedType.SPEED_TYPE_RESTRICTION]: (this._descentSpeedRestriction && this._descentSpeedRestriction.isValid(this._planeAltitude) ? this._descentSpeedRestriction.speed : false),
+			[SpeedType.SPEED_TYPE_TRANSITION]: (this._descentSpeedTransition && this._descentSpeedTransition.isValid(this._planeAltitude) ? this._descentSpeedTransition.speed : false),
+			[SpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+			[SpeedType.SPEED_TYPE_SELECTED]: (this._descentSpeedSelected && this._descentSpeedSelected.isValid() ? this._descentSpeedSelected.speed : false),
+			[SpeedType.SPEED_TYPE_ECON]: (this._descentSpeedEcon && this._descentSpeedEcon.isValid() ? this._descentSpeedEcon.speed : false)
+		};
 
+		this._updateLastCommandedSpeed();
+		this._updateLastMachMode();
+
+		let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+			return speed[value] < speed[accumulator] ? value : accumulator;
+		}, SpeedType.SPEED_TYPE_ECON);
+
+		this._updateCommandedSpeed(commandedSpeedKey, SpeedPhase.SPEED_PHASE_APPROACH);
+		this._updateMachMode();
 	}
 
 	_updateLastCommandedSpeed() {
@@ -428,9 +467,9 @@ class DescentSpeedRestriction extends SpeedRestriction {
 }
 
 
-class SpeedTransition extends Speed {
-	constructor(speed = 250, isDeleted = false) {
-		super(speed);
+class SpeedTransition extends SpeedRestriction {
+	constructor(speed = 250, altitude = 10000, isDeleted = false) {
+		super(speed, altitude);
 		this._isDeleted = isDeleted;
 	}
 
@@ -442,6 +481,11 @@ class SpeedTransition extends Speed {
 		this._isDeleted = isDeleted;
 	}
 
+	/**
+	 * TODO implement above/bellow altitude check
+	 * @param planeAltitude
+	 * @returns {boolean}
+	 */
 	isValid(planeAltitude) {
 		if (this._speed && isFinite(this._speed) && !this._isDeleted) {
 			if (10000 > planeAltitude) {
@@ -449,6 +493,18 @@ class SpeedTransition extends Speed {
 			}
 		}
 		return false;
+	}
+}
+
+class DescentSpeedTransition extends SpeedTransition {
+	constructor(speed = 240, altitude = 10000, isDeleted = false) {
+		super(speed, altitude, isDeleted);
+	}
+}
+
+class ClimbSpeedTransition extends SpeedTransition {
+	constructor(speed = 250, altitude = 10000, isDeleted = false) {
+		super(speed, altitude, isDeleted);
 	}
 }
 
