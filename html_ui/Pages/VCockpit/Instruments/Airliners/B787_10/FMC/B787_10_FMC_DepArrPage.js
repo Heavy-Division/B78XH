@@ -261,7 +261,7 @@ class B787_10_FMC_DepArrPage {
 		};
 
 		fmc.refreshPageCallback = () => {
-			B787_10_FMC_DepArrPage.ShowDeparturePage(fmc);
+			B787_10_FMC_DepArrPage.ShowDeparturePage(fmc, currentPage);
 		};
 
 		//end of CWB EXEC handling
