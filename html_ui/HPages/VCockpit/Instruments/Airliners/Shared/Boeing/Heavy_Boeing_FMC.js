@@ -1,4 +1,97 @@
 class Heavy_Boeing_FMC extends Boeing_FMC {
+
+
+	// Property for EXEC handling
+	get fpHasChanged() {
+		return this._fpHasChanged;
+	}
+
+	set fpHasChanged(value) {
+		this._fpHasChanged = value;
+	}
+
+	/**
+	 * Speed Intervention FIX
+	 */
+
+	toggleSpeedIntervention() {
+		if (this.getIsSpeedInterventionActive()) {
+			this.deactivateSpeedIntervention();
+		} else {
+			this.activateSpeedIntervention();
+		}
+	}
+
+	activateSpeedIntervention() {
+		if (!this.getIsVNAVActive()) {
+			return;
+		}
+		this._isSpeedInterventionActive = true;
+		if (Simplane.getAutoPilotMachModeActive()) {
+			let currentMach = Simplane.getAutoPilotMachHoldValue();
+			Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
+		} else {
+			let currentSpeed = Simplane.getAutoPilotAirspeedHoldValue();
+			Coherent.call('AP_SPD_VAR_SET', 1, currentSpeed);
+		}
+		SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', 'number', 1);
+		SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
+		if (this.aircraftType == Aircraft.AS01B) {
+			this.activateSPD();
+		}
+	}
+
+	deactivateSpeedIntervention() {
+		this._isSpeedInterventionActive = false;
+		SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', 'number', 0);
+		if (this.getIsVNAVActive()) {
+			SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 2);
+		}
+	}
+
+	activateSPD() {
+		if (this.getIsVNAVActive() && this.aircraftType != Aircraft.AS01B) {
+			return;
+		}
+		let altitude = Simplane.getAltitudeAboveGround();
+		if (altitude < 400) {
+			this._pendingSPDActivation = true;
+		} else {
+			this.doActivateSPD();
+		}
+		SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', 'number', 1);
+		this._isSPDActive = true;
+	}
+
+
+	doActivateSPD() {
+		this._pendingSPDActivation = false;
+		if (Simplane.getAutoPilotMachModeActive()) {
+			let currentMach = Simplane.getAutoPilotMachHoldValue();
+			Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
+			SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_ON', 'number', 1);
+		} else {
+			let currentSpeed = Simplane.getAutoPilotAirspeedHoldValue();
+			Coherent.call('AP_SPD_VAR_SET', 1, currentSpeed);
+			SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_OFF', 'number', 1);
+		}
+		if (!this._isFLCHActive) {
+			this.setAPSpeedHoldMode();
+		}
+		this.setThrottleMode(ThrottleMode.AUTO);
+		let stayManagedSpeed = (this._pendingVNAVActivation || this._isVNAVActive) && !this._isSpeedInterventionActive;
+		if (!stayManagedSpeed) {
+			SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
+		}
+	}
+
+	deactivateSPD() {
+		SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', 'number', 0);
+		this._isSPDActive = false;
+		this._pendingSPDActivation = false;
+	}
+
+
 	constructor() {
 		super(...arguments);
 		this._fpHasChanged = false;
@@ -195,57 +288,30 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 	}
 
 	onEvent(_event) {
-		super.onEvent(_event);
 		console.log('B787_10_Heavy_Boeing_FMC onEvent ' + _event);
+
 		if (_event.indexOf('AP_LNAV') != -1) {
 			this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
+			return;
 			//this.toggleLNAV();
-		} else if (_event.indexOf('AP_VNAV') != -1) {
-			//this._navModeSelector.onNavChangedEvent('VNAV_PRESSED');
-			this.toggleVNAV();
-		} else if (_event.indexOf('AP_FLCH') != -1) {
-			//this._navModeSelector.onNavChangedEvent('FLC_PRESSED');
-			this.toggleFLCH();
 		} else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
 			this._navModeSelector.onNavChangedEvent('HDG_HOLD_PRESSED');
+			return;
 			//this.toggleHeadingHold();
 		} else if (_event.indexOf('AP_HEADING_SEL') != -1) {
 			this._navModeSelector.onNavChangedEvent('HDG_SEL_PRESSED');
+			return;
 			//this.activateHeadingSel();
-		} else if (_event.indexOf('AP_SPD') != -1) {
-			if (this.aircraftType === Aircraft.AS01B) {
-				if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
-					this.activateSPD();
-				} else {
-					this.deactivateSPD();
-				}
-			} else {
-				if ((this.getIsAltitudeHoldActive() || this.getIsVSpeedActive()) && this.getIsTHRActive()) {
-					this.toggleSPD();
-				}
-			}
-		} else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
-			this.toggleSpeedIntervention();
-		} else if (_event.indexOf('AP_VSPEED') != -1) {
-			//this._navModeSelector.onNavChangedEvent('VS_PRESSED');
-			this.toggleVSpeed();
 		} else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
 			this._navModeSelector.onNavChangedEvent(NavModeEvent.ALT_INTERVENTION_PRESSED);
+			return;
 			//this.activateAltitudeSel();
-		} else if (_event.indexOf('AP_ALT_HOLD') != -1) {
-			this.toggleAltitudeHold();
-		} else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
-			this.setAPSpeedHoldMode();
-			if (this.aircraftType == Aircraft.AS01B)
-				this.deactivateSPD();
-			this.setThrottleMode(ThrottleMode.TOGA);
-			if (Simplane.getIndicatedSpeed() > 80) {
-				this.deactivateLNAV();
-				this.deactivateVNAV();
-			}
-		} else if (_event.indexOf('EXEC') != -1) {
-			this.onExec();
 		}
+
+		/**
+		 * TODO: Move this to ELSE???
+		 */
+		super.onEvent(_event);
 	}
 
 	/**
