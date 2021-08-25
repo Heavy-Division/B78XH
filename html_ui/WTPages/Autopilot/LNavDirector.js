@@ -47,6 +47,73 @@ class LNavDirector {
 		this.previousDeviation = 0;
 	}
 
+	resolveBankKnobPosition() {
+
+		/**
+		 * LIMIT 30 -> APPROX RATE: 2.6 (2.8)
+		 * LIMIT 25 -> APPROX RATE: 2.2
+		 * LIMIT 20 -> APPROX RATE: 1.7
+		 * LIMIT 15 -> APPROX RATE: 1.25
+		 * LIMIT 10 -> APPROX RATE: 0.8
+		 * LIMIT AUTO -> APPROX RATE: 1.25 (below 250 KIAS) 1.75 (above 25 KIAS)
+		 *
+		 * (AUTO need to be tested for BANK LIMITS)
+		 */
+
+
+		/**
+		 * BANK LIMIT fix
+		 */
+		switch (SimVar.GetSimVarValue('A:AUTOPILOT MAX BANK ID', 'Number')) {
+			case 0:
+				/**
+				 * 2.8 undershot a bit
+				 * @type {number}
+				 */
+				this.options.maxBankAngle = 30;
+				this.options.bankRate = 3;
+				break;
+			case 1:
+				/**
+				 * 2.2 -> undershot a bit
+				 * 2.5 -> overshot a bit
+				 * @type {number}
+				 */
+				this.options.maxBankAngle = 25;
+				this.options.bankRate = 2.4;
+				break;
+			case 2:
+				this.options.maxBankAngle = 20;
+				this.options.bankRate = 1.7;
+				break;
+			case 3:
+				this.options.maxBankAngle = 15;
+				this.options.bankRate = 1.25;
+				break;
+			case 4:
+				this.options.maxBankAngle = 10;
+				this.options.bankRate = 0.8;
+				break;
+			case 5:
+				if (Simplane.getIndicatedSpeed() > 250) {
+					this.options.maxBankAngle = 25;
+					/**
+					 * This should be 1.75
+					 * Maybe AUTO uses MAX BANK 20 and RATE 1.75
+					 * @type {number}
+					 */
+					this.options.bankRate = 2.2;
+				} else {
+					this.options.maxBankAngle = 15;
+					this.options.bankRate = 1.25;
+				}
+				break;
+			default:
+				this.options.maxBankAngle = 30;
+				this.options.bankRate = 3;
+		}
+	}
+
 	/**
 	 * Updates the LNavDirector.
 	 */
@@ -58,43 +125,7 @@ class LNavDirector {
 
 		if (this.activeFlightPlan) {
 
-			/**
-			 * BANK LIMIT fix
-			 */
-			switch (SimVar.GetSimVarValue('A:AUTOPILOT MAX BANK ID', 'Number')) {
-				case 0:
-					this.options.maxBankAngle = 30;
-					this.options.bankRate = 3;
-					break;
-				case 1:
-					this.options.maxBankAngle = 25;
-					this.options.bankRate = 3;
-					break;
-				case 2:
-					this.options.maxBankAngle = 20;
-					this.options.bankRate = 3;
-					break;
-				case 3:
-					this.options.maxBankAngle = 15;
-					this.options.bankRate = 1.5;
-					break;
-				case 4:
-					this.options.maxBankAngle = 10;
-					this.options.bankRate = 0.5;
-					break;
-				case 5:
-					if (Simplane.getIndicatedSpeed() > 250) {
-						this.options.maxBankAngle = 25;
-						this.options.bankRate = 3;
-					} else {
-						this.options.maxBankAngle = 15;
-						this.options.bankRate = 1.5;
-					}
-					break;
-				default:
-					this.options.maxBankAngle = 30;
-					this.options.bankRate = 3;
-			}
+			this.resolveBankKnobPosition();
 
 			/**
 			 * Only for DEBUG purpose

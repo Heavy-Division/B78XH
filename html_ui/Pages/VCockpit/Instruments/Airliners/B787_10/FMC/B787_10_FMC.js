@@ -468,7 +468,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 
 		this._pilotWaypoints = new CJ4_FMC_PilotWaypoint_Manager(this);
 		this._pilotWaypoints.activate();
-		
+
 		B787_10_FMC_IdentPage.ShowPage1(this);
 	}
 
@@ -1044,6 +1044,32 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let altitude = Simplane.getAltitude();
 		let temperature = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
 		return this.getClimbThrustN1(temperature, altitude) - this.getThrustCLBMode() * 8.6;
+	}
+
+	rateTester() {
+		if (this._lastTimeX === undefined) {
+			this._startHeading = Simplane.getHeadingTrue();
+			this._lastTimeX = Date.now();
+		}
+
+		this._timeX = Date.now();
+
+		//console.log('TIME: ' + this._timeX);
+		//console.log('LAST TIME: ' + this._lastTimeX);
+
+		if (this._timeX > this._lastTimeX + 1000) {
+			let heading = Simplane.getHeadingTrue();
+			let rate = 0;
+			if (heading > this._startHeading) {
+				rate = heading - this._startHeading;
+			} else {
+				rate = this._startHeading - heading;
+			}
+			console.log('RATE PER SEC: ' + rate);
+
+			this._timeX = undefined;
+			this._lastTimeX = undefined;
+		}
 	}
 
 	updateAutopilot() {
