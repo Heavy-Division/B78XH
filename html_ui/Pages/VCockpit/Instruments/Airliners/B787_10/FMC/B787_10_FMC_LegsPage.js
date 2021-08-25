@@ -682,10 +682,12 @@ class B787_10_FMC_LegsPage {
 			this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
 				const details = HoldDetails.createDefault(holdWaypoint.waypoint.bearingInFP, holdWaypoint.waypoint.bearingInFP);
 				this._fmc.flightPlanManager.addHoldAtWaypointIndex(holdWaypoint.index, details);
-				this._fmc.fpHasChanged = true;
 
 				this._fmc.inOut = '';
-				B787_10_FMC_HoldsPage.showHoldPage(this._fmc, holdWaypoint.waypoint.ident);
+
+				this._fmc.activateRoute(false, () => {
+					B787_10_FMC_HoldsPage.showHoldPage(this._fmc, holdWaypoint.waypoint.ident);
+				});
 			});
 		} else {
 			this._fmc.showErrorMessage('INVALID ENTRY');
