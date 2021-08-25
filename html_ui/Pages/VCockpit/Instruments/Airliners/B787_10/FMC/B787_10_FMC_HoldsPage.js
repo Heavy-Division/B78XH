@@ -163,7 +163,11 @@ class B787_10_FMC_HoldsPage {
 				this._state.isModifying = true;
 				this._fmc.fpHasChanged = true;
 				this._fmc.flightPlanManager.modifyHoldDetails(currentHold.index, newDetails)
-				.then(() => this.update());
+				.then(() => {
+					this._fmc.activateRoute(false, () => {
+						this.update();
+					});
+				});
 			});
 		} else {
 			this._fmc.showErrorMessage('INVALID ENTRY');
@@ -193,7 +197,11 @@ class B787_10_FMC_HoldsPage {
 				this._state.isModifying = true;
 				this._fmc.fpHasChanged = true;
 				this._fmc.flightPlanManager.modifyHoldDetails(currentHold.index, newDetails)
-				.then(() => this.update());
+				.then(() => {
+					this._fmc.activateRoute(false, () => {
+						this.update();
+					});
+				});
 			});
 		} else {
 			this._fmc.showErrorMessage('INVALID ENTRY');
@@ -223,7 +231,11 @@ class B787_10_FMC_HoldsPage {
 				this._state.isModifying = true;
 				this._fmc.fpHasChanged = true;
 				this._fmc.flightPlanManager.modifyHoldDetails(currentHold.index, newDetails)
-				.then(() => this.update());
+				.then(() => {
+					this._fmc.activateRoute(false, () => {
+						this.update();
+					});
+				});
 			});
 		} else {
 			this._fmc.showErrorMessage('INVALID ENTRY');
@@ -334,6 +346,7 @@ class B787_10_FMC_HoldsPage {
 			this._fmc.eraseTemporaryFlightPlan(() => {
 				this._fmc.fpHasChanged = false;
 				this._state.isModifying = false;
+				this._fmc.eraseRouteModifications();
 				this.update();
 			});
 		}
@@ -343,6 +356,23 @@ class B787_10_FMC_HoldsPage {
 	 * Handles when EXEC is pressed.
 	 */
 	handleExec() {
+		if (this._fmc.fpHasChanged && this._fmc._isRouteActivated) {
+			this._fmc.refreshPageCallback = () => {
+				this._state.isModifying = false;
+				this.update();
+			}; // TODO this seems annoying, but this is how stuff works in cj4_fmc right now
+			this._fmc.onExecDefault();
+		} else if (this._fmc.fpHasChanged) {
+			this._fmc.fpHasChanged = false;
+			this._fmc.activateRoute(() => {
+				//this._fmc.activatingDirectTo = false;
+				this._fmc.refreshPageCallback = () => {
+					this.update();
+				}; // TODO this seems annoying, but this is how stuff works in cj4_fmc right now
+				this._fmc.onExecDefault();
+			});
+		}
+		/*
 		if (this._fmc._fpHasChanged) {
 			this._fmc._fpHasChanged = false;
 			this._state.isModifying = false;
@@ -352,6 +382,7 @@ class B787_10_FMC_HoldsPage {
 				this._fmc.onExecDefault();
 			});
 		}
+		*/
 	}
 
 	/**
@@ -524,6 +555,7 @@ class B787_10_FMC_HoldsPage {
 			instance._state.page = B787_10_FMC_HoldsPage.FPLN_HOLD;
 		}
 
+		console.log('is fp changed' + fmc._fpHasChanged);
 		instance._state.isModifying = fmc._fpHasChanged;
 		B787_10_FMC_HoldsPage.Instance = instance;
 
