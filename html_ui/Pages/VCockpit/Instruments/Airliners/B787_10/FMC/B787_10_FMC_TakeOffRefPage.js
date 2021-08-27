@@ -110,7 +110,7 @@ class B787_10_FMC_TakeOffRefPage {
 		let flapsCell = '---';
 		let flapsAngle = fmc.getTakeOffFlap();
 		if (isFinite(flapsAngle) && flapsAngle >= 0) {
-			flapsCell = flapsAngle.toFixed(0);
+			flapsCell = fastToFixed(flapsAngle, 0);
 		} else {
 			flapsCell = '□□';
 		}

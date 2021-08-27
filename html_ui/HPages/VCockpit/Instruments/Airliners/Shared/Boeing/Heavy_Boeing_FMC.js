@@ -1,6 +1,25 @@
 class Heavy_Boeing_FMC extends Boeing_FMC {
 
 
+	setTakeOffFlap(s) {
+		let value = Number.parseInt(s);
+		if (isFinite(value)) {
+			/**
+			 * Only flaps 5, 10, 15, 17, 18, 20 can be set for takeoff
+			 */
+			if ([5, 10, 15, 17, 18, 20].indexOf(value) !== -1) {
+				this._takeOffFlap = value;
+				/**
+				 * Automatically clear all vSpeeds after flaps change
+				 */
+				this.clearVSpeeds();
+				return true;
+			}
+		}
+		this.showErrorMessage(this.defaultInputErrorMessage);
+		return false;
+	}
+
 	// Property for EXEC handling
 	get fpHasChanged() {
 		return this._fpHasChanged;
