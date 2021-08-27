@@ -622,7 +622,7 @@ class B787_10_FMC_LegsPage {
 
 		} else {
 			this._fmc.onRightInput[5] = () => {
-				//new B787_10_FMC_RouteDataPage(this._fmc).showPage();
+				new B787_10_FMC_RouteDataPage(this._fmc).showPage();
 			};
 		}
 	}
