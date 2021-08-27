@@ -1,4 +1,3 @@
-Include.addScript('/Heavy/Utils/HeavyDataStorage.js');
 /**
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  * Be aware. This class should never be used outside ISFD (SAI).

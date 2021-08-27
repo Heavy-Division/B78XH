@@ -1,5 +1,3 @@
-Include.addScript('/B78XH/Enums/B78XH_LocalVariables.js');
-
 class B78XH_APUInfo {
 	constructor() {
 		this.localVariables = B78XH_LocalVariables.APU;

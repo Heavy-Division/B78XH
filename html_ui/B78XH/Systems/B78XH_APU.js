@@ -1,5 +1,3 @@
-Include.addScript('/B78XH/Systems/B78XH_APUInfo.js');
-
 class B78XH_APU extends B78XH_APUInfo {
 
 	constructor() {
@@ -14,7 +12,7 @@ class B78XH_APU extends B78XH_APUInfo {
 		this.apuOilTemp = 15;
 	}
 
-	update(_deltaTime, delayInMilliseconds){
+	update(_deltaTime, delayInMilliseconds) {
 		this.updateApuRPM();
 		this.updateApuStatus();
 		this.updateApuEGT();
