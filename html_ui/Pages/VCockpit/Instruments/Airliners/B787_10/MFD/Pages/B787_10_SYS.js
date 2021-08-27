@@ -229,14 +229,14 @@ class B787_10_SYS_Page {
 
 	getTotalFuelInMegagrams() {
 		let factor = this.gallonToMegapounds;
-		if (BaseAirliners.unitIsMetric(Aircraft.AS01B))
+		if (!HeavyDivision.configuration.useImperial())
 			factor = this.gallonToMegagrams;
 		return (SimVar.GetSimVarValue('FUEL TOTAL QUANTITY', 'gallons') * factor);
 	}
 
 	getMainTankFuelInMegagrams(_index) {
 		let factor = this.gallonToMegapounds;
-		if (BaseAirliners.unitIsMetric(Aircraft.AS01B))
+		if (!HeavyDivision.configuration.useImperial())
 			factor = this.gallonToMegagrams;
 		return (SimVar.GetSimVarValue('FUELSYSTEM TANK QUANTITY:' + _index, 'gallons') * factor);
 	}
@@ -369,7 +369,7 @@ class B787_10_SYS_Page_FUEL extends B787_10_SYS_Page {
 			}
 		}
 		if (this.unitTextSVG) {
-			if (BaseAirliners.unitIsMetric(Aircraft.B747_8))
+			if (!HeavyDivision.configuration.useImperial())
 				diffAndSetText(this.unitTextSVG, 'KGS X 1000');
 			else
 				diffAndSetText(this.unitTextSVG, 'LBS X 1000');
