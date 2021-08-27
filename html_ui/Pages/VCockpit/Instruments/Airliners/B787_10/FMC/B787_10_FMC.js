@@ -255,7 +255,7 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		this._takeOffN1TempRow = [70, 60, 55, 50, 45, 40, 35, 30, 25, 20, 15, 10, 5, 0, -10, -20, -30, -40, -50];
 		this._thrustTakeOffMode = 1;
 		this._thrustCLBMode = 1;
-		this._thrustTakeOffTemp = 20;
+		this._thrustTakeOffTemp = NaN;
 		this._lastUpdateAPTime = NaN;
 		this.refreshFlightPlanCooldown = 0;
 		this.updateAutopilotCooldown = 0;
@@ -270,6 +270,24 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		this._hasReachedTopOfDescent = false;
 		this._apCooldown = 500;
 
+		this._prepareDefaultValues();
+
+		this._overrideDefaultAsoboValues();
+	}
+
+	_overrideDefaultAsoboValues() {
+		/**
+		 * Flaps handling
+		 */
+		this._takeOffFlap = -1;
+		let flapAngles = [0, 1, 5, 10, 15, 17, 18, 20, 25, 30];
+		let flapIndex = Simplane.getFlapsHandleIndex(true);
+		if (flapIndex >= 1) {
+			this._takeOffFlap = flapAngles[flapIndex];
+		}
+	}
+
+	_prepareDefaultValues() {
 		/**
 		 * TODO: All these properties should be removed after Speed director implementation
 		 * @type {null}
@@ -326,8 +344,6 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 			 */
 			SimVar.SetSimVarValue('L:B78XH_MCDU_CURRENT_FPLN_WAYPOINT', 'number', -1);
 
-			let oat = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
-			this._thrustTakeOffTemp = Math.ceil(oat / 10) * 10;
 			this.onInit = () => {
 				B787_10_FMC_InitRefIndexPage.ShowPage1(this);
 			};
