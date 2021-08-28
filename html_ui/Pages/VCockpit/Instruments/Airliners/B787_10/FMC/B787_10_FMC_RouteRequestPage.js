@@ -28,6 +28,77 @@ class B787_10_FMC_RouteRequestPage {
 		this.fmc.updateSideButtonActiveStatus();
 	}
 
+	parseAirways(navlog) {
+		let waypoints = [];
+		for (let i = 0; i < navlog.length; i++) {
+			let ident = SimBriefOceanicWaypointConverter.convert(navlog[i].ident);
+			let airwayIn;
+			let airwayOut;
+
+			/**
+			 * Direct waypoints has to have airway in always set to undefined
+			 *
+			 * ELSE
+			 *
+			 * AirwayIn has to be set to via_airway
+			 */
+			if (navlog[i].via_airway === 'DCT') {
+				airwayIn = undefined;
+			} else {
+				airwayIn = navlog[i].via_airway;
+			}
+
+
+			/**
+			 * Do we have next waypoint?
+			 */
+			if (navlog[i + 1]) {
+				/**
+				 * If next waypoint has airway DCT then airway out of current waypoint has to be undefined
+				 */
+				if (navlog[i + 1].via_airway === 'DCT') {
+					airwayOut = undefined;
+				} else {
+					/**
+					 * if next waypoint is on different airway then current waypoint airway out
+					 * has to be same as next waypoint airway (airways cross)
+					 */
+					if (navlog[i + 1].via_airway !== navlog[i].via_airway) {
+						airwayOut = navlog[i + 1].via_airway;
+					} else {
+						/**
+						 * If next waypoint is direct then airwayOut of current waypoint has to be undefined
+						 * (both waypoints are DCT)
+						 *
+						 * ELSE
+						 *
+						 * next waypoint is on airway so current waypoint exits to the airway
+						 * (current waypoint is first waypoint on the airway)
+						 */
+						if (navlog[i + 1].via_airway === 'DCT') {
+							airwayOut = undefined;
+						} else {
+							airwayOut = navlog[i + 1].via_airway;
+						}
+					}
+				}
+			}
+			let waypointToPush = {
+				ident: ident,
+				airway: navlog[i].via_airway,
+				airwayIn: airwayIn,
+				airwayOut: airwayOut,
+				altitude: navlog[i].altitude_feet,
+				lat: navlog[i].pos_lat,
+				long: navlog[i].pos_long
+			};
+
+			waypoints.push(waypointToPush);
+		}
+
+		return waypoints;
+	}
+
 	setupInputHandlers() {
 		this.fmc.onLeftInput[5] = () => {
 			B787_10_FMC_RoutePage.ShowPage1(this.fmc);
@@ -323,22 +394,28 @@ class B787_10_FMC_RouteRequestPage {
 				navlog = removeTocAndTod(navlog);
 				navlog = breakAPartNAT(navlog);
 
-				navlog.forEach((fix) => {
-					let ident = SimBriefOceanicWaypointConverter.convert(fix.ident);
-					waypoints.push({
-						ident: ident,
-						airway: fix.via_airway,
-						altitude: fix.altitude_feet,
-						lat: fix.pos_lat,
-						long: fix.pos_long
-					});
-				});
 
+				waypoints = this.parseAirways(navlog);
+
+				/*
+								navlog.forEach((fix) => {
+									let ident = SimBriefOceanicWaypointConverter.convert(fix.ident);
+									waypoints.push({
+										ident: ident,
+										airway: fix.via_airway,
+										altitude: fix.altitude_feet,
+										lat: fix.pos_lat,
+										long: fix.pos_long
+									});
+								});
+				*/
 				/**
 				 * SET first waypoint to DCT
+				 * first waypoint also has to have airwayIn set to undefined
 				 */
 
 				waypoints[0].airway = 'DCT';
+				waypoints[0].airwayIn = undefined;
 
 				/**
 				 * GROUP BY Airway
@@ -356,7 +433,7 @@ class B787_10_FMC_RouteRequestPage {
 				this.waypoints = finalWaypoints;
 
 				this.waypoints.forEach((waypoint) => {
-					this.progress.push([waypoint.airway, waypoint.ident, '', false]);
+					this.progress.push([waypoint.airway, waypoint.ident, '', false, waypoint.airwayIn, waypoint.airwayOut]);
 				});
 			};
 
@@ -398,6 +475,16 @@ class B787_10_FMC_RouteRequestPage {
 									this.fmc.onLeftInput = [];
 									this.fmc.onRightInput = [];
 									this.fmc.updateSideButtonActiveStatus();
+									/**
+									 * TODO: Fuck this???
+									 *
+									 * Because airways are parsed and we know all waypoints we could insert the waypoints directly with addWaypoint()
+									 * + It would be extremely fast because airways need to be cached to be able to get all waypoints along airway
+									 *   and we would not need to load the airways to the cache
+									 * - It could be a problem for users who do not use same AIRAC on simbrief and in MSFS
+									 *   because the FMC would think that waypoints are on same airway but MSFS would not know about it (possible problem for ingame ATC)
+									 *
+									 */
 									this.insertWaypointsAlongAirway(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, this.waypoints[iterator].airway, () => {
 										iterator++;
 										insertWaypoint();
@@ -413,7 +500,14 @@ class B787_10_FMC_RouteRequestPage {
 						this.fmc.onRightInput = [];
 						this.fmc.updateSideButtonActiveStatus();
 						this.progress[iterator][2] = this.waypoints[iterator].ident;
-						this.insertWaypoint(this.waypoints[iterator].ident, this.fmc.flightPlanManager.getWaypointsCount() - 1, iterator, () => {
+						let idx = this.fmc.flightPlanManager.getWaypointsCount() - 1;
+						this.insertWaypoint(this.waypoints[iterator].ident, idx, iterator, () => {
+							/**
+							 * The waypoint is direct -> insert parsed airways (only airwayOut should be needed)
+							 */
+							const waypoint = this.fmc.flightPlanManager.getWaypoint(idx);
+							waypoint.infos.airwayIn = this.progress[iterator][4];
+							waypoint.infos.airwayOut = this.progress[iterator][5];
 							iterator++;
 							insertWaypoint();
 						});
@@ -806,15 +900,24 @@ class B787_10_FMC_RouteRequestPage {
 											this.progress[progressIndex][2] = icao.trim().split(' ').pop();
 											this.updateProgress(progressIndex);
 										}
-										console.log('add icao:' + icao + ' @ ' + idx);
+										//console.log('add icao:' + icao + ' @ ' + idx);
 										this.fmc.flightPlanManager.addWaypoint(icao, idx, () => {
-											const waypoint = this.fmc.flightPlanManager.getWaypoint(idx);
+											const waypoint = this.fmc.flightPlanManager.getWaypoint(idx - 1);
+											const ident = waypoint.infos.ident;
 											waypoint.infos.UpdateAirway(airwayName).then(() => {
 												waypoint.infos.airwayIn = airwayName;
 												if (i < count) {
 													waypoint.infos.airwayOut = airwayName;
 												}
-												console.log('icao:' + icao + ' added');
+
+												/**
+												 * If it is last waypoint on airway override airways by parsed airways
+												 */
+												if (lastWaypointIdent === waypoint.infos.ident) {
+													waypoint.infos.airwayIn = this.progress[progressIndex][4];
+													waypoint.infos.airwayOut = this.progress[progressIndex][5];
+												}
+												//console.log('icao:' + icao + ' added; Ident:' + lastWaypointIdent + '; Airway in: ' + waypoint.infos.airwayIn + '; Airway out: ' + waypoint.infos.airwayOut);
 												resolve();
 											});
 										});
