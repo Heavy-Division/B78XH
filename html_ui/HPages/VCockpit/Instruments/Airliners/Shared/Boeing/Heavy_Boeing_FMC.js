@@ -246,10 +246,10 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
 	}
 
-	activateMainRoute() {
+	activateMainRoute(callback = EmptyCallback.Void) {
 		console.log('activate main route');
 		this._isMainRouteActivated = true;
-		this.activateRoute();
+		this.activateRoute(false, callback);
 	}
 
 	//function added to set departure enroute transition index
@@ -322,7 +322,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 			return;
 			//this.activateHeadingSel();
 		} else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
-			this._navModeSelector.onNavChangedEvent(NavModeEvent.ALT_INTERVENTION_PRESSED);
+			//this._navModeSelector.onNavChangedEvent(NavModeEvent.ALT_INTERVENTION_PRESSED);
 			return;
 			//this.activateAltitudeSel();
 		}
