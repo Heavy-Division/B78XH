@@ -1,0 +1,375 @@
+:root {
+    --bodyHeightScale: 1;
+}
+
+@keyframes TemporaryShow {
+    0%, 100% {
+        visibility: visible;
+    }
+}
+
+@keyframes TemporaryHide {
+    0%, 100% {
+        visibility: hidden;
+    }
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+html body {
+    -webkit-user-select: none;
+    font-family: var(--font);
+    font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100);
+    color: white;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#highlight {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+}
+
+#Electricity {
+    width: 100%;
+    height: 100%;
+}
+
+#Electricity[state=off] {
+    display: none;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("/Fonts/RobotoMono-Medium.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto-Light";
+    src: url("/Fonts/RobotoMono-Light.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url("/Fonts/RobotoMono-Bold.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+#highlight {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+}
+
+b787-10-pfd-element {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: black;
+    font-family: Roboto-Bold;
+    overflow: hidden;
+    z-index: 0;
+}
+
+b787-10-pfd-element #Electricity {
+    width: 100%;
+    height: 100%;
+}
+
+b787-10-pfd-element #Electricity[state=off] {
+    display: none;
+}
+
+b787-10-pfd-element #Electricity[state=on] {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+b787-10-pfd-element #MainFrame {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+b787-10-pfd-element #LeftDisplay {
+    transform: rotateX(0);
+    flex: 0 0 33%;
+    background: black;
+    border-right: 6px solid #4E4E50;
+}
+
+b787-10-pfd-element #LeftDisplay .content {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 100%;
+    overflow: auto;
+}
+
+b787-10-pfd-element #LeftDisplay .content .element {
+    background-color: #313133;
+    border-left: 2px solid #4E4E50;
+    border-bottom: 3px solid #4E4E50;
+}
+
+b787-10-pfd-element #LeftDisplay .content #PlaneInfo {
+    min-height: 200px;
+    max-height: 200px;
+    display: flex;
+}
+
+b787-10-pfd-element #LeftDisplay .content #PlaneInfo #PlaneInfo_Fields {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 20%;
+    color: deepskyblue;
+    font-family: Roboto-Light;
+    font-size: 18px;
+}
+
+b787-10-pfd-element #LeftDisplay .content #PlaneInfo #PlaneInfo_Values {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 60%;
+    color: white;
+    font-family: Roboto-Light;
+    font-size: 20px;
+}
+
+b787-10-pfd-element #LeftDisplay .content #PlaneInfo #Watch {
+    position: absolute;
+    top: 5%;
+    left: 67%;
+    width: 25%;
+}
+
+b787-10-pfd-element #LeftDisplay .content #PlaneInfo #Watch #Digital {
+    position: relative;
+    left: 21%;
+    top: 80%;
+    font-family: Roboto-Light;
+    font-size: 20px;
+}
+
+b787-10-pfd-element #LeftDisplay #DayInfo {
+    min-height: 50px;
+    max-height: 50px;
+}
+
+b787-10-pfd-element #LeftDisplay #DayInfo #DayInfo_Fields {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: deepskyblue;
+    font-family: Roboto-Light;
+    font-size: 16px;
+    width: 95%;
+    margin-left: 3%;
+}
+
+b787-10-pfd-element #LeftDisplay #DayInfo #DayInfo_Values {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    color: white;
+    font-family: Roboto-Light;
+    font-size: 19px;
+    width: 95%;
+    margin-left: -3%;
+}
+
+b787-10-pfd-element #RightDisplay {
+    transform: rotateX(0);
+    flex: 0 0 66%;
+    display: flex;
+    flex-direction: column;
+}
+
+b787-10-pfd-element #RightDisplay > .top {
+    transform: rotateX(0);
+    position: relative;
+    flex: 0 0 65%;
+    background: black;
+    overflow: hidden;
+}
+
+b787-10-pfd-element #RightDisplay > .top #HorizonContainer {
+    transform: rotateX(0);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: hidden;
+}
+
+b787-10-pfd-element #RightDisplay > .top #HorizonContainer #Horizon {
+    position: absolute;
+    top: 26.5%;
+    width: 100%;
+    height: 40%;
+    border: none;
+}
+
+b787-10-pfd-element #RightDisplay > .top #InstrumentsContainer {
+    transform: rotateX(0);
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+b787-10-pfd-element #RightDisplay > .top #InstrumentsContainer #Altimeter {
+    transform: rotateX(0);
+    position: absolute;
+    top: 1.75%;
+    left: 68%;
+    width: 22%;
+    height: 100%;
+}
+
+b787-10-pfd-element #RightDisplay > .top #InstrumentsContainer #Airspeed {
+    transform: rotateX(0);
+    position: absolute;
+    top: 4.25%;
+    left: 10%;
+    width: 22%;
+    height: 100%;
+}
+
+b787-10-pfd-element #RightDisplay > .top #InstrumentsContainer #VSpeed {
+    transform: rotateX(0);
+    position: absolute;
+    border: none;
+    top: 11.75%;
+    left: 84%;
+    width: 25%;
+    height: 100%;
+    z-index: 0;
+}
+
+b787-10-pfd-element #RightDisplay > .top #InstrumentsContainer #ILS {
+    transform: rotateX(0);
+    position: absolute;
+    border: none;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+b787-10-pfd-element #RightDisplay > .top #FMAContainer {
+    transform: rotateX(0);
+    position: absolute;
+    border: none;
+    width: 47%;
+    height: 8%;
+    top: 2%;
+    left: 26%;
+    z-index: 0;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom {
+    transform: rotateX(0);
+    position: relative;
+    flex: 0 0 35%;
+    background: black;
+    overflow: hidden;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Map {
+    position: absolute;
+    height: 175%;
+    width: 175%;
+    top: -43%;
+    left: -37.5%;
+    display: block;
+    /* Map position (left and top) is set in mapConfig.json file (see SvgMapConfig.ts) (makes it editable at runtime) */
+    /* Map position (left and top) is set in mapConfig.json file (see SvgMapConfig.ts) (makes it editable at runtime) */
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Map #MapOrientation {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    width: 10%;
+    height: calc(3 * 1vh * var(--bodyHeightScale));
+    background-color: #1a1d21;
+    color: white;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Map #WindData {
+    position: absolute;
+    top: 0%;
+    width: 7%;
+    right: 10%;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Map #MapRange {
+    position: absolute;
+    bottom: 0%;
+    right: 0%;
+    width: 7%;
+    height: calc(3 * 1vh * var(--bodyHeightScale));
+    background-color: #1a1d21;
+    color: #36c8d2;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Map #MapSVG, b787-10-pfd-element #RightDisplay > .bottom #Map #road-network-canvas {
+    transform: rotateX(0);
+    position: absolute;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Map bing-map {
+    transform: rotateX(0);
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Compass {
+    transform: rotateX(0);
+    position: absolute;
+    top: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #Compass svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+b787-10-pfd-element #RightDisplay > .bottom #CompassInfos {
+    transform: rotateX(0);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+/*# sourceMappingURL=B787_10_PFD.css.map */
