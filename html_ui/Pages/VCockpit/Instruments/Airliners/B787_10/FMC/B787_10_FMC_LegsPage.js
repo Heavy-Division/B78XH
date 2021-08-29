@@ -551,6 +551,7 @@ class B787_10_FMC_LegsPage {
 					this._fmc.fpHasChanged = false;
 					this._fmc.selectMode = B787_10_FMC_LegsPage.SELECT_MODE.NONE;
 					this._fmc.eraseTemporaryFlightPlan(() => {
+						this._fmc.eraseRouteModifications();
 						this.resetAfterOp();
 					});
 				}

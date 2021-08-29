@@ -312,6 +312,7 @@ class B787_10_FMC_RoutePage {
 					this._airwayIndex = -1;
 					this._fmc.fpHasChanged = false;
 					this._fmc.eraseTemporaryFlightPlan(() => {
+						this._fmc.eraseRouteModifications();
 						this.update(true);
 					});
 				}
