@@ -50,7 +50,7 @@ class SvgFlightPlanElement extends SvgMapElement {
 
 			const temporaryPlanStyle = '#00dcf0';
 			const activePlanStyle = 'magenta';
-			const missedPlanStyle = '#ffd700';
+			const missedPlanStyle = 'cyan';
 
 			for (let index = 0; index < fplnCount; index++) {
 				const plan = fpm.getFlightPlan(index);
@@ -84,7 +84,7 @@ class SvgFlightPlanElement extends SvgMapElement {
 					 * Show missed segment by force
 					 */
 					if (missedSegment.offset > -1) {
-						this.buildPathFromWaypoints(waypoints, missedSegment.offset - 1, waypoints.length - 1, map, missedPlanStyle, true);
+						this.buildPathFromWaypoints(waypoints, missedSegment.offset - 1, waypoints.length - 1, map, missedPlanStyle, (index !== 0));
 					}
 
 					//Remainder of plan
