@@ -10,15 +10,50 @@ let HeavyDivision;
 	 */
 	let configuration;
 	(function (configuration) {
+		const activeFlightPlanSynchronizationStrategy = function () {
+			return parseInt(HeavyDataStorage.get('FP_SYNCHRONIZATION_STRATEGY', '0'));
+		};
+
+		configuration.activeFlightPlanSynchronizationStrategy = activeFlightPlanSynchronizationStrategy;
+
 		/**
-		 * Is flight plan synchronization activated
+		 * Is any synchronization of flight plan activated
 		 * @returns {boolean}
 		 */
 		const isFlightPlanSynchronizationActive = function () {
-			return false;
-			return (!!parseInt(WTDataStore.get('WT_CJ4_FPSYNC', 0)));
+			return !(activeFlightPlanSynchronizationStrategy == 0);
 		};
 		configuration.isFlightPlanSynchronizationActive = isFlightPlanSynchronizationActive;
+
+		/**
+		 * Is OneWay synchronization of flight plan activated
+		 * @Description: Enforce oneway sync from world map to fp and then remove world map flight plan
+		 * @returns {boolean}
+		 */
+		const isOneWaySynchronizationActive = function () {
+			return (activeFlightPlanSynchronizationStrategy == 1);
+		};
+		configuration.isOneWaySynchronizationActive = isOneWaySynchronizationActive;
+
+		/**
+		 * Is non procedure synchronization of flight plan activated
+		 * @Description: Enable syncing but with explode procedures to waypoints
+		 * @returns {boolean}
+		 */
+		const isNonProcedureSynchronizationActive = function () {
+			return (activeFlightPlanSynchronizationStrategy == 2);
+		};
+		configuration.isNonProcedureSynchronizationActive = isNonProcedureSynchronizationActive;
+
+		/**
+		 * Is normal flight plan synchronization activated
+		 * TODO: FIX FPSync
+		 * @returns {boolean}
+		 */
+		const isNormalFlightPlanSynchronizationActive = function () {
+			return (activeFlightPlanSynchronizationStrategy == 3);
+		};
+		configuration.isNormalFlightPlanSynchronizationActive = isNormalFlightPlanSynchronizationActive;
 
 		/**
 		 * Should aircraft use imperial units
