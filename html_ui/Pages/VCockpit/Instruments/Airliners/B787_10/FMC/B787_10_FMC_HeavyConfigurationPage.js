@@ -2,14 +2,31 @@ class B787_10_FMC_HeavyConfigurationPage {
 	static ShowPage1(fmc) {
 		fmc.clearDisplay();
 
-		let fpSyncCell = (HeavyDivision.configuration.isFlightPlanSynchronizationActive() ? '<[color=green]ON[/color]←→[size=small]OFF[/size]' : '<[size=small]ON[/size]←→[color=red]OFF[/color]');
+		let fpSyncCell = '';
+
+		console.log('STRATEGY: ' + HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy());
+		switch (HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy()) {
+			case 0:
+				fpSyncCell = '<[color=green]None[/color]/[size=small]OneWay[/size]';
+				break;
+			case 1:
+				fpSyncCell = '<[size=small]None[/size]/[color=green]OneWay[/color]';
+				break;
+			case 2:
+				fpSyncCell = '<[color=green]None[/color]/[size=small]OneWay[/size]';
+				break;
+			case 3:
+				fpSyncCell = '<[color=green]None[/color]/[size=small]OneWay[/size]';
+				break;
+		}
+
 		let simBriefCell = (this.isSimBriefFilled() ? '<[color=green]FILLED[/color]' : '<[color=red]NOT FILLED[/color]');
 		let unitsCell = (HeavyDivision.configuration.useImperial() ? '<[color=green]IMPERIAL[/color]←→[size=small]METRIC[/size]' : '<[size=small]IMPERIAL[/size]←→[color=green]METRIC[/color]');
 		fmc.setTemplate([
 			['HEAVY CONFIGURATION'],
 			['', 'SimBrief'],
 			['', simBriefCell],
-			['', 'FP SYNC'],
+			['', 'FP SYNC STRATEGY'],
 			['', fpSyncCell],
 			['', 'UNITS'],
 			['', unitsCell],
@@ -35,16 +52,25 @@ class B787_10_FMC_HeavyConfigurationPage {
 			new B787_10_FMC_SimBriefConfigurationPage(fmc).showPage();
 		};
 
-		/*
+
 		fmc.onRightInput[1] = () => {
-			if (this.isFPSyncActive()) {
-				WTDataStore.set('WT_CJ4_FPSYNC', 0);
-			} else {
-				WTDataStore.set('WT_CJ4_FPSYNC', 1);
+			switch (HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy()) {
+				case 0:
+					HeavyDataStorage.set('FP_SYNCHRONIZATION_STRATEGY', '1');
+					break;
+				case 1:
+					HeavyDataStorage.set('FP_SYNCHRONIZATION_STRATEGY', '0');
+					break;
+				case 2:
+					HeavyDataStorage.set('FP_SYNCHRONIZATION_STRATEGY', '0');
+					break;
+				case 3:
+					HeavyDataStorage.set('FP_SYNCHRONIZATION_STRATEGY', '0');
+					break;
 			}
 			B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
 		};
-		*/
+
 
 		fmc.onRightInput[2] = () => {
 			if (HeavyDivision.configuration.useImperial()) {
