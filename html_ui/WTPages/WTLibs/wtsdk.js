@@ -782,6 +782,326 @@
 		}
 	}
 
+	/** A class for destroying ingame flight plan  */
+	class FlightPlanAsoboDestroyer {
+		static init() {
+			if (!FlightPlanAsoboDestroyer.fpListenerInitialized) {
+				RegisterViewListener('JS_LISTENER_FLIGHTPLAN');
+				FlightPlanAsoboDestroyer.fpListenerInitialized = true;
+			}
+		}
+
+		static DestroyIngameFlightPlan() {
+			return __awaiter(this, void 0, void 0, function* () {
+				return new Promise((resolve, reject) => {
+					FlightPlanAsoboDestroyer.init();
+					setTimeout(() => {
+						Coherent.call('LOAD_CURRENT_GAME_FLIGHT');
+						Coherent.call('LOAD_CURRENT_ATC_FLIGHTPLAN');
+						setTimeout(() => {
+							Coherent.call('GET_FLIGHTPLAN').then((data) => __awaiter(this, void 0, void 0, function* () {
+								if (data.waypoints.length === 0) {
+									resolve();
+									return;
+								}
+								/**
+								 * Reset game flight plan
+								 */
+								yield Coherent.call('SET_CURRENT_FLIGHTPLAN_INDEX', 0).catch(console.log);
+								yield Coherent.call('CLEAR_CURRENT_FLIGHT_PLAN').catch(console.log);
+
+								/**
+								 * Set origin back to game flight plan
+								 */
+								yield Coherent.call('SET_ORIGIN', data.waypoints[0].icao, false);
+
+
+								/**
+								 * Clear all procedures from game flight plan
+								 */
+								yield Coherent.call('SET_DESTINATION', -1, false);
+								yield Coherent.call('SET_ORIGIN_RUNWAY_INDEX', -1).catch(console.log);
+								yield Coherent.call('SET_DEPARTURE_RUNWAY_INDEX', -1);
+								yield Coherent.call('SET_DEPARTURE_PROC_INDEX', -1);
+								yield Coherent.call('SET_DEPARTURE_ENROUTE_TRANSITION_INDEX', -1);
+								yield Coherent.call('SET_ARRIVAL_RUNWAY_INDEX', -1);
+								yield Coherent.call('SET_ARRIVAL_PROC_INDEX', -1);
+								yield Coherent.call('SET_ARRIVAL_ENROUTE_TRANSITION_INDEX', -1);
+								yield Coherent.call('SET_APPROACH_INDEX', -1).then(() => {
+									Coherent.call('SET_APPROACH_TRANSITION_INDEX', -1);
+								});
+
+								resolve();
+							}));
+						}, 500);
+					}, 200);
+				});
+			});
+		}
+	}
+
+
+	/** A class for syncing a flight plan with the game */
+	class FlightPlanAsoboNonProcedureSync {
+		static init() {
+			if (!FlightPlanAsoboNonProcedureSync.fpListenerInitialized) {
+				RegisterViewListener('JS_LISTENER_FLIGHTPLAN');
+				FlightPlanAsoboNonProcedureSync.fpListenerInitialized = true;
+			}
+		}
+
+		static LoadFromGame(fpln) {
+			return __awaiter(this, void 0, void 0, function* () {
+				console.log('LOAD FPLN');
+				return new Promise((resolve, reject) => {
+					FlightPlanAsoboNonProcedureSync.init();
+					setTimeout(() => {
+						Coherent.call('LOAD_CURRENT_GAME_FLIGHT');
+						Coherent.call('LOAD_CURRENT_ATC_FLIGHTPLAN');
+						setTimeout(() => {
+							Coherent.call('GET_FLIGHTPLAN').then((data) => __awaiter(this, void 0, void 0, function* () {
+								console.log('COHERENT GET_FLIGHTPLAN received');
+								const isDirectTo = data.isDirectTo;
+								// TODO: talk to matt about dirto
+								if (!isDirectTo) {
+									if (data.waypoints.length === 0) {
+										resolve();
+										return;
+									}
+									yield fpln._parentInstrument.facilityLoader.getFacilityRaw(data.waypoints[0].icao, 10000);
+									// set origin
+									yield fpln.setOrigin(data.waypoints[0].icao);
+									// set dest
+									yield fpln.setDestination(data.waypoints[data.waypoints.length - 1].icao);
+									// set route
+									const enrouteStart = (data.departureWaypointsSize == -1) ? 1 : data.departureWaypointsSize;
+									const enroute = data.waypoints.slice(enrouteStart);
+									for (let i = 0; i < enroute.length - 1; i++) {
+										const wpt = enroute[i];
+										console.log(wpt.icao);
+										if (wpt.icao.trim() !== '') {
+											yield fpln.addWaypoint(wpt.icao);
+										} else if (wpt.ident === 'Custom') {
+											const cwpt = WaypointBuilder.fromCoordinates('CUST' + i, wpt.lla, fpln._parentInstrument);
+											yield fpln.addUserWaypoint(cwpt);
+										}
+									}
+									// set departure
+									//  rwy index
+									yield fpln.setOriginRunwayIndex(data.originRunwayIndex);
+									//  proc index
+									yield fpln.setDepartureProcIndex(data.departureProcIndex);
+									yield fpln.setDepartureRunwayIndex(data.departureRunwayIndex);
+									//  enroutetrans index
+									yield fpln.setDepartureEnRouteTransitionIndex(data.departureEnRouteTransitionIndex);
+									// set arrival
+									//  arrivalproc index
+									yield fpln.setArrivalProcIndex(data.arrivalProcIndex);
+									//  arrivaltrans index
+									yield fpln.setArrivalEnRouteTransitionIndex(data.arrivalEnRouteTransitionIndex);
+									// set approach
+									//  approach index
+									yield fpln.setApproachIndex(data.approachIndex);
+									//  approachtrans index
+									yield fpln.setApproachTransitionIndex(data.approachTransitionIndex);
+									this.fpChecksum = fpln.getCurrentFlightPlan().checksum;
+									resolve();
+								}
+							}));
+						}, 500);
+					}, 200);
+				});
+			});
+		}
+
+		static SaveToGame(fpln) {
+			return __awaiter(this, void 0, void 0, function* () {
+				// eslint-disable-next-line no-async-promise-executor
+				return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+					FlightPlanAsoboSync.init();
+					const plan = fpln.getCurrentFlightPlan();
+					if (HeavyDivision.configuration.isNonProcedureSynchronizationActive && (plan.checksum !== this.fpChecksum)) {
+						// await Coherent.call("CREATE_NEW_FLIGHTPLAN");
+						yield Coherent.call('SET_CURRENT_FLIGHTPLAN_INDEX', 0).catch(console.log);
+						yield Coherent.call('CLEAR_CURRENT_FLIGHT_PLAN').catch(console.log);
+						if (plan.hasOrigin && plan.hasDestination) {
+							if (plan.hasOrigin) {
+								yield Coherent.call('SET_ORIGIN', plan.originAirfield.icao, false);
+							}
+							if (plan.hasDestination) {
+								yield Coherent.call('SET_DESTINATION', plan.destinationAirfield.icao, false);
+							}
+							let coIndex = 1;
+							let waypointsToSync = null;
+							waypointsToSync = [...plan.departure.waypoints, ...plan.enroute.waypoints, ...plan.arrival.waypoints, ...plan.approach.waypoints];
+							let directIndex = waypointsToSync.findIndex((w) => {
+								return w.ident === '$DIR';
+							});
+
+							if (directIndex !== -1) {
+								waypointsToSync.splice(0, directIndex + 1);
+							}
+
+							let newWaypoints = [];
+
+							for (let i = 0; i < waypointsToSync.length; i++) {
+								let exists = newWaypoints.findIndex((w) => {
+									return w.ident === waypointsToSync[i].ident;
+								});
+								if (exists === -1) {
+									console.log('inserting ' + waypointsToSync[i].ident);
+									newWaypoints.push(waypointsToSync[i]);
+								}
+							}
+
+
+							for (let i = 0; i < newWaypoints.length; i++) {
+								const wpt = newWaypoints[i];
+								console.log('To SYNC: ' + wpt.icao + 'To SYNC: ' + wpt.ident);
+								if (wpt.icao.trim() !== '' && wpt.ident !== '$DIR') {
+									yield Coherent.call('ADD_WAYPOINT', wpt.icao, coIndex, false);
+									coIndex++;
+								}
+							}
+							/**
+							 * Clear all procedures from game flight plan
+							 */
+							//yield Coherent.call('SET_DESTINATION', -1, false);
+							//yield Coherent.call('SET_ORIGIN_RUNWAY_INDEX', -1).catch(console.log);
+							yield Coherent.call('SET_ORIGIN_RUNWAY_INDEX', plan.procedureDetails.originRunwayIndex).catch(console.log);
+							yield Coherent.call('SET_DEPARTURE_RUNWAY_INDEX', plan.procedureDetails.departureRunwayIndex);
+							//yield Coherent.call('SET_DEPARTURE_RUNWAY_INDEX', -1);
+							yield Coherent.call('SET_DEPARTURE_PROC_INDEX', -1);
+							yield Coherent.call('SET_DEPARTURE_ENROUTE_TRANSITION_INDEX', -1);
+							//yield Coherent.call('SET_ARRIVAL_RUNWAY_INDEX', -1);
+							yield Coherent.call('SET_ARRIVAL_RUNWAY_INDEX', plan.procedureDetails.arrivalRunwayIndex);
+							yield Coherent.call('SET_ARRIVAL_PROC_INDEX', -1);
+							yield Coherent.call('SET_ARRIVAL_ENROUTE_TRANSITION_INDEX', -1);
+							yield Coherent.call('SET_APPROACH_INDEX', -1).then(() => {
+								Coherent.call('SET_APPROACH_TRANSITION_INDEX', -1);
+							});
+						}
+						this.fpChecksum = plan.checksum;
+					}
+					Coherent.call('RECOMPUTE_ACTIVE_WAYPOINT_INDEX');
+				}));
+			});
+		}
+	}
+
+	FlightPlanAsoboNonProcedureSync.fpChecksum = 0;
+	FlightPlanAsoboNonProcedureSync.fpListenerInitialized = false;
+
+
+	/** A class for oneway syncing a flight plan with the game */
+	class FlightPlanAsoboOnewaySync {
+		static init() {
+			if (!FlightPlanAsoboOnewaySync.fpListenerInitialized) {
+				RegisterViewListener('JS_LISTENER_FLIGHTPLAN');
+				FlightPlanAsoboOnewaySync.fpListenerInitialized = true;
+			}
+		}
+
+		static LoadFromGame(fpln) {
+			return __awaiter(this, void 0, void 0, function* () {
+				console.log('LOAD FPLN');
+				return new Promise((resolve, reject) => {
+					FlightPlanAsoboOnewaySync.init();
+					setTimeout(() => {
+						Coherent.call('LOAD_CURRENT_GAME_FLIGHT');
+						Coherent.call('LOAD_CURRENT_ATC_FLIGHTPLAN');
+						setTimeout(() => {
+							Coherent.call('GET_FLIGHTPLAN').then((data) => __awaiter(this, void 0, void 0, function* () {
+								console.log('COHERENT GET_FLIGHTPLAN received');
+								const isDirectTo = data.isDirectTo;
+								// TODO: talk to matt about dirto
+								if (!isDirectTo) {
+									if (data.waypoints.length === 0) {
+										resolve();
+										return;
+									}
+									yield fpln._parentInstrument.facilityLoader.getFacilityRaw(data.waypoints[0].icao, 10000);
+									// set origin
+									yield fpln.setOrigin(data.waypoints[0].icao);
+									// set dest
+									yield fpln.setDestination(data.waypoints[data.waypoints.length - 1].icao);
+									// set route
+									const enrouteStart = (data.departureWaypointsSize == -1) ? 1 : data.departureWaypointsSize;
+									const enroute = data.waypoints.slice(enrouteStart);
+									for (let i = 0; i < enroute.length - 1; i++) {
+										const wpt = enroute[i];
+										console.log(wpt.icao);
+										if (wpt.icao.trim() !== '') {
+											yield fpln.addWaypoint(wpt.icao);
+										} else if (wpt.ident === 'Custom') {
+											const cwpt = WaypointBuilder.fromCoordinates('CUST' + i, wpt.lla, fpln._parentInstrument);
+											yield fpln.addUserWaypoint(cwpt);
+										}
+									}
+									// set departure
+									//  rwy index
+									yield fpln.setOriginRunwayIndex(data.originRunwayIndex);
+									//  proc index
+									yield fpln.setDepartureProcIndex(data.departureProcIndex);
+									yield fpln.setDepartureRunwayIndex(data.departureRunwayIndex);
+									//  enroutetrans index
+									yield fpln.setDepartureEnRouteTransitionIndex(data.departureEnRouteTransitionIndex);
+									// set arrival
+									//  arrivalproc index
+									yield fpln.setArrivalProcIndex(data.arrivalProcIndex);
+									//  arrivaltrans index
+									yield fpln.setArrivalEnRouteTransitionIndex(data.arrivalEnRouteTransitionIndex);
+									// set approach
+									//  approach index
+									yield fpln.setApproachIndex(data.approachIndex);
+									//  approachtrans index
+									yield fpln.setApproachTransitionIndex(data.approachTransitionIndex);
+									this.fpChecksum = fpln.getCurrentFlightPlan().checksum;
+
+
+									/**
+									 * Reset game flight plan
+									 */
+									yield Coherent.call('SET_CURRENT_FLIGHTPLAN_INDEX', 0).catch(console.log);
+									yield Coherent.call('CLEAR_CURRENT_FLIGHT_PLAN').catch(console.log);
+
+									/**
+									 * Set origin back to game flight plan
+									 */
+									yield Coherent.call('SET_ORIGIN', data.waypoints[0].icao, false);
+
+
+									/**
+									 * Clear all procedures from game flight plan
+									 */
+									yield Coherent.call('SET_DESTINATION', -1, false);
+									yield Coherent.call('SET_ORIGIN_RUNWAY_INDEX', -1).catch(console.log);
+									yield Coherent.call('SET_DEPARTURE_RUNWAY_INDEX', -1);
+									yield Coherent.call('SET_DEPARTURE_PROC_INDEX', -1);
+									yield Coherent.call('SET_DEPARTURE_ENROUTE_TRANSITION_INDEX', -1);
+									yield Coherent.call('SET_ARRIVAL_RUNWAY_INDEX', -1);
+									yield Coherent.call('SET_ARRIVAL_PROC_INDEX', -1);
+									yield Coherent.call('SET_ARRIVAL_ENROUTE_TRANSITION_INDEX', -1);
+									yield Coherent.call('SET_APPROACH_INDEX', -1).then(() => {
+										Coherent.call('SET_APPROACH_TRANSITION_INDEX', -1);
+									});
+
+									console.log('FLIGHT PLAN UNSET');
+
+									resolve();
+								}
+							}));
+						}, 500);
+					}, 200);
+				});
+			});
+		}
+	}
+
+	FlightPlanAsoboOnewaySync.fpChecksum = 0;
+	FlightPlanAsoboOnewaySync.fpListenerInitialized = false;
+
+
 	/** A class for syncing a flight plan with the game */
 	class FlightPlanAsoboSync {
 		static init() {
@@ -2499,9 +2819,20 @@
 						plan.setParentInstrument(_parentInstrument);
 						this._flightPlans = [];
 						this._flightPlans.push(plan);
-						if (WTDataStore.get('WT_CJ4_FPSYNC', 0) !== 0) {
-							this.pauseSync();
-							yield FlightPlanAsoboSync.LoadFromGame(this);
+						this.pauseSync();
+						switch (HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy()) {
+							case 0:
+								yield FlightPlanAsoboDestroyer.DestroyIngameFlightPlan();
+								break;
+							case 1:
+								yield FlightPlanAsoboOnewaySync.LoadFromGame(this);
+								break;
+							case 2:
+								yield FlightPlanAsoboNonProcedureSync.LoadFromGame(this);
+								break;
+							case 3:
+								yield FlightPlanAsoboSync.LoadFromGame(this);
+								break;
 						}
 						this.resumeSync();
 						// ctd magic sauce?
@@ -3923,7 +4254,15 @@
 				}
 				window.localStorage.setItem(FlightPlanManager.FlightPlanKey, fpJson);
 				SimVar.SetSimVarValue(FlightPlanManager.FlightPlanVersionKey, 'number', ++this._currentFlightPlanVersion);
-				FlightPlanAsoboSync.SaveToGame(this);
+
+				switch (HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy) {
+					case 2:
+						FlightPlanAsoboNonProcedureSync.SaveToGame(this);
+						break;
+					case 3:
+						FlightPlanAsoboSync.SaveToGame(this);
+						break;
+				}
 			});
 		}
 
@@ -6798,6 +7137,7 @@
 	exports.CJ4_SpeedObserver = CJ4_SpeedObserver;
 	exports.DirectTo = DirectTo;
 	exports.FlightPlanAsoboSync = FlightPlanAsoboSync;
+	exports.FlightPlanAsoboOnewaySync = FlightPlanAsoboOnewaySync;
 	exports.FlightPlanManager = FlightPlanManager;
 	exports.FlightPlanSegment = FlightPlanSegment;
 	exports.GPS = GPS;
