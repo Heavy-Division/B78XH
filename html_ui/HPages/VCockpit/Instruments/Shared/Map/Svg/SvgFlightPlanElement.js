@@ -75,7 +75,7 @@ class SvgFlightPlanElement extends SvgMapElement {
 
 					//Active leg
 					if (waypoints[activeWaypointIndex] && waypoints[activeWaypointIndex - 1]) {
-						this.buildPathFromWaypoints(waypoints, activeWaypointIndex - 1, activeWaypointIndex + 1, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), (index !== 0));
+						this.buildPathFromWaypoints(waypoints, activeWaypointIndex - 1, activeWaypointIndex + 1, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), false);
 					}
 
 					//Missed approach preview
