@@ -340,6 +340,12 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		});
 		if (this.urlConfig.index == 1) {
 			/**
+			 * Reset TOD
+			 */
+
+			SimVar.SetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number', 0);
+			SimVar.SetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number', 0);
+			/**
 			 * Reset stepping
 			 */
 			SimVar.SetSimVarValue('L:B78XH_MCDU_CURRENT_FPLN_WAYPOINT', 'number', -1);
