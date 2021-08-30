@@ -306,6 +306,11 @@ b787-10-nd-element #NDInfo #TopBox text.Large {
     fill: white;
 }
 
+b787-10-nd-element #NDInfo #TopBox #Waypoint #WP_Name {
+    fill: magenta;
+}
+
+
 b787-10-nd-element #NDInfo #TopBox text.Units {
     font-size: 30px;
     fill: cyan;
