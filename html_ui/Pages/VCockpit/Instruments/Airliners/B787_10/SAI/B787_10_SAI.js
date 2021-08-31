@@ -936,8 +936,8 @@ class B787_10_SAI_AttitudeIndicator extends HTMLElement {
 			diffAndSetAttribute(this.horizon_root, 'style', 'position:absolute; z-index: -3; width: 100%; height:100%;');
 			diffAndSetAttribute(this.horizon_root, 'transform', 'translate(0, 100)');
 			this.appendChild(this.horizon_root);
-			this.horizonTopColor = '#0d47a1';
-			this.horizonBottomColor = '#6c4f23';
+			this.horizonTopColor = '#133d8f';
+			this.horizonBottomColor = '#312d1d';
 			this.horizonTop = document.createElementNS(Avionics.SVG.NS, 'rect');
 			diffAndSetAttribute(this.horizonTop, 'fill', (this.backgroundVisible) ? this.horizonTopColor : 'transparent');
 			diffAndSetAttribute(this.horizonTop, 'x', '-1000');
