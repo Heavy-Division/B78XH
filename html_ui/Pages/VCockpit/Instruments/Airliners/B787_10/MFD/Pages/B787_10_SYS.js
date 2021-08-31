@@ -710,10 +710,55 @@ class B787_10_SYS_Page_FCTL extends B787_10_SYS_Page {
 class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 
 	init() {
+		if (this.pageRoot != null) {
+			this.stdButton = this.pageRoot.querySelector('#STD_BUTTON');
+			this.stdButtonPath = this.pageRoot.querySelector('#STD_BUTTON_PATH');
+			this.stdButtonPath.addEventListener('click', this.toggleBaroSTD.bind(this));
+			this.baroPressureValue = this.pageRoot.querySelector('#BARO_PRESSURE_VALUE');
+			this.pressureUnits = this.pageRoot.querySelector('#PRESSURE_UNITS');
+			this.inSwitch = this.pageRoot.querySelector('#IN_SWITCH')
+			this.inSwitch.addEventListener('click', this.setBaroToIN.bind(this));
+			this.inSwitchBackground = this.pageRoot.querySelector('#IN_SWITCH_BACKGROUND')
+			this.hpaSwitch = this.pageRoot.querySelector('#HPA_SWITCH')
+			this.hpaSwitch.addEventListener('click', this.setBaroToHPA.bind(this));
+			this.hpaSwitchBackground = this.pageRoot.querySelector('#HPA_SWITCH_BACKGROUND')
+		}
+	}
 
+	toggleBaroSTD() {
+		if (this.isBaroSTD()) {
+			SimVar.SetSimVarValue('L:XMLVAR_Baro1_ForcedToSTD', 'Number', 0);
+		} else {
+			SimVar.SetSimVarValue('L:XMLVAR_Baro1_ForcedToSTD', 'Number', 1);
+		}
+	}
+
+	setBaroToIN(){
+		SimVar.SetSimVarValue('L:XMLVAR_Baro_Selector_HPA_1', 'Bool', false)
+	}
+
+	setBaroToHPA(){
+		SimVar.SetSimVarValue('L:XMLVAR_Baro_Selector_HPA_1', 'Bool', true)
+	}
+
+	isBaroSTD() {
+		return !!(SimVar.GetSimVarValue('L:XMLVAR_Baro1_ForcedToSTD', 'Number'));
+	}
+
+	isBaroUnitInchesOfMercury() {
+		return (Simplane.getPressureSelectedUnits() === 'inches of mercury');
 	}
 
 	updateChild(_deltaTime) {
+		const baroMode = this.isBaroSTD();
+		const baroInInchesOfMercury = this.isBaroUnitInchesOfMercury();
+
+		diffAndSetText(this.baroPressureValue, (baroMode ? 'STD' : fastToFixed(Simplane.getPressureValue(), 2)));
+		this.stdButton.setAttribute('fill', (baroMode ? 'green' : 'none'));
+		diffAndSetText(this.pressureUnits, (baroInInchesOfMercury ? 'IN' : 'HPA'));
+
+		diffAndSetAttribute(this.inSwitchBackground, 'fill', (baroInInchesOfMercury ? '#155700' : 'none'))
+		diffAndSetAttribute(this.hpaSwitchBackground, 'fill', (baroInInchesOfMercury ? 'none' : '#155700'))
 	}
 
 	getName() {

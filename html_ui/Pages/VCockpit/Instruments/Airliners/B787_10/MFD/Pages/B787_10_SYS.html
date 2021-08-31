@@ -1077,10 +1077,6 @@ POWER SYS" transform="translate(493 354)" font-size="17" class="titles"><tspan x
                             <rect width="239" height="139" rx="18" stroke="none"/>
                             <rect x="1" y="1" width="237" height="137" rx="17" fill="none"/>
                         </g>
-                        <g id="Rectangle_156" data-name="Rectangle 156" transform="translate(457.87 183.666)" fill="none" stroke="#ededed" stroke-width="2">
-                            <rect width="169.781" height="270.834" rx="18" stroke="none"/>
-                            <rect x="1" y="1" width="167.781" height="268.834" rx="17" fill="none"/>
-                        </g>
                         <rect id="Rectangle_139" data-name="Rectangle 139" width="48" height="17" transform="translate(149 541)"/>
                         <rect id="Rectangle_152" data-name="Rectangle 152" width="93" height="17" transform="translate(271.737 308.5)"/>
                         <text id="CAPT" transform="translate(151.5 556.5)" class="box-titles" font-weight="500"><tspan x="0" y="0">CAPT</tspan></text>
@@ -1155,7 +1151,7 @@ POWER SYS" transform="translate(493 354)" font-size="17" class="titles"><tspan x
                         </g>
                         <g id="Rectangle_159" data-name="Rectangle 159" transform="translate(479.858 388.796)" fill="#727272" stroke="#333" stroke-width="4">
                             <rect width="124.141" height="53" stroke="none"/>
-                            <rect x="2" y="2" width="120.141" height="49" fill="none"/>
+                            <rect id="STD_BUTTON" x="2" y="2" width="120.141" height="49" fill="none"/>
                         </g>
                         <g id="Rectangle_154" data-name="Rectangle 154" transform="translate(321.589 128.666)" fill="#727272" stroke="#333" stroke-width="4">
                             <rect width="101.608" height="53" stroke="none"/>
@@ -1163,19 +1159,31 @@ POWER SYS" transform="translate(493 354)" font-size="17" class="titles"><tspan x
                         </g>
                         <g id="Rectangle_155" data-name="Rectangle 155" transform="translate(215.088 128.796)" fill="#155700" stroke="#9a9a9a" stroke-width="4">
                             <rect width="101.608" height="53" stroke="none"/>
-                            <rect x="2" y="2" width="97.608" height="49" fill="none"/>
+                            <rect x="2" y="2" width="97.608" height="49" fill="green"/>
+                        </g>
+                        <g id="Rectangle_156" data-name="Rectangle 156" transform="translate(457.87 183.666)" fill="none" stroke="#ededed" stroke-width="2">
+                            <rect width="169.781" height="270.834" rx="18" stroke="none"/>
+                            <rect x="1" y="1" width="167.781" height="268.834" rx="17" fill="none"/>
                         </g>
                         <path id="Path_150" data-name="Path 150" d="M2155.717-24.3V28.9l3.962-4.136v-44.9l93.57-.018,4.04-3.971Z" transform="translate(-1888.222 417.836)" fill="#9a9a9a"/>
                         <path id="Path_159" data-name="Path 159" d="M2155.717-24.3V28.9l3.962-4.136v-44.9l93.57-.018,4.04-3.971Z" transform="translate(-1678.265 224.836)" fill="#9a9a9a"/>
-                        <path id="Path_160" data-name="Path 160" d="M2155.718-24.3V28.9l4.841-4.136v-44.9l115.223.026,4.142-4.064Z" transform="translate(-1675.827 412.967)" fill="#9a9a9a"/>
+                        <text id="RST" transform="translate(523.929 423.264)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">STD</tspan></text>
+                        <path id="STD_BUTTON_PATH" data-name="Path 160" d="M2155.718-24.3V28.9l4.841-4.136v-44.9l115.223.026,4.142-4.064Z" transform="translate(-1675.827 412.967)" fill="#9a9a9a"/>
                         <path id="Path_157" data-name="Path 157" d="M2155.717-24.3V28.9l3.962-4.136v-44.9l93.57-.018,4.04-3.971Z" transform="translate(-1834.095 152.836)" fill="#9a9a9a"/>
                         <path id="Path_158" data-name="Path 158" d="M2155.717-24.3V28.9l3.962-4.136v-44.9l93.57-.018,4.04-3.971Z" transform="translate(-1940.597 152.967)" fill="#333"/>
                         <text id="CTR" transform="translate(300.267 428.134)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">CTR</tspan></text>
-                        <text id="_29.92" data-name="29.92" transform="translate(498.26 235.134)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">29.92</tspan></text>
-                        <text id="RST" transform="translate(523.929 423.264)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">STD</tspan></text>
-                        <text id="IN" transform="translate(528.26 305.264)" fill="#4ffe00" class="button-titles" font-weight="700"><tspan x="0" y="0">IN</tspan></text>
-                        <text id="HPA" transform="translate(528.224 359.166)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">HPA</tspan></text>
-                        <text id="HPA-2" data-name="HPA" transform="translate(586.168 234.134)" fill="#53ffff" class="button-titles-blue" font-weight="700"><tspan x="0" y="0">HPA</tspan></text>
+                        <text id="BARO_PRESSURE_VALUE" data-name="BARO_PRESSURE_VALUE" transform="translate(498.26 235.134)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">---</tspan></text>
+                        <g id="IN_SWITCH">
+                            <path id="Path_164" data-name="Path 164" d="M2532.252,1540l-9.8,12.819,9.8,14.022,10.121-14.022Z" transform="translate(-2034.419 -1258.329)" fill="#727272" stroke="#9a9a9a" stroke-width="2"/>
+                            <path id="IN_SWITCH_BACKGROUND" data-name="Path 166" d="M2528.142,1540l-5.685,7.439,5.685,8.137,5.873-8.137Z" transform="translate(-2030.499 -1252.697)" fill="none"/>
+                            <text id="IN" transform="translate(528.26 305.264)" fill="#4ffe00" class="button-titles" font-weight="700"><tspan x="0" y="0">IN</tspan></text>
+                        </g>
+                        <g id="HPA_SWITCH">
+                            <path id="Path_161" data-name="Path 161" d="M2532.252,1540l-9.8,12.819,9.8,14.022,10.121-14.022Z" transform="translate(-2035.419 -1202.713)" fill="#727272" stroke="#9a9a9a" stroke-width="2"/>
+                            <path id="HPA_SWITCH_BACKGROUND" data-name="Path 163" d="M2528.142,1540l-5.685,7.439,5.685,8.137,5.873-8.137Z" transform="translate(-2031.499 -1197.081)" fill="none"/>
+                            <text id="HPA" transform="translate(528.224 359.166)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">HPA</tspan></text>
+                        </g>
+                        <text id="PRESSURE_UNITS" data-name="HPA" transform="translate(586.168 234.134)" fill="#53ffff" class="button-titles-blue" font-weight="700"><tspan x="0" y="0"></tspan></text>
                         <text id="FO-2" data-name="FO" transform="translate(360.394 163.134)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">FO</tspan></text>
                         <text id="CAPT-2" data-name="CAPT" transform="translate(242.495 163.134)" fill="#ededed" class="button-titles" font-weight="700"><tspan x="0" y="0">CAPT</tspan></text>
                         <g id="Rectangle_149" data-name="Rectangle 149" transform="translate(215.462 337.666)" fill="#727272" stroke="#333" stroke-width="4">
@@ -1200,12 +1208,8 @@ POWER SYS" transform="translate(493 354)" font-size="17" class="titles"><tspan x
                         <rect id="Rectangle_157" data-name="Rectangle 157" width="85.211" height="17" transform="translate(498.26 175.166)"/>
                         <text id="BAROSET" transform="translate(503.516 190.666)" class="box-titles" font-weight="500"><tspan x="0" y="0">BAROSET</tspan></text>
                         <text id="MAINT_INFO" data-name="MAINT INFO" transform="translate(456.26 126.75)" class="box-titles" font-weight="500"><tspan x="0" y="0">MAINT INFO</tspan></text>
-                        <path id="Path_161" data-name="Path 161" d="M2532.252,1540l-9.8,12.819,9.8,14.022,10.121-14.022Z" transform="translate(-2035.419 -1202.713)" fill="#727272" stroke="#9a9a9a" stroke-width="2"/>
-                        <path id="Path_164" data-name="Path 164" d="M2532.252,1540l-9.8,12.819,9.8,14.022,10.121-14.022Z" transform="translate(-2034.419 -1258.329)" fill="#727272" stroke="#9a9a9a" stroke-width="2"/>
                         <path id="Path_162" data-name="Path 162" d="M2534.817,1569.252v-3.491l8.861-12.235-8.825-11.193v-3.3l11.381,14.4Z" transform="translate(-2038.01 -1203.372)" fill="#323232"/>
                         <path id="Path_165" data-name="Path 165" d="M2534.817,1569.252v-3.491l8.861-12.235-8.825-11.193v-3.3l11.381,14.4Z" transform="translate(-2037.01 -1258.988)" fill="#323232"/>
-                        <path id="Path_163" data-name="Path 163" d="M2528.142,1540l-5.685,7.439,5.685,8.137,5.873-8.137Z" transform="translate(-2031.499 -1197.081)" fill="#155700"/>
-                        <path id="Path_166" data-name="Path 166" d="M2528.142,1540l-5.685,7.439,5.685,8.137,5.873-8.137Z" transform="translate(-2030.499 -1252.697)" fill="#155700"/>
                         <path id="Path_167" data-name="Path 167" d="M3157.1,2203.083v64.875h8.245" transform="translate(-1636.861 3277.349) rotate(-90)" fill="none" stroke="#ededed" stroke-width="3"/>
                         <g id="Rectangle_160" data-name="Rectangle 160" transform="translate(7.87 183.666)" fill="none" stroke="#ededed" stroke-width="2">
                             <rect width="169.781" height="270.834" rx="18" stroke="none"/>
