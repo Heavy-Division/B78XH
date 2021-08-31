@@ -114,14 +114,10 @@ class Jet_PFD_AttitudeIndicator extends HTMLElement {
 				}
 				let separator = document.createElementNS(Avionics.SVG.NS, 'rect');
 				diffAndSetAttribute(separator, 'fill', (this.isHud) ? 'lime' : 'white');
-				diffAndSetAttribute(separator, "x", (this.isHud) ? "-250" : "-200");
-				diffAndSetAttribute(separator, "y", (this.isHud) ? "-110" : "0");
-				/*
-				diffAndSetAttribute(separator, 'x', (this.isHud) ? '-400' : '-1500');
-				diffAndSetAttribute(separator, 'y', (this.isHud) ? '-110' : '0');
-				 */
-				diffAndSetAttribute(separator, 'width', (this.isHud) ? '765' : '3000');
-				diffAndSetAttribute(separator, 'height', (this.isHud) ? '3' : '6');
+				diffAndSetAttribute(separator, "x", (this.isHud) ? "-250" : "-190");
+				diffAndSetAttribute(separator, "y", (this.isHud) ? "-110" : "-1");
+				diffAndSetAttribute(separator, 'width', (this.isHud) ? '765' : '380');
+				diffAndSetAttribute(separator, 'height', (this.isHud) ? '3' : '3');
 				this.horizon_bottom.appendChild(separator);
 			}
 		}
