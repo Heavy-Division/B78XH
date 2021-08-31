@@ -707,4 +707,9 @@ b787-10-sys-element #Pages #FCTL_Page text.box-label {
     text-anchor: middle;
 }
 
+b787-10-sys-element #Pages #ELEC_Page text.titles {
+    font-size: 17px;
+    fill: var(--eicasBlue);
+}
+
 /*# sourceMappingURL=B787_10_SYS.css.map */

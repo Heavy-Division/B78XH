@@ -278,6 +278,11 @@ class B787_10_SYS_Page_STAT extends B787_10_SYS_Page {
 }
 
 class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
+
+	init() {
+
+	}
+
 	updateChild(_deltaTime) {
 	}
 
