@@ -120,6 +120,7 @@ class B787_10_FMC_PayloadManagerPage {
 			{'CENTER': this.getTankValue(B787_10_FMC_PayloadManagerPage.tankVariables.CENTER)}
 		];
 
+		this._internalPayloadValuesCache = [];
 		this.payloadValues = this.getPayloadValues();
 
 		B787_10_FMC_PayloadManagerPage.centerOfGravity = this.getCenterOfGravity();
@@ -147,7 +148,12 @@ class B787_10_FMC_PayloadManagerPage {
 		return SimVar.GetSimVarValue('PAYLOAD STATION WEIGHT:' + index, 'Pounds');
 	}
 
+	getPayloadValueFromCache(index){
+		return this._internalPayloadValuesCache[index];
+	}
+
 	async setPayloadValue(index, value) {
+		this._internalPayloadValuesCache[index] = value;
 		return SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:' + index, 'Pounds', value);
 	}
 
@@ -514,14 +520,14 @@ class B787_10_FMC_PayloadManagerPage {
 		let randomFront;
 		let actualValue;
 		if (B787_10_FMC_PayloadManagerPage.centerOfGravity > (requestedCenterOfGravity + 0.05)) {
-			actualValue = this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.BUSINESS_CLASS);
+			actualValue = this.getPayloadValueFromCache(B787_10_FMC_PayloadManagerPage.payloadIndex.BUSINESS_CLASS);
 			await this.setPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.BUSINESS_CLASS, amount + actualValue);
 		} else if (B787_10_FMC_PayloadManagerPage.centerOfGravity > (requestedCenterOfGravity + 0.01)) {
 			randomFront = keys[Math.floor(Math.random() * keys.length)];
-			actualValue = this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex[randomFront]);
+			actualValue = this.getPayloadValueFromCache(B787_10_FMC_PayloadManagerPage.payloadIndex[randomFront]);
 			await this.setPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex[randomFront], amount + actualValue);
 		} else {
-			actualValue = this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.PREMIUM_ECONOMY);
+			actualValue = this.getPayloadValueFromCache(B787_10_FMC_PayloadManagerPage.payloadIndex.PREMIUM_ECONOMY);
 			await this.setPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.PREMIUM_ECONOMY, amount + actualValue);
 		}
 	}
@@ -531,14 +537,14 @@ class B787_10_FMC_PayloadManagerPage {
 		let randomRear;
 		let actualValue;
 		if (B787_10_FMC_PayloadManagerPage.centerOfGravity < (requestedCenterOfGravity - 0.05)) {
-			actualValue = this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.REAR_BAGGAGE);
+			actualValue = this.getPayloadValueFromCache(B787_10_FMC_PayloadManagerPage.payloadIndex.REAR_BAGGAGE);
 			await this.setPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.REAR_BAGGAGE, amount + actualValue);
 		} else if (B787_10_FMC_PayloadManagerPage.centerOfGravity < (requestedCenterOfGravity - 0.01)) {
 			randomRear = keys[Math.floor(Math.random() * keys.length)];
-			actualValue = this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex[randomRear]);
+			actualValue = this.getPayloadValueFromCache(B787_10_FMC_PayloadManagerPage.payloadIndex[randomRear]);
 			await this.setPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex[randomRear], amount + actualValue);
 		} else {
-			actualValue = this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.ECONOMY_CLASS);
+			actualValue = this.getPayloadValueFromCache(B787_10_FMC_PayloadManagerPage.payloadIndex.ECONOMY_CLASS);
 			await this.setPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.ECONOMY_CLASS, amount + actualValue);
 		}
 	}
