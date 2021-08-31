@@ -707,9 +707,39 @@ b787-10-sys-element #Pages #FCTL_Page text.box-label {
     text-anchor: middle;
 }
 
+/**
+ * ELEC PAGE Definitions
+ */
+
 b787-10-sys-element #Pages #ELEC_Page text.titles {
     font-size: 17px;
     fill: var(--eicasBlue);
+}
+
+/**
+ * EFIS PAGE Definitions
+ */
+
+b787-10-sys-element #Pages #EFIS_DSP_Page text.button-titles-blue {
+    font-size: 20px;
+    fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #EFIS_DSP_Page text.button-titles {
+    fill: #ededed;
+    font-size: 20px;
+}
+
+b787-10-sys-element #Pages #EFIS_DSP_Page text.button-text {
+    fill: #ededed;
+    font-size: 20px;
+    font-family: "Roboto Medium";
+}
+
+b787-10-sys-element #Pages #EFIS_DSP_Page text.box-titles {
+    fill: #ededed;
+    font-size: 18px;
+    font-family: "Roboto Medium";
 }
 
 /*# sourceMappingURL=B787_10_SYS.css.map */

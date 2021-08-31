@@ -708,6 +708,11 @@ class B787_10_SYS_Page_FCTL extends B787_10_SYS_Page {
 }
 
 class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
+
+	init() {
+
+	}
+
 	updateChild(_deltaTime) {
 	}
 
