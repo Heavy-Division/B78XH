@@ -958,3 +958,5 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		return waypoint;
 	}
 }
+
+FMCMainDisplay.clrValue = "DELETE";
