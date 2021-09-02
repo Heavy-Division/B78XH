@@ -4186,10 +4186,18 @@
 		 * Gets the coordinates of a point that is a specific distance from the destination along the flight plan.
 		 * @param distance The distance from destination we want the coordinates for.
 		 */
-		getCoordinatesAtNMFromDestinationAlongFlightPlan(distance) {
+		getCoordinatesAtNMFromDestinationAlongFlightPlan(distance, toApproach = false) {
 			const allWaypoints = this.getAllWaypoints();
 			const destination = this.getDestination();
 			if (destination) {
+				if(toApproach){
+					const missed = this.getCurrentFlightPlan().approach;
+					const mWayipoints = missed.waypoints;
+					if(mWayipoints.length > 0){
+						const cumulativeToApproach = mWayipoints[mWayipoints.length - 1].cumulativeDistanceInFP;
+						distance = distance + (destination.cumulativeDistanceInFP - cumulativeToApproach);
+					}
+				}
 				const fromStartDistance = destination.cumulativeDistanceInFP - distance;
 				let prev;
 				let next;
