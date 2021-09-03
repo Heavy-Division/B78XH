@@ -123,29 +123,47 @@ class B787_10_FMC_LegsPage {
 				if (isActWpt) {
 					if (waypoint.fix.icao === '$DISCO') {
 						this._rows[2 * i] = [' THEN'];
-						this._rows[2 * i + 1] = ['□□□□□ ----- ROUTE DISCONTINUITY -----'];
+						this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□') + ' ----- ROUTE DISCONTINUITY ----'];
 					} else if (waypoint.fix.hasHold) {
 						this._rows[2 * i] = [' HOLD AT'];
-						this._rows[2 * i + 1] = [`${waypoint.fix.ident != '' ? waypoint.fix.ident : 'USR'}`];
+						this._rows[2 * i + 1] = [`${waypoint.fix.ident != '' ? this._fmc.makeSettable(waypoint.fix.ident) : this._fmc.makeSettable('USR')}`];
 					} else {
 						this._rows[2 * i] = [' ' + bearing.padStart(3, '0'), '', '', distance.padStart(4, ' ') + 'NM'];
-						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? waypoint.fix.ident + '' : 'USR'];
+						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? this._fmc.makeSettable(waypoint.fix.ident + '') : this._fmc.makeSettable('USR')];
 					}
 				} else {
 					if (waypoint.fix.icao === '$DISCO') {
 						this._rows[2 * i] = [' THEN'];
-						this._rows[2 * i + 1] = ['□□□□□ ----- ROUTE DISCONTINUITY -----'];
+						this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□') + ' ----- ROUTE DISCONTINUITY ----'];
+						;
 					} else if (waypoint.fix.hasHold) {
 						this._rows[2 * i] = [' HOLD AT'];
-						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? waypoint.fix.ident : 'USR'];
+						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? this._fmc.makeSettable(waypoint.fix.ident) : this._fmc.makeSettable('USR')];
 					} else {
 						this._rows[2 * i] = [' ' + bearing.padStart(3, '0'), '', '', distance.padStart(4, ' ') + 'NM'];
-						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? waypoint.fix.ident : 'USR'];
+						this._rows[2 * i + 1] = [waypoint.fix.ident != '' ? this._fmc.makeSettable(waypoint.fix.ident) : this._fmc.makeSettable('USR')];
 					}
 				}
 
 				if (waypoint.fix.icao !== '$DISCO') {
-					this._rows[2 * i + 1][1] = (SegmentType.Enroute === waypointSegment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + '/' + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix));
+					let row = '';
+
+					if (SegmentType.Enroute === waypointSegment.type) {
+						row = Math.round(this._fmc.getCrzManagedSpeed(true)) + '/';
+						if (this._fmc.cruiseFlightLevel) {
+							row += 'FL' + this._fmc.cruiseFlightLevel;
+						} else {
+							row += '-----';
+						}
+
+					} else {
+						row += this.getAltSpeedRestriction(waypoint.fix);
+					}
+
+
+					// (SegmentType.Enroute === waypointSegment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + '/' + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix))
+
+					this._rows[2 * i + 1][1] = this._fmc.makeSettable(row);
 				}
 			}
 		}
@@ -208,7 +226,7 @@ class B787_10_FMC_LegsPage {
 		this._fmc.setTemplate([
 			[' ' + modStr + ' LEGS', this._currentPage.toFixed(0), Math.max(1, this._pageCount.toFixed(0))],
 			...this._rows,
-			[`${this._isAddingHold ? '---------HOLD AT--------' : holdExiting ? '-------EXIT ARMED-------' : '------------------------'}`],
+			[`${this._isAddingHold ? '---------HOLD AT--------' : holdExiting ? '-------EXIT ARMED-------' : '__FMCSEPARATOR'}`],
 			[`${this._isAddingHold ? '□□□□□' : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, this._rsk6Field]
 		]);
 	}
