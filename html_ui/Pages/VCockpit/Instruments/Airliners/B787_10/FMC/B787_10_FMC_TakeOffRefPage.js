@@ -10,7 +10,7 @@ class B787_10_FMC_TakeOffRefPage {
 		};
 		let v1 = '□□□';
 		if (fmc.v1Speed) {
-			v1 = 'KT' + fmc.makeSettable(fmc.v1Speed);
+			v1 = fmc.makeSettable(fmc.v1Speed) + 'KT';
 		} else {
 			v1 = fmc.makeSettable(v1);
 		}
@@ -31,7 +31,7 @@ class B787_10_FMC_TakeOffRefPage {
 		};
 		let vR = '□□□';
 		if (fmc.vRSpeed) {
-			vR = 'KT' + fmc.makeSettable(fmc.vRSpeed);
+			vR = fmc.makeSettable(fmc.vRSpeed) + 'KT';
 		} else {
 			vR = fmc.makeSettable(vR);
 		}
@@ -52,7 +52,7 @@ class B787_10_FMC_TakeOffRefPage {
 		};
 		let v2 = '□□□';
 		if (fmc.v2Speed) {
-			v2 = 'KT' + fmc.makeSettable(fmc.v2Speed);
+			v2 = fmc.makeSettable(fmc.v2Speed) + 'KT';
 		} else {
 			v2 = fmc.makeSettable(v2);
 		}
@@ -213,7 +213,7 @@ class B787_10_FMC_TakeOffRefPage {
 			accelHtCell = '---';
 		}
 		accelHtCell = fmc.makeSettable(accelHtCell);
-		accelHtCell = 'FT' + accelHtCell;
+		accelHtCell = accelHtCell + 'FT';
 		fmc.onRightInput[1] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
@@ -229,7 +229,7 @@ class B787_10_FMC_TakeOffRefPage {
 			thrRedCell = '---';
 		}
 		thrRedCell = fmc.makeSettable(thrRedCell);
-		thrRedCell = 'FT' + thrRedCell;
+		thrRedCell = thrRedCell + 'FT';
 		fmc.onRightInput[2] = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
