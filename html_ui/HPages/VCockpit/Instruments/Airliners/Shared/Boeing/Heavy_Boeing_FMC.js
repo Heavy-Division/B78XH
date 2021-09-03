@@ -512,7 +512,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 			label = label.split('[color]')[0];
 		}
 		this._labels[row][col] = label;
-		this._labelElements[row][col].innerHTML = label;
+		this._labelElements[row][col].innerHTML = '<bdi>' + label + '</bdi>';
 	}
 
 	/**
@@ -567,7 +567,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 			content = content.split('[color]')[0];
 		}
 		this._lines[row][col] = content;
-		this._lineElements[row][col].innerHTML = this._lines[row][col];
+		this._lineElements[row][col].innerHTML = '<bdi>' + this._lines[row][col] + '</bdi>';
 	}
 
 	trySetTransAltitude(s) {
