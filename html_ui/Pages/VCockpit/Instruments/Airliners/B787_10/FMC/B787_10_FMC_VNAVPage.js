@@ -342,7 +342,7 @@ class B787_10_FMC_VNAVPage {
 			['SPD RESTR'],
 			[speedRestrictionCell],
 			['__FMCSEPARATOR'],
-			[econPromptCell, '<ENG OUT'],
+			[econPromptCell, 'ENG OUT>'],
 			[],
 			[]
 		]);
@@ -532,7 +532,7 @@ class B787_10_FMC_VNAVPage {
 			['__FMCSEPARATOR'],
 			[econPromptCell, ''],
 			[''],
-			['', '<LRC']
+			['', 'LRC>']
 		]);
 		this.fmc.onPrevPage = () => {
 			this.enforcedPage = 1;
@@ -574,9 +574,9 @@ class B787_10_FMC_VNAVPage {
 			['SPD RESTR'],
 			[],
 			['PAUSE @ DIST FROM DEST'],
-			['OFF', '<FORECAST'],
+			['OFF', 'FORECAST>'],
 			[],
-			['\<OFFPATH DES', descentNowAvailable && !SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_ACTIVATED', 'Number') ? '<DES NOW' : '']
+			['\<OFFPATH DES', descentNowAvailable && !SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_ACTIVATED', 'Number') ? 'DES NOW>' : '']
 		]);
 		this.fmc.onPrevPage = () => {
 			this.enforcedPage = 2;

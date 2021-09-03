@@ -25,7 +25,7 @@ class B787_10_FMC_IdentPage {
 			['OPC'],
 			[fmc.fmcBakVersion, ''],
 			['--------------------------------------'],
-			['\<INDEX', '<POS INIT']
+			['\<INDEX', 'POS INIT>']
 		]);
 		if (fmc.urlConfig.index == 1) {
 			fmc.onLeftInput[5] = () => {

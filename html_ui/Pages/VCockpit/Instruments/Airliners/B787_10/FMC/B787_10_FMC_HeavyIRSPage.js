@@ -44,7 +44,7 @@ class B787_10_FMC_HeavyIRSPage {
 		let rows = [
 			['IRS'],
 			['IRS STATUS', 'ALIGN TIME'],
-			[irsStateString, '<' + irsAlignSpeed],
+			[irsStateString, irsAlignSpeed + '>'],
 			['', ''],
 			['', ''],
 			['', ''],
@@ -52,7 +52,7 @@ class B787_10_FMC_HeavyIRSPage {
 			['', ''],
 			['', ''],
 			['', ''],
-			['', '<FORCE ALIGN'],
+			['', 'FORCE ALIGN>'],
 			['', ''],
 			['<BACK']
 		];

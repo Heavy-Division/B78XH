@@ -169,7 +169,7 @@ class B787_10_FMC_TakeOffRefPage {
 			['TAKEOFF DATA', ''],
 			['<REQUEST', '', ''],
 			[separator],
-			['\<INDEX', '<THRUST LIM']
+			['\<INDEX', 'THRUST LIM>']
 		]);
 
 		if (fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished) {
@@ -251,7 +251,7 @@ class B787_10_FMC_TakeOffRefPage {
 			['SLOPE/COND', 'REF OAT'],
 			['U0.0/DRY', '', ''],
 			['__FMCSEPARATOR'],
-			['\<INDEX', '<THRUST LIM']
+			['\<INDEX', 'THRUST LIM>']
 		]);
 
 		fmc.onLeftInput[5] = () => {

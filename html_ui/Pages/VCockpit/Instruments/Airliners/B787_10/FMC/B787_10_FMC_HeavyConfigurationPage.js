@@ -7,21 +7,21 @@ class B787_10_FMC_HeavyConfigurationPage {
 		console.log('STRATEGY: ' + HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy());
 		switch (HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy()) {
 			case 0:
-				fpSyncCell = '<[color=green]None[/color]/[size=small]OneWay[/size]';
+				fpSyncCell = '[color=green]None[/color]/[size=small]OneWay[/size]>';
 				break;
 			case 1:
-				fpSyncCell = '<[size=small]None[/size]/[color=green]OneWay[/color]';
+				fpSyncCell = '[size=small]None[/size]/[color=green]OneWay[/color]>';
 				break;
 			case 2:
-				fpSyncCell = '<[color=green]None[/color]/[size=small]OneWay[/size]';
+				fpSyncCell = '[color=green]None[/color]/[size=small]OneWay[/size]>';
 				break;
 			case 3:
-				fpSyncCell = '<[color=green]None[/color]/[size=small]OneWay[/size]';
+				fpSyncCell = '[color=green]None[/color]/[size=small]OneWay[/size]>';
 				break;
 		}
 
-		let simBriefCell = (this.isSimBriefFilled() ? '<[color=green]FILLED[/color]' : '<[color=red]NOT FILLED[/color]');
-		let unitsCell = (HeavyDivision.configuration.useImperial() ? '<[color=green]IMPERIAL[/color]←→[size=small]METRIC[/size]' : '<[size=small]IMPERIAL[/size]←→[color=green]METRIC[/color]');
+		let simBriefCell = (this.isSimBriefFilled() ? '[color=green]FILLED[/color]>' : '[color=red]NOT FILLED[/color]>');
+		let unitsCell = (HeavyDivision.configuration.useImperial() ? '[color=green]IMPERIAL[/color]←→[size=small]METRIC[/size]>' : '[size=small]IMPERIAL[/size]←→[color=green]METRIC[/color]>');
 		fmc.setTemplate([
 			['HEAVY CONFIGURATION'],
 			['', 'SimBrief'],

@@ -15,13 +15,13 @@ class B787_10_FMC_HeavyPage {
 			[''],
 			[''],
 			[''],
-			['', '<CONFIGURATION']
+			['', 'CONFIGURATION>']
 		];
 
 		if (!B787_10_FMC_HeavyPage.WITHOUT_MANAGERS) {
-			rows[2] = ['', '<IRS Menu'];
-			rows[4] = ['', '<Payload Manager'];
-			//rows[6] = ['', '<SimRate Manager'];
+			rows[2] = ['', 'IRS Menu>'];
+			rows[4] = ['', 'Payload Manager>'];
+			//rows[6] = ['', 'SimRate Manager>'];
 
 			fmc.onRightInput[0] = () => {
 				new B787_10_FMC_HeavyIRSPage(fmc).showPage();

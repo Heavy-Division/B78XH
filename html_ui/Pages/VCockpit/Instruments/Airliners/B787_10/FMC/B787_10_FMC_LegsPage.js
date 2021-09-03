@@ -179,7 +179,7 @@ class B787_10_FMC_LegsPage {
 		}
 
 		if (this._isMapModePlan) {
-			this._rsk6Field = '<STEP';
+			this._rsk6Field = 'STEP>';
 
 			let canStep = true;
 
@@ -208,7 +208,7 @@ class B787_10_FMC_LegsPage {
 				}
 			}
 		} else {
-			this._rsk6Field = '<RTE DATA';
+			this._rsk6Field = 'RTE DATA>';
 		}
 
 		const modStr = this._fmc.fpHasChanged ? 'MOD' : 'ACT';

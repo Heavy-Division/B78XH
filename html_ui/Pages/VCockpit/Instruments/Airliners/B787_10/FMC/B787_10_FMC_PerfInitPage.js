@@ -99,7 +99,7 @@ class B787_10_FMC_PerfInitPage {
 				['DATA LINK', 'STEP SIZE'],
 				['NO COMM', stepSizeCell],
 				[separator],
-				['\<INDEX', '<THRUST LIM']
+				['\<INDEX', 'THRUST LIM>']
 			]);
 
 			if(fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished){

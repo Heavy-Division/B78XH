@@ -105,7 +105,7 @@ class B787_10_FMC_RouteDataPage {
 							fuelCell = (fuelLeft * fuelModifier).toFixed(1);
 						}
 
-						rows[2 * i] = [etaCell, '<', waypoint.ident, fuelCell];
+						rows[2 * i] = [etaCell, '>', waypoint.ident, fuelCell];
 					}
 				}
 			}
@@ -118,7 +118,7 @@ class B787_10_FMC_RouteDataPage {
 			['ETA', 'WIND', 'WAYPOINT', 'FUEL'],
 			...rows,
 			['-------------------------------WIND DATA'],
-			['<LEGS', '<REQUEST']
+			['<LEGS', 'REQUEST>']
 		]);
 
 		this.fmc.onLeftInput[5] = () => {

@@ -446,7 +446,7 @@ class B787_10_FMC_PayloadManagerPage {
 		if(B787_10_FMC_PayloadManagerPage.isPayloadManagerExecuted){
 			rows[12][1] = 'RUNNING...'
 		} else {
-			rows[12][1] = '<EXECUTE';
+			rows[12][1] = 'EXECUTE>';
 			this.fmc.onRightInput[5] = () => {
 				B787_10_FMC_PayloadManagerPage.isPayloadManagerExecuted = true;
 				this.flushFuelAndPayload().then(() => {

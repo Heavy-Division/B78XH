@@ -89,7 +89,7 @@ class B787_10_FMC_ApproachPage {
 			[''],
 			[''],
 			['__FMCSEPARATOR'],
-			['\<INDEX', '<THRUST LIM']
+			['\<INDEX', 'THRUST LIM>']
 		]);
 		fmc.onLeftInput[5] = () => {
 			B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);

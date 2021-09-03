@@ -129,14 +129,14 @@ class B787_10_FMC_RoutePage {
 			if (!this._fmc._isMainRouteActivated) {
 				this._fmc.fpHasChanged = true;
 				this._lsk6Field = '<ERASE';
-				this._activateCell = '<ACTIVATE';
+				this._activateCell = 'ACTIVATE>';
 			} else {
-				this._activateCell = '<PERF INIT';
+				this._activateCell = 'PERF INIT>';
 				this._lsk6Field = '<RTE 2';
 			}
 		} else if (this._fmc.flightPlanManager.getCurrentFlightPlanIndex() === 0) {
 			this._fmc.fpHasChanged = false;
-			this._activateCell = '<PERF INIT';
+			this._activateCell = 'PERF INIT>';
 			this._lsk6Field = '<RTE 2';
 		}
 
@@ -193,9 +193,9 @@ class B787_10_FMC_RoutePage {
 			['ROUTE', 'CO ROUTE'],
 			['\<REQUEST', this._coRouteCell],
 			['ROUTE'],
-			['\<REPORT', '<RTE COPY'],
+			['\<REPORT', 'RTE COPY>'],
 			['ROUTE ---------------------------------'],
-			['\<PRINT', '<ALTN'],
+			['\<PRINT', 'ALTN>'],
 			[''],
 			[this._lsk6Field, this._activateCell]
 		]);
@@ -320,9 +320,9 @@ class B787_10_FMC_RoutePage {
 		};
 
 		this._fmc.onRightInput[5] = () => {
-			if (this._activateCell === '<PERF INIT') {
+			if (this._activateCell === 'PERF INIT>') {
 				B787_10_FMC_PerfInitPage.ShowPage1(this._fmc);
-			} else if (this._activateCell === '<ACTIVATE') {
+			} else if (this._activateCell === 'ACTIVATE>') {
 				this._fmc.activateMainRoute();
 				this.update(true);
 			}

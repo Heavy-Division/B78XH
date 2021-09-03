@@ -131,15 +131,15 @@ class B787_10_FMC_ThrustLimPage {
 			['SEL/OAT', toN1CellTitle],
 			[selectedTempCell + '[size=medium-size]C[/size]/' + oatCell + '[size=medium-size]C[/size]', toN1Cell],
 			[''],
-			['\<TO', '<CLB', (thrustTOMode === 0 ? '<SEL>' : ''), thrustClimbModeCell0],
+			['\<TO', 'CLB>', (thrustTOMode === 0 ? '<SEL>' : ''), thrustClimbModeCell0],
 			['TO 1'],
-			['\<-10%', '<CLB 1', (thrustTOMode === 1 ? '<SEL>' : ''), thrustClimbModeCell1],
+			['\<-10%', 'CLB 1>', (thrustTOMode === 1 ? '<SEL>' : ''), thrustClimbModeCell1],
 			['TO 2'],
-			['\<-20%', '<CLB 2', (thrustTOMode === 2 ? '<SEL>' : ''), thrustClimbModeCell2],
+			['\<-20%', 'CLB 2>', (thrustTOMode === 2 ? '<SEL>' : ''), thrustClimbModeCell2],
 			[''],
 			[''], //['\<TO-B'],
 			[separator],
-			['\<INDEX', '<TAKEOFF']
+			['\<INDEX', 'TAKEOFF>']
 		]);
 
 		/**
