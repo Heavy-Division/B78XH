@@ -1150,6 +1150,15 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				this._speedDirector = new SpeedDirector(this);
 			} else {
 				try {
+					/*
+					const activeWaypoint = this.flightPlanManager.getActiveWaypoint();
+					if(activeWaypoint && activeWaypoint.speedConstraint === -1){
+						this._speedDirector._waypointSpeedConstraint.speed = null;
+						this._speedDirector._waypointSpeedConstraint.speedMach = null;
+					} else if(activeWaypoint && activeWaypoint.speedConstraint !== -1){
+						this._speedDirector._waypointSpeedConstraint.speed = activeWaypoint.speedConstraint;
+					}
+					 */
 					this._speedDirector.update(this.currentFlightPhase);
 				} catch (error) {
 					console.error(error);

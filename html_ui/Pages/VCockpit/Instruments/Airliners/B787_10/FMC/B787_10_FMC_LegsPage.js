@@ -160,6 +160,37 @@ class B787_10_FMC_LegsPage {
 						row += this.getAltSpeedRestriction(waypoint.fix);
 					}
 
+					/*
+					if (SegmentType.Enroute === waypointSegment.type) {
+						let speedConstraint = -1;
+						if (waypoint.fix.speedConstraint && waypoint.fix.speedConstraint > 100) {
+							speedConstraint = waypoint.fix.speedConstraint;
+						}
+
+						if (this._fmc._speedDirector._commandedSpeedType === SpeedType.SPEED_TYPE_ECON) {
+							row = this._fmc.colorizeContent(this._fmc._speedDirector.speed, 'magenta');
+						} else if (this._fmc._speedDirector._commandedSpeedType === SpeedType.SPEED_TYPE_WAYPOINT && isActWpt) {
+							row = this._fmc.colorizeContent(this._fmc._speedDirector.speed, 'magenta');
+						} else {
+							if (speedConstraint !== -1) {
+								row = speedConstraint;
+							} else {
+								row = this._fmc._speedDirector.speed;
+							}
+						}
+						//row = Math.round(this._fmc.getCrzManagedSpeed(true)) + '/';
+						row = row + '/';
+						if (this._fmc.cruiseFlightLevel) {
+							row += 'FL' + this._fmc.cruiseFlightLevel;
+						} else {
+							row += '-----';
+						}
+
+					} else {
+						row += this.getAltSpeedRestriction(waypoint.fix, isActWpt);
+					}
+					 */
+
 
 					// (SegmentType.Enroute === waypointSegment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + '/' + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix))
 
@@ -725,7 +756,7 @@ class B787_10_FMC_LegsPage {
 		this._isDirty = false;
 	}
 
-	getAltSpeedRestriction(waypoint) {
+	getAltSpeedRestriction(waypoint, isActive = false) {
 		let speedConstraint = '---';
 		let altitudeConstraint = '----- ';
 		const wpt = waypoint;
@@ -753,6 +784,10 @@ class B787_10_FMC_LegsPage {
 
 		}
 		altitudeConstraint = altitudeConstraint.padStart(6, ' ');
+
+		//if (this._fmc._speedDirector._commandedSpeedType === SpeedType.SPEED_TYPE_WAYPOINT && isActive) {
+		//	speedConstraint = this._fmc.colorizeContent(speedConstraint, 'magenta');
+		//}
 
 		return speedConstraint + '/' + altitudeConstraint + '';
 	}

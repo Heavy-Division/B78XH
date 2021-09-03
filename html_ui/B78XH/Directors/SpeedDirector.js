@@ -42,6 +42,8 @@ class SpeedDirector {
 		this._descentSpeedTransition = new DescentSpeedTransition();
 		this._descentSpeedSelected = new DescentSpeed(null);
 		this._descentSpeedEcon = new DescentSpeed(282);
+
+//		this._waypointSpeedConstraint = new WaypointSpeed(null, null);
 	}
 
 	get machModeActive() {
@@ -89,6 +91,8 @@ class SpeedDirector {
 						return this._resolveMachKias(this._accelerationSpeedRestriction);
 					case SpeedType.SPEED_TYPE_PROTECTED:
 						return this._resolveMachKias(this._overspeedProtection);
+//					case SpeedType.SPEED_TYPE_WAYPOINT:
+//						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
 					case SpeedType.SPEED_TYPE_ECON:
 						return this._resolveMachKias(this._climbSpeedEcon);
 				}
@@ -103,6 +107,8 @@ class SpeedDirector {
 						return (this.machModeActive ? (this._cruiseSpeedSelected.speedMach ? this._cruiseSpeedSelected.speedMach : this._resolveMachKias(this._cruiseSpeedSelected)) : this._cruiseSpeedSelected.speed);
 					case SpeedType.SPEED_TYPE_PROTECTED:
 						return this._resolveMachKias(this._overspeedProtection);
+//					case SpeedType.SPEED_TYPE_WAYPOINT:
+//						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
 				}
 				break;
 			case SpeedPhase.SPEED_PHASE_DESCENT:
@@ -117,6 +123,8 @@ class SpeedDirector {
 						return this._resolveMachKias(this._descentSpeedEcon);
 					case SpeedType.SPEED_TYPE_PROTECTED:
 						return this._resolveMachKias(this._overspeedProtection);
+//					case SpeedType.SPEED_TYPE_WAYPOINT:
+//						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
 				}
 				break;
 			case SpeedPhase.SPEED_PHASE_APPROACH:
@@ -131,6 +139,8 @@ class SpeedDirector {
 						return this._resolveMachKias(this._descentSpeedEcon);
 					case SpeedType.SPEED_TYPE_PROTECTED:
 						return this._resolveMachKias(this._overspeedProtection);
+//					case SpeedType.SPEED_TYPE_WAYPOINT:
+//						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
 				}
 				break;
 		}
@@ -182,6 +192,7 @@ class SpeedDirector {
 			[SpeedType.SPEED_TYPE_ACCELERATION]: (this._accelerationSpeedRestriction && this._accelerationSpeedRestriction.isValid(this._planeAltitude) ? this._accelerationSpeedRestriction.speed : false),
 			[SpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
 			[SpeedType.SPEED_TYPE_SELECTED]: (this._climbSpeedSelected && this._climbSpeedSelected.isValid() ? this._climbSpeedSelected.speed : false),
+			//[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
 			[SpeedType.SPEED_TYPE_ECON]: (this._climbSpeedEcon && this._climbSpeedEcon.isValid() ? this._climbSpeedEcon.speed : false)
 		};
 
@@ -198,8 +209,9 @@ class SpeedDirector {
 
 	_updateCruiseSpeed() {
 		let speed = {
-			[SpeedType.SPEED_TYPE_SELECTED]: (this._cruiseSpeedSelected && this._cruiseSpeedSelected.isValid() ? this._cruiseSpeedSelected.speed : null),
+			[SpeedType.SPEED_TYPE_SELECTED]: (this._cruiseSpeedSelected && this._cruiseSpeedSelected.isValid() ? this._cruiseSpeedSelected.speed : false),
 			[SpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+			//[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
 			[SpeedType.SPEED_TYPE_ECON]: (this._cruiseSpeedEcon && this._cruiseSpeedEcon.isValid() ? this._cruiseSpeedEcon.speed : null)
 		};
 
@@ -220,6 +232,7 @@ class SpeedDirector {
 			[SpeedType.SPEED_TYPE_TRANSITION]: (this._descentSpeedTransition && this._descentSpeedTransition.isValid(this._planeAltitude) ? this._descentSpeedTransition.speed : false),
 			[SpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
 			[SpeedType.SPEED_TYPE_SELECTED]: (this._descentSpeedSelected && this._descentSpeedSelected.isValid() ? this._descentSpeedSelected.speed : false),
+			//[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
 			[SpeedType.SPEED_TYPE_ECON]: (this._descentSpeedEcon && this._descentSpeedEcon.isValid() ? this._descentSpeedEcon.speed : false)
 		};
 
@@ -308,6 +321,24 @@ class Speed {
 class ClimbSpeed extends Speed {
 	constructor(speed) {
 		super(speed);
+	}
+}
+
+/**
+ * Waypoint speed definition
+ */
+class WaypointSpeed extends Speed {
+	constructor(speed, speedMach) {
+		super(speed);
+		this._speedMach = speedMach;
+	}
+
+	get speedMach() {
+		return Number(this._speedMach);
+	}
+
+	set speedMach(speedMach) {
+		this._speedMach = Number(speedMach);
 	}
 }
 
@@ -516,6 +547,7 @@ let SpeedType;
 	SpeedType[SpeedType['SPEED_TYPE_TRANSITION'] = 3] = 'SPEED_TYPE_TRANSITION';
 	SpeedType[SpeedType['SPEED_TYPE_ACCELERATION'] = 4] = 'SPEED_TYPE_ACCELERATION';
 	SpeedType[SpeedType['SPEED_TYPE_PROTECTED'] = 5] = 'SPEED_TYPE_PROTECTED';
+	SpeedType[SpeedType['SPEED_TYPE_WAYPOINT'] = 6] = 'SPEED_TYPE_WAYPOINT';
 })(SpeedType || (SpeedType = {}));
 
 let SpeedPhase;
