@@ -47,38 +47,38 @@ class LNavDirector {
 		this.previousDeviation = 0;
 	}
 
+	calculateRateOfTurn(maxBank) {
+		const trueSpeed = Simplane.getTrueSpeed();
+		const magic = 1091;
+		const correction = 0.4;
+		const rateOfTurn = (magic * Math.tan(maxBank)) / trueSpeed;
+		return [rateOfTurn, rateOfTurn + correction];
+		//return (magic * Math.tan(maxBank)) / trueSpeed;
+	}
+
 	resolveBankKnobPosition() {
-
-		/**
-		 * LIMIT 30 -> APPROX RATE: 2.6 (2.8)
-		 * LIMIT 25 -> APPROX RATE: 2.2
-		 * LIMIT 20 -> APPROX RATE: 1.7
-		 * LIMIT 15 -> APPROX RATE: 1.25
-		 * LIMIT 10 -> APPROX RATE: 0.8
-		 * LIMIT AUTO -> APPROX RATE: 1.25 (below 250 KIAS) 1.75 (above 25 KIAS)
-		 *
-		 * (AUTO need to be tested for BANK LIMITS)
-		 */
+		const maxBank = SimVar.GetSimVarValue('AUTOPILOT MAX BANK', 'Radians');
+		this.options.maxBankAngle = maxBank * Avionics.Utils.RAD2DEG;
+		const rateOfTurn = this.calculateRateOfTurn(maxBank);
+		this.options.bankRate = rateOfTurn[0];
 
 
+		//console.log("RATE delta: " + Math.abs(Simplane.getTurnRate() * Avionics.Utils.RAD2DEG - rateOfTurn[0]));
+		//console.log('Max aircraft bank: ' + this.options.maxBankAngle);
+		//console.log('Calculated bank rate (REAL): ' + rateOfTurn[0]);
+		//console.log('Calculated bank rate (CORRECTION): ' + rateOfTurn[1]);
+		//console.log('MSFS turn rate: ' + Simplane.getTurnRate() * Avionics.Utils.RAD2DEG);
 		/**
 		 * BANK LIMIT fix
 		 */
+		/*
 		switch (SimVar.GetSimVarValue('A:AUTOPILOT MAX BANK ID', 'Number')) {
 			case 0:
-				/**
-				 * 2.8 undershot a bit
-				 * @type {number}
-				 */
+
 				this.options.maxBankAngle = 30;
 				this.options.bankRate = 3;
 				break;
 			case 1:
-				/**
-				 * 2.2 -> undershot a bit
-				 * 2.5 -> overshot a bit
-				 * @type {number}
-				 */
 				this.options.maxBankAngle = 25;
 				this.options.bankRate = 2.4;
 				break;
@@ -97,11 +97,6 @@ class LNavDirector {
 			case 5:
 				if (Simplane.getIndicatedSpeed() > 250) {
 					this.options.maxBankAngle = 25;
-					/**
-					 * This should be 1.75
-					 * Maybe AUTO uses MAX BANK 20 and RATE 1.75
-					 * @type {number}
-					 */
 					this.options.bankRate = 2.2;
 				} else {
 					this.options.maxBankAngle = 15;
@@ -112,6 +107,7 @@ class LNavDirector {
 				this.options.maxBankAngle = 30;
 				this.options.bankRate = 3;
 		}
+		*/
 	}
 
 	/**
@@ -303,6 +299,22 @@ class LNavDirector {
 
 		const turnAnticipationAngle = Math.min(this.options.maxTurnAnticipationAngle, Math.abs(turnAngle)) * Avionics.Utils.DEG2RAD;
 		return Math.min((turnRadius * Math.abs(Math.tan(turnAnticipationAngle / 2))) + enterBankDistance, this.options.maxTurnAnticipationDistance(planeState));
+	}
+
+	static turnRadiusTest(airspeedTrue, bankAngle) {
+		// Turn radius formula
+		// R =v^2/(11.23*tan(0.01745*b))
+
+		/**
+		 * Custom turn radius formula
+		 */
+		const speed = airspeedTrue * 1.47;
+		const fpssq = Math.pow(speed, 2)
+		const bankAngleInRadians = bankAngle * Avionics.Utils.DEG2RAD;
+		const tanOfBankAngle = Math.tan(bankAngleInRadians);
+
+		const preRadius = (fpssq / (tanOfBankAngle * 32.2))
+		return preRadius / 6076.11549;
 	}
 
 	/**
@@ -655,7 +667,7 @@ class LNavDirectorOptions {
 		 * value is used to avoid swinging towards the active waypoint when the waypoint is close,
 		 * if the plane is off track.
 		 */
-		this.minimumTrackingDistance = 1;
+		this.minimumTrackingDistance = 2;
 
 		/** The maximum bank angle of the aircraft. */
 		this.maxBankAngle = 30;
@@ -670,7 +682,7 @@ class LNavDirectorOptions {
 		this.maxTurnAnticipationDistance = (planeState) => planeState.trueAirspeed < 350 ? 7 : 10;
 
 		/** The number of degrees left in the turn that turn completion will stop and rollout/tracking will begin. */
-		this.degreesRollout = 15;
+		this.degreesRollout = 20;
 	}
 }
 
