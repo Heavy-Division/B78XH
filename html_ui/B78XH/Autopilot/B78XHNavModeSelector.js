@@ -1069,6 +1069,7 @@ class B78XHNavModeSelector {
 					SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'number', 1);
 				}
 				this.lowLevelActivateLNAV();
+				this.lowLevelDeactivateHeadingHold()
 				this.currentLateralActiveState = LateralNavModeState.LNAV;
 			} else {
 				this.lowLevelArmLNAV();
