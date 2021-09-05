@@ -114,6 +114,8 @@ class B787_10_PFD_MainPage extends NavSystemPage {
 
 	onUpdate(_deltaTime) {
 		super.onUpdate(_deltaTime);
+		this.extendHtmlElementsWithIrsState();
+		this.isIRSAligned();
 	}
 
 	onEvent(_event) {
@@ -140,6 +142,49 @@ class B787_10_PFD_MainPage extends NavSystemPage {
 			diffAndSetAttribute(this.gps, 'mapstyle', 'rose');
 		else
 			diffAndSetAttribute(this.gps, 'mapstyle', 'arc');
+	}
+
+	extendHtmlElementsWithIrsState() {
+		let groundRibbonGroup = document.getElementById('GroundRibbonGroup');
+		groundRibbonGroup.setAttribute('irs-state', 'off');
+
+		let groundLineGroup = document.getElementById('GroundLineGroup');
+		groundLineGroup.setAttribute('irs-state', 'off');
+
+		let selectedHeadingGroup = document.getElementById('selectedHeadingGroup');
+		selectedHeadingGroup.setAttribute('irs-state', 'off');
+	}
+
+	isIRSAligned() {
+		let irsLState = SimVar.GetSimVarValue('L:B78XH_IRS_L_STATE', 'Number');
+		let irsRState = SimVar.GetSimVarValue('L:B78XH_IRS_R_STATE', 'Number');
+
+		// TODO: IRS Position should be set
+		//let isIrsPositionSet = SimVar.GetSimVarValue('L:B78XH_IS_IRS_POSITION_SET', 'Boolean');
+
+		if ((irsLState > 1 || irsRState > 1)) {
+			document.querySelectorAll('[irs-state]').forEach((element) => {
+				if (element) {
+					element.setAttribute('irs-state', 'aligned');
+				}
+			});
+		} else {
+			let irsLSwitchState = SimVar.GetSimVarValue('L:B78XH_IRS_L_STATE', 'Number');
+			let irsRSwitchState = SimVar.GetSimVarValue('L:B78XH_IRS_R_STATE', 'Number');
+			if (irsLSwitchState > 0 || irsRSwitchState > 0) {
+				document.querySelectorAll('[irs-state]').forEach((element) => {
+					if (element) {
+						element.setAttribute('irs-state', 'aligning');
+					}
+				});
+			} else {
+				document.querySelectorAll('[irs-state]').forEach((element) => {
+					if (element) {
+						element.setAttribute('irs-state', 'off');
+					}
+				});
+			}
+		}
 	}
 }
 

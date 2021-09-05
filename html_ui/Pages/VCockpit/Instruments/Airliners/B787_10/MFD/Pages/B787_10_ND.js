@@ -744,6 +744,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 
 	onUpdate(_deltaTime) {
 		super.onUpdate(_deltaTime);
+		this.updateMapIfIrsNotAligned();
 		this.updateAltitudeArc(_deltaTime);
 	}
 
@@ -797,6 +798,124 @@ class B787_10_ND_Map extends MapInstrumentElement {
 
 	getAbsoluteAltitudeDeltaForAltitudeArc() {
 		return Math.abs(Simplane.getAutoPilotDisplayedAltitudeLockValue() - Simplane.getAltitude());
+	}
+
+	extendMFDHtmlElementsWithIrsState() {
+		[this._parent.querySelector('#Map'),
+			this._parent.querySelector('#headingGroup'),
+			this._parent.querySelector('#ArcRangeGroup'),
+			this._parent.querySelector('#CourseInfo'),
+			this._parent.querySelector('#selectedHeadingGroup'),
+			this._parent.querySelector('#selectedTrackGroup'),
+			this._parent.querySelector('#ILSGroup'),
+			this._parent.querySelector('#currentRefGroup'),
+			this._parent.querySelector('#RangeGroup')
+		].forEach((element) => {
+			if (element) {
+				element.setAttribute('irs-state', 'off');
+			}
+		});
+
+		let compassCircleGroup = this._parent.querySelector('#circleGroup');
+		if (compassCircleGroup) {
+			compassCircleGroup.querySelectorAll('text').forEach((element) => {
+				if (element) {
+					element.setAttribute('irs-state', 'off');
+				}
+			});
+		}
+
+		let outerCircleGroup = this._parent.querySelector('#outerCircle');
+		if (outerCircleGroup) {
+			outerCircleGroup.querySelectorAll('text').forEach((element) => {
+				if (element) {
+					element.setAttribute('irs-state', 'off');
+				}
+			});
+		}
+	}
+
+	updateMapIfIrsNotAligned() {
+		this.extendMFDHtmlElementsWithIrsState();
+		let irsLState = SimVar.GetSimVarValue('L:B78XH_IRS_L_STATE', 'Number');
+		let irsRState = SimVar.GetSimVarValue('L:B78XH_IRS_R_STATE', 'Number');
+		if ((irsLState > 1 || irsRState > 1)) {
+			this._parent.querySelectorAll('[irs-state]').forEach((element) => {
+				if (element) {
+					element.setAttribute('irs-state', 'aligned');
+				}
+			});
+			return;
+		} else if (irsLState > 0 || irsRState > 0) {
+			this._parent.querySelectorAll('[irs-state]').forEach((element) => {
+				if (element) {
+					element.setAttribute('irs-state', 'aligning');
+				}
+			});
+
+			let aligns = this._parent.querySelectorAll('.align-value');
+
+			aligns.forEach((element) => {
+				element.style.visibility = 'hidden';
+				element.textContent = '';
+			});
+
+			let times = [];
+			let position = 0;
+			let now = Math.floor(new Date().getTime() / 1000);
+
+
+			if (irsLState >= 1 || irsRState >= 1) {
+				let irsLTimeForAlign = SimVar.GetSimVarValue('L:B78XH_IRS_L_TIME_FOR_ALIGN', 'Number');
+				let irsRTimeForAlign = SimVar.GetSimVarValue('L:B78XH_IRS_R_TIME_FOR_ALIGN', 'Number');
+				let irsLInitAlignTime = SimVar.GetSimVarValue('L:B78XH_IRS_L_INIT_ALIGN_TIME', 'Number');
+				let irsRInitAlignTime = SimVar.GetSimVarValue('L:B78XH_IRS_R_INIT_ALIGN_TIME', 'Number');
+
+				let mode = 0;
+
+				if (irsLInitAlignTime !== -1 && irsRInitAlignTime !== -1) {
+					mode = 3;
+				} else if (irsLInitAlignTime !== -1 && irsRInitAlignTime === -1) {
+					mode = 1;
+				} else if (irsRInitAlignTime !== -1 && irsLInitAlignTime === -1) {
+					mode = 2;
+				}
+
+				let setTime = (initTime, toAlign) => {
+					let totalSeconds = (initTime + toAlign) - now;
+					if(totalSeconds < 0){
+						totalSeconds = 0;
+					}
+					let minutes = Math.floor(totalSeconds / 60);
+					let seconds = totalSeconds - minutes * 60;
+					let minutesString = (minutes.toString().length < 2 ? minutes.toString().padStart(2, '0') : minutes.toString());
+					let secondsString = (seconds.toString().length < 2 ? seconds.toString().padStart(2, '0') : seconds.toString());
+					aligns.forEach((element) => {
+						element.textContent = minutesString + ':' + secondsString;
+						element.style.visibility = 'visible';
+					})
+				}
+
+
+				if (mode === 3) {
+					if (irsLInitAlignTime + irsLTimeForAlign <= irsRInitAlignTime + irsRTimeForAlign) {
+						setTime(irsLInitAlignTime, irsLTimeForAlign);
+					} else {
+						setTime(irsRInitAlignTime, irsRTimeForAlign);
+					}
+				} else if (mode === 1) {
+					setTime(irsLInitAlignTime, irsLTimeForAlign);
+				} else if (mode === 2) {
+					setTime(irsRInitAlignTime, irsRTimeForAlign);
+				}
+			}
+		} else {
+			this._parent.querySelectorAll('[irs-state]').forEach((element) => {
+				if (element) {
+					element.setAttribute('irs-state', 'off');
+				}
+			});
+		}
 	}
 }
 

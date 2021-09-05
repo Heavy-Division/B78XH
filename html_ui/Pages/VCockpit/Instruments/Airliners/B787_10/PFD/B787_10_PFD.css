@@ -514,9 +514,9 @@ b787-10-pfd-element #RightDisplay > .bottom > #FakeHdgSvg > text {
 }
 
 b787-10-pfd-element #RightDisplay > .bottom #Compass:not([irs-state=aligned]) {
-    /* display: none; */
+    display: none;
 }
 
 b787-10-pfd-element #RightDisplay > .bottom #CompassInfos:not([irs-state=aligned]) {
-    /* display: none; */
+    display: none;
 }

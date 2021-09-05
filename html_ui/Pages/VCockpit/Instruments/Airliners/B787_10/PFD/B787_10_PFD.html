@@ -78,11 +78,26 @@
             <div id="RightDisplay">
                 <div class="top">
                     <div id="HorizonContainer">
+
+                        <div id="FakeBlackMask" irs-state="off">
+                            <svg id="FakeMaskSvg" version="1.1" viewBox="0 0 600 600 " xmlns="http://www.w3.org/2000/svg">
+                                <rect id="AttBox" x="182" y="204" width="54" height="27" irs-state="off" />
+                                <text id="AttText" x="209" y="217.5" irs-state="off">ATT</text>
+
+                                <rect id="VertBox" x="485" y="205" width="26" height="85" irs-state="off" />
+
+                                <text id="VertText" transform="rotate(90)" x="226" y="-492" irs-state="off">
+                                    <tspan id="VertTextSpan" rotate="270 270 270 270 0">VERT</tspan>
+                                </text>
+
+                            </svg>
+                        </div>
+
                         <jet-pfd-attitude-indicator id="Horizon" background="true"></jet-pfd-attitude-indicator>
                     </div>
                     <div id="InstrumentsContainer">
                         <jet-pfd-altimeter-indicator id="Altimeter"></jet-pfd-altimeter-indicator>
-                        <jet-pfd-vspeed-indicator id="VSpeed"></jet-pfd-vspeed-indicator>
+                        <jet-pfd-vspeed-indicator id="VSpeed" irs-state="off"></jet-pfd-vspeed-indicator>
                         <jet-pfd-airspeed-indicator id="Airspeed"></jet-pfd-airspeed-indicator>
                         <jet-pfd-ils-indicator id="ILS"></jet-pfd-ils-indicator>
                     </div>
@@ -91,13 +106,17 @@
                     </div>
                 </div>
                 <div class="bottom">
+                    <svg id="FakeHdgSvg" version="1.1" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" irs-state="off">
+                        <rect id="FakeHdgBox" x="280" y="1" width="40" height="20"/>
+                        <text id="FakeHdgText" x="300" y="10">HDG</text>
+                    </svg>
                     <div id="Map">
                         <map-instrument id="MapInstrument" bing-id="PFD" show-overlay="false" show-roads="false"
                                         show-bing-map="false"
                                         config-path="/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/"></map-instrument>
                     </div>
-                    <jet-pfd-nd-compass id="Compass" display-mode="arc"></jet-pfd-nd-compass>
-                    <b787-10-pfd-compass-infos id="CompassInfos"></b787-10-pfd-compass-infos>
+                    <jet-pfd-nd-compass id="Compass" display-mode="arc" irs-state="off"></jet-pfd-nd-compass>
+                    <b787-10-pfd-compass-infos id="CompassInfos" irs-state="off"></b787-10-pfd-compass-infos>
                 </div>
             </div>
         </div>
