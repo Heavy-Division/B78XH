@@ -52,6 +52,7 @@ class LNavDirector {
 		const magic = 1091;
 		const correction = 0.4;
 		const rateOfTurn = (magic * Math.tan(maxBank)) / trueSpeed;
+
 		return [rateOfTurn, rateOfTurn + correction];
 		//return (magic * Math.tan(maxBank)) / trueSpeed;
 	}
@@ -292,17 +293,17 @@ class LNavDirector {
 	 */
 	getAnticipationDistance(planeState, turnAngle) {
 		const headwind = AutopilotMath.windComponents(planeState.trueHeading, planeState.windDirection, planeState.windSpeed).headwind;
-		const turnRadius = AutopilotMath.turnRadius(planeState.trueAirspeed - headwind, this.options.maxBankAngle);
+		//const turnRadius = AutopilotMath.turnRadius(planeState.trueAirspeed - headwind, this.options.maxBankAngle);
+		const turnRadius = LNavDirector.turnRadiusTest(planeState.trueAirspeed - headwind, this.options.maxBankAngle);
 
 		const bankDiff = (Math.sign(turnAngle) * this.options.maxBankAngle) - planeState.bankAngle;
 		const enterBankDistance = (Math.abs(bankDiff) / this.options.bankRate) * ((planeState.trueAirspeed - headwind) / 3600);
-
 		const turnAnticipationAngle = Math.min(this.options.maxTurnAnticipationAngle, Math.abs(turnAngle)) * Avionics.Utils.DEG2RAD;
 		return Math.min((turnRadius * Math.abs(Math.tan(turnAnticipationAngle / 2))) + enterBankDistance, this.options.maxTurnAnticipationDistance(planeState));
 	}
 
 	static turnRadiusTest(airspeedTrue, bankAngle) {
-		// Turn radius formula
+		// Normal turn radius formula
 		// R =v^2/(11.23*tan(0.01745*b))
 
 		/**
@@ -314,7 +315,7 @@ class LNavDirector {
 		const tanOfBankAngle = Math.tan(bankAngleInRadians);
 
 		const preRadius = (fpssq / (tanOfBankAngle * 32.2))
-		return preRadius / 6076.11549;
+		return preRadius / 6076.11549 * 0.87;
 	}
 
 	/**
@@ -471,10 +472,9 @@ class LNavDirector {
 		SimVar.SetSimVarValue('L:WT_CJ4_XTK', 'number', xtk);
 		SimVar.SetSimVarValue('L:WT_CJ4_DTK', 'number', correctedDtk);
 
-		const interceptAngle = AutopilotMath.interceptAngle(xtk, navSensitivity);
+		const interceptAngle = AutopilotMath.interceptAngle(xtk, navSensitivity, 25);
 		const bearingToWaypoint = Avionics.Utils.computeGreatCircleHeading(planeState.position, legEnd);
 		const deltaAngle = Math.abs(Avionics.Utils.diffAngle(dtk, bearingToWaypoint));
-
 		const interceptRate = Math.sign(this.previousDeviation) === 1
 			? Math.max(this.previousDeviation - xtk, 0)
 			: -1 * Math.min(this.previousDeviation - xtk, 0);
@@ -483,8 +483,16 @@ class LNavDirector {
 		const interceptRateScalar = Math.abs(xtk) < (fullDeflection / 2)
 			? 1 - Math.min(interceptRate / (fullDeflection / 10), 1)
 			: 1;
-
 		const headingToSet = deltaAngle < Math.abs(interceptAngle) ? AutopilotMath.normalizeHeading(dtk + (interceptAngle * interceptRateScalar)) : bearingToWaypoint;
+		/*
+		console.log('Intercept angle: ' + interceptAngle);
+		console.log('delta angle: ' + deltaAngle);
+		console.log('Intercept rate: ' + interceptRate);
+		console.log('Intercept rate scalar: ' + interceptRateScalar);
+		console.log('DTK: ' + dtk);
+		console.log('XTK: ' + xtk);
+		console.log('Heading to set: ' + headingToSet);
+		 */
 		this.previousDeviation = xtk;
 
 		if (execute) {
@@ -667,13 +675,13 @@ class LNavDirectorOptions {
 		 * value is used to avoid swinging towards the active waypoint when the waypoint is close,
 		 * if the plane is off track.
 		 */
-		this.minimumTrackingDistance = 2;
+		this.minimumTrackingDistance = 1;
 
 		/** The maximum bank angle of the aircraft. */
 		this.maxBankAngle = 30;
 
 		/** The rate of bank in degrees per second. */
-		this.bankRate = 5;
+		this.bankRate = 3;
 
 		/** The maximum turn angle in degrees to calculate turn anticipation to. */
 		this.maxTurnAnticipationAngle = 110;
