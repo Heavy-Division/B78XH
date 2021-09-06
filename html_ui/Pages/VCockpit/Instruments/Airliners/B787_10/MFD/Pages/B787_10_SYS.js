@@ -716,19 +716,19 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 			this.stdButtonPath.addEventListener('click', this.toggleBaroSTD.bind(this));
 			this.baroPressureValue = this.pageRoot.querySelector('#BARO_PRESSURE_VALUE');
 			this.pressureUnits = this.pageRoot.querySelector('#PRESSURE_UNITS');
-			this.inSwitch = this.pageRoot.querySelector('#IN_SWITCH')
+			this.inSwitch = this.pageRoot.querySelector('#IN_SWITCH');
 			this.inSwitch.addEventListener('click', this.setBaroToIN.bind(this));
-			this.inSwitchBackground = this.pageRoot.querySelector('#IN_SWITCH_BACKGROUND')
-			this.hpaSwitch = this.pageRoot.querySelector('#HPA_SWITCH')
+			this.inSwitchBackground = this.pageRoot.querySelector('#IN_SWITCH_BACKGROUND');
+			this.hpaSwitch = this.pageRoot.querySelector('#HPA_SWITCH');
 			this.hpaSwitch.addEventListener('click', this.setBaroToHPA.bind(this));
-			this.hpaSwitchBackground = this.pageRoot.querySelector('#HPA_SWITCH_BACKGROUND')
+			this.hpaSwitchBackground = this.pageRoot.querySelector('#HPA_SWITCH_BACKGROUND');
 		}
 	}
 
 	toggleBaroSTD() {
 		if (this.isBaroSTD()) {
 			const savedPressure = SimVar.GetSimVarValue('L:XMLVAR_Baro1_SavedPressure', 'Number');
-			SimVar.SetSimVarValue('K:2:KOHLSMAN_SET', 'Number', savedPressure)
+			SimVar.SetSimVarValue('K:2:KOHLSMAN_SET', 'Number', savedPressure);
 			SimVar.SetSimVarValue('L:XMLVAR_Baro1_ForcedToSTD', 'Number', 0);
 		} else {
 			SimVar.SetSimVarValue('L:XMLVAR_Baro1_SavedPressure', 'Number', Simplane.getPressureValue());
@@ -737,12 +737,12 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 		}
 	}
 
-	setBaroToIN(){
-		SimVar.SetSimVarValue('L:XMLVAR_Baro_Selector_HPA_1', 'Bool', false)
+	setBaroToIN() {
+		SimVar.SetSimVarValue('L:XMLVAR_Baro_Selector_HPA_1', 'Bool', false);
 	}
 
-	setBaroToHPA(){
-		SimVar.SetSimVarValue('L:XMLVAR_Baro_Selector_HPA_1', 'Bool', true)
+	setBaroToHPA() {
+		SimVar.SetSimVarValue('L:XMLVAR_Baro_Selector_HPA_1', 'Bool', true);
 	}
 
 	isBaroSTD() {
@@ -756,13 +756,19 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 	updateChild(_deltaTime) {
 		const baroMode = this.isBaroSTD();
 		const baroInInchesOfMercury = this.isBaroUnitInchesOfMercury();
+		let baroValue;
+		if (baroInInchesOfMercury) {
+			baroValue = fastToFixed(Simplane.getPressureValue(), 2);
+		} else {
+			baroValue = fastToFixed(Simplane.getPressureValue('hectopascal'), 0);
+		}
 
-		diffAndSetText(this.baroPressureValue, (baroMode ? 'STD' : fastToFixed(Simplane.getPressureValue(), 2)));
+		diffAndSetText(this.baroPressureValue, (baroMode ? 'STD' : baroValue));
 		this.stdButton.setAttribute('fill', (baroMode ? 'green' : 'none'));
 		diffAndSetText(this.pressureUnits, (baroInInchesOfMercury ? 'IN' : 'HPA'));
 
-		diffAndSetAttribute(this.inSwitchBackground, 'fill', (baroInInchesOfMercury ? '#155700' : 'none'))
-		diffAndSetAttribute(this.hpaSwitchBackground, 'fill', (baroInInchesOfMercury ? 'none' : '#155700'))
+		diffAndSetAttribute(this.inSwitchBackground, 'fill', (baroInInchesOfMercury ? '#155700' : 'none'));
+		diffAndSetAttribute(this.hpaSwitchBackground, 'fill', (baroInInchesOfMercury ? 'none' : '#155700'));
 	}
 
 	getName() {
