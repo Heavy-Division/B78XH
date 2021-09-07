@@ -84,11 +84,12 @@ class SvgFlightPlanElement extends SvgMapElement {
 					 * Show missed segment by force
 					 */
 					if (missedSegment.offset > -1) {
-						this.buildPathFromWaypoints(waypoints, missedSegment.offset - 1, waypoints.length - 1, map, missedPlanStyle, (index !== 0));
+						this.buildPathFromWaypoints(waypoints, missedSegment.offset - 1, waypoints.length - 1, map, missedPlanStyle, false);
 					}
 
 					//Remainder of plan
-					this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), (index !== 0));
+					//this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), (index !== 0));
+					this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), false);
 				}
 			}
 		}
