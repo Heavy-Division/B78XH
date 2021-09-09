@@ -694,7 +694,7 @@ map-instrument[irs-state=aligned],
 #RangeGroup[irs-state=aligned],
 #NDInfo[irs-state=aligned]
 #circleGroup text[irs-state=aligned] {
-    display: block;
+    /** display: block; */
 }
 
 #time-to-align[irs-state=aligning] #time-to-align2[irs-state=aligning] {
