@@ -581,7 +581,8 @@ map-instrument[irs-state=off], map-instrument[irs-state=inited], map-instrument[
 #RangeGroup[irs-state=off], #RangeGroup[irs-state=inited], #RangeGroup[irs-state=aligning],
 #NDInfo[irs-state=off], #NDInfo[irs-state=inited], #NDInfo[irs-state=aligning],
 #circleGroup text[irs-state=off], #circleGroup text[irs-state=inited], #circleGroup text[irs-state=aligning],
-#outerCircle text[irs-state=off], #outerCircle text[irs-state=inited], #outerCircle text[irs-state=aligning] {
+#outerCircle text[irs-state=off], #outerCircle text[irs-state=inited], #outerCircle text[irs-state=aligning],
+#trackingText[irs-state=off], #trackingText[irs-state=inited], #trackingText[irs-state=aligning]{
     display: none;
 }
 

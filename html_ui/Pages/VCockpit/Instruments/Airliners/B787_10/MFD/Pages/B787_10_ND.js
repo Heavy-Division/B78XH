@@ -823,7 +823,8 @@ class B787_10_ND_Map extends MapInstrumentElement {
 			this._parent.querySelector('#selectedTrackGroup'),
 			this._parent.querySelector('#ILSGroup'),
 			this._parent.querySelector('#currentRefGroup'),
-			this._parent.querySelector('#RangeGroup')
+			this._parent.querySelector('#RangeGroup'),
+			this._parent.querySelector('#trackingText')
 		].forEach((element) => {
 			if (element) {
 				element.setAttribute('irs-state', 'off');

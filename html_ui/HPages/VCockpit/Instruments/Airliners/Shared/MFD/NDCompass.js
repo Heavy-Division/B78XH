@@ -145,6 +145,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 					this.trackingGroup.appendChild(this.trackingLine);
 
 					this.trackingText = document.createElementNS(Avionics.SVG.NS, 'text');
+					diffAndSetAttribute(this.trackingText, 'id', 'trackingText');
 					diffAndSetAttribute(this.trackingText, 'x', left - 110);
 					diffAndSetAttribute(this.trackingText, 'y', -1 * position2 + offset);
 					diffAndSetAttribute(this.trackingText, 'font-size', fontSize);
