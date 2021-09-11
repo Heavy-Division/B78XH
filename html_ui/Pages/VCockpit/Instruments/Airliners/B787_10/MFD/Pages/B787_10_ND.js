@@ -814,44 +814,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 		return Math.abs(Simplane.getAutoPilotDisplayedAltitudeLockValue() - Simplane.getAltitude());
 	}
 
-	extendMFDHtmlElementsWithIrsState() {
-		[this._parent.querySelector('#Map'),
-			this._parent.querySelector('#headingGroup'),
-			this._parent.querySelector('#ArcRangeGroup'),
-			this._parent.querySelector('#CourseInfo'),
-			this._parent.querySelector('#selectedHeadingGroup'),
-			this._parent.querySelector('#selectedTrackGroup'),
-			this._parent.querySelector('#ILSGroup'),
-			this._parent.querySelector('#currentRefGroup'),
-			this._parent.querySelector('#RangeGroup'),
-			this._parent.querySelector('#trackingText')
-		].forEach((element) => {
-			if (element) {
-				element.setAttribute('irs-state', 'off');
-			}
-		});
-
-		let compassCircleGroup = this._parent.querySelector('#circleGroup');
-		if (compassCircleGroup) {
-			compassCircleGroup.querySelectorAll('text').forEach((element) => {
-				if (element) {
-					element.setAttribute('irs-state', 'off');
-				}
-			});
-		}
-
-		let outerCircleGroup = this._parent.querySelector('#outerCircle');
-		if (outerCircleGroup) {
-			outerCircleGroup.querySelectorAll('text').forEach((element) => {
-				if (element) {
-					element.setAttribute('irs-state', 'off');
-				}
-			});
-		}
-	}
-
 	updateMapIfIrsNotAligned() {
-		this.extendMFDHtmlElementsWithIrsState();
 		let irsLState = SimVar.GetSimVarValue('L:B78XH_IRS_L_STATE', 'Number');
 		let irsRState = SimVar.GetSimVarValue('L:B78XH_IRS_R_STATE', 'Number');
 		if ((irsLState > 1 || irsRState > 1)) {

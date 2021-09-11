@@ -51,6 +51,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 			}
 			this.arcRangeGroup = document.createElementNS(Avionics.SVG.NS, 'g');
 			diffAndSetAttribute(this.arcRangeGroup, 'id', 'ArcRangeGroup');
+			diffAndSetAttribute(this.arcRangeGroup, 'irs-state', 'off');
 			viewBox.appendChild(this.arcRangeGroup);
 			{
 				let rads = [0.25, 0.50, 0.75];
@@ -99,6 +100,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 						if (bIsBig) {
 							let text = document.createElementNS(Avionics.SVG.NS, 'text');
 							diffAndSetText(text, (i % 3 == 0) ? fastToFixed(degrees / 10, 0) : '');
+							diffAndSetAttribute(text, 'irs-state', 'off');
 							diffAndSetAttribute(text, 'x', '50');
 							diffAndSetAttribute(text, 'y', (-(circleRadius - 50 - length - 18)) + '');
 							diffAndSetAttribute(text, 'fill', 'white');
@@ -146,6 +148,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 
 					this.trackingText = document.createElementNS(Avionics.SVG.NS, 'text');
 					diffAndSetAttribute(this.trackingText, 'id', 'trackingText');
+					diffAndSetAttribute(this.trackingText, 'irs-state', 'off');
 					diffAndSetAttribute(this.trackingText, 'x', left - 110);
 					diffAndSetAttribute(this.trackingText, 'y', -1 * position2 + offset);
 					diffAndSetAttribute(this.trackingText, 'font-size', fontSize);
@@ -160,6 +163,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 				this.rotatingCircle.appendChild(this.trackingGroup);
 				this.headingGroup = document.createElementNS(Avionics.SVG.NS, 'g');
 				diffAndSetAttribute(this.headingGroup, 'id', 'headingGroup');
+				diffAndSetAttribute(this.headingGroup, 'irs-state', 'off');
 				{
 					this.headingBug = document.createElementNS(Avionics.SVG.NS, 'path');
 					diffAndSetAttribute(this.headingBug, 'id', 'headingBug');
@@ -171,6 +175,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 				this.rotatingCircle.appendChild(this.headingGroup);
 				this.courseGroup = document.createElementNS(Avionics.SVG.NS, 'g');
 				diffAndSetAttribute(this.courseGroup, 'id', 'CourseInfo');
+				diffAndSetAttribute(this.courseGroup, 'irs-state', 'off');
 				this.rotatingCircle.appendChild(this.courseGroup);
 				{
 					let scale;
@@ -302,6 +307,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 				}
 				this.selectedHeadingGroup = document.createElementNS(Avionics.SVG.NS, 'g');
 				diffAndSetAttribute(this.selectedHeadingGroup, 'id', 'selectedHeadingGroup');
+				diffAndSetAttribute(this.selectedHeadingGroup, 'irs-state', 'off');
 				{
 					this.selectedHeadingLine = Avionics.SVG.computeDashLine(50, 70, (circleRadius - 5), 15, 3, '#ff00e0');
 					diffAndSetAttribute(this.selectedHeadingLine, 'id', 'selectedHeadingLine');
@@ -316,6 +322,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 				this.rotatingCircle.appendChild(this.selectedHeadingGroup);
 				this.selectedTrackGroup = document.createElementNS(Avionics.SVG.NS, 'g');
 				diffAndSetAttribute(this.selectedTrackGroup, 'id', 'selectedTrackGroup');
+				diffAndSetAttribute(this.selectedTrackGroup, 'irs-state', 'off');
 				{
 					this.selectedTrackLine = Avionics.SVG.computeDashLine(50, 70, (circleRadius - 5), 15, 3, '#ff00e0');
 					diffAndSetAttribute(this.selectedTrackLine, 'id', 'selectedTrackLine');
@@ -330,6 +337,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 				this.rotatingCircle.appendChild(this.selectedTrackGroup);
 				this.ilsGroup = document.createElementNS(Avionics.SVG.NS, 'g');
 				diffAndSetAttribute(this.ilsGroup, 'id', 'ILSGroup');
+				diffAndSetAttribute(this.ilsGroup, 'irs-state', 'off');
 				{
 					let ilsBug = document.createElementNS(Avionics.SVG.NS, 'path');
 					diffAndSetAttribute(ilsBug, 'id', 'ilsBug');
@@ -344,6 +352,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 			{
 				this.currentRefGroup = document.createElementNS(Avionics.SVG.NS, 'g');
 				diffAndSetAttribute(this.currentRefGroup, 'id', 'currentRefGroup');
+				diffAndSetAttribute(this.currentRefGroup, 'irs-state', 'off');
 				{
 					if (!this._fullscreen) {
 						diffAndSetAttribute(this.currentRefGroup, 'transform', 'translate(-10 212) scale(1.2)');
@@ -400,6 +409,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 				viewBox.appendChild(this.currentRefGroup);
 				let rangeGroup = document.createElementNS(Avionics.SVG.NS, 'g');
 				diffAndSetAttribute(rangeGroup, 'id', 'RangeGroup');
+				diffAndSetAttribute(rangeGroup, 'irs-state', 'off');
 				{
 					let centerX = -185;
 					let centerY = 50 - circleRadius;
@@ -459,6 +469,7 @@ class Jet_MFD_NDCompass extends Jet_NDCompass {
 					{
 						let text = document.createElementNS(Avionics.SVG.NS, 'text');
 						diffAndSetText(text, texts[i]);
+						diffAndSetAttribute(text, 'irs-state', 'off');
 						diffAndSetAttribute(text, 'x', '500');
 						diffAndSetAttribute(text, 'y', '115');
 						diffAndSetAttribute(text, 'fill', 'white');
