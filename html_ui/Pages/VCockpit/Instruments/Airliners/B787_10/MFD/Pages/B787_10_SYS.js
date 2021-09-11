@@ -711,6 +711,18 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 
 	init() {
 		if (this.pageRoot != null) {
+			this.rstButton = this.pageRoot.querySelector('#RST_BUTTON')
+			this.rstButtonPath = this.pageRoot.querySelector('#RST_BUTTON_PATH');
+			this.rstButtonPath.addEventListener('click', this.resetMinimumReference.bind(this));
+			this.minimumReferenceValue = this.pageRoot.querySelector('#MINIMUM_REFERENCE_VALUE')
+
+			this.radioSwitch = this.pageRoot.querySelector('#RADIO_SWITCH')
+			this.radioSwitch.addEventListener('click', this.setMinsToRadio.bind(this));
+			this.baroSwitch = this.pageRoot.querySelector('#BARO_SWITCH')
+			this.baroSwitch.addEventListener('click', this.setMinsToBaro.bind(this));
+			this.radioSwitchBackground = this.pageRoot.querySelector('#RADIO_SWITCH_BACKGROUND')
+			this.baroSwitchBackground = this.pageRoot.querySelector('#BARO_SWITCH_BACKGROUND')
+
 			this.stdButton = this.pageRoot.querySelector('#STD_BUTTON');
 			this.stdButtonPath = this.pageRoot.querySelector('#STD_BUTTON_PATH');
 			this.stdButtonPath.addEventListener('click', this.toggleBaroSTD.bind(this));
@@ -722,6 +734,30 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 			this.hpaSwitch = this.pageRoot.querySelector('#HPA_SWITCH');
 			this.hpaSwitch.addEventListener('click', this.setBaroToHPA.bind(this));
 			this.hpaSwitchBackground = this.pageRoot.querySelector('#HPA_SWITCH_BACKGROUND');
+		}
+	}
+
+	resetMinimumReference(){
+		HeavyEventDispatcher.trigger(HeavyEventDispatcher.event.Mins_RST, HeavyEventDispatcher.target.PFD);
+	}
+
+	getMinsValue(){
+		return SimVar.GetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number');
+	}
+
+	areMinsInRadioPosition(){
+		return !(!!SimVar.GetSimVarValue('L:XMLVAR_Mins_Selector_Baro', 'Number'));
+	}
+
+	setMinsToRadio(){
+		if(!this.areMinsInRadioPositionValue){
+			HeavyEventDispatcher.triggerValue(HeavyEventDispatcher.event.Mins_Selector_Set, HeavyEventDispatcher.target.GLOBAL, 0, 'Number')
+		}
+	}
+
+	setMinsToBaro(){
+		if(this.areMinsInRadioPositionValue){
+			HeavyEventDispatcher.triggerValue(HeavyEventDispatcher.event.Mins_Selector_Set, HeavyEventDispatcher.target.GLOBAL, 1, 'Number')
 		}
 	}
 
@@ -751,6 +787,14 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 	}
 
 	updateChild(_deltaTime) {
+		this.areMinsInRadioPositionValue = this.areMinsInRadioPosition()
+
+
+		diffAndSetText(this.minimumReferenceValue, this.getMinsValue());
+
+		diffAndSetAttribute(this.radioSwitchBackground, 'fill', (this.areMinsInRadioPositionValue ? '#155700' : 'none'));
+		diffAndSetAttribute(this.baroSwitchBackground, 'fill', (this.areMinsInRadioPositionValue ? 'none' : '#155700'));
+
 		const baroMode = this.isBaroSTD();
 		const baroInInchesOfMercury = this.isBaroUnitInchesOfMercury();
 		let baroValue;
