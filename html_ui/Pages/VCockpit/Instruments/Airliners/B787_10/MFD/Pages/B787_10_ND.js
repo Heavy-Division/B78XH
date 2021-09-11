@@ -817,12 +817,19 @@ class B787_10_ND_Map extends MapInstrumentElement {
 	updateMapIfIrsNotAligned() {
 		let irsLState = SimVar.GetSimVarValue('L:B78XH_IRS_L_STATE', 'Number');
 		let irsRState = SimVar.GetSimVarValue('L:B78XH_IRS_R_STATE', 'Number');
+		if(this.irsAligned && (irsLState > 1 || irsRState > 1)){
+			return;
+		} else {
+			this.irsAligned = false;
+		}
+
 		if ((irsLState > 1 || irsRState > 1)) {
 			this._parent.querySelectorAll('[irs-state]').forEach((element) => {
 				if (element) {
 					element.setAttribute('irs-state', 'aligned');
 				}
 			});
+			this.irsAligned = true;
 			return;
 		} else if (irsLState > 0 || irsRState > 0) {
 			this._parent.querySelectorAll('[irs-state]').forEach((element) => {
