@@ -303,6 +303,7 @@ class B787_10_PFD_Altimeter extends NavSystemElement {
 		super();
 		this.isMTRSActive = false;
 		this.minimumReference = 200;
+		SimVar.SetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number', this.minimumReference);
 	}
 
 	init(root) {
@@ -336,14 +337,17 @@ class B787_10_PFD_Altimeter extends NavSystemElement {
 			case 'Mins_INC':
 				this.minimumReference += 10;
 				this.altimeter.minimumReferenceValue = this.minimumReference;
+				SimVar.SetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number', this.altimeter.minimumReferenceValue);
 				break;
 			case 'Mins_DEC':
 				this.minimumReference -= 10;
 				this.altimeter.minimumReferenceValue = this.minimumReference;
+				SimVar.SetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number', this.altimeter.minimumReferenceValue);
 				break;
 			case 'Mins_Press':
 				this.minimumReference = 200;
 				this.altimeter.minimumReferenceValue = this.minimumReference;
+				SimVar.SetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number', this.altimeter.minimumReferenceValue);
 				break;
 		}
 	}
