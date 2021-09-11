@@ -727,11 +727,8 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 
 	toggleBaroSTD() {
 		if (this.isBaroSTD()) {
-			const savedPressure = SimVar.GetSimVarValue('L:XMLVAR_Baro1_SavedPressure', 'Number');
-			SimVar.SetSimVarValue('K:2:KOHLSMAN_SET', 'Number', savedPressure);
 			SimVar.SetSimVarValue('L:XMLVAR_Baro1_ForcedToSTD', 'Number', 0);
 		} else {
-			SimVar.SetSimVarValue('L:XMLVAR_Baro1_SavedPressure', 'Number', Simplane.getPressureValue());
 			SimVar.SetSimVarValue('L:XMLVAR_Baro1_ForcedToSTD', 'Number', 1);
 			SimVar.SetSimVarValue('K:BAROMETRIC_STD_PRESSURE', 'Number', 1);
 		}
