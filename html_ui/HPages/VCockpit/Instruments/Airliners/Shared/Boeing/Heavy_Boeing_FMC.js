@@ -139,36 +139,10 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		this._isMainRouteActivated = false;
 
 		/**
-		 * TODO: This should be moved to custom system class for observing
-		 * @type {{route: {origin: boolean, destination: boolean, completed: boolean, activated: boolean}, takeoff: {flaps: boolean, completed: boolean, v1: boolean, vR: boolean, v2: boolean}, perfInit: {cruiseAltitude: boolean, costIndex: boolean, reserves: boolean, completed: boolean}, thrust: {takeOffTemp: boolean, completed: boolean}, finished: boolean, completed: boolean}}
+		 * FMC data holder
+		 * @type {FMCDataHolder}
 		 */
-		this.fmcPreFlightComplete = {
-			completed: false,
-			finished: false,
-			thrust: {
-				completed: false,
-				takeOffTemp: false
-			},
-			takeoff: {
-				completed: false,
-				flaps: false,
-				v1: false,
-				vR: false,
-				v2: false
-			},
-			perfInit: {
-				completed: false,
-				cruiseAltitude: false,
-				costIndex: false,
-				reserves: false
-			},
-			route: {
-				completed: false,
-				origin: false,
-				destination: false,
-				activated: false
-			}
-		};
+		this.dataHolder = new FMCDataHolder();
 
 		this._alertingMessages = [];
 	}
@@ -748,11 +722,45 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		}
 	}
 
+	checkFmcPreFlight(){
+		if(!this.dataHolder.preFlightDataHolder.finished){
+			this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature = (!!this.getThrustTakeOffTemp())
+			this.dataHolder.preFlightDataHolder.thrustLim.completed = (this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature)
+
+			this.dataHolder.preFlightDataHolder.takeOff.flaps = (!!this.getTakeOffFlap())
+			this.dataHolder.preFlightDataHolder.takeOff.v1 = (!!this.v1Speed)
+			this.dataHolder.preFlightDataHolder.takeOff.vR = (!!this.vRSpeed)
+			this.dataHolder.preFlightDataHolder.takeOff.v2 = (!!this.v2Speed)
+			this.dataHolder.preFlightDataHolder.takeOff.completed = (this.dataHolder.preFlightDataHolder.takeOff.v1 && this.dataHolder.preFlightDataHolder.takeOff.vR && this.dataHolder.preFlightDataHolder.takeOff.v2 && this.dataHolder.preFlightDataHolder.takeOff.flaps);
+
+			this.dataHolder.preFlightDataHolder.perfInit.cruiseAltitude = (!!this.cruiseFlightLevel)
+			this.dataHolder.preFlightDataHolder.perfInit.costIndex = (!!this.costIndex)
+			this.dataHolder.preFlightDataHolder.perfInit.reserves = (!!this.getFuelReserves())
+			this.dataHolder.preFlightDataHolder.perfInit.completed = (this.dataHolder.preFlightDataHolder.perfInit.cruiseAltitude && this.dataHolder.preFlightDataHolder.perfInit.costIndex && this.dataHolder.preFlightDataHolder.perfInit.reserves)
+
+			this.dataHolder.preFlightDataHolder.route.origin = (!!this.flightPlanManager.getOrigin())
+			this.dataHolder.preFlightDataHolder.route.destination = (!!this.flightPlanManager.getDestination())
+			this.dataHolder.preFlightDataHolder.route.activated = true
+			this.dataHolder.preFlightDataHolder.route.completed = (this.dataHolder.preFlightDataHolder.route.activated && this.dataHolder.preFlightDataHolder.route.destination && this.dataHolder.preFlightDataHolder.route.origin)
+
+			this.dataHolder.preFlightDataHolder.completed = (this.dataHolder.preFlightDataHolder.thrustLim.completed && this.dataHolder.preFlightDataHolder.takeOff.completed && this.dataHolder.preFlightDataHolder.perfInit.completed && this.dataHolder.preFlightDataHolder.route.completed)
+		}
+	}
+
+	showFMCPreFlightComplete(airspeed){
+		if(this.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF && airspeed < 80){
+			this.checkFmcPreFlight();
+		} else {
+			this.dataHolder.preFlightDataHolder.finished = true;
+		}
+	}
+
 	/**
 	 * TODO: This should be in FlightPhaseManager
 	 */
 	checkUpdateFlightPhase() {
 		let airSpeed = Simplane.getTrueSpeed();
+		this.showFMCPreFlightComplete(airSpeed);
 		if (airSpeed > 10) {
 			if (this.currentFlightPhase === 0) {
 				this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_TAKEOFF;

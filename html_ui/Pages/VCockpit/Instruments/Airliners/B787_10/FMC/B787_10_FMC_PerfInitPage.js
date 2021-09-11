@@ -82,7 +82,7 @@ class B787_10_FMC_PerfInitPage {
 
 			let separator = '__FMCSEPARATOR';
 
-			if(!fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished && !fmc.fmcPreFlightComplete.perfInit.completed){
+			if(!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.perfInit.completed){
 				separator = '--------------------------------PRE-FLT';
 			}
 
@@ -102,7 +102,7 @@ class B787_10_FMC_PerfInitPage {
 				['\<INDEX', 'THRUST LIM>']
 			]);
 
-			if(fmc.fmcPreFlightComplete.completed && !fmc.fmcPreFlightComplete.finished){
+			if(fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished){
 				let fmsPreFlightElement = document.createElement("div");
 				fmsPreFlightElement.classList.add('fms-preflight');
 				fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;')
