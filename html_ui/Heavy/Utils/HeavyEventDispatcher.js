@@ -17,6 +17,13 @@ let HeavyEventDispatcher;
 		SimVar.SetSimVarValue(HeavyEventDispatcher.target[target] + HeavyEventDispatcher.event[event], 'Number', 0);
 	};
 
+	HeavyEventDispatcher.triggerValue = function (event, target, value = 0, units = 'Number', debug = false) {
+		if(debug){
+			console.log(HeavyEventDispatcher.target[target] + HeavyEventDispatcher.event[event] + ' Units: ' + units + '; Value: ' + value);
+		}
+		SimVar.SetSimVarValue(HeavyEventDispatcher.target[target] + HeavyEventDispatcher.event[event], units, value);
+	};
+
 	/**
 	 * Target definitions
 	 */
@@ -79,6 +86,8 @@ let HeavyEventDispatcher;
 		event[event['Mins_INC'] = 200] = 'Mins_INC';
 		event[event['Mins_DEC'] = 201] = 'Mins_DEC';
 		event[event['Mins_RST'] = 202] = 'Mins_Press'; /* B:AIRLINER_Mins_Button_Push global event can be also use */
+		event[event['Mins_Selector_Toggle'] = 203] = 'B:AIRLINER_Mins_Selector_Toggle';
+		event[event['Mins_Selector_Set'] = 204] = 'B:AIRLINER_Mins_Selector_Set';
 
 
 		/**
