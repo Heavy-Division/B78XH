@@ -711,7 +711,17 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 
 	init() {
 		if (this.pageRoot != null) {
-			this.rstButton = this.pageRoot.querySelector('#RST_BUTTON')
+
+			this.ctrButton = this.pageRoot.querySelector('#CTR_BUTTON');
+			this.ctrButtonPath = this.pageRoot.querySelector('#CTR_BUTTON_PATH');
+			this.ctrButtonPath.addEventListener('click', this.toggleNDCenter.bind(this));
+
+			this.plusButtonPath = this.pageRoot.querySelector('#PLUS_BUTTON_PATH');
+			this.plusButtonPath.addEventListener('click', this.increaseNDRange.bind(this));
+			this.minusButtonPath = this.pageRoot.querySelector('#MINUS_BUTTON_PATH');
+			this.minusButtonPath.addEventListener('click', this.decreaseNDRange.bind(this));
+
+
 			this.rstButtonPath = this.pageRoot.querySelector('#RST_BUTTON_PATH');
 			this.rstButtonPath.addEventListener('click', this.resetMinimumReference.bind(this));
 			this.minimumReferenceValue = this.pageRoot.querySelector('#MINIMUM_REFERENCE_VALUE')
@@ -745,6 +755,18 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 			this.terrButtonPath = this.pageRoot.querySelector('#TERR_BUTTON_PATH');
 			this.terrButtonPath.addEventListener('click', this.toggleTERR.bind(this))
 		}
+	}
+
+	toggleNDCenter(){
+		HeavyEventDispatcher.trigger(HeavyEventDispatcher.event.AUTOPILOT_CTR, HeavyEventDispatcher.target.MFD_1)
+	}
+
+	increaseNDRange(){
+		HeavyEventDispatcher.trigger(HeavyEventDispatcher.event.Range_INC, HeavyEventDispatcher.target.MFD_1)
+	}
+
+	decreaseNDRange(){
+		HeavyEventDispatcher.trigger(HeavyEventDispatcher.event.Range_DEC, HeavyEventDispatcher.target.MFD_1)
 	}
 
 	toggleWXR(){
@@ -809,6 +831,9 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 	}
 
 	updateChild(_deltaTime) {
+		const isNDCentered = SimVar.GetSimVarValue('L:B78XH_IS_ND_CENTERED:1', 'Bool');
+		this.ctrButton.setAttribute('fill', (isNDCentered ? 'green' : 'none'));
+
 		const wxRadarOn = SimVar.GetSimVarValue('L:BTN_WX_ACTIVE:1', 'bool');
 		const terrainOn = SimVar.GetSimVarValue('L:BTN_TERRONND_ACTIVE:1', 'number');
 		const trafficOn = SimVar.GetSimVarValue('L:BTN_TFCONND_ACTIVE:1', 'number');
