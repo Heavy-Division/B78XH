@@ -734,7 +734,29 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 			this.hpaSwitch = this.pageRoot.querySelector('#HPA_SWITCH');
 			this.hpaSwitch.addEventListener('click', this.setBaroToHPA.bind(this));
 			this.hpaSwitchBackground = this.pageRoot.querySelector('#HPA_SWITCH_BACKGROUND');
+
+			this.wxrButton = this.pageRoot.querySelector('#WXR_BUTTON');
+			this.wxrButtonPath = this.pageRoot.querySelector('#WXR_BUTTON_PATH');
+			this.wxrButtonPath.addEventListener('click', this.toggleWXR.bind(this));
+			this.tfcButton = this.pageRoot.querySelector('#TFC_BUTTON');
+			this.tfcButtonPath = this.pageRoot.querySelector('#TFC_BUTTON_PATH');
+			this.tfcButtonPath.addEventListener('click', this.toggleTFC.bind(this))
+			this.terrButton = this.pageRoot.querySelector('#TERR_BUTTON');
+			this.terrButtonPath = this.pageRoot.querySelector('#TERR_BUTTON_PATH');
+			this.terrButtonPath.addEventListener('click', this.toggleTERR.bind(this))
 		}
+	}
+
+	toggleWXR(){
+		HeavyEventDispatcher.trigger(HeavyEventDispatcher.event.DSP_WXR, HeavyEventDispatcher.target.MFD_1)
+	}
+
+	toggleTFC(){
+		HeavyEventDispatcher.trigger(HeavyEventDispatcher.event.DSP_TFC, HeavyEventDispatcher.target.MFD_1)
+	}
+
+	toggleTERR(){
+		HeavyEventDispatcher.trigger(HeavyEventDispatcher.event.DSP_TERR, HeavyEventDispatcher.target.MFD_1)
 	}
 
 	resetMinimumReference(){
@@ -787,8 +809,15 @@ class B787_10_SYS_Page_EFIS_DSP extends B787_10_SYS_Page {
 	}
 
 	updateChild(_deltaTime) {
-		this.areMinsInRadioPositionValue = this.areMinsInRadioPosition()
+		const wxRadarOn = SimVar.GetSimVarValue('L:BTN_WX_ACTIVE:1', 'bool');
+		const terrainOn = SimVar.GetSimVarValue('L:BTN_TERRONND_ACTIVE:1', 'number');
+		const trafficOn = SimVar.GetSimVarValue('L:BTN_TFCONND_ACTIVE:1', 'number');
 
+		this.wxrButton.setAttribute('fill', (wxRadarOn ? 'green' : 'none'));
+		this.tfcButton.setAttribute('fill', (trafficOn ? 'green' : 'none'));
+		this.terrButton.setAttribute('fill', (terrainOn ? 'green' : 'none'));
+
+		this.areMinsInRadioPositionValue = this.areMinsInRadioPosition()
 
 		diffAndSetText(this.minimumReferenceValue, this.getMinsValue());
 
