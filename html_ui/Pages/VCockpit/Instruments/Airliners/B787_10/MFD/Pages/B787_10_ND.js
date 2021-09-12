@@ -90,6 +90,7 @@ class B787_10_ND extends B787_10_CommonMFD.MFDTemplateElement {
 			case 'AUTOPILOT_CTR':
 				if (this.map.mode != Jet_NDCompass_Display.PLAN) {
 					this.mapIsCentered = !this.mapIsCentered;
+					SimVar.SetSimVarValue('L:B78XH_IS_ND_CENTERED:' + this.gps.instrumentIndex, 'Bool', this.mapIsCentered);
 					this.forceMapUpdate = true;
 					this.onNavButton(B787_10_NavButtons.MAP);
 					this.navMenu.refresh();
