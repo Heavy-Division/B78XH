@@ -827,6 +827,7 @@ class B787_10_ND_Map extends MapInstrumentElement {
 		if ((irsLState > 1 || irsRState > 1)) {
 			this._parent.querySelectorAll('[irs-state]').forEach((element) => {
 				if (element) {
+					//element.removeAttribute('irs-state')
 					element.setAttribute('irs-state', 'aligned');
 				}
 			});
