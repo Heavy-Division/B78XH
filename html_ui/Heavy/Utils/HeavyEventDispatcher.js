@@ -78,6 +78,9 @@ let HeavyEventDispatcher;
 		event[event['DSP_ND'] = 112] = 'ND';
 		event[event['DSP_EICAS'] = 113] = 'EICAS';
 		event[event['DSP_ENG'] = 114] = 'ENG';
+		event[event['DSP_WXR'] = 115] = 'WXR';
+		event[event['DSP_TFC'] = 116] = 'TFC';
+		event[event['DSP_TERR'] = 117] = 'TERR';
 
 		/**
 		 * PFD Events
