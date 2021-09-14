@@ -74,37 +74,83 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 		let fp = this.flightPlanManager.getCurrentFlightPlan();
 		let allWaypoints = fp.waypoints.slice(fp.activeWaypointIndex);
 
+		let targetAltitude = undefined;
+		let targetIndex = undefined;
+		let targetType = undefined;
+
 		for (let i = 0; i <= allWaypoints.length - 1; i++) {
+			console.log(allWaypoints[i].ident);
 			if (allWaypoints[i].legAltitudeDescription === 0) {
 				continue;
 			}
 			if (allWaypoints[i].legAltitudeDescription === 1 && isFinite(allWaypoints[i].legAltitude1)) {
-				return Math.round(allWaypoints[i].legAltitude1);
+				targetAltitude = Math.round(allWaypoints[i].legAltitude1);
+				targetIndex = i;
+				targetType = 'AT';
+				break;
 			}
 
 			if (allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)) {
-				return Math.round(allWaypoints[i].legAltitude1);
+				targetAltitude = Math.round(allWaypoints[i].legAltitude1);
+				targetIndex = i;
+				targetType = 'A';
+				break;
 			}
 
 			if (allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)) {
-				return Math.round(allWaypoints[i].legAltitude1);
+				targetAltitude = Math.round(allWaypoints[i].legAltitude1);
+				targetIndex = i;
+				targetType = 'B';
+				break;
 			}
 
 			if (allWaypoints[i].legAltitudeDescription === 4 && isFinite(allWaypoints[i].legAltitude1) && isFinite(allWaypoints[i].legAltitude2)) {
 				if (allWaypoints[i].legAltitude1 === allWaypoints[i].legAltitude2) {
-					return Math.round(allWaypoints[i].legAltitude1);
+					targetAltitude = Math.round(allWaypoints[i].legAltitude1);
+					targetIndex = i;
+					targetType = 'AT';
+					break;
 				}
 
 				if (allWaypoints[i].legAltitude1 < allWaypoints[i].legAltitude2) {
 					let middle = (allWaypoints[i].legAltitude2 - allWaypoints[i].legAltitude1) / 2;
-					return Math.round(allWaypoints[i].legAltitude1 + middle);
+					targetAltitude = Math.round(allWaypoints[i].legAltitude1 + middle);
+					targetIndex = i;
+					targetType = 'AB';
+					break;
 				}
 
 				if (allWaypoints[i].legAltitude1 > allWaypoints[i].legAltitude2) {
 					let middle = (allWaypoints[i].legAltitude1 - allWaypoints[i].legAltitude2) / 2;
-					return Math.round(allWaypoints[i].legAltitude2 + middle);
+					targetAltitude = Math.round(allWaypoints[i].legAltitude2 + middle);
+					targetIndex = i;
+					targetType = 'AB';
+					break;
 				}
 			}
+		}
+		const lat = SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude');
+		const long = SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude');
+		const ll = new LatLongAlt(lat, long);
+
+		let distance = Avionics.Utils.computeGreatCircleDistance(ll, allWaypoints[0].infos.coordinates);
+
+		if (targetIndex !== 0) {
+			for (let i = 1; i < allWaypoints.length; i++) {
+				distance += Avionics.Utils.computeGreatCircleDistance(allWaypoints[i - 1].infos.coordinates, allWaypoints[i].infos.coordinates);
+				if (i === targetIndex) {
+					break;
+				}
+			}
+		}
+
+		if (targetAltitude) {
+			return {
+				targetAltitude: targetAltitude,
+				distance: distance,
+				waypoint: allWaypoints[targetIndex],
+				targetType: targetType
+			};
 		}
 
 		return NaN;
@@ -1288,6 +1334,9 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					SimVar.SetSimVarValue('K:AP_PANEL_ALTITUDE_HOLD', 'Number', 1);
 				}
 			}
+			if (!this.getIsVNAVActive()) {
+				SimVar.SetSimVarValue('L:B78XH_CUSTOM_VNAV_DESCENT_ENABLED', 'Number', 0);
+			}
 
 			if (this.getIsVNAVActive()) {
 				let nextWaypoint = this.flightPlanManager.getActiveWaypoint();
@@ -1332,7 +1381,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 							 * Descent new implementation
 							 */
 
-							let nextAltitude = this.getNextDescentAltitude();
+							let nextAltitudeObject = this.getNextDescentAltitude();
+							let nextAltitude = nextAltitudeObject.targetAltitude;
 							let selectedAltitude = altitude;
 							this._selectedAltitude = altitude;
 							let shouldEnableLevelOff = null;
@@ -1442,11 +1492,275 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 						}
 					}
 				}
+				//this.tryExecuteBAL();
 			}
 
 			this._execLight.style.backgroundColor = this.getIsRouteActivated() ? '#00ff00' : 'black';
 			this.updateAutopilotCooldown = this._apCooldown;
 		}
+	}
+
+	calculateFpmToNextWaypoint(altitude, targetAltitude, distance, waypoint, targetType) {
+		let groundSpeed = Simplane.getGroundSpeed();
+		if (targetAltitude === 'B') {
+			targetAltitude = targetAltitude - 300;
+		} else if (targetType === 'A') {
+			targetAltitude = targetAltitude + 300;
+		}
+
+		if (waypoint.isRunway) {
+			targetAltitude += 100;
+		}
+		let altitudeDelta = Math.abs(altitude - targetAltitude);
+		let knotsToMilesCoef = 0.0191796575;
+		let milesPerMinute = groundSpeed * knotsToMilesCoef;
+
+		let minutesToWaypoint = distance / milesPerMinute;
+		let rate = altitudeDelta / minutesToWaypoint;
+
+		return rate;
+	}
+
+	executeCustomVNAVDescent(rate, targetAltitude) {
+
+
+		SimVar.SetSimVarValue('L:B78XH_CUSTOM_VNAV_DESCENT_ENABLED', 'Number', 1);
+
+		/**
+		 * Disable FLCH mode
+		 */
+		SimVar.SetSimVarValue('K:FLIGHT_LEVEL_CHANGE_ON', 'Number', 0);
+
+		/**
+		 * Enable AIRSPEED mode
+		 */
+		SimVar.SetSimVarValue('K:AP_AIRSPEED_ON', 'Number', 1);
+
+		/**
+		 * Round (ceil) vertical speed
+		 */
+
+		const shouldCeil = !(rate < 30);
+
+		if (shouldCeil) {
+			rate = -1 * Math.ceil(Math.abs(rate) / 50) * 50;
+		}
+
+		/**
+		 * Do not descent during descent
+		 */
+		if (rate > -5) {
+			rate = 0;
+		}
+
+		/**
+		 * Set vertical speed and add 150 feet per minute (better be on altitude sooner)
+		 */
+		SimVar.SetSimVarValue('K:AP_VS_VAR_SET_ENGLISH', 'Feet per minute', rate);
+
+		/**
+		 * Set next target altitude
+		 */
+		Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, targetAltitude, this._forceNextAltitudeUpdate);
+		SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 1);
+
+		/**
+		 * Enable AP vertical speed hold
+		 * NOTE: K:AP_VS_ON can be used instead of K:AP_VS_HOLD
+		 */
+		SimVar.SetSimVarValue('K:AP_VS_HOLD', 'Number', 1);
+	}
+
+	controlDescent() {
+		/**
+		 * Descent new implementation
+		 */
+		let altitude = Simplane.getAltitude();
+		let targetAltitudeAndDistance = this.getNextDescentAltitude();
+
+		this.executeCustomVNAVDescent(this.calculateFpmToNextWaypoint(altitude, targetAltitudeAndDistance.targetAltitude, targetAltitudeAndDistance.distance, targetAltitudeAndDistance.waypoint, targetAltitudeAndDistance.targetType), targetAltitudeAndDistance.targetAltitude);
+
+		/*
+		let selectedAltitude = altitude;
+		this._selectedAltitude = altitude;
+		let shouldEnableLevelOff = null;
+		let needUpdateAltitude = false;
+		let targetAltitude = NaN;
+
+		if (nextAltitude >= selectedAltitude) {
+			shouldEnableLevelOff = false;
+			targetAltitude = nextAltitude;
+		} else if (nextAltitude < selectedAltitude) {
+			shouldEnableLevelOff = true;
+			targetAltitude = selectedAltitude;
+		}
+
+		this._descentTargetAltitude = targetAltitude;
+
+		if (this._lastDescentTargetAltitude !== this._descentTargetAltitude) {
+			this._lastDescentTargetAltitude = this._descentTargetAltitude;
+			needUpdateAltitude = true;
+		}
+
+		if (this._lastSelectedAltitude !== this._selectedAltitude) {
+			this._lastSelectedAltitude = this._selectedAltitude;
+			needUpdateAltitude = true;
+		}
+
+		let altitudeInterventionPushed = SimVar.GetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number');
+
+		if (altitudeInterventionPushed) {
+			needUpdateAltitude = true;
+			SimVar.SetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number', 0);
+		}
+
+
+		if (Simplane.getAutoPilotAltitudeLockActive()) {
+			if (shouldEnableLevelOff) {
+				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number', 1);
+			}
+		}
+
+		let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number');
+
+		if (!isLevelOffActive || altitudeInterventionPushed) {
+			if (isFinite(targetAltitude) && needUpdateAltitude) {
+				Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, targetAltitude, this._forceNextAltitudeUpdate);
+				this._forceNextAltitudeUpdate = false;
+				SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
+			}
+		}
+		*/
+	}
+
+	controlDescentOld() {
+		/**
+		 * Descent new implementation
+		 */
+
+		let nextAltitude = this.getNextDescentAltitude();
+		let selectedAltitude = altitude;
+		this._selectedAltitude = altitude;
+		let shouldEnableLevelOff = null;
+		let needUpdateAltitude = false;
+		let targetAltitude = NaN;
+
+		if (nextAltitude >= selectedAltitude) {
+			shouldEnableLevelOff = false;
+			targetAltitude = nextAltitude;
+		} else if (nextAltitude < selectedAltitude) {
+			shouldEnableLevelOff = true;
+			targetAltitude = selectedAltitude;
+		}
+
+		this._descentTargetAltitude = targetAltitude;
+
+		if (this._lastDescentTargetAltitude !== this._descentTargetAltitude) {
+			this._lastDescentTargetAltitude = this._descentTargetAltitude;
+			needUpdateAltitude = true;
+		}
+
+		if (this._lastSelectedAltitude !== this._selectedAltitude) {
+			this._lastSelectedAltitude = this._selectedAltitude;
+			needUpdateAltitude = true;
+		}
+
+		let altitudeInterventionPushed = SimVar.GetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number');
+
+		if (altitudeInterventionPushed) {
+			needUpdateAltitude = true;
+			SimVar.SetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number', 0);
+		}
+
+
+		if (Simplane.getAutoPilotAltitudeLockActive()) {
+			if (shouldEnableLevelOff) {
+				SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number', 1);
+			}
+		}
+
+		let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number');
+
+		if (!isLevelOffActive || altitudeInterventionPushed) {
+			if (isFinite(targetAltitude) && needUpdateAltitude) {
+				Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, targetAltitude, this._forceNextAltitudeUpdate);
+				this._forceNextAltitudeUpdate = false;
+				SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
+			}
+		}
+	}
+
+	tryExecuteBAL() {
+		/*
+								if (Simplane.getAutoPilotThrottleActive()) {
+									let altitude = Simplane.getAltitudeAboveGround();
+									if (altitude < 50) {
+										if (!this._pitch) {
+											this._pitch = SimVar.GetSimVarValue('PLANE PITCH DEGREES', 'Radians')
+										}
+										if(!this._pitchInterval50 && !this._stopPitchInterval50){
+											this._pitchInterval50 = setInterval(() => {
+												let fpm = Simplane.getVerticalSpeed();
+												if(fpm > -400){
+													this._pitch += 0.0002;
+												} else if (fpm < -800) {
+													this._pitch -= 0.0001;
+												}
+												SimVar.SetSimVarValue('PLANE PITCH DEGREES', 'Radians', this._pitch);
+											}, 5)
+										}
+										if (Simplane.getEngineThrottleMode(0) != ThrottleMode.IDLE) {
+											console.log('Setting thrust to idle');
+											Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.IDLE);
+											SimVar.SetSimVarValue("A:GENERAL ENG THROTTLE LEVER POSITION:1", "Percent", 0);
+											SimVar.SetSimVarValue("A:GENERAL ENG THROTTLE LEVER POSITION:2", "Percent", 0);
+										}
+									}
+
+									if (altitude < 20) {
+										this._stopPitchInterval50 = true;
+										if(this._pitchInterval50){
+											clearInterval(this._pitchInterval50);
+										}
+										if(!this._pitchInterval11 && !this._stopPitchInterval11){
+											this._pitchInterval11 = setInterval(() => {
+												let fpm = Simplane.getVerticalSpeed();
+												if(fpm > -80){
+													this._pitch += 0.0002;
+												} else if (fpm < -150) {
+													this._pitch -= 0.0005;
+												}
+												//this._pitch -= 0.00065;
+												//this._pitch -= 0.00075;
+												SimVar.SetSimVarValue('PLANE PITCH DEGREES', 'Radians', this._pitch);
+											}, 2)
+										}
+										this._stopHoldPitch = true;
+									}
+
+									if(altitude < 5){
+										this._stopPitchInterval11 = true;
+										if(this._pitchInterval11){
+											clearInterval(this._pitchInterval11);
+										}
+										if(!this._pitchInterval5 && !this._stopPitchInterval5){
+											this._pitchInterval5 = setInterval(() => {
+												this._pitch += 0.00003;
+												if(this._pitch < 0){
+													SimVar.SetSimVarValue('PLANE PITCH DEGREES', 'Radians', this._pitch);
+												}
+											}, 5)
+										}
+									}
+
+									if(Simplane.getAutoPilotActive() != 1){
+										this._stopPitchInterval5 = true;
+										if(this._pitchInterval5){
+											clearInterval(this._pitchInterval5);
+										}
+									}
+								}
+								 */
 	}
 
 	updateSideButtonActiveStatus() {

@@ -260,7 +260,12 @@ class B787_10_PFD_VSpeed extends NavSystemElement {
 		if (Simplane.getAutoPilotVerticalSpeedHoldActive()) {
 			var selVSpeed = Math.round(Simplane.getAutoPilotVerticalSpeedHoldValue());
 			diffAndSetAttribute(this.vsi, 'selected_vspeed', selVSpeed + '');
-			diffAndSetAttribute(this.vsi, 'selected_vspeed_active', 'true');
+
+			if (SimVar.GetSimVarValue('L:B78XH_CUSTOM_VNAV_DESCENT_ENABLED', 'Number') === 1) {
+				diffAndSetAttribute(this.vsi, 'selected_vspeed_active', 'false');
+			} else {
+				diffAndSetAttribute(this.vsi, 'selected_vspeed_active', 'true');
+			}
 		} else {
 			diffAndSetAttribute(this.vsi, 'selected_vspeed_active', 'false');
 		}
