@@ -3,7 +3,7 @@
         {
             "path": "html_ui/B78XH/b78xh.json",
             "size": 122,
-            "date": 132772512000673980
+            "date": 132772519555743060
         },
         {
             "path": "html_ui/plans/plan.pln",
@@ -14,6 +14,51 @@
             "path": "ModelBehaviorDefs/Heavy/Index.xml",
             "size": 137,
             "date": 132748293433366720
+        },
+        {
+            "path": "html_ui/Heavy/Enums/B78XH_EICAS_Messages.js",
+            "size": 90770,
+            "date": 132772519495090110
+        },
+        {
+            "path": "html_ui/Heavy/Enums/B78XH_LocalVariables.js",
+            "size": 4155,
+            "date": 132748293434006720
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyDataStorage.js",
+            "size": 1254,
+            "date": 132748293434026720
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyEventDispatcher.js",
+            "size": 3610,
+            "date": 132758779807314620
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyInputChecks.js",
+            "size": 3114,
+            "date": 132748293434036720
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyInputUtils.js",
+            "size": 331,
+            "date": 132748293434036720
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyUpdateDelayer.js",
+            "size": 894,
+            "date": 132748293434036720
+        },
+        {
+            "path": "html_ui/Heavy/Utils/HeavyUtils.js",
+            "size": 3512,
+            "date": 132748293434046720
+        },
+        {
+            "path": "html_ui/Heavy/Utils/UpdateDelayer.js",
+            "size": 1484,
+            "date": 132748293434046720
         },
         {
             "path": "html_ui/B78XH/Autopilot/B78XHNavModeSelector.js",
@@ -36,14 +81,14 @@
             "date": 132748293433866720
         },
         {
-            "path": "html_ui/B78XH/Systems/B78XH_APUInfo.js",
-            "size": 764,
-            "date": 132748293433866720
-        },
-        {
             "path": "html_ui/B78XH/Systems/B78XH_Initializer.js",
             "size": 5583,
             "date": 132748293433876720
+        },
+        {
+            "path": "html_ui/B78XH/Systems/B78XH_APUInfo.js",
+            "size": 764,
+            "date": 132748293433866720
         },
         {
             "path": "html_ui/B78XH/Systems/B78XH_IRS.js",
@@ -59,51 +104,6 @@
             "path": "html_ui/B78XH/Systems/B78XH_SystemsInfo.js",
             "size": 487,
             "date": 132748293433886700
-        },
-        {
-            "path": "html_ui/Heavy/Enums/B78XH_EICAS_Messages.js",
-            "size": 88889,
-            "date": 132772511325397700
-        },
-        {
-            "path": "html_ui/Heavy/Enums/B78XH_LocalVariables.js",
-            "size": 4155,
-            "date": 132748293434006720
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyDataStorage.js",
-            "size": 1254,
-            "date": 132748293434026720
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyEventDispatcher.js",
-            "size": 3610,
-            "date": 132758779807314620
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyInputUtils.js",
-            "size": 331,
-            "date": 132748293434036720
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyUpdateDelayer.js",
-            "size": 894,
-            "date": 132748293434036720
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyUtils.js",
-            "size": 3512,
-            "date": 132748293434046720
-        },
-        {
-            "path": "html_ui/Heavy/Utils/HeavyInputChecks.js",
-            "size": 3114,
-            "date": 132748293434036720
-        },
-        {
-            "path": "html_ui/Heavy/Utils/UpdateDelayer.js",
-            "size": 1484,
-            "date": 132748293434046720
         },
         {
             "path": "html_ui/WTPages/Autopilot/AutopilotMath.js",
@@ -156,14 +156,14 @@
             "date": 132748293434516740
         },
         {
-            "path": "html_ui/WTPages/WTLibs/WT_SimPlaneMod.js",
-            "size": 675,
-            "date": 132748293434516740
-        },
-        {
             "path": "ModelBehaviorDefs/Asobo/Generic/Index.xml",
             "size": 470,
             "date": 132748293433346700
+        },
+        {
+            "path": "html_ui/WTPages/WTLibs/WT_SimPlaneMod.js",
+            "size": 675,
+            "date": 132748293434516740
         },
         {
             "path": "ModelBehaviorDefs/Heavy/Airliner/Common.xml",
@@ -206,26 +206,6 @@
             "date": 132750794343018270
         },
         {
-            "path": "html_ui/B78XH/DataHolders/FMC/FMCDataHolder.js",
-            "size": 246,
-            "date": 132758447813569970
-        },
-        {
-            "path": "html_ui/B78XH/DataHolders/FMC/PreFlightDataHolder.js",
-            "size": 5280,
-            "date": 132758461197840910
-        },
-        {
-            "path": "html_ui/B78XH/DataHolders/MFD/MFDDataHolder.js",
-            "size": 26,
-            "date": 132758353224967200
-        },
-        {
-            "path": "html_ui/B78XH/DataHolders/PFD/PFDDataHolder.js",
-            "size": 26,
-            "date": 132758353225027260
-        },
-        {
             "path": "html_ui/Heavy/Integrations/SimBrief/SimBrief.js",
             "size": 659,
             "date": 132748293434016720
@@ -244,6 +224,26 @@
             "path": "html_ui/Heavy/Integrations/SimBrief/SimBriefOceanicWaypointConverter.js",
             "size": 326,
             "date": 132748293434026720
+        },
+        {
+            "path": "html_ui/B78XH/DataHolders/FMC/FMCDataHolder.js",
+            "size": 246,
+            "date": 132758447813569970
+        },
+        {
+            "path": "html_ui/B78XH/DataHolders/FMC/PreFlightDataHolder.js",
+            "size": 5280,
+            "date": 132758461197840910
+        },
+        {
+            "path": "html_ui/B78XH/DataHolders/MFD/MFDDataHolder.js",
+            "size": 26,
+            "date": 132758353224967200
+        },
+        {
+            "path": "html_ui/B78XH/DataHolders/PFD/PFDDataHolder.js",
+            "size": 26,
+            "date": 132758353225027260
         },
         {
             "path": "html_ui/Pages/VCockpit/Core/VCockpit.html",
@@ -306,14 +306,14 @@
             "date": 132748293433916740
         },
         {
-            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/MapInstrument.html",
-            "size": 5939,
-            "date": 132748293433916740
-        },
-        {
             "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/MapInstrument.js",
             "size": 63670,
             "date": 132757139831509860
+        },
+        {
+            "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/MapInstrument.html",
+            "size": 5939,
+            "date": 132748293433916740
         },
         {
             "path": "html_ui/HPages/VCockpit/Instruments/Airliners/Shared/Boeing/Heavy_Boeing_FMC.js",
@@ -926,13 +926,13 @@
             "date": 132748293434336740
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_TACAN.png",
-            "size": 3274,
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_TACAN_DISPLAYED.png",
+            "size": 4449,
             "date": 132748293434346720
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_TACAN_DISPLAYED.png",
-            "size": 4449,
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_TACAN.png",
+            "size": 3274,
             "date": 132748293434346720
         },
         {

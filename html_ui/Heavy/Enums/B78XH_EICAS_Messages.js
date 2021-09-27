@@ -128,6 +128,14 @@ let EICASMessages;
 	EICASMessages[EICASMessages['FUEL_PRESS_ENG_L'] = 2052] = 'FUEL PRESS ENG L';
 	EICASMessages[EICASMessages['FUEL_PRESS_ENG_R'] = 2053] = 'FUEL PRESS ENG R';
 	EICASMessages[EICASMessages['FUEL_QTY_LOW'] = 2054] = 'FUEL QTY LOW';
+	EICASMessages[EICASMessages['GEAR_DISAGREE'] = 2055] = 'GEAR DISAGREE';
+	EICASMessages[EICASMessages['GEAR_DRAG_BRACE_L'] = 2056] = 'GEAR DRAG BRACE L';
+	EICASMessages[EICASMessages['GEAR_DRAG_BRACE_R'] = 2057] = 'GEAR DRAG BRACE R';
+	EICASMessages[EICASMessages['GEAR_SIDE_BRACE_L'] = 2058] = 'GEAR SIDE BRACE L';
+	EICASMessages[EICASMessages['GEAR_SIDE_BRACE_R'] = 2059] = 'GEAR SIDE BRACE R';
+	EICASMessages[EICASMessages['GLIDESLOPE'] = 2060] = 'GLIDESLOPE';
+
+
 	/**
 	 * ADVISORY Messages
 	 * @type {string}
@@ -289,6 +297,13 @@ let EICASMessages;
 	EICASMessages[EICASMessages['FUEL_PUMP_R_FWD_ADVISORY'] = 3154] = 'FUEL PUMP R FWD';
 	EICASMessages[EICASMessages['FUEL_TEMP_LOW_ADVISORY'] = 3155] = 'FUEL TEMP LOW';
 	EICASMessages[EICASMessages['FUEL_VALVE_APU_ADVISORY'] = 3156] = 'FUEL VALVE APU';
+	EICASMessages[EICASMessages['GEAR_CONTROL'] = 3157] = 'GEAR CONTROL';
+	EICASMessages[EICASMessages['GEAR_DOOR'] = 3158] = 'GEAR DOOR';
+	EICASMessages[EICASMessages['GND_PROX_SYS'] = 3159] = 'GND PROX SYS';
+	EICASMessages[EICASMessages['GPS'] = 3160] = 'GPS';
+	EICASMessages[EICASMessages['GPWS_FLAP_OVRD'] = 3161] = 'GPWS FLAP OVRD';
+	EICASMessages[EICASMessages['GPWS_GEAR_OVRD'] = 3162] = 'GPWS GEAR OVRD';
+	EICASMessages[EICASMessages['GPWS_TERR_OVRD'] = 3163] = 'GPWS TERR OVRD';
 
 	/**
 	 * COMM Messages
@@ -303,6 +318,7 @@ let EICASMessages;
 	EICASMessages[EICASMessages['COMM_BUSY'] = 4004] = 'COMM BUSY';
 	EICASMessages[EICASMessages['FD_DOOR_CALL'] = 4005] = 'FD DOOR CALL';
 	EICASMessages[EICASMessages['FMC_COMM'] = 4006] = 'FMC';
+	EICASMessages[EICASMessages['GROUND_CALL'] = 4007] = 'GROUND CALL';
 	/**
 	 * MEMO Messages
 	 * @type {string}
@@ -323,6 +339,7 @@ let EICASMessages;
 	EICASMessages[EICASMessages['DOORS_MANUAL'] = 5013] = 'DOORS MANUAL';
 	EICASMessages[EICASMessages['FUEL_BALANCE_ON'] = 5014] = 'FUEL BALANCE ON';
 	EICASMessages[EICASMessages['FUEL_CROSSFEED_ON'] = 5015] = 'FUEL CROSSFEED ON';
+	EICASMessages[EICASMessages['GS_ALERT_INHIBITED'] = 5016] = 'G/S ALERT INHIBITED';
 	/**
 	 * STATUS Messages
 	 * @type {string}
@@ -1109,6 +1126,16 @@ let EICASMessages;
 	EICASMessages[EICASMessages['FUEL_PUMP_R_FWD_STATUS'] = 6778] = 'FUEL PUMP R FWD';
 	EICASMessages[EICASMessages['FUEL_TEMP_LOW_STATUS'] = 6779] = 'FUEL TEMP LOW';
 	EICASMessages[EICASMessages['FUEL_VALVE_APU_STATUS'] = 6780] = 'FUEL VALVE APU';
+	EICASMessages[EICASMessages['GEAR_CONTROL_SYS'] = 6781] = 'GEAR CONTROL SYS';
+	EICASMessages[EICASMessages['GEAR_INDICATION_SYS'] = 6782] = 'GEAR INDICATION SYS';
+	EICASMessages[EICASMessages['GEAR_INHIBIT_RESET_RELAY'] = 6783] = 'GEAR INHIBIT RESET RELAY';
+	EICASMessages[EICASMessages['GEAR_LEVER_SWITCH'] = 6784] = 'GEAR LEVER SWITCH';
+	EICASMessages[EICASMessages['GLS_L'] = 6785] = 'GLS L';
+	EICASMessages[EICASMessages['GLS_R'] = 6786] = 'GLS R';
+	EICASMessages[EICASMessages['GPS_L'] = 6787] = 'GPS L';
+	EICASMessages[EICASMessages['GPS_R'] = 6788] = 'GPS R';
+	EICASMessages[EICASMessages['GROUND_PROXIMITY_SYS_L'] = 6789] = 'GROUND PROXIMITY SYS L';
+	EICASMessages[EICASMessages['GROUND_PROXIMITY_SYS_R'] = 6790] = 'GROUND PROXIMITY SYS R';
 
 
 })(EICASMessages || (EICASMessages = {}));
