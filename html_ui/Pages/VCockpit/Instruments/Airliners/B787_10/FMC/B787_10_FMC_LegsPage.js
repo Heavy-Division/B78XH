@@ -565,6 +565,8 @@ class B787_10_FMC_LegsPage {
 									});
 								}
 							});
+						} else {
+							this._fmc.showErrorMessage('INVALID DELETE');
 						}
 						break;
 					}
