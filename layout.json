@@ -3,7 +3,7 @@
         {
             "path": "html_ui/B78XH/b78xh.json",
             "size": 122,
-            "date": 132772547976231440
+            "date": 132772554793642430
         },
         {
             "path": "html_ui/plans/plan.pln",
@@ -62,8 +62,8 @@
         },
         {
             "path": "html_ui/Heavy/Enums/B78XH_EICAS_Messages.js",
-            "size": 101049,
-            "date": 132772547898639140
+            "size": 103795,
+            "date": 132772554370304560
         },
         {
             "path": "html_ui/Heavy/Enums/B78XH_LocalVariables.js",
@@ -111,14 +111,14 @@
             "date": 132748293434476720
         },
         {
-            "path": "html_ui/WTPages/Autopilot/HoldsDirector.js",
-            "size": 22716,
-            "date": 132748293434486720
-        },
-        {
             "path": "html_ui/WTPages/Autopilot/LNavDirector.js",
             "size": 30205,
             "date": 132753017510893740
+        },
+        {
+            "path": "html_ui/WTPages/Autopilot/HoldsDirector.js",
+            "size": 22716,
+            "date": 132748293434486720
         },
         {
             "path": "html_ui/WTPages/Autopilot/LocDirector.js",
@@ -231,13 +231,13 @@
             "date": 132748293434016720
         },
         {
-            "path": "html_ui/Heavy/Integrations/SimBrief/SimBriefApi.js",
-            "size": 904,
+            "path": "html_ui/Heavy/Integrations/SimBrief/SimBriefCredentials.js",
+            "size": 431,
             "date": 132748293434016720
         },
         {
-            "path": "html_ui/Heavy/Integrations/SimBrief/SimBriefCredentials.js",
-            "size": 431,
+            "path": "html_ui/Heavy/Integrations/SimBrief/SimBriefApi.js",
+            "size": 904,
             "date": 132748293434016720
         },
         {
