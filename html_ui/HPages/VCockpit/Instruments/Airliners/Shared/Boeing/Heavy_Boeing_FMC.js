@@ -144,7 +144,7 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		 */
 		this.dataHolder = new FMCDataHolder();
 
-		this._alertingMessages = [];
+		this.messageManager = new FMCMessagesManager();
 	}
 
 	Init() {

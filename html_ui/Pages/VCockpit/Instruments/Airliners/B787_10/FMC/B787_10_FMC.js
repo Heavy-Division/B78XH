@@ -1,14 +1,14 @@
 class B787_10_FMC extends Heavy_Boeing_FMC {
 
 	_updateAlertingMessages() {
-		if (this._alertingMessages.length > 0) {
+		if (this.messageManager.numberOfMessages > 0) {
 			let messageBoxTitle = document.body.querySelector('.fms-message-title');
 			let messageBoxContent = document.body.querySelector('.fms-message-content');
 			let messageBoxCount = document.body.querySelector('.fms-message-count');
 
-			messageBoxTitle.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].title;
-			messageBoxContent.innerHTML = this._alertingMessages[this._alertingMessages.length - 1].content;
-			messageBoxCount.innerHTML = this._alertingMessages.length.toFixed(0).padStart(2, '0');
+			messageBoxTitle.innerHTML = this.messageManager.lastMessage.title;
+			messageBoxContent.innerHTML = this.messageManager.lastMessage.text;
+			messageBoxCount.innerHTML = this.messageManager.numberOfMessages.toFixed(0).padStart(2, '0');
 			let messageBox = document.body.querySelector('.fms-message');
 			messageBox.style.display = 'block';
 		} else {
@@ -475,8 +475,8 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 				B787_10_FMC_HoldsPage.handleHoldPressed(this);
 			});
 			this.getChildById('.fms-clr-msg').addEventListener('mouseup', () => {
-				if (this._alertingMessages.length > 0) {
-					this._alertingMessages.pop();
+				if (this.messageManager.numberOfMessages > 0) {
+					this.messageManager.removeLastMessage();
 				}
 			});
 

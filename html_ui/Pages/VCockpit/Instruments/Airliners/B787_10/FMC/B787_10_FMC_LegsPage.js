@@ -406,7 +406,8 @@ class B787_10_FMC_LegsPage {
 										this._fmc.flightPlanManager.clearDiscontinuity(waypoint.index);
 										lskWaypointIndex += 1;
 									} else {
-										this._fmc.showErrorMessage('INVALID DELETE');
+										this._fmc.clearUserInput()
+										this._fmc.messageManager.showMessage('INVALID DELETE', 'SELECTED LINE CAN NOT <br> BE DELETED')
 										isMovable = false;
 									}
 								}
@@ -450,7 +451,8 @@ class B787_10_FMC_LegsPage {
 										this._fmc.flightPlanManager.clearDiscontinuity(waypoint.index);
 										selectedWpIndex += 1;
 									} else {
-										this._fmc.showErrorMessage('INVALID DELETE');
+										this._fmc.clearUserInput()
+										this._fmc.messageManager.showMessage('INVALID DELETE', 'SELECTED LINE CAN NOT <br> BE DELETED')
 										return;
 									}
 								}
@@ -550,7 +552,8 @@ class B787_10_FMC_LegsPage {
 											this.resetAfterOp();
 										});
 									} else {
-										this._fmc.showErrorMessage('INVALID DELETE');
+										this._fmc.clearUserInput()
+										this._fmc.messageManager.showMessage('INVALID DELETE', 'SELECTED LINE CAN NOT <br> BE DELETED')
 									}
 								} else if (waypoint.fix.isHold) {
 									this._fmc.flightPlanManager.deleteHoldAtWaypointIndex(waypoint.index);
@@ -566,7 +569,8 @@ class B787_10_FMC_LegsPage {
 								}
 							});
 						} else {
-							this._fmc.showErrorMessage('INVALID DELETE');
+							this._fmc.clearUserInput()
+							this._fmc.messageManager.showMessage('INVALID DELETE', 'SELECTED LINE CAN NOT <br> BE DELETED')
 						}
 						break;
 					}
