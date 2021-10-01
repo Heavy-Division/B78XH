@@ -485,6 +485,32 @@ class B787_10_FMC extends Heavy_Boeing_FMC {
 					B787_10_FMC_HeavyPage.ShowPage1(this);
 				});
 			}
+
+			/**
+			 * Check NAV DATA
+			 */
+
+			let y = SimVar.GetGlobalVarValue('ZULU YEAR', 'number');
+			let m = SimVar.GetGlobalVarValue('ZULU MONTH OF YEAR', 'number');
+			let d = SimVar.GetGlobalVarValue('ZULU DAY OF MONTH', 'number');
+			let date = new Date();
+			date.setUTCFullYear(y, m - 1, d)
+			date.setUTCHours(23, 59, 59);
+
+			let navDataDateRange = this.getNavDataDateRange();
+			let navDataDateArray = navDataDateRange.substring(navDataDateRange.length - 8).split('/')
+			let m1 = B787_10_FMC._MonthOfYear.findIndex(function(element){
+				return element === navDataDateArray[0].substring(0, 3);
+			})
+			let d1 = navDataDateArray[0].substring(navDataDateArray[0].length - 2);
+			let y1  = '20' + navDataDateArray[1]
+
+			let date1 = new Date();
+			date1.setUTCFullYear(parseInt(y1), m1 + 1, parseInt(d1))
+			date1.setUTCHours(23, 59, 59);
+			if(date1.getTime() < date.getTime()){
+				this.messageManager.showMessage('NAV DATA OUT OF DATE', 'END DATE OF THE ACTIVE <br> DATA BASE HAS PASSED <br> SELECT NEW CYCLE <br> ON IDENT PAGE')
+			}
 		}
 
 		if (B787_10_FMC_HeavyPage.WITHOUT_MANAGERS) {
