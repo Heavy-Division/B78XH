@@ -283,7 +283,11 @@ class Heavy_Boeing_FMC extends Boeing_FMC {
 		console.log('B787_10_Heavy_Boeing_FMC onEvent ' + _event);
 
 		if (_event.indexOf('AP_LNAV') != -1) {
-			this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
+			if(this._isMainRouteActivated){
+				this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
+			} else {
+				this.messageManager.showMessage('NO ACTIVE ROUTE', 'ACTIVATE ROUTE TO <br> ENGAGE LNAV');
+			}
 			return;
 			//this.toggleLNAV();
 		} else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
