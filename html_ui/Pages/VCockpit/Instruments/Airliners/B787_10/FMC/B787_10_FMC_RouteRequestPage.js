@@ -1,6 +1,7 @@
 class B787_10_FMC_RouteRequestPage {
 	constructor(fmc) {
 		this.fmc = fmc;
+		this.eventProtector = this.fmc.querySelector('#event-protector');
 		this.progress = [];
 	}
 
@@ -99,10 +100,18 @@ class B787_10_FMC_RouteRequestPage {
 
 	setupInputHandlers() {
 		this.fmc.onLeftInput[5] = () => {
+			this.eventProtector.style.display = 'none';
 			B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 		};
 
 		this.fmc.onLeftInput[0] = () => {
+			/**
+			 * Protect all events
+			 */
+			this.eventProtector.style.display = 'block';
+
+			this.fmc.messageManager.showMessage('STANDBY ONE', 'FMC PROCESSING <br> LAST ENTRY <br>PLEASE WAIT');
+
 			/**
 			 * Callback hell
 			 */
@@ -446,18 +455,24 @@ class B787_10_FMC_RouteRequestPage {
 					if (protection > 400) {
 						iterator = 20000;
 						this.fmc.flightPlanManager.resumeSync();
+						this.eventProtector.style.display = 'none';
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 						return;
 					}
 					if (!this.waypoints[iterator]) {
 						iterator = 20000;
 						this.fmc.flightPlanManager.resumeSync();
+						this.eventProtector.style.display = 'none';
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 						return;
 					}
 
 					if (iterator >= this.waypoints.length) {
 						this.fmc.flightPlanManager.resumeSync();
+						this.eventProtector.style.display = 'none';
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}
 
@@ -528,6 +543,14 @@ class B787_10_FMC_RouteRequestPage {
 		 * TODO: Refactor this... It is same as SimBrief just parsing log is different
 		 */
 		this.fmc.onLeftInput[1] = () => {
+
+			/**
+			 * Protect all events
+			 */
+			this.eventProtector.style.display = 'block';
+
+			this.fmc.messageManager.showMessage('STANDBY ONE', 'FMC PROCESSING <br> LAST ENTRY <br>PLEASE WAIT');
+
 			/**
 			 * Callback hell
 			 */
@@ -708,18 +731,24 @@ class B787_10_FMC_RouteRequestPage {
 					if (protection > 400) {
 						iterator = 20000;
 						this.fmc.flightPlanManager.resumeSync();
+						this.eventProtector.style.display = 'none';
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 						return;
 					}
 					if (!this.waypoints[iterator]) {
 						iterator = 20000;
 						this.fmc.flightPlanManager.resumeSync();
+						this.eventProtector.style.display = 'none';
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 						return;
 					}
 
 					if (iterator >= this.waypoints.length) {
 						this.fmc.flightPlanManager.resumeSync();
+						this.eventProtector.style.display = 'none';
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}
 
