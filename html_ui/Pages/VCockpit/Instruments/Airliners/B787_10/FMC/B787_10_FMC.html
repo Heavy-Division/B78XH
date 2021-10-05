@@ -1,6 +1,6 @@
-﻿<link rel="stylesheet" href="B787_10_FMC.css"/>
+﻿<link href="B787_10_FMC.css" rel="stylesheet"/>
 
-<script type="text/html" id="B787_10_FMC">
+<script id="B787_10_FMC" type="text/html">
     <glasscockpit-highlight id="highlight"></glasscockpit-highlight>
     <div id="Mainframe">
         <div id="Electricity" state="off">
@@ -102,7 +102,8 @@
                     </div>
 
                     <div class="fms-screen-label-container">
-                        <div class="fms-screen-label col-0 separator-label">---------------------------------------</div>
+                        <div class="fms-screen-label col-0 separator-label">---------------------------------------
+                        </div>
                         <div class="fms-screen-label col-1"></div>
                         <div class="fms-screen-label col-2"></div>
                         <div class="fms-screen-label col-3"></div>
@@ -186,111 +187,106 @@
     <div id="Borders"></div>
 </script>
 
-<script type="text/html" import-script="/JS/SimPlane.js"></script>
+<script import-script="/JS/SimPlane.js" type="text/html"></script>
 
 <!-- WT files -->
-<script type="text/html" import-script="/WTPages/WTLibs/WT_SimPlaneMod.js"></script>
-<script type="text/html" import-script="/WTPages/WTLibs/DataStore.js"></script>
-<script type="text/html" import-script="/WTPages/WTLibs/WT_GCMath.js"></script>
-<script type="text/html" import-script="/WTPages/WTLibs/LzUtf8.js"></script>
-<script type="text/html" import-script="/WTPages/WTLibs/wtsdk.js"></script>
+<script import-script="/WTPages/WTLibs/WT_SimPlaneMod.js" type="text/html"></script>
+<script import-script="/WTPages/WTLibs/DataStore.js" type="text/html"></script>
+<script import-script="/WTPages/WTLibs/WT_GCMath.js" type="text/html"></script>
+<script import-script="/WTPages/WTLibs/LzUtf8.js" type="text/html"></script>
+<script import-script="/WTPages/WTLibs/wtsdk.js" type="text/html"></script>
 
-<script type="text/html" import-script="/WTPages/Autopilot/AutopilotMath.js"></script>
-<script type="text/html" import-script="/WTPages/Autopilot/HoldsDirector.js"></script>
-<script type="text/html" import-script="/WTPages/Autopilot/LocDirector.js"></script>
-<script type="text/html" import-script="/WTPages/Autopilot/LNavDirector.js"></script>
-<script type="text/html" import-script="/WTPages/Autopilot/WT_BaseVnav.js"></script>
-<script type="text/html" import-script="/WTPages/Autopilot/WT_VnavAutopilot.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/CJ4_FMC_PilotWaypoint.js"></script>
+<script import-script="/WTPages/Autopilot/AutopilotMath.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/HoldsDirector.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/LocDirector.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/LNavDirector.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/WT_BaseVnav.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/WT_VnavAutopilot.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/CJ4_FMC_PilotWaypoint.js"
+        type="text/html"></script>
 <!-- WT files END -->
 
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/Utils/RadioNav.js"></script>
+<script import-script="/Pages/VCockpit/Instruments/Shared/Utils/RadioNav.js" type="text/html"></script>
 
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/Runway.js"></script>
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/FlightPlan.js"></script>
-<script type="text/html" import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/Waypoint.js"></script>
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/Approach.js"></script>
-<script type="text/html" import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/WaypointLoader.js"></script>
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/GeoCalc.js"></script>
+<script import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/Runway.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/FlightPlan.js" type="text/html"></script>
+<script import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/Waypoint.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/Approach.js" type="text/html"></script>
+<script import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/WaypointLoader.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/GeoCalc.js" type="text/html"></script>
 
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/LogicElements/SearchField.js"></script>
+<script import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/LogicElements/SearchField.js"
+        type="text/html"></script>
 
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/NavSystem.js"></script>
+<script import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/NavSystem.js" type="text/html"></script>
 
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/BaseAirliners.js"></script>
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/FMC/FMCMainDisplay.js"></script>
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/Boeing/Boeing_FMC.js"></script>
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Shared/FMC/FMCDataManager.js"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/Shared/BaseAirliners.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/Shared/FMC/FMCMainDisplay.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/Shared/Boeing/Boeing_FMC.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/Shared/FMC/FMCDataManager.js" type="text/html"></script>
 
 <!-- Heavy files -->
-<script type="text/html" import-script="/B78XH/Autopilot/B78XHNavModeSelector.js"></script>
-<script type="text/html" import-script="/B78XH/Directors/SpeedDirector.js"></script>
-<script type="text/html" import-script="/B78XH/DataHolders/FMC/FMCDataHolder.js"></script>
-<script type="text/html" import-script="/B78XH/DataHolders/FMC/FMCMessagesHolder.js"></script>
-<script type="text/html" import-script="/B78XH/Managers/FMCMessagesManager.js"></script>
-<script type="text/html"
-        import-script="/HPages/VCockpit/Instruments/Airliners/Shared/Boeing/Heavy_Boeing_FMC.js"></script>
-<script type="text/html" import-script="/Heavy/Enums/B78XH_LocalVariables.js"></script>
-<script type="text/html" import-script="/Heavy/Utils/HeavyUtils.js"></script>
-<script type="text/html" import-script="/Heavy/Utils/HeavyEventDispatcher.js"></script>
-<script type="text/html" import-script="/Heavy/Utils/UpdateDelayer.js"></script>
-<script type="text/html" import-script="/Heavy/Utils/HeavyInputChecks.js"></script>
-<script type="text/html" import-script="/Heavy/Utils/HeavyInputUtils.js"></script>
-<script type="text/html" import-script="/Heavy/Utils/HeavyDataStorage.js"></script>
-<script type="text/html" import-script="/Heavy/Integrations/SimBrief/SimBrief.js"></script>
-<script type="text/html" import-script="/Heavy/Integrations/SimBrief/SimBriefApi.js"></script>
-<script type="text/html" import-script="/Heavy/Integrations/SimBrief/SimBriefCredentials.js"></script>
-<script type="text/html" import-script="/Heavy/Integrations/SimBrief/SimBriefOceanicWaypointConverter.js"></script>
-<!-- Heavy files END -->
+<script import-script="/B78XH/Autopilot/B78XHNavModeSelector.js" type="text/html"></script>
+<script import-script="/B78XH/Directors/SpeedDirector.js" type="text/html"></script>
+<script import-script="/B78XH/DataHolders/FMC/FMCDataHolder.js" type="text/html"></script>
+<script import-script="/B78XH/DataHolders/FMC/FMCMessagesHolder.js" type="text/html"></script>
+<script import-script="/B78XH/Managers/FMCMessagesManager.js" type="text/html"></script>
+<script import-script="/HPages/VCockpit/Instruments/Airliners/Shared/Boeing/Heavy_Boeing_FMC.js"
+        type="text/html"></script>
+<script import-script="/Heavy/Enums/B78XH_LocalVariables.js" type="text/html"></script>
+<script import-script="/Heavy/Utils/HeavyUtils.js" type="text/html"></script>
+<script import-script="/Heavy/Utils/HeavyEventDispatcher.js" type="text/html"></script>
+<script import-script="/Heavy/Utils/UpdateDelayer.js" type="text/html"></script>
+<script import-script="/Heavy/Utils/HeavyInputChecks.js" type="text/html"></script>
+<script import-script="/Heavy/Utils/HeavyInputUtils.js" type="text/html"></script>
+<script import-script="/Heavy/libs/hdsdk.js" type="text/html"></script>
 
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_IdentPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_InitRefIndexPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PosInitPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PerfInitPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ThrustLimPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_TakeOffRefPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ApproachPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_MaintPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RoutePage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RouteRequestPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_DepArrPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_NavRadioPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ProgressPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_FMCCommPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_LegsPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SelectWptPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_VNAVPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RouteDataPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HoldsPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimBriefConfigurationPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyConfigurationPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PayloadManagerPage.js"></script>
-<script type="text/html"
-        import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyIRSPage.js"></script>
-<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_IdentPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_InitRefIndexPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PosInitPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PerfInitPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ThrustLimPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_TakeOffRefPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ApproachPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_MaintPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RoutePage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RouteRequestPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_DepArrPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_NavRadioPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ProgressPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_FMCCommPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_LegsPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SelectWptPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_VNAVPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_RouteDataPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HoldsPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_SimBriefConfigurationPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyConfigurationPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_PayloadManagerPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_HeavyIRSPage.js"
+        type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC.js" type="text/html"></script>

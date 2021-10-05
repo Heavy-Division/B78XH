@@ -2,9 +2,13 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "target": "ES2015",
-    "module":"ES2015",
-    "lib": ["es2015", "es2016", "es2017", "dom"],
-
+    "module": "ES2015",
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "dom"
+    ],
     "allowJs": true,
     "strict": true,
     "declaration": true,
@@ -12,11 +16,13 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-
     "sourceMap": true,
     "outDir": "build",
     "rootDir": ".",
     "baseUrl": ".",
+    "typeRoots": [
+      "./types"
+    ]
   },
   "exclude": [
     "node_modules"
