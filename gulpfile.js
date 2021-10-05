@@ -26,9 +26,9 @@ var packageSize = 0;
 
 /** Directories configuration **/
 /** Directories for layout and manifest **/
-const directoriesToProcess = ['./**', '!*.*', '!*', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**'];
+const directoriesToProcess = ['./**', '!*.*', '!*', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**'];
 /** Directories for release**/
-const directoriesToRelease = ['./**', '!*', 'LICENSE', 'thirdparty_licenses.txt', './manifest.json', './layout.json', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**'];
+const directoriesToRelease = ['./**', '!*', 'LICENSE', 'thirdparty_licenses.txt', './manifest.json', './layout.json', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**'];
 
 /** Internal Transformers */
 const _prepareLayoutFile = (data) => {
