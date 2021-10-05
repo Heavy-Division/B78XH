@@ -179,7 +179,8 @@ const foldersMap = {
 		sourceDir: 'build/instruments',
 		pattern: 'build/instruments/**/*.js'
 	},
-	"build-b78xh": {destination: 'html_ui/B78XH', sourceDir: 'build/b78xh', pattern: 'build/b78xh/**/*.js'}
+	"build-b78xh": {destination: 'html_ui/B78XH', sourceDir: 'build/b78xh', pattern: 'build/b78xh/**/*.js'},
+	"build-heavy": {destination: 'html_ui/Heavy', sourceDir: 'build/heavy', pattern: 'build/heavy/**/*.js'}
 };
 
 let copyTasks = [];
