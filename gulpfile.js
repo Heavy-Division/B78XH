@@ -4,6 +4,8 @@ const fs = require('fs');
 const zip = require('gulp-zip');
 const del = require('del');
 const bump = require('gulp-update-version');
+const pipeline = require('readable-stream').pipeline;
+const mergeStream = require('merge-stream');
 
 /** Default mathjs configuration does not support BigNumbers */
 //const math = require('mathjs');
@@ -39,14 +41,30 @@ const _prepareLayoutFile = (data) => {
 	});
 };
 
+const TerminalColors = {
+	default: '\x1b[0m',
+	black: '\x1b[30m',
+	red: '\x1b[31m',
+	green: '\x1b[32m',
+	yellow: '\x1b[33m',
+	blue: '\x1b[34m',
+	magenta: '\x1b[35m',
+	cyan: '\x1b[36m',
+	white: '\x1b[37m'
+};
+
+function log(message, color = TerminalColors.default) {
+	console.log(color + message + TerminalColors.default);
+}
+
 const _updateManifest = () => {
-	console.log('Updating manifest.json');
+	log('Updating manifest.json.', TerminalColors.yellow);
 	let originalManifest = fs.readFileSync('manifest.json').toString();
 	let manifestJson = JSON.parse(originalManifest);
 	manifestJson.total_package_size = String(packageSize).padStart(20, '0');
 	fs.writeFile('manifest.json', JSON.stringify(manifestJson, null, 4), () => {
 	});
-	console.log('manifest.json updated.');
+	log('manifest.json updated.', TerminalColors.green);
 };
 
 const copyPackageVersion = () => {
@@ -91,9 +109,9 @@ function buildTask() {
 	).on('data', function (data) {
 		_prepareLayoutFile(data);
 	}).on('end', function () {
-		console.log('Creating layout.json');
+		log('Creating layout.json', TerminalColors.yellow);
 		fs.writeFile('layout.json', JSON.stringify(layoutOutput, null, 4), _updateManifest);
-		console.log('layout.json created.');
+		log('layout.json created.', TerminalColors.green);
 	});
 }
 
@@ -141,8 +159,54 @@ function preBumpTask(callback) {
 	});
 }
 
+function watchBuildFolder() {
+	log('Monitoring build folder.\n', TerminalColors.blue);
+	let toRun = copyTasks.map(function (name) {
+		return name;
+	});
+
+	gulp.watch('build/**/*.js', {ignoreInitial: false}, gulp.series(gulp.parallel(
+		toRun), buildTask)
+	).on('change', function(path, stats) {
+		log('Source files were changed. Starting build process...', TerminalColors.red)
+	});
+}
+
+const foldersMap = {
+	"build-instruments": {
+		name: 'instruments',
+		destination: 'html_ui/Pages/VCockpit/Instruments',
+		sourceDir: 'build/instruments',
+		pattern: 'build/instruments/**/*.js'
+	},
+	"build-b78xh": {destination: 'html_ui/B78XH', sourceDir: 'build/b78xh', pattern: 'build/b78xh/**/*.js'}
+};
+
+let copyTasks = [];
+
+function createCopyTasks(name){
+	exports[name] = function () {
+		log('Reading files from \'' + foldersMap[name].sourceDir + '\'', TerminalColors.blue);
+		return pipeline(
+			gulp.src(foldersMap[name].pattern).on('finish', function () {
+				log('Reading files from \'' + foldersMap[name].sourceDir + '\' finished.', TerminalColors.green);
+				log('Writing files  from \'' + foldersMap[name].sourceDir + '\' to \'' + foldersMap[name].destination + '\'.', TerminalColors.yellow);
+			}),
+			gulp.dest(foldersMap[name].destination).on('finish', function () {
+				log('Writing files  from \'' + foldersMap[name].sourceDir + '\' to \'' + foldersMap[name].destination + '\' finished.', TerminalColors.green);
+			})
+		);
+	};
+}
+
+for(const key in foldersMap) {
+	createCopyTasks(key);
+	copyTasks.push(key);
+}
+
 exports.release = gulp.series(deleteReleaseCache, buildTask, copyFilesForReleaseToCache, releaseTask, deleteReleaseCache);
 exports.default = buildTask;
+exports.watch = watchBuildFolder;
 exports.build = buildTask;
 exports.bump = bumpTask;
 exports.prebump = preBumpTask;
