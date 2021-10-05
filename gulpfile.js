@@ -6,6 +6,9 @@ const del = require('del');
 const bump = require('gulp-update-version');
 const pipeline = require('readable-stream').pipeline;
 const mergeStream = require('merge-stream');
+const rollup = require('gulp-rollup');
+const ts = require('gulp-typescript');
+
 
 /** Default mathjs configuration does not support BigNumbers */
 //const math = require('mathjs');
@@ -159,55 +162,54 @@ function preBumpTask(callback) {
 	});
 }
 
-function watchBuildFolder() {
+const HDSDKProject = ts.createProject('./src/hdsdk/tsconfig.json');
+function buildHDSDKTask() {
+	let res = gulp.src('src/hdsdk/**/*.ts').pipe(HDSDKProject());
+	return pipeline(
+		res.js,
+		gulp.dest('build/cache/hdsdk')
+	);
+}
+
+function rollupHDSDKTask() {
+	return pipeline(
+		gulp.src('build/cache/hdsdk/**/*.js'),
+		rollup({
+			input: 'build/cache/hdsdk/hdsdk.js',
+			output: {
+				format: 'umd',
+				sourcemap: false,
+				extend: true,
+				name: 'window'
+			}
+		}),
+		gulp.dest('build/cache/rollups')
+	);
+}
+
+function copyHDSDKTask() {
+	return pipeline(
+		gulp.src('build/cache/rollups/hdsdk.js'),
+		gulp.dest('html_ui/Heavy/libs')
+	);
+}
+
+function cleanBuildCache(callback){
+	del('build/**/*');
+	callback();
+}
+
+function monitorHDSDKSourceDirectory(){
 	log('Monitoring build folder.\n', TerminalColors.blue);
-	let toRun = copyTasks.map(function (name) {
-		return name;
+	gulp.watch(['src/hdsdk/**/*', '!src/hdsdk/tsconfig.json'], {ignoreInitial: true}, gulp.series(cleanBuildCache, buildHDSDKTask, rollupHDSDKTask, copyHDSDKTask, cleanBuildCache, buildTask)).on('change', function (path, stats) {
+		log('Source files were changed. Starting build process...', TerminalColors.red);
 	});
-
-	gulp.watch('build/**/*.js', {ignoreInitial: false}, gulp.series(gulp.parallel(
-		toRun), buildTask)
-	).on('change', function(path, stats) {
-		log('Source files were changed. Starting build process...', TerminalColors.red)
-	});
-}
-
-const foldersMap = {
-	"build-instruments": {
-		name: 'instruments',
-		destination: 'html_ui/Pages/VCockpit/Instruments',
-		sourceDir: 'build/instruments',
-		pattern: 'build/instruments/**/*.js'
-	},
-	"build-b78xh": {destination: 'html_ui/B78XH', sourceDir: 'build/b78xh', pattern: 'build/b78xh/**/*.js'},
-	"build-heavy": {destination: 'html_ui/Heavy', sourceDir: 'build/heavy', pattern: 'build/heavy/**/*.js'}
-};
-
-let copyTasks = [];
-
-function createCopyTasks(name){
-	exports[name] = function () {
-		log('Reading files from \'' + foldersMap[name].sourceDir + '\'', TerminalColors.blue);
-		return pipeline(
-			gulp.src(foldersMap[name].pattern).on('finish', function () {
-				log('Reading files from \'' + foldersMap[name].sourceDir + '\' finished.', TerminalColors.green);
-				log('Writing files  from \'' + foldersMap[name].sourceDir + '\' to \'' + foldersMap[name].destination + '\'.', TerminalColors.yellow);
-			}),
-			gulp.dest(foldersMap[name].destination).on('finish', function () {
-				log('Writing files  from \'' + foldersMap[name].sourceDir + '\' to \'' + foldersMap[name].destination + '\' finished.', TerminalColors.green);
-			})
-		);
-	};
-}
-
-for(const key in foldersMap) {
-	createCopyTasks(key);
-	copyTasks.push(key);
 }
 
 exports.release = gulp.series(deleteReleaseCache, buildTask, copyFilesForReleaseToCache, releaseTask, deleteReleaseCache);
 exports.default = buildTask;
-exports.watch = watchBuildFolder;
 exports.build = buildTask;
 exports.bump = bumpTask;
 exports.prebump = preBumpTask;
+exports.buildSDK = gulp.series(cleanBuildCache, buildHDSDKTask, rollupHDSDKTask, copyHDSDKTask, cleanBuildCache, buildTask);
+exports.monitorSDKSource = monitorHDSDKSourceDirectory
