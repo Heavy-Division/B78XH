@@ -98,6 +98,13 @@ function defaultTask(callback) {
 }
 
 function buildTask() {
+	/**
+	 * This is important for resetting the array with watch (monitorSDKSource and so on)
+	 * @type {number}
+	 */
+	layoutOutput.content.length = 0;
+
+	console.log(layoutOutput.content.length);
 	return gulp.src(directoriesToProcess, {nodir: true, cwd: './'})
 	.pipe(
 		through.obj(function (file, _, callback) {
@@ -163,6 +170,7 @@ function preBumpTask(callback) {
 }
 
 const HDSDKProject = ts.createProject('./src/hdsdk/tsconfig.json');
+
 function buildHDSDKTask() {
 	let res = gulp.src('src/hdsdk/**/*.ts').pipe(HDSDKProject());
 	return pipeline(
@@ -194,12 +202,12 @@ function copyHDSDKTask() {
 	);
 }
 
-function cleanBuildCache(callback){
+function cleanBuildCache(callback) {
 	del('build/**/*');
 	callback();
 }
 
-function monitorHDSDKSourceDirectory(){
+function monitorHDSDKSourceDirectory() {
 	log('Monitoring build folder.\n', TerminalColors.blue);
 	gulp.watch(['src/hdsdk/**/*', '!src/hdsdk/tsconfig.json'], {ignoreInitial: true}, gulp.series(cleanBuildCache, buildHDSDKTask, rollupHDSDKTask, copyHDSDKTask, cleanBuildCache, buildTask)).on('change', function (path, stats) {
 		log('Source files were changed. Starting build process...', TerminalColors.red);
@@ -212,4 +220,4 @@ exports.build = buildTask;
 exports.bump = bumpTask;
 exports.prebump = preBumpTask;
 exports.buildSDK = gulp.series(cleanBuildCache, buildHDSDKTask, rollupHDSDKTask, copyHDSDKTask, cleanBuildCache, buildTask);
-exports.monitorSDKSource = monitorHDSDKSourceDirectory
+exports.monitorSDKSource = monitorHDSDKSourceDirectory;
