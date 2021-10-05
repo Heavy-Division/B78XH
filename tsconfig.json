@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "sourceMap": true,
+    "outDir": "build",
+    "rootDir": "./src",
+    "baseUrl": "./src",
+    "removeComments": true
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "src/scripts/**/*"
+  ]
+}
