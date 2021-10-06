@@ -195,7 +195,7 @@ class B787_10_FMC_VNAVPage {
 			this.fmc.clearUserInput();
 
 			let storeToFMC = async (value, force = false) => {
-				if (HeavyInputChecks.speedRange(value) || force) {
+				if (HeavyInput.Validators.speedRange(value) || force) {
 					this.fmc._speedDirector._climbSpeedSelected.speed = value;
 				}
 			};
@@ -252,7 +252,7 @@ class B787_10_FMC_VNAVPage {
 					let altitude = toSet[1];
 					let roundedAltitude = Math.round(altitude / 100) * 100;
 					let valueToCheck = speed + '/' + roundedAltitude;
-					if (HeavyInputChecks.speedRestriction(valueToCheck, this.fmc.cruiseFlightLevel * 100)) {
+					if (HeavyInput.Validators.speedRestriction(valueToCheck, this.fmc.cruiseFlightLevel * 100)) {
 						this.fmc._speedDirector._climbSpeedRestriction.speed = speed;
 						this.fmc._speedDirector._climbSpeedRestriction.altitude = roundedAltitude;
 					} else {
@@ -281,7 +281,7 @@ class B787_10_FMC_VNAVPage {
 		this.fmc.onRightInput[2] = () => {
 			let value = this.fmc.inOut;
 			this.fmc.clearUserInput();
-			let altitude = HeavyInputUtils.inputToAltitude(value);
+			let altitude = HeavyInput.Converters.inputToAltitude(value);
 			if (altitude) {
 				this.fmc.trySetTransAltitude(altitude);
 			}
@@ -469,7 +469,7 @@ class B787_10_FMC_VNAVPage {
 			this.fmc.clearUserInput();
 
 			let storeToFMC = async (value, force = false) => {
-				if (HeavyInputChecks.speedRange(value) || force) {
+				if (HeavyInput.Validators.speedRange(value) || force) {
 					this.fmc._speedDirector._cruiseSpeedSelected.speed = value;
 				}
 			};
