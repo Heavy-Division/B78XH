@@ -174,6 +174,8 @@ const HDSDKProject = ts.createProject('./src/hdsdk/tsconfig.json');
 function buildHDSDKTask() {
 	let res = gulp.src('src/hdsdk/**/*.ts').pipe(HDSDKProject());
 	return pipeline(
+		res.dts,
+		gulp.dest('src/hdsdk/types'),
 		res.js,
 		gulp.dest('build/cache/hdsdk')
 	);
