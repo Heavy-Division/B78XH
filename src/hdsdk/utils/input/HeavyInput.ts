@@ -1,6 +1,6 @@
 export namespace HeavyInput {
 	export class Converters {
-		static inputToAltitude(input: string): number | false {
+		public static inputToAltitude(input: string): number | false {
 			let inputCheck = input.split('FL');
 			if (inputCheck.length === 1) {
 				return isFinite(Number(inputCheck[0])) ? Number(inputCheck[0]) : false
