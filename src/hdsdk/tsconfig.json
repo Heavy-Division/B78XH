@@ -21,7 +21,7 @@
     "rootDir": ".",
     "baseUrl": ".",
     "typeRoots": [
-      "./types"
+      "./types/**"
     ]
   },
   "exclude": [
