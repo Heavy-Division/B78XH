@@ -181,11 +181,39 @@ function buildHDSDKTask() {
 	);
 }
 
+const HDLoggerProject = ts.createProject('./src/hdlogger/tsconfig.json');
+
+function buildHDLoggerTask() {
+	let res = gulp.src('src/hdlogger/**/*.ts').pipe(HDLoggerProject());
+	return pipeline(
+		res.dts,
+		gulp.dest('src/hdlogger/types'),
+		res.js,
+		gulp.dest('build/cache/hdlogger')
+	);
+}
+
 function rollupHDSDKTask() {
 	return pipeline(
 		gulp.src('build/cache/hdsdk/**/*.js'),
 		rollup({
 			input: 'build/cache/hdsdk/hdsdk.js',
+			output: {
+				format: 'umd',
+				sourcemap: false,
+				extend: true,
+				name: 'window'
+			}
+		}),
+		gulp.dest('build/cache/rollups')
+	);
+}
+
+function rollupHDLoggerTask() {
+	return pipeline(
+		gulp.src('build/cache/hdlogger/**/*.js'),
+		rollup({
+			input: 'build/cache/hdlogger/hdlogger.js',
 			output: {
 				format: 'umd',
 				sourcemap: false,
@@ -204,8 +232,25 @@ function copyHDSDKTask() {
 	);
 }
 
+function copyHDLoggerTask() {
+	return pipeline(
+		gulp.src('build/cache/rollups/hdlogger.js'),
+		gulp.dest('html_ui/Heavy/libs')
+	);
+}
+
 function cleanBuildCache(callback) {
 	del('build/**/*');
+	callback();
+}
+
+function cleanBuildCacheSDK(callback) {
+	del('build/hdsdk/**/*');
+	callback();
+}
+
+function cleanBuildCacheLogger(callback) {
+	del('build/hdlogger/**/*');
 	callback();
 }
 
@@ -216,10 +261,23 @@ function monitorHDSDKSourceDirectory() {
 	});
 }
 
+function monitorHDLoggerSourceDirectory() {
+	log('Monitoring build folder.\n', TerminalColors.blue);
+	gulp.watch(['src/hdlogger/**/*', '!src/hdlogger/tsconfig.json'], {ignoreInitial: true}, gulp.series(cleanBuildCacheLogger, buildHDLoggerTask, rollupHDLoggerTask, copyHDLoggerTask, cleanBuildCacheLogger, buildTask)).on('change', function (path, stats) {
+		log('Source files were changed. Starting build process...', TerminalColors.red);
+	});
+}
+
 exports.release = gulp.series(deleteReleaseCache, buildTask, copyFilesForReleaseToCache, releaseTask, deleteReleaseCache);
 exports.default = buildTask;
 exports.build = buildTask;
 exports.bump = bumpTask;
 exports.prebump = preBumpTask;
-exports.buildSDK = gulp.series(cleanBuildCache, buildHDSDKTask, rollupHDSDKTask, copyHDSDKTask, cleanBuildCache, buildTask);
+exports.buildSDK = gulp.series(cleanBuildCache, buildHDSDKTask, rollupHDSDKTask, copyHDSDKTask, cleanBuildCacheSDK, buildTask);
+exports.buildLogger = gulp.series(cleanBuildCacheLogger, buildHDLoggerTask, rollupHDLoggerTask, copyHDLoggerTask, cleanBuildCacheLogger, buildTask);
+
+/**
+ * Monitoring
+ */
 exports.monitorSDKSource = monitorHDSDKSourceDirectory;
+exports.monitorHDLoggerSource = monitorHDLoggerSourceDirectory;
