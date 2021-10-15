@@ -54,8 +54,9 @@
                 url.searchParams.append('userid', String(this.credentials.userId));
             }
             if (this.credentials && this.credentials.userName) {
-                url.searchParams.append('username', this.credentials.userName);
+                url.searchParams.append('username', String(this.credentials.userName));
             }
+            console.log(url);
             return url;
         }
     }
@@ -165,7 +166,18 @@
          * @returns {string}
          */
         get userName() {
-            return this._userName || String(HeavyDataStorage.get('SIMBRIEF_USERNAME', ''));
+            if (this._userName) {
+                return this._userName;
+            }
+            else {
+                const userName = HeavyDataStorage.get('SIMBRIEF_USERNAME', '');
+                if (userName) {
+                    return String(userName);
+                }
+                else {
+                    return '';
+                }
+            }
         }
         /**
          * Returns SimBrief userId

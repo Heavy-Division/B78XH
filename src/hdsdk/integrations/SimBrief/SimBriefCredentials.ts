@@ -30,7 +30,16 @@ export class SimBriefCredentials {
 	 * @returns {string}
 	 */
 	public get userName(): string {
-		return this._userName || String(HeavyDataStorage.get('SIMBRIEF_USERNAME', ''));
+		if (this._userName) {
+			return this._userName;
+		} else {
+			const userName = HeavyDataStorage.get('SIMBRIEF_USERNAME', '');
+			if (userName) {
+				return String(userName);
+			} else {
+				return '';
+			}
+		}
 	}
 
 	/**

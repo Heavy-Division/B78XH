@@ -63,7 +63,7 @@ export class SimBriefApi {
 		}
 
 		if (this.credentials && this.credentials.userName) {
-			url.searchParams.append('username', this.credentials.userName);
+			url.searchParams.append('username', String(this.credentials.userName));
 		}
 
 		return url;
