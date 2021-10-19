@@ -16,7 +16,7 @@ class B787_10_FMC_PayloadManagerPage {
 		return {
 			'CENTER': 'FUEL TANK CENTER QUANTITY',
 			'LEFT_MAIN': 'FUEL TANK LEFT MAIN QUANTITY',
-			'RIGHT_MAIN': 'FUEL TANK RIGHT MAIN QUANTITY',
+			'RIGHT_MAIN': 'FUEL TANK RIGHT MAIN QUANTITY'
 		};
 	}
 
@@ -80,27 +80,27 @@ class B787_10_FMC_PayloadManagerPage {
 		this._remainingPayload = value;
 	}
 
-	static get getMaxFuel(){
+	static get getMaxFuel() {
 		return 33384;
 	}
 
-	static get getMinFuel(){
+	static get getMinFuel() {
 		return 0;
 	}
 
-	static get getMaxPayload(){
+	static get getMaxPayload() {
 		return 560001;
 	}
 
-	static get getMinPayload(){
+	static get getMinPayload() {
 		return 0;
 	}
 
-	static get getMaxCenterOfGravity(){
+	static get getMaxCenterOfGravity() {
 		return 100;
 	}
 
-	static get getMinCenterOfGravity(){
+	static get getMinCenterOfGravity() {
 		return 0;
 	}
 
@@ -111,11 +111,11 @@ class B787_10_FMC_PayloadManagerPage {
 		this.init();
 	}
 
-	init(){
+	init() {
 		this.tankPriorityValues = [
 			{
 				'LEFT_MAIN': this.getTankValue(B787_10_FMC_PayloadManagerPage.tankVariables.LEFT_MAIN),
-				'RIGHT_MAIN': this.getTankValue(B787_10_FMC_PayloadManagerPage.tankVariables.RIGHT_MAIN),
+				'RIGHT_MAIN': this.getTankValue(B787_10_FMC_PayloadManagerPage.tankVariables.RIGHT_MAIN)
 			},
 			{'CENTER': this.getTankValue(B787_10_FMC_PayloadManagerPage.tankVariables.CENTER)}
 		];
@@ -139,7 +139,7 @@ class B787_10_FMC_PayloadManagerPage {
 			},
 			{
 				'ECONOMY_CLASS': this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.ECONOMY_CLASS),
-				'REAR_BAGGAGE': this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.REAR_BAGGAGE),
+				'REAR_BAGGAGE': this.getPayloadValue(B787_10_FMC_PayloadManagerPage.payloadIndex.REAR_BAGGAGE)
 			}
 		];
 	}
@@ -148,7 +148,7 @@ class B787_10_FMC_PayloadManagerPage {
 		return SimVar.GetSimVarValue('PAYLOAD STATION WEIGHT:' + index, 'Pounds');
 	}
 
-	getPayloadValueFromCache(index){
+	getPayloadValueFromCache(index) {
 		return this._internalPayloadValuesCache[index];
 	}
 
@@ -185,40 +185,39 @@ class B787_10_FMC_PayloadManagerPage {
 		return (useLbs ? fuel * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'Pounds') : fuel);
 	}
 
-	async flushFuelAndPayload(){
+	async flushFuelAndPayload() {
 		return new Promise(resolve => {
 			this.flushFuel().then(() => {
 				return this.resetPayload();
 			}).then(() => {
 				return this.fmc.getCurrentWeight(true);
-			}).then( weight => {
-				return this.fmc.setZeroFuelWeight((298700 + B787_10_FMC_PayloadManagerPage.requestedPayload) / 1000, EmptyCallback.Void, true)
+			}).then(weight => {
+				return this.fmc.setZeroFuelWeight((298700 + B787_10_FMC_PayloadManagerPage.requestedPayload) / 1000, EmptyCallback.Void, true);
 			}).then(() => {
 				return this.resetPayload();
 			}).then(() => {
 				resolve();
-			})
+			});
 		});
 	}
 
 	async flushFuel() {
-		return new Promise( resolve => {
+		return new Promise(resolve => {
 			let setTankFuel = async (variable, gallons) => {
 				SimVar.SetSimVarValue(variable, 'Gallons', gallons);
-			}
+			};
 
 			B787_10_FMC_PayloadManagerPage.tankPriority.forEach((tanks, index) => {
 				tanks.forEach((tank) => {
 					setTankFuel(B787_10_FMC_PayloadManagerPage.tankVariables[tank], 0).then(() => {
-						console.log(B787_10_FMC_PayloadManagerPage.tankVariables[tank] + " flushed");
+						console.log(B787_10_FMC_PayloadManagerPage.tankVariables[tank] + ' flushed');
 					});
 				});
 			});
-			this.fmc.trySetBlockFuel(0, true)
+			this.fmc.trySetBlockFuel(0, true);
 			resolve();
 		});
 	}
-
 
 
 	calculateTanks(fuel) {
@@ -234,12 +233,12 @@ class B787_10_FMC_PayloadManagerPage {
 		let setTankFuel = async (variable, gallons) => {
 			fuelBlock += gallons;
 			SimVar.SetSimVarValue(variable, 'Gallons', gallons);
-		}
+		};
 
 		B787_10_FMC_PayloadManagerPage.tankPriority.forEach((tanks, index) => {
 			tanks.forEach((tank) => {
 				setTankFuel(B787_10_FMC_PayloadManagerPage.tankVariables[tank], this.tankPriorityValues[index][tank]).then(() => {
-					console.log(B787_10_FMC_PayloadManagerPage.tankVariables[tank] + " set to " + this.tankPriorityValues[index][tank]);
+					console.log(B787_10_FMC_PayloadManagerPage.tankVariables[tank] + ' set to ' + this.tankPriorityValues[index][tank]);
 				});
 			});
 		});
@@ -308,25 +307,15 @@ class B787_10_FMC_PayloadManagerPage {
 		if (B787_10_FMC_PayloadManagerPage.isPayloadManagerExecuted) {
 			this.fmc.pageUpdate = () => {
 				this.showPage();
-			}
+			};
 		}
 		let rows = [['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', ''], ['', '']];
-
-
-		/**
-		 * The string should be set to "PAYLOAD (Pounds)" for right side but has to be set to "(PAYLOAD (Pounds"
-		 * Why: MSFS process the string
-		 * Examples:
-		 * "(PAYLOAD (Pounds" -> "PAYLOAD (Pounds)"
-		 * "PAYLOAD (Pounds)" -> "(PAYLOAD (Pounds"
-		 * "100000 lbs" -> "lbs 100000"
-		 * "lbs 100000" => "lbs 100000"
-		 */
+		
 		let weightPerGallon;
 		let units;
 		let payloadModifier;
 		let useImperial = HeavyDivision.configuration.useImperial();
-		if(useImperial){
+		if (useImperial) {
 			weightPerGallon = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'pounds');
 			units = 'Pounds';
 			payloadModifier = 1.0;
@@ -356,11 +345,11 @@ class B787_10_FMC_PayloadManagerPage {
 		rows[4][0] = (B787_10_FMC_PayloadManagerPage.requestedCenterOfGravity ? B787_10_FMC_PayloadManagerPage.requestedCenterOfGravity.toFixed(2) + '%' : B787_10_FMC_PayloadManagerPage.centerOfGravity.toFixed(2) + '%');
 		rows[4][1] = this.getCenterOfGravity().toFixed(2) + '%';
 		rows[5][0] = 'FOB (' + units + ')';
-		rows[5][1] = '(FOB (' + units + '';
+		rows[5][1] = 'FOB (' + units + ')';
 		rows[6][0] = fobReqToRender;
 		rows[6][1] = fobToRender;
 		rows[7][0] = 'PAYLOAD (' + units + ')';
-		rows[7][1] = '(PAYLOAD (' + units + '';
+		rows[7][1] = 'PAYLOAD (' + units + ')';
 		rows[8][0] = payloadReqToRender;
 		rows[8][1] = payloadToRender;
 		rows[9][0] = (B787_10_FMC_PayloadManagerPage.remainingPayload ? 'REMAINING PAYLOAD' : '');
@@ -371,53 +360,53 @@ class B787_10_FMC_PayloadManagerPage {
 
 
 		this.fmc.onLeftInput[1] = () => {
-			if(isFinite(parseFloat(this.fmc.inOut))){
-				if(parseFloat(this.fmc.inOut) > B787_10_FMC_PayloadManagerPage.getMinCenterOfGravity && parseFloat(this.fmc.inOut) < B787_10_FMC_PayloadManagerPage.getMaxCenterOfGravity){
+			if (isFinite(parseFloat(this.fmc.inOut))) {
+				if (parseFloat(this.fmc.inOut) > B787_10_FMC_PayloadManagerPage.getMinCenterOfGravity && parseFloat(this.fmc.inOut) < B787_10_FMC_PayloadManagerPage.getMaxCenterOfGravity) {
 					B787_10_FMC_PayloadManagerPage.requestedCenterOfGravity = parseFloat(this.fmc.inOut);
 					this.fmc.clearUserInput();
 					this.showPage();
 				} else {
-					this.fmc.showErrorMessage("OUT OF RANGE")
+					this.fmc.showErrorMessage('OUT OF RANGE');
 					return false;
 				}
 			} else {
-				this.fmc.showErrorMessage(this.fmc.defaultInputErrorMessage)
+				this.fmc.showErrorMessage(this.fmc.defaultInputErrorMessage);
 				return false;
 			}
 		};
 
 		this.fmc.onLeftInput[2] = () => {
-			if(isFinite(parseFloat(this.fmc.inOut))){
+			if (isFinite(parseFloat(this.fmc.inOut))) {
 				let useImperial = HeavyDivision.configuration.useImperial();
 				let requestedInGallons;
-				let weightPerGallon
-				if(useImperial){
+				let weightPerGallon;
+				if (useImperial) {
 					weightPerGallon = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'pounds');
 				} else {
 					weightPerGallon = SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms');
 				}
 
-				requestedInGallons = this.fmc.inOut / weightPerGallon
-				if(parseFloat(requestedInGallons) > B787_10_FMC_PayloadManagerPage.getMinFuel && parseFloat(requestedInGallons) < B787_10_FMC_PayloadManagerPage.getMaxFuel){
+				requestedInGallons = this.fmc.inOut / weightPerGallon;
+				if (parseFloat(requestedInGallons) > B787_10_FMC_PayloadManagerPage.getMinFuel && parseFloat(requestedInGallons) < B787_10_FMC_PayloadManagerPage.getMaxFuel) {
 					B787_10_FMC_PayloadManagerPage.requestedFuel = parseFloat(requestedInGallons);
 					this.fmc.clearUserInput();
 					this.showPage();
 				} else {
-					this.fmc.showErrorMessage("OUT OF RANGE")
+					this.fmc.showErrorMessage('OUT OF RANGE');
 					return false;
 				}
 			} else {
-				this.fmc.showErrorMessage(this.fmc.defaultInputErrorMessage)
+				this.fmc.showErrorMessage(this.fmc.defaultInputErrorMessage);
 				return false;
 			}
 		};
 
 		this.fmc.onLeftInput[3] = () => {
-			if(isFinite(parseFloat(this.fmc.inOut))){
+			if (isFinite(parseFloat(this.fmc.inOut))) {
 				let useImperial = HeavyDivision.configuration.useImperial();
 				let requestedInPounds;
-				let payloadModifier
-				if(useImperial){
+				let payloadModifier;
+				if (useImperial) {
 					payloadModifier = 1.0;
 				} else {
 					payloadModifier = 2.20462262;
@@ -425,26 +414,26 @@ class B787_10_FMC_PayloadManagerPage {
 
 				requestedInPounds = this.fmc.inOut * payloadModifier;
 
-				if(parseFloat(requestedInPounds) > B787_10_FMC_PayloadManagerPage.getMinPayload && parseFloat(requestedInPounds) < B787_10_FMC_PayloadManagerPage.getMaxPayload){
+				if (parseFloat(requestedInPounds) > B787_10_FMC_PayloadManagerPage.getMinPayload && parseFloat(requestedInPounds) < B787_10_FMC_PayloadManagerPage.getMaxPayload) {
 					B787_10_FMC_PayloadManagerPage.requestedPayload = parseFloat(requestedInPounds);
 					this.fmc.clearUserInput();
 					this.showPage();
 				} else {
-					this.fmc.showErrorMessage("OUT OF RANGE")
+					this.fmc.showErrorMessage('OUT OF RANGE');
 					return false;
 				}
 			} else {
-				this.fmc.showErrorMessage(this.fmc.defaultInputErrorMessage)
+				this.fmc.showErrorMessage(this.fmc.defaultInputErrorMessage);
 				return false;
 			}
 		};
 
 		this.fmc.onLeftInput[5] = () => {
-			B787_10_FMC_HeavyPage.ShowPage1(this.fmc)
+			B787_10_FMC_HeavyPage.ShowPage1(this.fmc);
 		};
 
-		if(B787_10_FMC_PayloadManagerPage.isPayloadManagerExecuted){
-			rows[12][1] = 'RUNNING...'
+		if (B787_10_FMC_PayloadManagerPage.isPayloadManagerExecuted) {
+			rows[12][1] = 'RUNNING...';
 		} else {
 			rows[12][1] = 'EXECUTE>';
 			this.fmc.onRightInput[5] = () => {
