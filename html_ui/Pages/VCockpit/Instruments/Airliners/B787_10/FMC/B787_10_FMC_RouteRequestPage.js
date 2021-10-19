@@ -19,6 +19,8 @@ class B787_10_FMC_RouteRequestPage {
 			[''],
 			[''],
 			[''],
+			[''],
+			[''],
 			['<BACK']
 		]);
 
