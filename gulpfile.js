@@ -193,6 +193,18 @@ function buildHDLoggerTask() {
 	);
 }
 
+const InstrumentsProject = ts.createProject('./src/instruments/tsconfig.json');
+
+function buildInstrumentsTask() {
+	let res = gulp.src('src/instruments/**/*.ts').pipe(InstrumentsProject());
+	return pipeline(
+		res.dts,
+		gulp.dest('src/instruments/types'),
+		res.js,
+		gulp.dest('build/cache/instruments')
+	);
+}
+
 function rollupHDSDKTask() {
 	return pipeline(
 		gulp.src('build/cache/hdsdk/**/*.js'),
@@ -239,6 +251,13 @@ function copyHDLoggerTask() {
 	);
 }
 
+function copyInstrumentsTask() {
+	return pipeline(
+		gulp.src('build/cache/instruments/**/*'),
+		gulp.dest('html_ui/Pages/VCockpit/Instruments')
+	);
+}
+
 function cleanBuildCache(callback) {
 	del('build/**/*');
 	callback();
@@ -251,6 +270,11 @@ function cleanBuildCacheSDK(callback) {
 
 function cleanBuildCacheLogger(callback) {
 	del('build/hdlogger/**/*');
+	callback();
+}
+
+function cleanBuildCacheInstruments(callback) {
+	del('build/instruments/**/*');
 	callback();
 }
 
@@ -275,6 +299,7 @@ exports.bump = bumpTask;
 exports.prebump = preBumpTask;
 exports.buildSDK = gulp.series(cleanBuildCache, buildHDSDKTask, rollupHDSDKTask, copyHDSDKTask, cleanBuildCacheSDK, buildTask);
 exports.buildLogger = gulp.series(cleanBuildCacheLogger, buildHDLoggerTask, rollupHDLoggerTask, copyHDLoggerTask, cleanBuildCacheLogger, buildTask);
+exports.buildInstruments = gulp.series(cleanBuildCacheInstruments, buildInstrumentsTask, copyInstrumentsTask, cleanBuildCacheInstruments, buildTask);
 
 /**
  * Monitoring

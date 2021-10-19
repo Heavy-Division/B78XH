@@ -1,0 +1,15 @@
+{
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "html_ui/Pages/**/*"
+  ],
+  "compilerOptions": {
+    "target": "ES2015",
+    "allowJs": true,
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "dist"
+  }
+}
