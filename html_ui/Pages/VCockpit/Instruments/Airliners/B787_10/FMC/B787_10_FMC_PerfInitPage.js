@@ -82,7 +82,7 @@ class B787_10_FMC_PerfInitPage {
 
 			let separator = '__FMCSEPARATOR';
 
-			if(!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.perfInit.completed){
+			if (!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.perfInit.completed) {
 				separator = '--------------------------------PRE-FLT';
 			}
 
@@ -93,7 +93,7 @@ class B787_10_FMC_PerfInitPage {
 				['FUEL', 'COST INDEX'],
 				[fuelCell, costIndexCell],
 				['ZFW', 'MIN FUEL TEMP'],
-				[zfwCell, '37°c-'],
+				[zfwCell, '-37°c'],
 				['RESERVES', 'CRZ CG'],
 				[reservesCell, crzCGCell],
 				['DATA LINK', 'STEP SIZE'],
@@ -102,10 +102,10 @@ class B787_10_FMC_PerfInitPage {
 				['\<INDEX', 'THRUST LIM>']
 			]);
 
-			if(fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished){
-				let fmsPreFlightElement = document.createElement("div");
+			if (fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished) {
+				let fmsPreFlightElement = document.createElement('div');
 				fmsPreFlightElement.classList.add('fms-preflight');
-				fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;')
+				fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;');
 				fmsPreFlightElement.innerText = 'FMC PREFLIGHT COMPLETE';
 				document.body.querySelector('.separator-label').appendChild(fmsPreFlightElement);
 			}
