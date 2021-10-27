@@ -42,7 +42,7 @@
     display: none;
 }
 
-.fms-mask{
+.fms-mask {
     display: none;
     position: absolute;
     vertical-align: top;
@@ -370,6 +370,14 @@
     height: 100%;
     border-right: 4px ridge white;
     pointer-events: none;
+}
+
+.remove-pointers {
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /*# sourceMappingURL=B787_10_FMC.css.map */
