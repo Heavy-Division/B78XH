@@ -3,4 +3,9 @@
 /node_modules/
 /package-lock.json
 /release/
+/src/generators/
+!/src/generators/readme.md
+!/src/generators/tsconfig.json
 todo.yml
+/src/instruments/types/generated/
+/src/backup/
