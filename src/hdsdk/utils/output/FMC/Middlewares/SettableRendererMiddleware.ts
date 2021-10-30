@@ -17,7 +17,8 @@ export class SettableRendererMiddleware implements IRendererMiddleware {
 				} else {
 					value.classList.remove('settableTarget');
 				}
-				return value.textContent = value.textContent.replace(this.regex, '$1');
+				value.textContent = value.textContent.replace(this.regex, '$1');
+				return value;
 			} else {
 				return value;
 			}

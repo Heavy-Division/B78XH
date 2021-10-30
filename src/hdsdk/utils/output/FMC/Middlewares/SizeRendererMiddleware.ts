@@ -12,7 +12,8 @@ export class SizeRendererMiddleware implements IRendererMiddleware {
 			return value.replace(this.regex, '$2');
 		} else if (value instanceof SVGTSpanElement) {
 			if (value.textContent) {
-				return value.textContent = value.textContent.replace(this.regex, '$2');
+				value.textContent = value.textContent.replace(this.regex, '$2');
+				return value;
 			} else {
 				return value;
 			}
