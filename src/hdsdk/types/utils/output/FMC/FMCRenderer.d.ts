@@ -9,7 +9,6 @@ export declare class FMCRenderer implements IRenderer {
      */
     private container;
     private middlewares;
-    private postRenderMiddlewares;
     private lines;
     private titles;
     private static linesPrefixes;
@@ -28,18 +27,6 @@ export declare class FMCRenderer implements IRenderer {
      * @param {string[][]} data
      */
     render(data: string[][]): void;
-    /**
-     * Adds middleware
-     * @param {IRendererMiddleware} middleware
-     */
-    postRenderMiddleware(middleware: IRendererMiddleware): void;
-    /**
-     * Applies all middlewares
-     * @param value
-     * @returns {any}
-     * @private
-     */
-    private applyPostRenderMiddlewares;
     /**
      * Sets data to lines
      * @param {number} index
