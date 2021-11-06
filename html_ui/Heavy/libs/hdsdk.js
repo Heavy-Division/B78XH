@@ -236,12 +236,24 @@
          * @param {string} value
          * @returns {string}
          */
-        static convert(value) {
-            let pattern1 = /([0-9]{2})N([0-9]{1})([0-9]{2})W/;
-            if (pattern1.test(value)) {
-                return value.replace(pattern1, '$1$3N');
+        static convert(waypoint) {
+            const pattern = /([0-9]{2})(N|S)([0-9]{3})(W|E)/;
+            const match = waypoint.match(pattern);
+            if (match !== null) {
+                const lat = parseInt(match[1], 10);
+                const lathem = match[2];
+                const long = parseInt(match[3], 10);
+                const longhem = match[4];
+                const sep = {
+                    'NW': 'N',
+                    'NE': 'E',
+                    'SW': 'W',
+                    'SE': 'S',
+                }[`${lathem}${longhem}`];
+                return long < 100 ?
+                    `${lat}${long}${sep}` : `${lat}${sep}${long % 100}`;
             }
-            return value;
+            return waypoint;
         }
     }
 
