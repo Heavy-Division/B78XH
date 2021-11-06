@@ -18,6 +18,10 @@ export class SeparatorRendererMiddleware implements IRendererMiddleware {
 			if (value.textContent === this.separator) {
 				value.textContent = this.replace;
 			}
+		} else if (value instanceof HTMLElement) {
+			if (value.innerText === this.separator) {
+				value.innerHTML = this.replace;
+			}
 		}
 		return value;
 	}

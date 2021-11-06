@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "ES2017",
+    "module": "es2017",
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "dom"
+    ],
+    "strict": false,
+    "allowJs": false,
+    "sourceMap": true,
+    "declaration": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "outDir": "build",
+    "rootDir": ".",
+    "baseUrl": ".",
+    "typeRoots": [
+      ".types/**",
+      "./node_modules/@types"
+    ]
+  }
+}

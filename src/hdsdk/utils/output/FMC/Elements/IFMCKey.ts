@@ -1,0 +1,3 @@
+interface IFMCKey {
+	event: () => void;
+}

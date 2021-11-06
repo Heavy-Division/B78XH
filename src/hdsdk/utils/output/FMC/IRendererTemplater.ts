@@ -1,3 +1,3 @@
 interface IRendererTemplater {
-	arrange(data: string[], target: SVGTSpanElement[]): void;
+	arrange(data: string[], target: HTMLElement[]): void;
 }

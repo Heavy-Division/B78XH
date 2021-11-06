@@ -4,12 +4,19 @@ export class SettableHighlighterRendererMiddleware implements IRendererMiddlewar
 
 	private readonly settableIdPrefix: string = 'S';
 
+	/**
+	 * TODO: Known issue: highlighter highlights whole TSPAN
+	 * Need to figure out a way to highlight only part of content
+	 * Example: Assumed temperature
+	 * @param value
+	 * @returns {any}
+	 */
 	public apply(value: any): any {
 		if (value instanceof SVGTSpanElement) {
-			if (value.classList.contains('settableTarget')) {
-				const settableBoxId = value.id.replace('TS', this.settableIdPrefix);
-				const settableBoxElement = document.getElementById(settableBoxId);
-				if (settableBoxElement !== null) {
+			const settableBoxId = value.id.replace('TS', this.settableIdPrefix);
+			const settableBoxElement = document.getElementById(settableBoxId);
+			if (settableBoxElement !== null) {
+				if (value.classList.contains('settableTarget')) {
 					const mode = settableBoxElement.dataset.mode;
 					const length = value.getComputedTextLength();
 					if (mode === 'normal') {
@@ -21,6 +28,8 @@ export class SettableHighlighterRendererMiddleware implements IRendererMiddlewar
 						settableBoxElement.setAttribute('x', right - length - 4 + 'px');
 						settableBoxElement.setAttribute('width', length + 12 + 'px');
 					}
+				} else {
+					settableBoxElement.style.display = 'none';
 				}
 			}
 		}

@@ -16,7 +16,7 @@
 
     class HDLogger {
         static log(message, level = Level.none) {
-            if (this.handlers && this.handlers.length > 0) {
+            if (this.handlers.length > 0) {
                 for (let handler of this.handlers) {
                     handler.log(message, level);
                 }

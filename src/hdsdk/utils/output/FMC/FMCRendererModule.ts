@@ -4,6 +4,8 @@ export * from './Middlewares/ColorRendererMiddleware';
 export * from './Middlewares/SizeRendererMiddleware';
 export * from './Middlewares/SeparatorRendererMiddleware';
 export * from './Middlewares/SettableRendererMiddleware';
+export * from './Middlewares/HtmlEncodeRendererMiddleware';
+export * from './Middlewares/HtmlDecodeRendererMiddleware';
 export * from './Middlewares/SettableHighlighterRendererMiddleware';
 export * from './Templaters/DefaultRendererTemplater';
 export * from './Templaters/NaturalRendererTemplater';

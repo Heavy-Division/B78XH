@@ -4190,10 +4190,10 @@
 			const allWaypoints = this.getAllWaypoints();
 			const destination = this.getDestination();
 			if (destination) {
-				if(toApproach){
+				if (toApproach) {
 					const missed = this.getCurrentFlightPlan().approach;
 					const mWayipoints = missed.waypoints;
-					if(mWayipoints.length > 0){
+					if (mWayipoints.length > 0) {
 						const cumulativeToApproach = mWayipoints[mWayipoints.length - 1].cumulativeDistanceInFP;
 						distance = distance + (destination.cumulativeDistanceInFP - cumulativeToApproach);
 					}

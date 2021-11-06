@@ -1,5 +1,5 @@
-import {SimBriefApi} from "./SimBriefApi";
-import {SimBriefCredentials} from "./SimBriefCredentials";
+import {SimBriefApi} from './SimBriefApi';
+import {SimBriefCredentials} from './SimBriefCredentials';
 
 export class SimBrief {
 
@@ -20,7 +20,7 @@ export class SimBrief {
 	 * @type {Promise<JSON> | null}
 	 * @private
 	 */
-	private flightPlan: Promise<JSON> | null;
+	private flightPlan: JSON;
 
 	/**
 	 * Constructor
@@ -51,19 +51,7 @@ export class SimBrief {
 	 * Returns SimBrief flight plan
 	 * @returns {Promise<JSON> | null}
 	 */
-	public getFlightPlan(): Promise<JSON> | null {
-		if (!this.flightPlan) {
-			this.fetchFlightPlan();
-		}
-
-		return this.flightPlan;
-	}
-
-	/**
-	 * Fetches SimBrief flight plan from API
-	 * @private
-	 */
-	private fetchFlightPlan(): void {
-		this.flightPlan = this.api.fetchData();
+	public async getFlightPlan(): Promise<JSON> {
+		return await this.api.fetchData(true);
 	}
 }

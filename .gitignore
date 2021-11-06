@@ -9,3 +9,6 @@
 todo.yml
 /src/instruments/types/generated/
 /src/backup/
+/src/dist/
+/src/build
+/src/node_modules

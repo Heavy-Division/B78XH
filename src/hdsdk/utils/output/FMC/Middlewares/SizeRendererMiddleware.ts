@@ -17,6 +17,11 @@ export class SizeRendererMiddleware implements IRendererMiddleware {
 			} else {
 				return value;
 			}
+		} else if (value instanceof HTMLElement) {
+			if (this.regex.test(value.innerHTML)) {
+				value.innerHTML = value.innerHTML.replace(this.regex, '<tspan class="$1">$2</tspan>');
+			}
+			return value;
 		}
 		return value;
 	}
