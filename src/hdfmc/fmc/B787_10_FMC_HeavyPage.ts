@@ -2,6 +2,7 @@ import {B787_10_FMC} from './B787_10_FMC';
 import {B787_10_FMC_HeavyIRSPage} from './B787_10_FMC_HeavyIRSPage';
 import {B787_10_FMC_PayloadManagerPage} from './B787_10_FMC_PayloadManagerPage';
 import {B787_10_FMC_HeavyConfigurationPage} from './B787_10_FMC_HeavyConfigurationPage';
+import {B787_10_FMC_LNAVDebug} from './B787_10_FMC_LNAVDebug';
 
 export class B787_10_FMC_HeavyPage {
 
@@ -15,7 +16,7 @@ export class B787_10_FMC_HeavyPage {
 			[''],
 			['', ''],
 			[''],
-			[''],
+			['', 'LNAV DEBUG'],
 			[''],
 			[''],
 			[''],
@@ -42,6 +43,10 @@ export class B787_10_FMC_HeavyPage {
 			 };
 			 */
 		}
+
+		fmc._renderer.rsk(3).event = () => {
+			B787_10_FMC_LNAVDebug.showPage(fmc);
+		};
 
 		fmc._renderer.rsk(6).event = () => {
 			B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
