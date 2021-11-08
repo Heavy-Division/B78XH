@@ -4,6 +4,288 @@
     (global = global || self, factory(global.window = global.window || {}));
 }(this, function (exports) { 'use strict';
 
+    class SpeedRepository {
+        constructor() {
+            this._isV1SpeedCustom = false;
+            this._isVRSpeedCustom = false;
+            this._isV2SpeedCustom = false;
+        }
+        get v1Speed() {
+            return this._v1Speed;
+        }
+        set v1Speed(speed) {
+            this._v1Speed = speed;
+        }
+        get vRSpeed() {
+            return this._vRSpeed;
+        }
+        set vRSpeed(speed) {
+            this._vRSpeed = speed;
+        }
+        get v2Speed() {
+            return this._v2Speed;
+        }
+        set v2Speed(speed) {
+            this._v2Speed = speed;
+        }
+        get isV2SpeedCustom() {
+            return this._isV2SpeedCustom;
+        }
+        set isV2SpeedCustom(value) {
+            this._isV2SpeedCustom = value;
+        }
+        get isVRSpeedCustom() {
+            return this._isVRSpeedCustom;
+        }
+        set isVRSpeedCustom(value) {
+            this._isVRSpeedCustom = value;
+        }
+        get isV1SpeedCustom() {
+            return this._isV1SpeedCustom;
+        }
+        set isV1SpeedCustom(value) {
+            this._isV1SpeedCustom = value;
+        }
+    }
+
+    var VSpeedType;
+    (function (VSpeedType) {
+        VSpeedType[VSpeedType["v1"] = 0] = "v1";
+        VSpeedType[VSpeedType["vR"] = 1] = "vR";
+        VSpeedType[VSpeedType["v2"] = 2] = "v2";
+    })(VSpeedType || (VSpeedType = {}));
+
+    class SpeedManager {
+        constructor(repository) {
+            this._speedRepository = repository;
+        }
+        get repository() {
+            return this._speedRepository;
+        }
+        clearVSpeeds() {
+            this.setV1Speed(0, true);
+            this.setVRSpeed(0, true);
+            this.setV2Speed(0, true);
+        }
+        setV1Speed(speed, computed = false) {
+            this._speedRepository.v1Speed = speed;
+            this._speedRepository.isV1SpeedCustom = !computed;
+            SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', speed).catch(console.error);
+        }
+        setVRSpeed(speed, computed = false) {
+            this._speedRepository.vRSpeed = speed;
+            this._speedRepository.isVRSpeedCustom = !computed;
+            SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', speed).catch(console.error);
+        }
+        setV2Speed(speed, computed = false) {
+            this._speedRepository.v2Speed = speed;
+            this._speedRepository.isV2SpeedCustom = !computed;
+            SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', speed).catch(console.error);
+        }
+        getComputedV1Speed(runway, weight, flaps) {
+            return SpeedManager.getComputedVSpeed(runway, weight, flaps, VSpeedType.v1);
+        }
+        getComputedVRSpeed(runway, weight, flaps) {
+            return SpeedManager.getComputedVSpeed(runway, weight, flaps, VSpeedType.vR);
+        }
+        getComputedV2Speed(runway, weight, flaps) {
+            return SpeedManager.getComputedVSpeed(runway, weight, flaps, VSpeedType.v2);
+        }
+        static getComputedVSpeed(runway, weight, flaps, type) {
+            let runwayCoefficient = SpeedManager._getRunwayCoefficient(runway);
+            let dWeightCoefficient = SpeedManager._getWeightCoefficient(weight, type);
+            const flapsCoefficient = SpeedManager._getFlapsCoefficient(flaps);
+            let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
+            let index = SpeedManager._getIndexFromTemp(temp);
+            let min;
+            let max;
+            switch (type) {
+                case VSpeedType.v1:
+                    min = SpeedManager._v1s[index][0];
+                    max = SpeedManager._v1s[index][1];
+                    break;
+                case VSpeedType.vR:
+                    min = SpeedManager._vRs[index][0];
+                    max = SpeedManager._vRs[index][1];
+                    break;
+                case VSpeedType.v2:
+                    min = SpeedManager._v2s[index][0];
+                    max = SpeedManager._v2s[index][1];
+                    break;
+            }
+            let speed = min * (1 - runwayCoefficient) + max * runwayCoefficient;
+            speed *= dWeightCoefficient;
+            speed -= flapsCoefficient;
+            speed = Math.round(speed);
+            return speed;
+        }
+        static _getRunwayCoefficient(runway) {
+            if (runway) {
+                let f = (runway.length - 2250) / (3250 - 2250);
+                return Utils.Clamp(f, 0.0, 1.0);
+            }
+            else {
+                return 1.0;
+            }
+        }
+        static _getWeightCoefficient(weight, type) {
+            let dWeightCoeff = (weight - 350) / (560 - 350);
+            dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
+            switch (type) {
+                case VSpeedType.v1:
+                    return 0.90 + (1.16 - 0.9) * dWeightCoeff;
+                case VSpeedType.vR:
+                    return 0.99 + (1.215 - 0.99) * dWeightCoeff;
+                case VSpeedType.v2:
+                    return 1.03 + (1.23 - 1.03) * dWeightCoeff;
+            }
+        }
+        static _getFlapsCoefficient(flaps) {
+            switch (flaps) {
+                case 5:
+                    return 2 * 5;
+                case 10:
+                    return 3 * 5;
+                case 15:
+                    return 4 * 5;
+                case 17:
+                    return 5 * 5;
+                case 18:
+                    return 6 * 5;
+                case 20:
+                    return 7 * 5;
+                default:
+                    return Simplane.getFlapsHandleIndex() * 5;
+            }
+        }
+        static _getIndexFromTemp(temp) {
+            if (temp < -10) {
+                return 0;
+            }
+            if (temp < 0) {
+                return 1;
+            }
+            if (temp < 10) {
+                return 2;
+            }
+            if (temp < 20) {
+                return 3;
+            }
+            if (temp < 30) {
+                return 4;
+            }
+            if (temp < 40) {
+                return 5;
+            }
+            if (temp < 43) {
+                return 6;
+            }
+            if (temp < 45) {
+                return 7;
+            }
+            if (temp < 47) {
+                return 8;
+            }
+            if (temp < 49) {
+                return 9;
+            }
+            if (temp < 51) {
+                return 10;
+            }
+            if (temp < 53) {
+                return 11;
+            }
+            if (temp < 55) {
+                return 12;
+            }
+            if (temp < 57) {
+                return 13;
+            }
+            if (temp < 59) {
+                return 14;
+            }
+            if (temp < 61) {
+                return 15;
+            }
+            if (temp < 63) {
+                return 16;
+            }
+            if (temp < 65) {
+                return 17;
+            }
+            if (temp < 66) {
+                return 18;
+            }
+            return 19;
+        }
+    }
+    SpeedManager._v1s = [
+        [130, 156],
+        [128, 154],
+        [127, 151],
+        [125, 149],
+        [123, 147],
+        [122, 145],
+        [121, 143],
+        [120, 143],
+        [120, 143],
+        [120, 142],
+        [119, 142],
+        [119, 142],
+        [119, 142],
+        [119, 141],
+        [118, 141],
+        [118, 141],
+        [118, 140],
+        [118, 140],
+        [117, 140],
+        [117, 140]
+    ];
+    SpeedManager._vRs = [
+        [130, 158],
+        [128, 156],
+        [127, 154],
+        [125, 152],
+        [123, 150],
+        [122, 148],
+        [121, 147],
+        [120, 146],
+        [120, 146],
+        [120, 145],
+        [119, 145],
+        [119, 144],
+        [119, 144],
+        [119, 143],
+        [118, 143],
+        [118, 142],
+        [118, 142],
+        [118, 141],
+        [117, 141],
+        [117, 140]
+    ];
+    SpeedManager._v2s = [
+        [135, 163],
+        [133, 160],
+        [132, 158],
+        [130, 157],
+        [129, 155],
+        [127, 153],
+        [127, 151],
+        [126, 150],
+        [125, 150],
+        [125, 149],
+        [124, 149],
+        [124, 148],
+        [124, 148],
+        [123, 147],
+        [123, 146],
+        [123, 146],
+        [123, 145],
+        [122, 145],
+        [122, 144],
+        [121, 144]
+    ];
+
     class BaseFMC extends BaseAirliners {
         constructor() {
             super();
@@ -29,9 +311,6 @@
             this.routePageCount = 2;
             this.tmpOrigin = '';
             this.tmpDestination = '';
-            this.customV1Speed = false;
-            this.customVRSpeed = false;
-            this.customV2Speed = false;
             this.transitionAltitude = 5000;
             this.perfTOTemp = 20;
             this.overSpeedLimitThreshold = false;
@@ -101,6 +380,9 @@
             this._lineElements = [];
             this.refreshPageCallback = undefined;
             this.pageUpdate = undefined;
+        }
+        get speedManager() {
+            return this._speedManager;
         }
         static approachTypeStringToIndex(approachType) {
             approachType = approachType.trim();
@@ -860,18 +1142,6 @@
                 });
             }
         }
-        _computeV1Speed() {
-            this.v1Speed = 120;
-            SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', this.v1Speed).catch(console.error);
-        }
-        _computeVRSpeed() {
-            this.vRSpeed = 130;
-            SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', this.vRSpeed).catch(console.error);
-        }
-        _computeV2Speed() {
-            this.v2Speed = 140;
-            SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', this.v2Speed).catch(console.error);
-        }
         trySetV1Speed(s) {
             if (s != undefined) {
                 if (!/^\d+$/.test(s)) {
@@ -881,9 +1151,7 @@
                 let v = parseInt(s);
                 if (isFinite(v)) {
                     if (v >= 0 && v < 1000) {
-                        this.v1Speed = v;
-                        this.customV1Speed = true;
-                        SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', this.v1Speed).catch(console.error);
+                        this.speedManager.setV1Speed(v);
                         return true;
                     }
                     this.showErrorMessage('ENTRY OUT OF RANGE');
@@ -893,9 +1161,7 @@
                 return false;
             }
             else {
-                this.v1Speed = undefined;
-                this.customV1Speed = true;
-                SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', 0).catch(console.error);
+                this.speedManager.setV1Speed(undefined);
                 return true;
             }
         }
@@ -908,9 +1174,7 @@
                 let v = parseInt(s);
                 if (isFinite(v)) {
                     if (v >= 0 && v < 1000) {
-                        this.vRSpeed = v;
-                        this.customVRSpeed = true;
-                        SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', this.vRSpeed).catch(console.error);
+                        this.speedManager.setVRSpeed(v);
                         return true;
                     }
                     this.showErrorMessage('ENTRY OUT OF RANGE');
@@ -920,9 +1184,7 @@
                 return false;
             }
             else {
-                this.vRSpeed = undefined;
-                this.customVRSpeed = true;
-                SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', 0).catch(console.error);
+                this.speedManager.setVRSpeed(undefined);
                 return true;
             }
         }
@@ -935,9 +1197,7 @@
                 let v = parseInt(s);
                 if (isFinite(v)) {
                     if (v > 0 && v < 1000) {
-                        this.v2Speed = v;
-                        this.customV2Speed = true;
-                        SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', this.v2Speed).catch(console.error);
+                        this.speedManager.setV2Speed(v);
                         return true;
                     }
                     this.showErrorMessage('ENTRY OUT OF RANGE');
@@ -947,9 +1207,7 @@
                 return false;
             }
             else {
-                this.v2Speed = undefined;
-                this.customV2Speed = true;
-                SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', 0).catch(console.error);
+                this.speedManager.setV2Speed(undefined);
                 return true;
             }
         }
@@ -961,7 +1219,7 @@
             let v = parseInt(s);
             if (isFinite(v) && v > 0) {
                 this.transitionAltitude = v;
-                SimVar.SetSimVarValue('L:AIRLINER_TRANS_ALT', 'Number', this.v2Speed).catch(console.error);
+                SimVar.SetSimVarValue('L:AIRLINER_TRANS_ALT', 'Number', this.transitionAltitude).catch(console.error);
                 return true;
             }
             this.showErrorMessage(this.defaultInputErrorMessage);
@@ -2075,6 +2333,8 @@
         Init() {
             super.Init();
             this.dataManager = new FMCDataManager(this);
+            this._speedRepository = new SpeedRepository();
+            this._speedManager = new SpeedManager(this._speedRepository);
             this.tempCurve = new Avionics.Curve();
             this.tempCurve.interpolationFunction = Avionics.CurveTool.NumberInterpolation;
             this.tempCurve.add(-10 * 3.28084, 21.50);
@@ -2226,11 +2486,6 @@
                         this.costIndex = 100;
                     }
                     this.onFMCFlightPlanLoaded();
-                    if (this.flightPlanManager.getWaypointsCount() >= 2) {
-                        this._computeV1Speed();
-                        this._computeVRSpeed();
-                        this._computeV2Speed();
-                    }
                     let callback = () => {
                         this.flightPlanManager.createNewFlightPlan();
                         let cruiseAlt = Math.floor(this.flightPlanManager.cruisingAltitude / 100);
@@ -2310,7 +2565,7 @@
         }
         onShutDown() {
             super.onShutDown();
-            this.clearVSpeeds();
+            this.speedManager.clearVSpeeds();
         }
         getFuelVarsUpdatedGrossWeight(useLbs = false) {
             if (!useLbs) {
@@ -2333,7 +2588,6 @@
                         this.blockFuel = SimVar.GetSimVarValue('FUEL TOTAL QUANTITY', 'gallons') * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms') / 1000;
                         this.zeroFuelWeight = this._fuelVarsUpdatedGrossWeight - this.blockFuel;
                         this.zeroFuelWeightMassCenter = SimVar.GetSimVarValue('CG PERCENT', 'percent');
-                        this.updateVSpeeds();
                         let waypointsNumber = SimVar.GetSimVarValue('C:fs9gps:FlightPlanWaypointsNumber', 'number', this.instrumentIdentifier);
                         if (waypointsNumber > 1) {
                             SimVar.SetSimVarValue('C:fs9gps:FlightPlanWaypointIndex', 'number', waypointsNumber - 1).then(() => {
@@ -2350,30 +2604,6 @@
                     }
                 });
             });
-        }
-        updateVSpeeds() {
-            if (!this.customV1Speed && !this.customVRSpeed && !this.customV2Speed && !this.wasTurnedOff()) {
-                this._computeV1Speed();
-                this._computeVRSpeed();
-                this._computeV2Speed();
-            }
-            else {
-                console.log('Custom V1 ' + this.customV1Speed);
-                console.log('Custom VR ' + this.customVRSpeed);
-                console.log('Custom V2 ' + this.customV2Speed);
-                console.log('Was Turned Off ' + this.wasTurnedOff());
-            }
-        }
-        clearVSpeeds() {
-            this.v1Speed = undefined;
-            this.vRSpeed = undefined;
-            this.v2Speed = undefined;
-            SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', 0).catch(console.error);
-            SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', 0).catch(console.error);
-            SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', 0).catch(console.error);
-            this.customV1Speed = false;
-            this.customVRSpeed = false;
-            this.customV2Speed = false;
         }
         onUpdate(_deltaTime) {
             super.onUpdate(_deltaTime);
@@ -2773,7 +3003,7 @@
                     /**
                      * Automatically clear all vSpeeds after flaps change
                      */
-                    this.clearVSpeeds();
+                    this.speedManager.clearVSpeeds();
                     return true;
                 }
             }
@@ -2964,7 +3194,13 @@
             }
         }
         onFMCFlightPlanLoaded() {
-            let vRSpeed = this._getComputedVRSpeed();
+            let runway = this.flightPlanManager.getDepartureRunway();
+            if (!runway) {
+                runway = this.flightPlanManager.getDetectedCurrentRunway();
+            }
+            const weight = this.getWeight(true);
+            const flaps = this.getTakeOffFlap();
+            let vRSpeed = this.speedManager.getComputedVRSpeed(runway, weight, flaps);
             SimVar.SetSimVarValue('FLY ASSISTANT TAKEOFF SPEED ESTIMATED', 'Knots', vRSpeed);
         }
         activateRoute(directTo = false, callback = EmptyCallback.Void) {
@@ -3402,16 +3638,13 @@
         getThrustClimbLimit() {
             return 100;
         }
-        _getComputedVRSpeed() {
-            return 100;
-        }
         getVRef(flapsHandleIndex = NaN, useCurrentWeight = true) {
             return 200;
         }
         getTakeOffManagedSpeed() {
             let altitude = Simplane.getAltitudeAboveGround();
             if (altitude < 35) {
-                return this.v2Speed + 15;
+                return this.speedManager.repository.v2Speed + 15;
             }
             return 250;
         }
@@ -3859,9 +4092,9 @@
                 this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature = (!!this.getThrustTakeOffTemp());
                 this.dataHolder.preFlightDataHolder.thrustLim.completed = (this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature);
                 this.dataHolder.preFlightDataHolder.takeOff.flaps = (!!this.getTakeOffFlap());
-                this.dataHolder.preFlightDataHolder.takeOff.v1 = (!!this.v1Speed);
-                this.dataHolder.preFlightDataHolder.takeOff.vR = (!!this.vRSpeed);
-                this.dataHolder.preFlightDataHolder.takeOff.v2 = (!!this.v2Speed);
+                this.dataHolder.preFlightDataHolder.takeOff.v1 = (!!this.speedManager.repository.v1Speed);
+                this.dataHolder.preFlightDataHolder.takeOff.vR = (!!this.speedManager.repository.vRSpeed);
+                this.dataHolder.preFlightDataHolder.takeOff.v2 = (!!this.speedManager.repository.v2Speed);
                 this.dataHolder.preFlightDataHolder.takeOff.completed = (this.dataHolder.preFlightDataHolder.takeOff.v1 && this.dataHolder.preFlightDataHolder.takeOff.vR && this.dataHolder.preFlightDataHolder.takeOff.v2 && this.dataHolder.preFlightDataHolder.takeOff.flaps);
                 this.dataHolder.preFlightDataHolder.perfInit.cruiseAltitude = (!!this.cruiseFlightLevel);
                 this.dataHolder.preFlightDataHolder.perfInit.costIndex = (!!this.costIndex);
@@ -5725,8 +5958,8 @@
                 }
             };
             let v1 = '□□□';
-            if (fmc.v1Speed) {
-                v1 = fmc.makeSettable(String(fmc.v1Speed)) + 'KT';
+            if (fmc.speedManager.repository.v1Speed) {
+                v1 = fmc.makeSettable(String(fmc.speedManager.repository.v1Speed)) + 'KT';
             }
             else {
                 v1 = fmc.makeSettable(v1);
@@ -5739,7 +5972,9 @@
                     B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
                 }
                 else if (value === '') {
-                    fmc._computeV1Speed();
+                    const [runway, weight, flaps] = this.takeOffSetting(fmc);
+                    const computedSpeed = fmc.speedManager.getComputedV1Speed(runway, weight, flaps);
+                    fmc.speedManager.setV1Speed(computedSpeed, true);
                     B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
                 }
                 else {
@@ -5749,8 +5984,8 @@
                 }
             };
             let vR = '□□□';
-            if (fmc.vRSpeed) {
-                vR = fmc.makeSettable(String(fmc.vRSpeed)) + 'KT';
+            if (fmc.speedManager.repository.vRSpeed) {
+                vR = fmc.makeSettable(String(fmc.speedManager.repository.vRSpeed)) + 'KT';
             }
             else {
                 vR = fmc.makeSettable(vR);
@@ -5763,7 +5998,9 @@
                     B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
                 }
                 else if (value === '') {
-                    fmc._computeVRSpeed();
+                    const [runway, weight, flaps] = this.takeOffSetting(fmc);
+                    const computedSpeed = fmc.speedManager.getComputedVRSpeed(runway, weight, flaps);
+                    fmc.speedManager.setVRSpeed(computedSpeed, true);
                     B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
                 }
                 else {
@@ -5773,8 +6010,8 @@
                 }
             };
             let v2 = '□□□';
-            if (fmc.v2Speed) {
-                v2 = fmc.makeSettable(String(fmc.v2Speed)) + 'KT';
+            if (fmc.speedManager.repository.v2Speed) {
+                v2 = fmc.makeSettable(String(fmc.speedManager.repository.v2Speed)) + 'KT';
             }
             else {
                 v2 = fmc.makeSettable(v2);
@@ -5787,7 +6024,9 @@
                     B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
                 }
                 else if (value === '') {
-                    fmc._computeV2Speed();
+                    const [runway, weight, flaps] = this.takeOffSetting(fmc);
+                    const computedSpeed = fmc.speedManager.getComputedV2Speed(runway, weight, flaps);
+                    fmc.speedManager.setV2Speed(computedSpeed, true);
                     B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
                 }
                 else {
@@ -5978,6 +6217,15 @@
             fmc.onNextPage = () => {
                 B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
             };
+        }
+        static takeOffSetting(fmc) {
+            let runway = fmc.flightPlanManager.getDepartureRunway();
+            if (!runway) {
+                runway = fmc.flightPlanManager.getDetectedCurrentRunway();
+            }
+            const flaps = fmc.getTakeOffFlap();
+            const weight = fmc.getWeight(true);
+            return [runway, weight, flaps];
         }
     }
     B787_10_FMC_TakeOffRefPage._timer = 0;
@@ -13285,187 +13533,6 @@
                 return 18;
             }
             return 19;
-        }
-        _computeV1Speed() {
-            console.log('Computing V1...');
-            let runwayCoef = 1.0;
-            {
-                let runway = this.flightPlanManager.getDepartureRunway();
-                if (!runway) {
-                    runway = this.flightPlanManager.getDetectedCurrentRunway();
-                }
-                if (runway) {
-                    console.log('Runway length = ' + runway.length);
-                    let f = (runway.length - 2250) / (3250 - 2250);
-                    runwayCoef = Utils.Clamp(f, 0, 1);
-                }
-                else {
-                    console.log('No Runway');
-                }
-            }
-            let w = this.getWeight(true);
-            console.log('Weight = ' + w);
-            let dWeightCoeff = (w - 350) / (560 - 350);
-            dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
-            dWeightCoeff = 0.90 + (1.16 - 0.9) * dWeightCoeff;
-            let flapsHandleIndex;
-            const takeoffFlaps = this.getTakeOffFlap();
-            switch (takeoffFlaps) {
-                case 5:
-                    flapsHandleIndex = 2;
-                    break;
-                case 10:
-                    flapsHandleIndex = 3;
-                    break;
-                case 15:
-                    flapsHandleIndex = 4;
-                    break;
-                case 17:
-                    flapsHandleIndex = 5;
-                    break;
-                case 18:
-                    flapsHandleIndex = 6;
-                    break;
-                case 20:
-                    flapsHandleIndex = 7;
-                    break;
-                default:
-                    flapsHandleIndex = Simplane.getFlapsHandleIndex();
-                    break;
-            }
-            let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
-            let index = this._getIndexFromTemp(temp);
-            console.log('Temperature = ' + temp + ' (index ' + index + ')');
-            let min = B787_10_FMC._v1s[index][0];
-            let max = B787_10_FMC._v1s[index][1];
-            this.v1Speed = min * (1 - runwayCoef) + max * runwayCoef;
-            this.v1Speed *= dWeightCoeff;
-            this.v1Speed -= flapsHandleIndex * 5;
-            this.v1Speed = Math.round(this.v1Speed);
-            this.customV1Speed = false;
-            SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', this.v1Speed);
-            console.log('V1 = ' + this.v1Speed);
-        }
-        _getComputedVRSpeed() {
-            let runwayCoef = 1.0;
-            {
-                let runway = this.flightPlanManager.getDepartureRunway();
-                if (!runway) {
-                    runway = this.flightPlanManager.getDetectedCurrentRunway();
-                }
-                if (runway) {
-                    console.log('Runway length = ' + runway.length);
-                    let f = (runway.length - 2250) / (3250 - 2250);
-                    runwayCoef = Utils.Clamp(f, 0, 1);
-                }
-                else {
-                    console.log('No Runway');
-                }
-            }
-            let w = this.getWeight(true);
-            let dWeightCoeff = (w - 350) / (560 - 350);
-            dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
-            dWeightCoeff = 0.99 + (1.215 - 0.99) * dWeightCoeff;
-            let flapsHandleIndex;
-            const takeoffFlaps = this.getTakeOffFlap();
-            switch (takeoffFlaps) {
-                case 5:
-                    flapsHandleIndex = 2;
-                    break;
-                case 10:
-                    flapsHandleIndex = 3;
-                    break;
-                case 15:
-                    flapsHandleIndex = 4;
-                    break;
-                case 17:
-                    flapsHandleIndex = 5;
-                    break;
-                case 18:
-                    flapsHandleIndex = 6;
-                    break;
-                case 20:
-                    flapsHandleIndex = 7;
-                    break;
-                default:
-                    flapsHandleIndex = Simplane.getFlapsHandleIndex();
-                    break;
-            }
-            let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
-            let index = this._getIndexFromTemp(temp);
-            let min = B787_10_FMC._vRs[index][0];
-            let max = B787_10_FMC._vRs[index][1];
-            let vRSpeed = min * (1 - runwayCoef) + max * runwayCoef;
-            vRSpeed *= dWeightCoeff;
-            vRSpeed -= flapsHandleIndex * 5;
-            vRSpeed = Math.round(vRSpeed);
-            return vRSpeed;
-        }
-        _computeVRSpeed() {
-            this.vRSpeed = this._getComputedVRSpeed();
-            this.customVRSpeed = false;
-            SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', this.vRSpeed);
-            console.log('VR = ' + this.vRSpeed);
-        }
-        _computeV2Speed() {
-            console.log('Computing V2...');
-            let runwayCoef = 1.0;
-            {
-                let runway = this.flightPlanManager.getDepartureRunway();
-                if (!runway) {
-                    runway = this.flightPlanManager.getDetectedCurrentRunway();
-                }
-                if (runway) {
-                    console.log('Runway length = ' + runway.length);
-                    let f = (runway.length - 2250) / (3250 - 2250);
-                    runwayCoef = Utils.Clamp(f, 0.0, 1.0);
-                }
-                else {
-                    console.log('No Runway');
-                }
-            }
-            let weight = this.getWeight(true);
-            console.log('Weight = ' + weight);
-            let dWeightCoeff = (weight - 350) / (560 - 350);
-            dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
-            dWeightCoeff = 1.03 + (1.23 - 1.03) * dWeightCoeff;
-            let flapsHandleIndex;
-            const takeoffFlaps = this.getTakeOffFlap();
-            switch (takeoffFlaps) {
-                case 5:
-                    flapsHandleIndex = 2;
-                    break;
-                case 10:
-                    flapsHandleIndex = 3;
-                    break;
-                case 15:
-                    flapsHandleIndex = 4;
-                    break;
-                case 17:
-                    flapsHandleIndex = 5;
-                    break;
-                case 18:
-                    flapsHandleIndex = 6;
-                    break;
-                case 20:
-                    flapsHandleIndex = 7;
-                    break;
-                default:
-                    flapsHandleIndex = Simplane.getFlapsHandleIndex();
-                    break;
-            }
-            let temp = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
-            let index = this._getIndexFromTemp(temp);
-            console.log('Temperature = ' + temp + ' (index ' + index + ')');
-            let min = B787_10_FMC._v2s[index][0];
-            let max = B787_10_FMC._v2s[index][1];
-            this.v2Speed = min * (1 - runwayCoef) + max * runwayCoef;
-            this.v2Speed *= dWeightCoeff;
-            this.v2Speed -= flapsHandleIndex * 5;
-            this.v2Speed = Math.round(this.v2Speed);
-            this.customV2Speed = false;
-            SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', this.v2Speed);
-            console.log('VR = ' + this.v2Speed);
         }
         getFlapTakeOffSpeed() {
             let dWeight = (this.getWeight(true) - 500) / (900 - 500);

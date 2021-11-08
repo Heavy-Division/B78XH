@@ -17,8 +17,8 @@ export class B787_10_FMC_TakeOffRefPage {
 			}
 		};
 		let v1 = '□□□';
-		if (fmc.v1Speed) {
-			v1 = fmc.makeSettable(String(fmc.v1Speed)) + 'KT';
+		if (fmc.speedManager.repository.v1Speed) {
+			v1 = fmc.makeSettable(String(fmc.speedManager.repository.v1Speed)) + 'KT';
 		} else {
 			v1 = fmc.makeSettable(v1);
 		}
@@ -29,7 +29,9 @@ export class B787_10_FMC_TakeOffRefPage {
 				fmc.trySetV1Speed(undefined);
 				B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
 			} else if (value === '') {
-				fmc._computeV1Speed();
+				const [runway, weight, flaps] = this.takeOffSetting(fmc);
+				const computedSpeed = fmc.speedManager.getComputedV1Speed(runway, weight, flaps);
+				fmc.speedManager.setV1Speed(computedSpeed, true);
 				B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
 			} else {
 				if (fmc.trySetV1Speed(value)) {
@@ -38,8 +40,8 @@ export class B787_10_FMC_TakeOffRefPage {
 			}
 		};
 		let vR = '□□□';
-		if (fmc.vRSpeed) {
-			vR = fmc.makeSettable(String(fmc.vRSpeed)) + 'KT';
+		if (fmc.speedManager.repository.vRSpeed) {
+			vR = fmc.makeSettable(String(fmc.speedManager.repository.vRSpeed)) + 'KT';
 		} else {
 			vR = fmc.makeSettable(vR);
 		}
@@ -50,7 +52,9 @@ export class B787_10_FMC_TakeOffRefPage {
 				fmc.trySetVRSpeed(undefined);
 				B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
 			} else if (value === '') {
-				fmc._computeVRSpeed();
+				const [runway, weight, flaps] = this.takeOffSetting(fmc);
+				const computedSpeed = fmc.speedManager.getComputedVRSpeed(runway, weight, flaps);
+				fmc.speedManager.setVRSpeed(computedSpeed, true);
 				B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
 			} else {
 				if (fmc.trySetVRSpeed(value)) {
@@ -59,8 +63,8 @@ export class B787_10_FMC_TakeOffRefPage {
 			}
 		};
 		let v2 = '□□□';
-		if (fmc.v2Speed) {
-			v2 = fmc.makeSettable(String(fmc.v2Speed)) + 'KT';
+		if (fmc.speedManager.repository.v2Speed) {
+			v2 = fmc.makeSettable(String(fmc.speedManager.repository.v2Speed)) + 'KT';
 		} else {
 			v2 = fmc.makeSettable(v2);
 		}
@@ -71,7 +75,9 @@ export class B787_10_FMC_TakeOffRefPage {
 				fmc.trySetV2Speed(undefined);
 				B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
 			} else if (value === '') {
-				fmc._computeV2Speed();
+				const [runway, weight, flaps] = this.takeOffSetting(fmc);
+				const computedSpeed = fmc.speedManager.getComputedV2Speed(runway, weight, flaps);
+				fmc.speedManager.setV2Speed(computedSpeed, true);
 				B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
 			} else {
 				if (fmc.trySetV2Speed(value)) {
@@ -277,5 +283,15 @@ export class B787_10_FMC_TakeOffRefPage {
 		fmc.onNextPage = () => {
 			B787_10_FMC_TakeOffRefPage.ShowPage1(fmc);
 		};
+	}
+
+	private static takeOffSetting(fmc): any[] {
+		let runway = fmc.flightPlanManager.getDepartureRunway();
+		if (!runway) {
+			runway = fmc.flightPlanManager.getDetectedCurrentRunway();
+		}
+		const flaps = fmc.getTakeOffFlap();
+		const weight = fmc.getWeight(true);
+		return [runway, weight, flaps];
 	}
 }

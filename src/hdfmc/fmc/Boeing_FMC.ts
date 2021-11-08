@@ -73,7 +73,7 @@ export class Boeing_FMC extends BaseFMC {
 				/**
 				 * Automatically clear all vSpeeds after flaps change
 				 */
-				this.clearVSpeeds();
+				this.speedManager.clearVSpeeds();
 				return true;
 			}
 		}
@@ -276,7 +276,13 @@ export class Boeing_FMC extends BaseFMC {
 	}
 
 	onFMCFlightPlanLoaded() {
-		let vRSpeed = this._getComputedVRSpeed();
+		let runway = this.flightPlanManager.getDepartureRunway();
+		if (!runway) {
+			runway = this.flightPlanManager.getDetectedCurrentRunway();
+		}
+		const weight = this.getWeight(true);
+		const flaps = this.getTakeOffFlap();
+		let vRSpeed = this.speedManager.getComputedVRSpeed(runway, weight, flaps);
 		SimVar.SetSimVarValue('FLY ASSISTANT TAKEOFF SPEED ESTIMATED', 'Knots', vRSpeed);
 	}
 
@@ -736,10 +742,6 @@ export class Boeing_FMC extends BaseFMC {
 		return 100;
 	}
 
-	_getComputedVRSpeed(): number {
-		return 100;
-	}
-
 	getVRef(flapsHandleIndex: number = NaN, useCurrentWeight: boolean = true): number {
 		return 200;
 	}
@@ -747,7 +749,7 @@ export class Boeing_FMC extends BaseFMC {
 	getTakeOffManagedSpeed(): number {
 		let altitude = Simplane.getAltitudeAboveGround();
 		if (altitude < 35) {
-			return this.v2Speed + 15;
+			return this.speedManager.repository.v2Speed + 15;
 		}
 		return 250;
 	}
@@ -1230,9 +1232,9 @@ export class Boeing_FMC extends BaseFMC {
 			this.dataHolder.preFlightDataHolder.thrustLim.completed = (this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature);
 
 			this.dataHolder.preFlightDataHolder.takeOff.flaps = (!!this.getTakeOffFlap());
-			this.dataHolder.preFlightDataHolder.takeOff.v1 = (!!this.v1Speed);
-			this.dataHolder.preFlightDataHolder.takeOff.vR = (!!this.vRSpeed);
-			this.dataHolder.preFlightDataHolder.takeOff.v2 = (!!this.v2Speed);
+			this.dataHolder.preFlightDataHolder.takeOff.v1 = (!!this.speedManager.repository.v1Speed);
+			this.dataHolder.preFlightDataHolder.takeOff.vR = (!!this.speedManager.repository.vRSpeed);
+			this.dataHolder.preFlightDataHolder.takeOff.v2 = (!!this.speedManager.repository.v2Speed);
 			this.dataHolder.preFlightDataHolder.takeOff.completed = (this.dataHolder.preFlightDataHolder.takeOff.v1 && this.dataHolder.preFlightDataHolder.takeOff.vR && this.dataHolder.preFlightDataHolder.takeOff.v2 && this.dataHolder.preFlightDataHolder.takeOff.flaps);
 
 			this.dataHolder.preFlightDataHolder.perfInit.cruiseAltitude = (!!this.cruiseFlightLevel);

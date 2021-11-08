@@ -1,3 +1,6 @@
+import {SpeedRepository} from '../../hdsdk/Repositories/SpeedRepository';
+import {SpeedManager} from '../../hdsdk/Managers/SpeedManager';
+
 export class BaseFMC extends BaseAirliners {
 	public defaultInputErrorMessage: string = 'INVALID ENTRY';
 	protected currentFlightPlanWaypointIndex: number = -1;
@@ -21,9 +24,6 @@ export class BaseFMC extends BaseAirliners {
 	protected routePageCount: number = 2;
 	public tmpOrigin: string = '';
 	public tmpDestination: string = '';
-	protected customV1Speed: boolean = false;
-	protected customVRSpeed: boolean = false;
-	protected customV2Speed: boolean = false;
 	public transitionAltitude: number = 5000;
 	protected perfTOTemp: number = 20;
 	protected overSpeedLimitThreshold: boolean = false;
@@ -124,9 +124,6 @@ export class BaseFMC extends BaseAirliners {
 	public flightPlanManager: FlightPlanManager;
 	protected altDestination: string;
 	protected groundTemperature: number;
-	public v1Speed: number;
-	public vRSpeed: number;
-	public v2Speed: number;
 	protected tempCurve: Curve;
 	public radioNav: RadioNav;
 	protected flaps: number;
@@ -158,6 +155,13 @@ export class BaseFMC extends BaseAirliners {
 	public refreshPageCallback: () => void = undefined;
 	public pageUpdate: () => void = undefined;
 	protected aircraftType: Aircraft;
+
+	protected _speedRepository: SpeedRepository;
+	protected _speedManager: SpeedManager;
+
+	get speedManager(): SpeedManager {
+		return this._speedManager;
+	}
 
 	constructor() {
 		super();
@@ -966,21 +970,6 @@ export class BaseFMC extends BaseAirliners {
 		}
 	}
 
-	_computeV1Speed(): void {
-		this.v1Speed = 120;
-		SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', this.v1Speed).catch(console.error);
-	}
-
-	_computeVRSpeed(): void {
-		this.vRSpeed = 130;
-		SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', this.vRSpeed).catch(console.error);
-	}
-
-	_computeV2Speed(): void {
-		this.v2Speed = 140;
-		SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', this.v2Speed).catch(console.error);
-	}
-
 	trySetV1Speed(s: string): boolean {
 		if (s != undefined) {
 			if (!/^\d+$/.test(s)) {
@@ -990,9 +979,7 @@ export class BaseFMC extends BaseAirliners {
 			let v = parseInt(s);
 			if (isFinite(v)) {
 				if (v >= 0 && v < 1000) {
-					this.v1Speed = v;
-					this.customV1Speed = true;
-					SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', this.v1Speed).catch(console.error);
+					this.speedManager.setV1Speed(v);
 					return true;
 				}
 				this.showErrorMessage('ENTRY OUT OF RANGE');
@@ -1001,9 +988,7 @@ export class BaseFMC extends BaseAirliners {
 			this.showErrorMessage(this.defaultInputErrorMessage);
 			return false;
 		} else {
-			this.v1Speed = undefined;
-			this.customV1Speed = true;
-			SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', 0).catch(console.error);
+			this.speedManager.setV1Speed(undefined);
 			return true;
 		}
 	}
@@ -1017,9 +1002,7 @@ export class BaseFMC extends BaseAirliners {
 			let v = parseInt(s);
 			if (isFinite(v)) {
 				if (v >= 0 && v < 1000) {
-					this.vRSpeed = v;
-					this.customVRSpeed = true;
-					SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', this.vRSpeed).catch(console.error);
+					this.speedManager.setVRSpeed(v);
 					return true;
 				}
 				this.showErrorMessage('ENTRY OUT OF RANGE');
@@ -1028,9 +1011,7 @@ export class BaseFMC extends BaseAirliners {
 			this.showErrorMessage(this.defaultInputErrorMessage);
 			return false;
 		} else {
-			this.vRSpeed = undefined;
-			this.customVRSpeed = true;
-			SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', 0).catch(console.error);
+			this.speedManager.setVRSpeed(undefined);
 			return true;
 		}
 	}
@@ -1044,9 +1025,7 @@ export class BaseFMC extends BaseAirliners {
 			let v = parseInt(s);
 			if (isFinite(v)) {
 				if (v > 0 && v < 1000) {
-					this.v2Speed = v;
-					this.customV2Speed = true;
-					SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', this.v2Speed).catch(console.error);
+					this.speedManager.setV2Speed(v);
 					return true;
 				}
 				this.showErrorMessage('ENTRY OUT OF RANGE');
@@ -1055,9 +1034,7 @@ export class BaseFMC extends BaseAirliners {
 			this.showErrorMessage(this.defaultInputErrorMessage);
 			return false;
 		} else {
-			this.v2Speed = undefined;
-			this.customV2Speed = true;
-			SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', 0).catch(console.error);
+			this.speedManager.setV2Speed(undefined);
 			return true;
 		}
 	}
@@ -1070,7 +1047,7 @@ export class BaseFMC extends BaseAirliners {
 		let v = parseInt(s);
 		if (isFinite(v) && v > 0) {
 			this.transitionAltitude = v;
-			SimVar.SetSimVarValue('L:AIRLINER_TRANS_ALT', 'Number', this.v2Speed).catch(console.error);
+			SimVar.SetSimVarValue('L:AIRLINER_TRANS_ALT', 'Number', this.transitionAltitude).catch(console.error);
 			return true;
 		}
 		this.showErrorMessage(this.defaultInputErrorMessage);
@@ -2259,6 +2236,8 @@ export class BaseFMC extends BaseAirliners {
 	Init() {
 		super.Init();
 		this.dataManager = new FMCDataManager(this);
+		this._speedRepository = new SpeedRepository();
+		this._speedManager = new SpeedManager(this._speedRepository);
 		this.tempCurve = new Avionics.Curve();
 		this.tempCurve.interpolationFunction = Avionics.CurveTool.NumberInterpolation;
 		this.tempCurve.add(-10 * 3.28084, 21.50);
@@ -2407,11 +2386,6 @@ export class BaseFMC extends BaseAirliners {
 					this.costIndex = 100;
 				}
 				this.onFMCFlightPlanLoaded();
-				if (this.flightPlanManager.getWaypointsCount() >= 2) {
-					this._computeV1Speed();
-					this._computeVRSpeed();
-					this._computeV2Speed();
-				}
 				let callback = () => {
 					this.flightPlanManager.createNewFlightPlan();
 					let cruiseAlt = Math.floor(this.flightPlanManager.cruisingAltitude / 100);
@@ -2494,7 +2468,7 @@ export class BaseFMC extends BaseAirliners {
 
 	onShutDown(): void {
 		super.onShutDown();
-		this.clearVSpeeds();
+		this.speedManager.clearVSpeeds();
 	}
 
 	getFuelVarsUpdatedGrossWeight(useLbs: boolean = false): number {
@@ -2520,7 +2494,6 @@ export class BaseFMC extends BaseAirliners {
 					this.blockFuel = SimVar.GetSimVarValue('FUEL TOTAL QUANTITY', 'gallons') * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms') / 1000;
 					this.zeroFuelWeight = this._fuelVarsUpdatedGrossWeight - this.blockFuel;
 					this.zeroFuelWeightMassCenter = SimVar.GetSimVarValue('CG PERCENT', 'percent');
-					this.updateVSpeeds();
 					let waypointsNumber = SimVar.GetSimVarValue('C:fs9gps:FlightPlanWaypointsNumber', 'number', this.instrumentIdentifier);
 					if (waypointsNumber > 1) {
 						SimVar.SetSimVarValue('C:fs9gps:FlightPlanWaypointIndex', 'number', waypointsNumber - 1).then(() => {
@@ -2535,31 +2508,6 @@ export class BaseFMC extends BaseAirliners {
 				}
 			});
 		});
-	}
-
-	updateVSpeeds(): void {
-		if (!this.customV1Speed && !this.customVRSpeed && !this.customV2Speed && !this.wasTurnedOff()) {
-			this._computeV1Speed();
-			this._computeVRSpeed();
-			this._computeV2Speed();
-		} else {
-			console.log('Custom V1 ' + this.customV1Speed);
-			console.log('Custom VR ' + this.customVRSpeed);
-			console.log('Custom V2 ' + this.customV2Speed);
-			console.log('Was Turned Off ' + this.wasTurnedOff());
-		}
-	}
-
-	clearVSpeeds(): void {
-		this.v1Speed = undefined;
-		this.vRSpeed = undefined;
-		this.v2Speed = undefined;
-		SimVar.SetSimVarValue('L:AIRLINER_V1_SPEED', 'Knots', 0).catch(console.error);
-		SimVar.SetSimVarValue('L:AIRLINER_VR_SPEED', 'Knots', 0).catch(console.error);
-		SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', 0).catch(console.error);
-		this.customV1Speed = false;
-		this.customVRSpeed = false;
-		this.customV2Speed = false;
 	}
 
 	onUpdate(_deltaTime: number): void {
