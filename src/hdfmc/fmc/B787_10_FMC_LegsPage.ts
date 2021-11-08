@@ -298,8 +298,8 @@ export class B787_10_FMC_LegsPage {
 		this._fmc._renderer.renderPages(this._currentPage, Math.max(1, this._pageCount));
 		this._fmc._renderer.render([
 			...this._rows,
-			[`${this._isAddingHold ? '---------HOLD AT--------' : holdExiting ? '-------EXIT ARMED-------' : '__FMCSEPARATOR'}`],
-			[`${this._isAddingHold ? '□□□□□' : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, this._rsk6Field]
+			['', `${this._isAddingHold ? '------------------HOLD AT-----------------' : holdExiting ? '----------------EXIT ARMED----------------' : '__FMCSEPARATOR'}`, ''],
+			[`${this._isAddingHold ? this._fmc.makeSettable('□□□□□') : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, this._rsk6Field]
 		]);
 	}
 
