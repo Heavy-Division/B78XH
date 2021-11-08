@@ -123,7 +123,7 @@ export class B787_10_FMC_RouteDataPage {
 		this.fmc._renderer.renderTitle('ACT RTE 1 DATA');
 		this.fmc._renderer.renderPages(currentPage, pageCount);
 		this.fmc._renderer.render([
-			['ETA', 'WIND', 'WAYPOINT', 'FUEL'],
+			['ETA', 'WAYPOINT', 'FUEL', 'WIND'],
 			...rows,
 			['------------------------------WIND DATA'],
 			['<LEGS', 'REQUEST>']
