@@ -83,9 +83,9 @@ export class B787_10_FMC_TakeOffRefPage {
 		let selectedTempCell;
 		let selectedTemp = fmc.getThrustTakeOffTemp();
 		if (selectedTemp) {
-			selectedTempCell = '[settable]' + selectedTemp + '[/settable]';
+			selectedTempCell = fmc.makeSettable(String(selectedTemp));
 		} else {
-			selectedTempCell = '[settable]--[/settable]';
+			selectedTempCell = fmc.makeSettable('--');
 		}
 		selectedTempCell = selectedTempCell + '°';
 
