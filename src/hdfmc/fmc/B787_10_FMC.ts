@@ -1004,17 +1004,6 @@ export class B787_10_FMC extends Boeing_FMC {
 		return 119 + 53 * dWeight;
 	}
 
-	getVLS() {
-		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
-		if (flapsHandleIndex === 4) {
-			let dWeight = (this.getWeight(true) - 200) / (528 - 200);
-			return 110 + 52 * dWeight;
-		} else {
-			let dWeight = (this.getWeight(true) - 200) / (528 - 200);
-			return 115 + 53 * dWeight;
-		}
-	}
-
 	setSelectedApproachFlapSpeed(s) {
 		let flap = NaN;
 		let speed = NaN;

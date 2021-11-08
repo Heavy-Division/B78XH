@@ -77,6 +77,17 @@ export class SpeedManager {
 		return speed;
 	}
 
+	getVLS(weight: number): number {
+		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+		if (flapsHandleIndex === 4) {
+			let dWeight = (weight - 61.4) / (82.5 - 61.4);
+			return 141 + 20 * dWeight;
+		} else {
+			let dWeight = (weight - 61.4) / (82.5 - 61.4);
+			return 146 + 21 * dWeight;
+		}
+	}
+
 	private static _getRunwayCoefficient(runway: any): number {
 		if (runway) {
 			let f = (runway.length - 2250) / (3250 - 2250);

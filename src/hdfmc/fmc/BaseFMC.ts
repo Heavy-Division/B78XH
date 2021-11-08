@@ -1242,7 +1242,7 @@ export class BaseFMC extends BaseAirliners {
 		}
 		let dWeight = ((useCurrentWeight ? this.getWeight() : this.zeroFuelWeight) - 42) / (75 - 42);
 		dWeight = Math.min(Math.max(dWeight, 0), 1);
-		let base = Math.max(150, this.getVLS() + 5);
+		let base = Math.max(150, this.speedManager.getVLS(this.getWeight()) + 5);
 		return base + 40 * dWeight;
 	}
 
@@ -1268,7 +1268,7 @@ export class BaseFMC extends BaseAirliners {
 		}
 		let dWeight = ((useCurrentWeight ? this.getWeight() : this.zeroFuelWeight) - 42) / (75 - 42);
 		dWeight = Math.min(Math.max(dWeight, 0), 1);
-		let base = Math.max(157, this.getVLS() + 5);
+		let base = Math.max(157, this.speedManager.getVLS(this.getWeight()) + 5);
 		return base + 40 * dWeight;
 	}
 
@@ -1291,7 +1291,7 @@ export class BaseFMC extends BaseAirliners {
 	getCleanApproachSpeed(): number {
 		let dWeight = (this.getWeight() - 42) / (75 - 42);
 		dWeight = Math.min(Math.max(dWeight, 0), 1);
-		let base = Math.max(172, this.getVLS() + 5);
+		let base = Math.max(172, this.speedManager.getVLS(this.getWeight()) + 5);
 		return base + 40 * dWeight;
 	}
 
@@ -1713,7 +1713,7 @@ export class BaseFMC extends BaseAirliners {
 		}
 		let windComp = SimVar.GetSimVarValue('AIRCRAFT WIND Z', 'knots') / 3;
 		windComp = Math.max(windComp, 5);
-		return this.getVLS() + windComp;
+		return this.speedManager.getVLS(this.getWeight()) + windComp;
 	}
 
 	setPerfApprVApp(s: string): boolean {
