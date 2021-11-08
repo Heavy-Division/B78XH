@@ -99,13 +99,13 @@ export class B787_10_FMC_PerfInitPage {
 
 			fmc._renderer.render([
 				['GR WT', 'CRZ ALT'],
-				[grWtCell, crzAltCell],
+				[grWtCell, fmc.makeSettable(crzAltCell)],
 				['FUEL', 'COST INDEX'],
-				[fuelCell, costIndexCell],
+				[fuelCell, fmc.makeSettable(costIndexCell)],
 				['ZFW', 'MIN FUEL TEMP'],
-				[zfwCell, '-37°c'],
+				[fmc.makeSettable(zfwCell), '-37°c'],
 				['RESERVES', 'CRZ CG'],
-				[reservesCell, crzCGCell],
+				[fmc.makeSettable(reservesCell), fmc.makeSettable(crzCGCell)],
 				['DATA LINK', 'STEP SIZE'],
 				['NO COMM', stepSizeCell],
 				[separator],
