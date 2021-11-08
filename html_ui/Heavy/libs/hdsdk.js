@@ -1228,25 +1228,30 @@
 
     class SettableRendererMiddleware {
         constructor() {
-            this.regex = /\[settable=([0-9]+|undefined)](.*)\[\/settable]/g;
+            this.regexUndefined = /\[settable=undefined](.*)\[\/settable]/g;
+            this.regexFixedWidth = /\[settable=([0-9]+)](.*)\[\/settable]/g;
         }
         apply(value) {
             return this.applyRegex(value);
         }
         applyRegex(value) {
-            this.regex.lastIndex = 0;
+            this.regexUndefined.lastIndex = 0;
+            this.regexFixedWidth.lastIndex = 0;
             if (value instanceof String) {
-                return value.replace(this.regex, '$1');
+                value = value.replace(this.regexUndefined, '<div class="settable"><span>$1</span></div>');
+                value = value.replace(this.regexFixedWidth, '<div class=\'settable\' style=\'width: $1px\'><span>$2</span></div>');
+                return value;
             }
             else if (value instanceof SVGTSpanElement) {
                 if (value.textContent) {
-                    if (this.regex.test(value.textContent)) {
+                    if (this.regexUndefined.test(value.textContent) || this.regexFixedWidth.test(value.textContent)) {
                         value.classList.add('settableTarget');
                     }
                     else {
                         value.classList.remove('settableTarget');
                     }
-                    value.textContent = value.textContent.replace(this.regex, '$1');
+                    value.textContent = value.textContent.replace(this.regexUndefined, '<div class="settable"><span>$1</span></div>');
+                    value.textContent = value.textContent.replace(this.regexFixedWidth, '<div class=\'settable\' style=\'width: $1px\'><span>$2</span></div>');
                     return value;
                 }
                 else {
@@ -1255,20 +1260,8 @@
                 }
             }
             else if (value instanceof HTMLElement) {
-                if (this.regex.test(value.innerHTML)) {
-                    this.regex.lastIndex = 0;
-                    const groups = this.regex.exec(value.innerHTML);
-                    if (groups) {
-                        if (groups.length === 2) {
-                            value.innerHTML = '<div class="settable"><span>' + groups[2] + '</span></div>';
-                        }
-                        else if (groups.length === 3) {
-                            value.innerHTML = '<div class="settable" style="width: ' + groups[1] + 'px"><span>' + groups[2] + '</span></div>';
-                        }
-                    }
-                    //value.innerHTML = value.innerHTML.replace(this.regex, '<div class="settable" style=\"$1\"><span>$2</span></div>');
-                    //value.innerHTML = value.innerHTML.replace(this.regex, '<div class=\'settable\' style=\'width: $1px\'><span>$2</span></div>');
-                }
+                value.innerHTML = value.innerHTML.replace(this.regexUndefined, '<div class="settable"><span>$1</span></div>');
+                value.innerHTML = value.innerHTML.replace(this.regexFixedWidth, '<div class=\'settable\' style=\'width: $1px\'><span>$2</span></div>');
                 return value;
             }
             return value;

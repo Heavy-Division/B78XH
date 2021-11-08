@@ -4090,9 +4090,10 @@
             if (fmc.refGate) {
                 gate = fmc.refGate;
             }
-            let heading = '---°';
+            let heading = '---';
+            heading = fmc.makeSettable(heading) + 'sdfsdf°';
             if (fmc.refHeading) {
-                heading = fastToFixed(fmc.refHeading, 0).padStart(3, '0') + '°';
+                heading = fmc.makeSettable(fastToFixed(fmc.refHeading, 0).padStart(3, '0')) + '°';
             }
             let irsPos = '□□□°□□.□ □□□□°□□.□';
             if (fmc.initCoordinates) {
@@ -4105,19 +4106,21 @@
                 ['', 'LAST POS'],
                 ['', lastPos],
                 ['REF AIRPORT'],
-                [refAirport, refAirportCoordinates],
+                [fmc.makeSettable(refAirport), refAirportCoordinates],
                 ['GATE'],
-                [gate],
+                [fmc.makeSettable(gate)],
                 ['UTC (GPS)', 'GPS POS'],
                 [dateString, currPos],
                 ['SET HDG', 'SET IRS POS'],
-                [heading, irsPos],
+                [heading, fmc.makeSettable(irsPos)],
                 ['__FMCSEPARATOR'],
                 ['<INDEX', 'ROUTE>']
             ]);
-            fmc._renderer.rsk(1).event = () => {
-                fmc.inOut = fmc.lastPos;
-            };
+            if (fmc.lastPos) {
+                fmc._renderer.rsk(1).event = () => {
+                    fmc.inOut = fmc.lastPos;
+                };
+            }
             fmc._renderer.lsk(2).event = async () => {
                 let value = fmc.inOut;
                 fmc.inOut = '';
@@ -4125,9 +4128,11 @@
                     B787_10_FMC_PosInitPage.ShowPage1(fmc);
                 }
             };
-            fmc._renderer.rsk(2).event = () => {
-                fmc.inOut = refAirportCoordinates;
-            };
+            if (refAirportCoordinates) {
+                fmc._renderer.rsk(2).event = () => {
+                    fmc.inOut = refAirportCoordinates;
+                };
+            }
             fmc._renderer.lsk(3).event = async () => {
                 let value = fmc.inOut;
                 fmc.inOut = '';
@@ -5503,25 +5508,30 @@
 
     class SettableRendererMiddleware {
         constructor() {
-            this.regex = /\[settable=([0-9]+|undefined)](.*)\[\/settable]/g;
+            this.regexUndefined = /\[settable=undefined](.*)\[\/settable]/g;
+            this.regexFixedWidth = /\[settable=([0-9]+)](.*)\[\/settable]/g;
         }
         apply(value) {
             return this.applyRegex(value);
         }
         applyRegex(value) {
-            this.regex.lastIndex = 0;
+            this.regexUndefined.lastIndex = 0;
+            this.regexFixedWidth.lastIndex = 0;
             if (value instanceof String) {
-                return value.replace(this.regex, '$1');
+                value = value.replace(this.regexUndefined, '<div class="settable"><span>$1</span></div>');
+                value = value.replace(this.regexFixedWidth, '<div class=\'settable\' style=\'width: $1px\'><span>$2</span></div>');
+                return value;
             }
             else if (value instanceof SVGTSpanElement) {
                 if (value.textContent) {
-                    if (this.regex.test(value.textContent)) {
+                    if (this.regexUndefined.test(value.textContent) || this.regexFixedWidth.test(value.textContent)) {
                         value.classList.add('settableTarget');
                     }
                     else {
                         value.classList.remove('settableTarget');
                     }
-                    value.textContent = value.textContent.replace(this.regex, '$1');
+                    value.textContent = value.textContent.replace(this.regexUndefined, '<div class="settable"><span>$1</span></div>');
+                    value.textContent = value.textContent.replace(this.regexFixedWidth, '<div class=\'settable\' style=\'width: $1px\'><span>$2</span></div>');
                     return value;
                 }
                 else {
@@ -5530,20 +5540,8 @@
                 }
             }
             else if (value instanceof HTMLElement) {
-                if (this.regex.test(value.innerHTML)) {
-                    this.regex.lastIndex = 0;
-                    const groups = this.regex.exec(value.innerHTML);
-                    if (groups) {
-                        if (groups.length === 2) {
-                            value.innerHTML = '<div class="settable"><span>' + groups[2] + '</span></div>';
-                        }
-                        else if (groups.length === 3) {
-                            value.innerHTML = '<div class="settable" style="width: ' + groups[1] + 'px"><span>' + groups[2] + '</span></div>';
-                        }
-                    }
-                    //value.innerHTML = value.innerHTML.replace(this.regex, '<div class="settable" style=\"$1\"><span>$2</span></div>');
-                    //value.innerHTML = value.innerHTML.replace(this.regex, '<div class=\'settable\' style=\'width: $1px\'><span>$2</span></div>');
-                }
+                value.innerHTML = value.innerHTML.replace(this.regexUndefined, '<div class="settable"><span>$1</span></div>');
+                value.innerHTML = value.innerHTML.replace(this.regexFixedWidth, '<div class=\'settable\' style=\'width: $1px\'><span>$2</span></div>');
                 return value;
             }
             return value;
@@ -5794,10 +5792,10 @@
             let selectedTempCell;
             let selectedTemp = fmc.getThrustTakeOffTemp();
             if (selectedTemp) {
-                selectedTempCell = '[settable]' + selectedTemp + '[/settable]';
+                selectedTempCell = fmc.makeSettable(String(selectedTemp));
             }
             else {
-                selectedTempCell = '[settable]--[/settable]';
+                selectedTempCell = fmc.makeSettable('--');
             }
             selectedTempCell = selectedTempCell + '°';
             let thrustTOMode = fmc.getThrustTakeOffMode();
@@ -6345,13 +6343,13 @@
                 fmc._renderer.renderTitle('PERF INIT');
                 fmc._renderer.render([
                     ['GR WT', 'CRZ ALT'],
-                    [grWtCell, crzAltCell],
+                    [grWtCell, fmc.makeSettable(crzAltCell)],
                     ['FUEL', 'COST INDEX'],
-                    [fuelCell, costIndexCell],
+                    [fuelCell, fmc.makeSettable(costIndexCell)],
                     ['ZFW', 'MIN FUEL TEMP'],
-                    [zfwCell, '-37°c'],
+                    [fmc.makeSettable(zfwCell), '-37°c'],
                     ['RESERVES', 'CRZ CG'],
-                    [reservesCell, crzCGCell],
+                    [fmc.makeSettable(reservesCell), fmc.makeSettable(crzCGCell)],
                     ['DATA LINK', 'STEP SIZE'],
                     ['NO COMM', stepSizeCell],
                     [separator],
@@ -11411,6 +11409,133 @@
         }
     }
 
+    class LNAV {
+        constructor() {
+        }
+        async setManagedMode(value) {
+            if (value) {
+                await SimVar.SetSimVarValue('K:AP_AVIONICS_MANAGED_ON', 'number', 0);
+            }
+            else {
+                await SimVar.SetSimVarValue('K:AP_AVIONICS_MANAGED_OFF', 'number', 0);
+            }
+        }
+        enableManagedMode() {
+            this.setManagedMode(true);
+        }
+        disableManagedMode() {
+            this.setManagedMode(false);
+        }
+        async setBank(degrees) {
+            await SimVar.SetSimVarValue('AUTOPILOT BANK HOLD REF', 'degrees', degrees);
+        }
+        setBankHold(value) {
+            SimVar.SetSimVarValue('AUTOPILOT BANK HOLD', 'Bool', value);
+        }
+        enableBankHold() {
+            this.setBankHold(true);
+        }
+        disableBankHold() {
+            this.setBankHold(false);
+        }
+    }
+
+    /**
+     * TODO: WIND_LEVELER is probably bugged in 787 I was talked about it with WT...
+     */
+    class B787_10_FMC_LNAVDebug {
+        static async showPage(fmc) {
+            fmc.cleanUpPage();
+            console.log('AP MANAGED MODE: ' + SimVar.GetSimVarValue('AUTOPILOT AVIONICS MANAGED', 'number'));
+            console.log('WING LEVELER: ' + SimVar.GetSimVarValue('AUTOPILOT WING LEVELER', 'number'));
+            console.log('BANK REF: ' + SimVar.GetSimVarValue('AUTOPILOT BANK HOLD REF', 'degrees'));
+            console.log('BANK HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT BANK HOLD', 'Bool'));
+            console.log('PITCH REF: ' + SimVar.GetSimVarValue('AUTOPILOT PITCH HOLD REF', 'degrees'));
+            console.log('PITCH HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT PITCH HOLD', 'Bool'));
+            console.log('APPROACH HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', 'boolean'));
+            fmc.pageUpdate = () => {
+                this.updater += 1;
+                if (this.updater > 10) {
+                    this.updater = 0;
+                    B787_10_FMC_LNAVDebug.showPage(fmc);
+                }
+            };
+            //SimVar.SetSimVarValue('K:AP_WING_LEVELER_OFF', 'number', 0);
+            //SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 2);
+            //SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'Number', 0);
+            //Simplane.setAPLNAVArmed(1);
+            //Simplane.setAPLNAVActive(1);
+            //SimVar.SetSimVarValue('K:AP_NAV1_HOLD_ON', 'number', 0);
+            //SimVar.SetSimVarValue('AUTOPILOT WING LEVELER', 'Bool', false);
+            //SimVar.SetSimVarValue('K:AUTOPILOT_BANK_HOLD', 'number', 0);
+            fmc._renderer.renderTitle('MANAGED LNAV DEBUG');
+            fmc._renderer.render([
+                ['', ''],
+                ['<ENABLE', 'MANAGED', 'DISABLE>'],
+                ['', ''],
+                ['<ENABLE', 'BANK HOLD', 'DISABLE>'],
+                ['', ''],
+                ['<BANK LEFT', '5°', 'BANK RIGHT>'],
+                ['', ''],
+                ['<BANK LEFT', '10°', 'BANK RIGHT>'],
+                ['', ''],
+                ['<BANK LEFT', '15°', 'BANK RIGHT>'],
+                ['', ''],
+                ['<', 'COHERENT', 'BANK MODE>'],
+                ['', '']
+            ]);
+            fmc._renderer.lsk(1).event = () => {
+                this.lnav.enableManagedMode();
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.rsk(1).event = () => {
+                this.lnav.disableManagedMode();
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.lsk(2).event = () => {
+                this.lnav.enableBankHold();
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.rsk(2).event = () => {
+                this.lnav.disableBankHold();
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.lsk(3).event = () => {
+                this.lnav.setBank(-5);
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.lsk(4).event = () => {
+                this.lnav.setBank(-10);
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.lsk(5).event = () => {
+                this.lnav.setBank(-15);
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.lsk(6).event = () => {
+                this.lnav.setBank(-20);
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.rsk(3).event = () => {
+                this.lnav.setBank(5);
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.rsk(4).event = () => {
+                this.lnav.setBank(10);
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.rsk(5).event = () => {
+                this.lnav.setBank(15);
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+            fmc._renderer.rsk(6).event = async () => {
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
+        }
+    }
+    B787_10_FMC_LNAVDebug.lnav = new LNAV();
+    B787_10_FMC_LNAVDebug.updater = 0;
+
     class B787_10_FMC_HeavyPage {
         static ShowPage1(fmc) {
             fmc.cleanUpPage();
@@ -11420,7 +11545,7 @@
                 [''],
                 ['', ''],
                 [''],
-                [''],
+                ['', 'LNAV DEBUG'],
                 [''],
                 [''],
                 [''],
@@ -11444,6 +11569,9 @@
                  };
                  */
             }
+            fmc._renderer.rsk(3).event = () => {
+                B787_10_FMC_LNAVDebug.showPage(fmc);
+            };
             fmc._renderer.rsk(6).event = () => {
                 B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
             };
@@ -11496,7 +11624,7 @@
                 originIdent = origin.ident;
             }
             let rows = [
-                [''],
+                ['', '', '', ''],
                 [''],
                 [''],
                 [''],
@@ -11576,7 +11704,7 @@
                 let displayedPageIndex = Math.min(currentPage, runwayPages.length) - 1;
                 for (let i = 0; i < runwayPages[displayedPageIndex].length; i++) {
                     let runwayIndex = runwayPages[displayedPageIndex][i].runwayIndex;
-                    rows[2 * i] = ['', runwayPages[displayedPageIndex][i].text];
+                    rows[2 * i] = ['', '', '', runwayPages[displayedPageIndex][i].text];
                     fmc._renderer.rsk(i + 1).event = () => {
                         if (fmc.flightPlanManager.getDepartureProcIndex() === -1) {
                             fmc.setOriginRunwayIndex(runwayIndex, () => {
@@ -11767,8 +11895,8 @@
                 destinationIdent = destination.ident;
             }
             let rows = [
-                [''],
-                [''],
+                ['', '', '', ''],
+                ['', '', '', ''],
                 [''],
                 [''],
                 [''],
@@ -11802,7 +11930,7 @@
                 }
             }
             if (selectedApproach) {
-                rows[0] = ['  NONE', Avionics.Utils.formatRunway(selectedApproach.name).trim()];
+                rows[0] = ['  NONE', '', '<SEL>', Avionics.Utils.formatRunway(selectedApproach.name).trim()];
                 fmc._renderer.rsk(1).event = () => {
                     fmc.flightPlanManager.pauseSync();
                     fmc.setApproachIndex(-1, () => {
@@ -11811,11 +11939,11 @@
                         B787_10_FMC_DepArrPage.ShowArrivalPage(fmc, currentPage);
                     });
                 };
-                rows[1] = ['', 'TRANS'];
+                rows[1] = ['', '', '', 'TRANS'];
                 let selectedTransitionIndex = fmc.flightPlanManager.getApproachTransitionIndex();
                 let selectedTransition = selectedApproach.transitions[selectedTransitionIndex];
                 if (selectedTransition) {
-                    rows[2] = ['', selectedTransition.name.trim()];
+                    rows[2] = ['', '', '<SEL>', selectedTransition.name.trim()];
                     fmc._renderer.rsk(2).event = () => {
                         fmc.flightPlanManager.pauseSync();
                         fmc.setApproachTransitionIndex(-1, () => {
@@ -11834,7 +11962,7 @@
                         let transition = selectedApproach.transitions[transitionIndex];
                         if (transition) {
                             let name = transition.name.trim();
-                            rows[2 * (i + 1)][1] = name;
+                            rows[2 * (i + 1)][3] = name;
                             fmc._renderer.rsk(i + 2).event = () => {
                                 fmc.flightPlanManager.pauseSync();
                                 fmc.setApproachTransitionIndex(transitionIndex, () => {
@@ -11848,9 +11976,10 @@
                 }
             }
             else if (selectedRunway) {
-                rows[0][1] = 'RW' + Avionics.Utils.formatRunway(selectedRunway.designation);
-                rows[1][1] = 'RWY EXT';
-                rows[2][1] = (fmc.vfrRunwayExtension && fmc.vfrRunwayExtension.toFixed(1)) + 'NM';
+                rows[0][3] = 'RW' + Avionics.Utils.formatRunway(selectedRunway.designation);
+                rows[0][2] = '<SEL>';
+                rows[1][3] = 'RWY EXT';
+                rows[2][3] = (fmc.vfrRunwayExtension && fmc.vfrRunwayExtension.toFixed(1)) + 'NM';
                 fmc._renderer.rsk(1).event = () => {
                     fmc.flightPlanManager.pauseSync();
                     fmc.ensureCurrentFlightPlanIsTemporary(() => {
@@ -11980,7 +12109,7 @@
                 for (let i = 0; i < approachPages[displayedPageIndex].length; i++) {
                     let approachIndex = approachPages[displayedPageIndex][i].approachIndex;
                     console.log('approachIndex ' + approachIndex);
-                    rows[2 * i] = ['', approachPages[displayedPageIndex][i].text];
+                    rows[2 * i] = ['', '', '', approachPages[displayedPageIndex][i].text];
                     fmc._renderer.rsk(i + 1).event = () => {
                         if (approachIndex <= lastApproachIndex) {
                             console.log('approachIndex <= lastApproachIndex');
@@ -12049,12 +12178,13 @@
                 if (currentPage > lastApproachPage || lastApproachIndex == -1) ;
                 else if (currentPage == firstRunwayPage && firstRunwayPage == lastApproachPage && firstRunwayTitleRow > 0) {
                     let runwaysTitleRow = (firstRunwayTitleRow * 2) - 1;
-                    rows[runwaysTitleRow][1] = 'RUNWAYS';
+                    rows[runwaysTitleRow][3] = 'RUNWAYS';
                 }
             }
             if (selectedArrival) {
                 console.log('Selected Arrival');
                 rows[0][0] = selectedArrival.name;
+                rows[0][1] = '<SEL>';
                 fmc._renderer.lsk(1).event = () => {
                     fmc.flightPlanManager.pauseSync();
                     fmc.setArrivalProcIndex(-1, () => {
@@ -12069,6 +12199,7 @@
                 let selectedEnrouteTransition = selectedArrival.enRouteTransitions[selectedEnrouteTransitionIndex];
                 if (selectedEnrouteTransition) {
                     rows[2][0] = selectedEnrouteTransition.name.trim();
+                    rows[2][1] = '<SEL>';
                     fmc._renderer.lsk(2).event = () => {
                         fmc.setArrivalAndRunwayIndex(selectedArrivalIndex, -1, () => {
                             fmc.activateRoute();
@@ -12773,6 +12904,11 @@
                     this._registered = true;
                 }, true);
             });
+            /* FOR New LNAV
+            RegisterViewListener('JS_LISTENER_AUTOPILOT', () => {
+                console.log('JS_LISTENER_AUTOPILOT registered.');
+            });
+            */
         }
         cleanUpPage() {
             this.onLeftInput = [];
