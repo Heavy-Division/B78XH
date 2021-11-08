@@ -165,6 +165,7 @@ export class B787_10_FMC extends Boeing_FMC {
 	 * @type {FMCRenderer}
 	 */
 	public _renderer: HDSDK.FMCRenderer;
+	private apListener: void;
 
 	/**
 	 * SU6 ORIGIN compatibility patch.
@@ -508,6 +509,11 @@ export class B787_10_FMC extends Boeing_FMC {
 				this._registered = true;
 			}, true);
 		});
+		/* FOR New LNAV
+		RegisterViewListener('JS_LISTENER_AUTOPILOT', () => {
+			console.log('JS_LISTENER_AUTOPILOT registered.');
+		});
+		*/
 	}
 
 	public cleanUpPage() {
