@@ -52,7 +52,7 @@ export class B787_10_FMC_LNAVDebug {
 			['', ''],
 			['<BANK LEFT', '15°', 'BANK RIGHT>'],
 			['', ''],
-			['<BANK LEFT', '20°', 'BANK RIGHT>'],
+			['<', 'COHERENT', 'BANK MODE>'],
 			['', '']
 		]);
 
@@ -112,14 +112,7 @@ export class B787_10_FMC_LNAVDebug {
 			B787_10_FMC_LNAVDebug.showPage(fmc);
 		};
 
-		fmc._renderer.rsk(6).event = () => {
-			this.lnav.setBank(20);
-			B787_10_FMC_LNAVDebug.showPage(fmc);
-		};
-
-
 		fmc._renderer.rsk(6).event = async () => {
-			this.lnav.setBank(15);
 			B787_10_FMC_LNAVDebug.showPage(fmc);
 		};
 	}
