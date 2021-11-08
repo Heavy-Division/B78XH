@@ -23,9 +23,10 @@ export class B787_10_FMC_PosInitPage {
 		if (fmc.refGate) {
 			gate = fmc.refGate;
 		}
-		let heading = '---°';
+		let heading = '---';
+		heading = fmc.makeSettable(heading) + 'sdfsdf°';
 		if (fmc.refHeading) {
-			heading = fastToFixed(fmc.refHeading, 0).padStart(3, '0') + '°';
+			heading = fmc.makeSettable(fastToFixed(fmc.refHeading, 0).padStart(3, '0')) + '°';
 		}
 		let irsPos = '□□□°□□.□ □□□□°□□.□';
 		if (fmc.initCoordinates) {
@@ -38,19 +39,22 @@ export class B787_10_FMC_PosInitPage {
 			['', 'LAST POS'],
 			['', lastPos],
 			['REF AIRPORT'],
-			[refAirport, refAirportCoordinates],
+			[fmc.makeSettable(refAirport), refAirportCoordinates],
 			['GATE'],
-			[gate],
+			[fmc.makeSettable(gate)],
 			['UTC (GPS)', 'GPS POS'],
 			[dateString, currPos],
 			['SET HDG', 'SET IRS POS'],
-			[heading, irsPos],
+			[heading, fmc.makeSettable(irsPos)],
 			['__FMCSEPARATOR'],
 			['<INDEX', 'ROUTE>']
 		]);
-		fmc._renderer.rsk(1).event = () => {
-			fmc.inOut = fmc.lastPos;
-		};
+
+		if (fmc.lastPos) {
+			fmc._renderer.rsk(1).event = () => {
+				fmc.inOut = fmc.lastPos;
+			};
+		}
 		fmc._renderer.lsk(2).event = async () => {
 			let value = fmc.inOut;
 			fmc.inOut = '';
@@ -58,9 +62,12 @@ export class B787_10_FMC_PosInitPage {
 				B787_10_FMC_PosInitPage.ShowPage1(fmc);
 			}
 		};
-		fmc._renderer.rsk(2).event = () => {
-			fmc.inOut = refAirportCoordinates;
-		};
+
+		if (refAirportCoordinates) {
+			fmc._renderer.rsk(2).event = () => {
+				fmc.inOut = refAirportCoordinates;
+			};
+		}
 		fmc._renderer.lsk(3).event = async () => {
 			let value = fmc.inOut;
 			fmc.inOut = '';
