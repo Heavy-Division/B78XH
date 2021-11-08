@@ -47,7 +47,7 @@ export class B787_10_FMC_DepArrPage {
 			originIdent = origin.ident;
 		}
 		let rows = [
-			[''],
+			['', '', '', ''],
 			[''],
 			[''],
 			[''],
@@ -125,7 +125,7 @@ export class B787_10_FMC_DepArrPage {
 			let displayedPageIndex = Math.min(currentPage, runwayPages.length) - 1;
 			for (let i = 0; i < runwayPages[displayedPageIndex].length; i++) {
 				let runwayIndex = runwayPages[displayedPageIndex][i].runwayIndex;
-				rows[2 * i] = ['', runwayPages[displayedPageIndex][i].text];
+				rows[2 * i] = ['', '', '', runwayPages[displayedPageIndex][i].text];
 				fmc._renderer.rsk(i + 1).event = () => {
 					if (fmc.flightPlanManager.getDepartureProcIndex() === -1) {
 						fmc.setOriginRunwayIndex(runwayIndex, () => {
@@ -326,8 +326,8 @@ export class B787_10_FMC_DepArrPage {
 			destinationIdent = destination.ident;
 		}
 		let rows = [
-			[''],
-			[''],
+			['', '', '', ''],
+			['', '', '', ''],
 			[''],
 			[''],
 			[''],
@@ -363,7 +363,7 @@ export class B787_10_FMC_DepArrPage {
 			}
 		}
 		if (selectedApproach) {
-			rows[0] = ['  NONE', Avionics.Utils.formatRunway(selectedApproach.name).trim()];
+			rows[0] = ['  NONE', '', '<SEL>', Avionics.Utils.formatRunway(selectedApproach.name).trim()];
 			fmc._renderer.rsk(1).event = () => {
 				fmc.flightPlanManager.pauseSync();
 				fmc.setApproachIndex(-1, () => {
@@ -372,11 +372,11 @@ export class B787_10_FMC_DepArrPage {
 					B787_10_FMC_DepArrPage.ShowArrivalPage(fmc, currentPage);
 				});
 			};
-			rows[1] = ['', 'TRANS'];
+			rows[1] = ['', '', '', 'TRANS'];
 			let selectedTransitionIndex = fmc.flightPlanManager.getApproachTransitionIndex();
 			let selectedTransition = selectedApproach.transitions[selectedTransitionIndex];
 			if (selectedTransition) {
-				rows[2] = ['', selectedTransition.name.trim()];
+				rows[2] = ['', '', '<SEL>', selectedTransition.name.trim()];
 				fmc._renderer.rsk(2).event = () => {
 					fmc.flightPlanManager.pauseSync();
 					fmc.setApproachTransitionIndex(-1, () => {
@@ -394,7 +394,7 @@ export class B787_10_FMC_DepArrPage {
 					let transition = selectedApproach.transitions[transitionIndex];
 					if (transition) {
 						let name = transition.name.trim();
-						rows[2 * (i + 1)][1] = name;
+						rows[2 * (i + 1)][3] = name;
 						fmc._renderer.rsk(i + 2).event = () => {
 							fmc.flightPlanManager.pauseSync();
 							fmc.setApproachTransitionIndex(transitionIndex, () => {
@@ -408,9 +408,10 @@ export class B787_10_FMC_DepArrPage {
 			}
 		} else if (selectedRunway) {
 			headStr = 'RUNWAYS';
-			rows[0][1] = 'RW' + Avionics.Utils.formatRunway(selectedRunway.designation);
-			rows[1][1] = 'RWY EXT';
-			rows[2][1] = (fmc.vfrRunwayExtension && fmc.vfrRunwayExtension.toFixed(1)) + 'NM';
+			rows[0][3] = 'RW' + Avionics.Utils.formatRunway(selectedRunway.designation);
+			rows[0][2] = '<SEL>';
+			rows[1][3] = 'RWY EXT';
+			rows[2][3] = (fmc.vfrRunwayExtension && fmc.vfrRunwayExtension.toFixed(1)) + 'NM';
 			fmc._renderer.rsk(1).event = () => {
 				fmc.flightPlanManager.pauseSync();
 				fmc.ensureCurrentFlightPlanIsTemporary(() => {
@@ -535,7 +536,7 @@ export class B787_10_FMC_DepArrPage {
 			for (let i = 0; i < approachPages[displayedPageIndex].length; i++) {
 				let approachIndex = approachPages[displayedPageIndex][i].approachIndex;
 				console.log('approachIndex ' + approachIndex);
-				rows[2 * i] = ['', approachPages[displayedPageIndex][i].text];
+				rows[2 * i] = ['', '', '', approachPages[displayedPageIndex][i].text];
 				fmc._renderer.rsk(i + 1).event = () => {
 					if (approachIndex <= lastApproachIndex) {
 						console.log('approachIndex <= lastApproachIndex');
@@ -607,12 +608,13 @@ export class B787_10_FMC_DepArrPage {
 				headStr = 'RUNWAYS';
 			} else if (currentPage == firstRunwayPage && firstRunwayPage == lastApproachPage && firstRunwayTitleRow > 0) {
 				let runwaysTitleRow = (firstRunwayTitleRow * 2) - 1;
-				rows[runwaysTitleRow][1] = 'RUNWAYS';
+				rows[runwaysTitleRow][3] = 'RUNWAYS';
 			}
 		}
 		if (selectedArrival) {
 			console.log('Selected Arrival');
 			rows[0][0] = selectedArrival.name;
+			rows[0][1] = '<SEL>';
 			fmc._renderer.lsk(1).event = () => {
 				fmc.flightPlanManager.pauseSync();
 				fmc.setArrivalProcIndex(-1, () => {
@@ -627,6 +629,7 @@ export class B787_10_FMC_DepArrPage {
 			let selectedEnrouteTransition = selectedArrival.enRouteTransitions[selectedEnrouteTransitionIndex];
 			if (selectedEnrouteTransition) {
 				rows[2][0] = selectedEnrouteTransition.name.trim();
+				rows[2][1] = '<SEL>';
 				fmc._renderer.lsk(2).event = () => {
 					fmc.setArrivalAndRunwayIndex(selectedArrivalIndex, -1, () => {
 						fmc.activateRoute();
