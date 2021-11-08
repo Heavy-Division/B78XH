@@ -40,9 +40,9 @@ export class B787_10_FMC_NavRadioPage {
 			 116.80MSEA
 			 */
 			if (bacon.ident !== '' && fmc.vor1Frequency > 0) {
-				vor1FrequencyCell = fmc.colorizeContent(fmc.vor1Frequency.toFixed(2), 'green') + fmc.resizeContent('M', 'small') + fmc.colorizeContent(bacon.ident, 'green');
+				vor1FrequencyCell = fmc.makeSettable(fmc.colorizeContent(fmc.vor1Frequency.toFixed(2), 'green') + fmc.resizeContent('M', 'small') + fmc.colorizeContent(bacon.ident, 'green'));
 			} else if (bacon.ident === '' && fmc.vor1Frequency > 0) {
-				vor1FrequencyCell = fmc.colorizeContent(fmc.vor1Frequency.toFixed(2), 'green') + fmc.resizeContent('M', 'small') + fmc.colorizeContent('---', 'green');
+				vor1FrequencyCell = fmc.makeSettable(fmc.colorizeContent(fmc.vor1Frequency.toFixed(2), 'green') + fmc.resizeContent('M', 'small') + fmc.colorizeContent('---', 'green'));
 			}
 
 			if (vor1FrequencyCell == '[]/[]') {
@@ -78,9 +78,9 @@ export class B787_10_FMC_NavRadioPage {
 					fmc.showErrorMessage(fmc.defaultInputErrorMessage);
 				}
 			};
-			vor1CourseCell = '-----';
+			vor1CourseCell = fmc.makeSettable('-----');
 			if (fmc.vor1Course >= 0) {
-				vor1CourseCell = fmc.vor1Course.toFixed(0) + '°';
+				vor1CourseCell = fmc.makeSettable(fmc.vor1Course.toFixed(0)) + '°';
 			}
 			fmc._renderer.lsk(2).event = () => {
 				let value = fmc.inOut;
@@ -112,9 +112,9 @@ export class B787_10_FMC_NavRadioPage {
 		if (!radioOn) {
 			const bacon = fmc.radioNav.getVORBeacon(2);
 			if (bacon.ident !== '' && fmc.vor2Frequency > 0) {
-				vor2FrequencyCell = fmc.colorizeContent(bacon.ident, 'green') + fmc.resizeContent('M', 'small') + fmc.colorizeContent(fmc.vor2Frequency.toFixed(2), 'green');
+				vor2FrequencyCell = fmc.makeSettable(fmc.colorizeContent(bacon.ident, 'green') + fmc.resizeContent('M', 'small') + fmc.colorizeContent(fmc.vor2Frequency.toFixed(2), 'green'));
 			} else if (bacon.ident === '' && fmc.vor2Frequency > 0) {
-				vor2FrequencyCell = fmc.resizeContent('M', 'small') + fmc.colorizeContent(fmc.vor2Frequency.toFixed(2), 'green') + fmc.colorizeContent('---', 'green');
+				vor2FrequencyCell = fmc.makeSettable(fmc.resizeContent('M', 'small') + fmc.colorizeContent(fmc.vor2Frequency.toFixed(2), 'green') + fmc.colorizeContent('---', 'green'));
 			}
 
 			if (vor2FrequencyCell == '[]/[]') {
@@ -169,9 +169,9 @@ export class B787_10_FMC_NavRadioPage {
 					fmc.showErrorMessage(fmc.defaultInputErrorMessage);
 				}
 			};
-			vor2CourseCell = '-----';
+			vor2CourseCell = fmc.makeSettable('-----');
 			if (fmc.vor2Course >= 0) {
-				vor2CourseCell = fmc.vor2Course.toFixed(0) + '°';
+				vor2CourseCell = fmc.makeSettable(fmc.vor2Course.toFixed(0)) + '°';
 			}
 			fmc._renderer.rsk(2).event = () => {
 				let value = fmc.inOut;
@@ -194,9 +194,9 @@ export class B787_10_FMC_NavRadioPage {
 		let ilsFrequencyCell = '';
 		let ilsCourseCell = '';
 		if (!radioOn) {
-			adf1FrequencyCell = '-----';
+			adf1FrequencyCell = fmc.makeSettable('-----');
 			if (fmc.adf1Frequency > 0) {
-				adf1FrequencyCell = fmc.adf1Frequency.toFixed(2);
+				adf1FrequencyCell = fmc.makeSettable(fmc.adf1Frequency.toFixed(2));
 			}
 			fmc._renderer.lsk(3).event = () => {
 				let value = fmc.inOut;
@@ -213,9 +213,9 @@ export class B787_10_FMC_NavRadioPage {
 					fmc.showErrorMessage(fmc.defaultInputErrorMessage);
 				}
 			};
-			adf2FrequencyCell = '-----';
+			adf2FrequencyCell = fmc.makeSettable('-----');
 			if (fmc.adf2Frequency > 0) {
-				adf2FrequencyCell = fmc.adf2Frequency.toFixed(2);
+				adf2FrequencyCell = fmc.makeSettable(fmc.adf2Frequency.toFixed(2));
 			}
 			fmc._renderer.rsk(3).event = () => {
 				let value = fmc.inOut;
@@ -256,6 +256,56 @@ export class B787_10_FMC_NavRadioPage {
 			};
 		}
 
+		fmc._renderer.lsk(6).event = () => {
+			let value = fmc.inOut;
+			fmc.clearUserInput();
+			if (value == BaseFMC.clrValue) {
+				fmc.pre1Frequency = undefined;
+			} else if (value == '') {
+				fmc.inOut = String(fmc.pre1Frequency);
+			} else {
+				let valueNumber = Number(value);
+				if (isFinite(valueNumber) && valueNumber >= 0 && valueNumber < 1699.9) {
+					fmc.clearUserInput();
+					fmc.pre1Frequency = valueNumber;
+				} else {
+					fmc.showErrorMessage('INVALID ENTRY');
+				}
+			}
+			B787_10_FMC_NavRadioPage.ShowPage(fmc);
+		};
+
+		fmc._renderer.rsk(6).event = () => {
+			let value = fmc.inOut;
+			fmc.clearUserInput();
+			if (value == BaseFMC.clrValue) {
+				fmc.pre2Frequency = undefined;
+			} else if (value == '') {
+				fmc.inOut = String(fmc.pre2Frequency);
+			} else {
+				const valueNumber = Number(value);
+				if (isFinite(valueNumber) && valueNumber >= 0 && valueNumber < 1699.9) {
+					fmc.clearUserInput();
+					fmc.pre2Frequency = valueNumber;
+					B787_10_FMC_NavRadioPage.ShowPage(fmc);
+				} else {
+					fmc.showErrorMessage('INVALID ENTRY');
+				}
+			}
+			B787_10_FMC_NavRadioPage.ShowPage(fmc);
+		};
+
+		let pre1FrequencyCell = '------';
+		if (fmc.pre1Frequency) {
+			pre1FrequencyCell = String(fmc.pre1Frequency);
+		}
+
+		let pre2FrequencyCell = '------';
+		if (fmc.pre2Frequency) {
+			pre2FrequencyCell = String(fmc.pre2Frequency);
+		}
+
+
 		fmc._renderer.renderTitle('NAV RADIO');
 		fmc._renderer.render([
 			['VOR L', 'VOR R'],
@@ -265,11 +315,11 @@ export class B787_10_FMC_NavRadioPage {
 			['ADF L', 'ADF R'],
 			[adf1FrequencyCell, adf2FrequencyCell],
 			['ILS-MLS'],
-			[ilsFrequencyCell],
+			[fmc.makeSettable(ilsFrequencyCell)],
 			[''],
 			[''],
-			['', '', 'PRESELECT'],
-			['------', '------']
+			['', 'PRESELECT', ''],
+			[fmc.makeSettable(pre1FrequencyCell), fmc.makeSettable(pre2FrequencyCell)]
 		]);
 	}
 }

@@ -74,7 +74,8 @@ export class BaseFMC extends BaseAirliners {
 	protected _adf1Frequency: number = 0;
 	protected _adf2Frequency: number = 0;
 	protected _rcl1Frequency: number = 0;
-	protected _pre2Frequency: number = 0;
+	protected _pre1Frequency: number = undefined;
+	protected _pre2Frequency: number = undefined;
 	protected _atc1Frequency: number = 0;
 	protected _radioNavOn: boolean = false;
 	protected _approachInitialized: boolean = false;
@@ -2174,6 +2175,10 @@ export class BaseFMC extends BaseAirliners {
 		return this._pre2Frequency;
 	}
 
+	get pre1Frequency(): number {
+		return this._pre1Frequency;
+	}
+
 	get atc1Frequency(): number {
 		return this._atc1Frequency;
 	}
@@ -2237,6 +2242,10 @@ export class BaseFMC extends BaseAirliners {
 
 	set rcl1Frequency(_frq: number) {
 		this._rcl1Frequency = _frq;
+	}
+
+	set pre1Frequency(_frq: number) {
+		this._pre1Frequency = _frq;
 	}
 
 	set pre2Frequency(_frq: number) {
