@@ -350,6 +350,9 @@ declare class SimVar {
 }
 
 declare class Simplane {
+
+	static getWeight(): number;
+
 	static getHeadingMagnetic(): number;
 
 	static getGroundSpeed(): number;

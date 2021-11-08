@@ -46,6 +46,18 @@
         set isV1SpeedCustom(value) {
             this._isV1SpeedCustom = value;
         }
+        get overridenSlatApproachSpeed() {
+            return this._overridenSlatApproachSpeed;
+        }
+        set overridenSlatApproachSpeed(value) {
+            this._overridenSlatApproachSpeed = value;
+        }
+        get overridenFlapApproachSpeed() {
+            return this._overridenFlapApproachSpeed;
+        }
+        set overridenFlapApproachSpeed(value) {
+            this._overridenFlapApproachSpeed = value;
+        }
     }
 
     var VSpeedType;
@@ -56,8 +68,12 @@
     })(VSpeedType || (VSpeedType = {}));
 
     class SpeedManager {
-        constructor(repository) {
+        constructor(repository, calculator) {
             this._speedRepository = repository;
+            this._speedCalculator = calculator;
+        }
+        get calculator() {
+            return this._speedCalculator;
         }
         get repository() {
             return this._speedRepository;
@@ -118,6 +134,38 @@
             speed -= flapsCoefficient;
             speed = Math.round(speed);
             return speed;
+        }
+        getVLS(weight) {
+            let flapsHandleIndex = Simplane.getFlapsHandleIndex();
+            if (flapsHandleIndex === 4) {
+                let dWeight = (weight - 61.4) / (82.5 - 61.4);
+                return 141 + 20 * dWeight;
+            }
+            else {
+                let dWeight = (weight - 61.4) / (82.5 - 61.4);
+                return 146 + 21 * dWeight;
+            }
+        }
+        getCleanApproachSpeed(weight = undefined) {
+            return this._speedCalculator.cleanApproachSpeed(weight);
+        }
+        getSlatApproachSpeed(weight = undefined) {
+            if (this.repository.overridenSlatApproachSpeed) {
+                return this.repository.overridenSlatApproachSpeed;
+            }
+            return this.calculator.getSlatApproachSpeed(weight);
+        }
+        getFlapApproachSpeed(weight = undefined) {
+            if (this.repository.overridenFlapApproachSpeed) {
+                return this.repository.overridenFlapApproachSpeed;
+            }
+            return this.calculator.getFlapApproachSpeed(weight);
+        }
+        getManagedApproachSpeed(flapsHandleIndex = NaN) {
+            return this.getVRef(flapsHandleIndex) - 5;
+        }
+        getVRef(flapsHandleIndex = NaN) {
+            return this.calculator.getVRef(flapsHandleIndex);
         }
         static _getRunwayCoefficient(runway) {
             if (runway) {
@@ -285,6 +333,81 @@
         [122, 144],
         [121, 144]
     ];
+
+    class SpeedCalculator {
+        cleanApproachSpeed(weight = undefined) {
+            let formula = (weight) => {
+                let dWeight = (weight - 200) / (528 - 200);
+                return 121 + 56 * dWeight;
+            };
+            return this.calculate(formula, this._getCheckedWeight(weight));
+        }
+        getSlatApproachSpeed(weight = undefined) {
+            let formula = (weight) => {
+                let dWeight = (weight - 200) / (528 - 200);
+                return 119 + 58 * dWeight;
+            };
+            return this.calculate(formula, this._getCheckedWeight(weight));
+        }
+        getFlapApproachSpeed(weight = undefined) {
+            let formula = (weight) => {
+                let dWeight = (weight - 200) / (528 - 200);
+                return 119 + 53 * dWeight;
+            };
+            return this.calculate(formula, this._getCheckedWeight(weight));
+        }
+        getVRef(flapsHandleIndex = NaN) {
+            let formula = (min, max) => {
+                return Math.round(((max - min) / (557 - 298.7) * (this._getCurrentWeight(true) / 1000 - 298.7)) + min);
+            };
+            if (isNaN(flapsHandleIndex)) {
+                flapsHandleIndex = Simplane.getFlapsHandleIndex();
+            }
+            let min = 198;
+            let max = 250;
+            if (flapsHandleIndex >= 9) {
+                min = 119;
+                max = 171;
+            }
+            else if (flapsHandleIndex >= 8) {
+                min = 119;
+                max = 174;
+            }
+            else if (flapsHandleIndex >= 7) {
+                min = 138;
+                max = 182;
+            }
+            else if (flapsHandleIndex >= 4) {
+                min = 138;
+                max = 182;
+            }
+            else if (flapsHandleIndex >= 2) {
+                min = 158;
+                max = 210;
+            }
+            else if (flapsHandleIndex >= 1) {
+                min = 173;
+                max = 231;
+            }
+            return this.calculate(formula, min, max);
+        }
+        calculate(formula, ...params) {
+            return formula(...params);
+        }
+        _getCheckedWeight(weight) {
+            if (weight === undefined) {
+                return this._getCurrentWeight(true) / 1000;
+            }
+            else {
+                return weight;
+            }
+        }
+        _getFlapsHandleIndex() {
+        }
+        _getCurrentWeight(useLbs = false) {
+            return (useLbs ? Simplane.getWeight() * 2.20462262 : Simplane.getWeight());
+        }
+    }
 
     class BaseFMC extends BaseAirliners {
         constructor() {
@@ -1411,7 +1534,7 @@
             }
             let dWeight = ((useCurrentWeight ? this.getWeight() : this.zeroFuelWeight) - 42) / (75 - 42);
             dWeight = Math.min(Math.max(dWeight, 0), 1);
-            let base = Math.max(150, this.getVLS() + 5);
+            let base = Math.max(150, this.speedManager.getVLS(this.getWeight()) + 5);
             return base + 40 * dWeight;
         }
         setFlapApproachSpeed(s) {
@@ -1435,7 +1558,7 @@
             }
             let dWeight = ((useCurrentWeight ? this.getWeight() : this.zeroFuelWeight) - 42) / (75 - 42);
             dWeight = Math.min(Math.max(dWeight, 0), 1);
-            let base = Math.max(157, this.getVLS() + 5);
+            let base = Math.max(157, this.speedManager.getVLS(this.getWeight()) + 5);
             return base + 40 * dWeight;
         }
         setSlatApproachSpeed(s) {
@@ -1456,7 +1579,7 @@
         getCleanApproachSpeed() {
             let dWeight = (this.getWeight() - 42) / (75 - 42);
             dWeight = Math.min(Math.max(dWeight, 0), 1);
-            let base = Math.max(172, this.getVLS() + 5);
+            let base = Math.max(172, this.speedManager.getVLS(this.getWeight()) + 5);
             return base + 40 * dWeight;
         }
         getManagedApproachSpeed(flapsHandleIndex = NaN) {
@@ -1464,20 +1587,20 @@
                 flapsHandleIndex = Simplane.getFlapsHandleIndex();
             }
             if (flapsHandleIndex === 0) {
-                return this.getCleanApproachSpeed();
+                return this.speedManager.getCleanApproachSpeed(this.getWeight(true));
             }
             else if (flapsHandleIndex === 1) {
-                return this.getSlatApproachSpeed();
+                return this.speedManager.getSlatApproachSpeed(this.getWeight(true));
             }
             else if (flapsHandleIndex === 2) {
-                return this.getFlapApproachSpeed();
+                return this.speedManager.getFlapApproachSpeed(this.getWeight(true));
             }
             else {
                 return this.getVApp();
             }
         }
         updateCleanApproachSpeed() {
-            let apprGreenDotSpeed = this.getCleanApproachSpeed();
+            let apprGreenDotSpeed = this.speedManager.getCleanApproachSpeed(this.getWeight(true));
             if (isFinite(apprGreenDotSpeed)) {
                 SimVar.SetSimVarValue('L:AIRLINER_APPR_GREEN_DOT_SPD', 'Number', apprGreenDotSpeed).catch(console.error);
             }
@@ -1853,7 +1976,7 @@
             }
             let windComp = SimVar.GetSimVarValue('AIRCRAFT WIND Z', 'knots') / 3;
             windComp = Math.max(windComp, 5);
-            return this.getVLS() + windComp;
+            return this.speedManager.getVLS(this.getWeight()) + windComp;
         }
         setPerfApprVApp(s) {
             if (s === BaseFMC.clrValue) {
@@ -2334,7 +2457,7 @@
             super.Init();
             this.dataManager = new FMCDataManager(this);
             this._speedRepository = new SpeedRepository();
-            this._speedManager = new SpeedManager(this._speedRepository);
+            this._speedManager = new SpeedManager(this._speedRepository, new SpeedCalculator());
             this.tempCurve = new Avionics.Curve();
             this.tempCurve.interpolationFunction = Avionics.CurveTool.NumberInterpolation;
             this.tempCurve.add(-10 * 3.28084, 21.50);
@@ -2634,7 +2757,7 @@
                 }
             }
             if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_APPROACH) {
-                SimVar.SetSimVarValue('L:AIRLINER_MANAGED_APPROACH_SPEED', 'number', this.getManagedApproachSpeed()).catch(console.error);
+                SimVar.SetSimVarValue('L:AIRLINER_MANAGED_APPROACH_SPEED', 'number', this.speedManager.getManagedApproachSpeed()).catch(console.error);
             }
             this.updateRadioNavState();
             this.updateHUDAirspeedColors();
@@ -6402,21 +6525,21 @@
                 flaps20Cell = '20°';
                 flaps25Cell = '25°';
                 flaps30Cell = '30°';
-                let flaps20Speed = fmc.getVRef(7);
+                let flaps20Speed = fmc.speedManager.getVRef(7);
                 if (isFinite(flaps20Speed)) {
                     flaps20VRefCell = flaps20Speed.toFixed(0) + 'KT';
                     fmc._renderer.rsk(1).event = () => {
                         fmc.inOut = '20/' + flaps20Speed.toFixed(0);
                     };
                 }
-                let flaps25Speed = fmc.getVRef(8);
+                let flaps25Speed = fmc.speedManager.getVRef(8);
                 if (isFinite(flaps25Speed)) {
                     flaps25VRefCell = flaps25Speed.toFixed(0) + 'KT';
                     fmc._renderer.rsk(2).event = () => {
                         fmc.inOut = '25/' + flaps25Speed.toFixed(0);
                     };
                 }
-                let flaps30Speed = fmc.getVRef(9);
+                let flaps30Speed = fmc.speedManager.getVRef(9);
                 if (isFinite(flaps30Speed)) {
                     flaps30VRefCell = flaps30Speed.toFixed(0) + 'KT';
                     fmc._renderer.rsk(3).event = () => {
@@ -13474,66 +13597,6 @@
                 });
             }
         }
-        _getIndexFromTemp(temp) {
-            if (temp < -10) {
-                return 0;
-            }
-            if (temp < 0) {
-                return 1;
-            }
-            if (temp < 10) {
-                return 2;
-            }
-            if (temp < 20) {
-                return 3;
-            }
-            if (temp < 30) {
-                return 4;
-            }
-            if (temp < 40) {
-                return 5;
-            }
-            if (temp < 43) {
-                return 6;
-            }
-            if (temp < 45) {
-                return 7;
-            }
-            if (temp < 47) {
-                return 8;
-            }
-            if (temp < 49) {
-                return 9;
-            }
-            if (temp < 51) {
-                return 10;
-            }
-            if (temp < 53) {
-                return 11;
-            }
-            if (temp < 55) {
-                return 12;
-            }
-            if (temp < 57) {
-                return 13;
-            }
-            if (temp < 59) {
-                return 14;
-            }
-            if (temp < 61) {
-                return 15;
-            }
-            if (temp < 63) {
-                return 16;
-            }
-            if (temp < 65) {
-                return 17;
-            }
-            if (temp < 66) {
-                return 18;
-            }
-            return 19;
-        }
         getFlapTakeOffSpeed() {
             let dWeight = (this.getWeight(true) - 500) / (900 - 500);
             return 134 + 40 * dWeight;
@@ -13609,70 +13672,6 @@
                 }
             }
             return speed;
-        }
-        getVRef(flapsHandleIndex = NaN) {
-            if (isNaN(flapsHandleIndex)) {
-                flapsHandleIndex = Simplane.getFlapsHandleIndex();
-            }
-            let min = 198;
-            let max = 250;
-            if (flapsHandleIndex >= 9) {
-                min = 119;
-                max = 171;
-            }
-            else if (flapsHandleIndex >= 8) {
-                min = 119;
-                max = 174;
-            }
-            else if (flapsHandleIndex >= 7) {
-                min = 138;
-                max = 182;
-            }
-            else if (flapsHandleIndex >= 4) {
-                min = 138;
-                max = 182;
-            }
-            else if (flapsHandleIndex >= 2) {
-                min = 158;
-                max = 210;
-            }
-            else if (flapsHandleIndex >= 1) {
-                min = 173;
-                max = 231;
-            }
-            return Math.round(((max - min) / (557 - 298.7) * (this.getWeight(true) - 298.7)) + min);
-        }
-        getManagedApproachSpeed(flapsHandleIndex = NaN) {
-            return this.getVRef(flapsHandleIndex) - 5;
-        }
-        getCleanApproachSpeed() {
-            let dWeight = (this.getWeight(true) - 200) / (528 - 200);
-            return 121 + 56 * dWeight;
-        }
-        getSlatApproachSpeed(useCurrentWeight = true) {
-            if (isFinite(this._overridenSlatApproachSpeed)) {
-                return this._overridenSlatApproachSpeed;
-            }
-            let dWeight = ((useCurrentWeight ? this.getWeight(true) : this.zeroFuelWeight) - 200) / (528 - 200);
-            return 119 + 58 * dWeight;
-        }
-        getFlapApproachSpeed(useCurrentWeight = true) {
-            if (isFinite(this._overridenFlapApproachSpeed)) {
-                return this._overridenFlapApproachSpeed;
-            }
-            let dWeight = ((useCurrentWeight ? this.getWeight(true) : this.zeroFuelWeight) - 200) / (528 - 200);
-            return 119 + 53 * dWeight;
-        }
-        getVLS() {
-            let flapsHandleIndex = Simplane.getFlapsHandleIndex();
-            if (flapsHandleIndex === 4) {
-                let dWeight = (this.getWeight(true) - 200) / (528 - 200);
-                return 110 + 52 * dWeight;
-            }
-            else {
-                let dWeight = (this.getWeight(true) - 200) / (528 - 200);
-                return 115 + 53 * dWeight;
-            }
         }
         setSelectedApproachFlapSpeed(s) {
             let flap = NaN;

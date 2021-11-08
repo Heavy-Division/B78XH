@@ -20,21 +20,21 @@ export class B787_10_FMC_ApproachPage {
 			flaps20Cell = '20°';
 			flaps25Cell = '25°';
 			flaps30Cell = '30°';
-			let flaps20Speed = fmc.getVRef(7);
+			let flaps20Speed = fmc.speedManager.getVRef(7);
 			if (isFinite(flaps20Speed)) {
 				flaps20VRefCell = flaps20Speed.toFixed(0) + 'KT';
 				fmc._renderer.rsk(1).event = () => {
 					fmc.inOut = '20/' + flaps20Speed.toFixed(0);
 				};
 			}
-			let flaps25Speed = fmc.getVRef(8);
+			let flaps25Speed = fmc.speedManager.getVRef(8);
 			if (isFinite(flaps25Speed)) {
 				flaps25VRefCell = flaps25Speed.toFixed(0) + 'KT';
 				fmc._renderer.rsk(2).event = () => {
 					fmc.inOut = '25/' + flaps25Speed.toFixed(0);
 				};
 			}
-			let flaps30Speed = fmc.getVRef(9);
+			let flaps30Speed = fmc.speedManager.getVRef(9);
 			if (isFinite(flaps30Speed)) {
 				flaps30VRefCell = flaps30Speed.toFixed(0) + 'KT';
 				fmc._renderer.rsk(3).event = () => {

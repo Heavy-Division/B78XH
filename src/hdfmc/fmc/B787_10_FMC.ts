@@ -813,67 +813,6 @@ export class B787_10_FMC extends Boeing_FMC {
 		}
 	}
 
-	_getIndexFromTemp(temp) {
-		if (temp < -10) {
-			return 0;
-		}
-		if (temp < 0) {
-			return 1;
-		}
-		if (temp < 10) {
-			return 2;
-		}
-		if (temp < 20) {
-			return 3;
-		}
-		if (temp < 30) {
-			return 4;
-		}
-		if (temp < 40) {
-			return 5;
-		}
-		if (temp < 43) {
-			return 6;
-		}
-		if (temp < 45) {
-			return 7;
-		}
-		if (temp < 47) {
-			return 8;
-		}
-		if (temp < 49) {
-			return 9;
-		}
-		if (temp < 51) {
-			return 10;
-		}
-		if (temp < 53) {
-			return 11;
-		}
-		if (temp < 55) {
-			return 12;
-		}
-		if (temp < 57) {
-			return 13;
-		}
-		if (temp < 59) {
-			return 14;
-		}
-		if (temp < 61) {
-			return 15;
-		}
-		if (temp < 63) {
-			return 16;
-		}
-		if (temp < 65) {
-			return 17;
-		}
-		if (temp < 66) {
-			return 18;
-		}
-		return 19;
-	}
-
 	getFlapTakeOffSpeed() {
 		let dWeight = (this.getWeight(true) - 500) / (900 - 500);
 		return 134 + 40 * dWeight;
@@ -947,61 +886,6 @@ export class B787_10_FMC extends Boeing_FMC {
 			}
 		}
 		return speed;
-	}
-
-	getVRef(flapsHandleIndex = NaN) {
-		if (isNaN(flapsHandleIndex)) {
-			flapsHandleIndex = Simplane.getFlapsHandleIndex();
-		}
-
-		let min = 198;
-		let max = 250;
-		if (flapsHandleIndex >= 9) {
-			min = 119;
-			max = 171;
-		} else if (flapsHandleIndex >= 8) {
-			min = 119;
-			max = 174;
-		} else if (flapsHandleIndex >= 7) {
-			min = 138;
-			max = 182;
-		} else if (flapsHandleIndex >= 4) {
-			min = 138;
-			max = 182;
-		} else if (flapsHandleIndex >= 2) {
-			min = 158;
-			max = 210;
-		} else if (flapsHandleIndex >= 1) {
-			min = 173;
-			max = 231;
-		}
-
-		return Math.round(((max - min) / (557 - 298.7) * (this.getWeight(true) - 298.7)) + min);
-	}
-
-	getManagedApproachSpeed(flapsHandleIndex = NaN) {
-		return this.getVRef(flapsHandleIndex) - 5;
-	}
-
-	getCleanApproachSpeed() {
-		let dWeight = (this.getWeight(true) - 200) / (528 - 200);
-		return 121 + 56 * dWeight;
-	}
-
-	getSlatApproachSpeed(useCurrentWeight = true) {
-		if (isFinite(this._overridenSlatApproachSpeed)) {
-			return this._overridenSlatApproachSpeed;
-		}
-		let dWeight = ((useCurrentWeight ? this.getWeight(true) : this.zeroFuelWeight) - 200) / (528 - 200);
-		return 119 + 58 * dWeight;
-	}
-
-	getFlapApproachSpeed(useCurrentWeight = true) {
-		if (isFinite(this._overridenFlapApproachSpeed)) {
-			return this._overridenFlapApproachSpeed;
-		}
-		let dWeight = ((useCurrentWeight ? this.getWeight(true) : this.zeroFuelWeight) - 200) / (528 - 200);
-		return 119 + 53 * dWeight;
 	}
 
 	setSelectedApproachFlapSpeed(s) {

@@ -1,11 +1,18 @@
 import {SpeedRepository} from '../Repositories/SpeedRepository';
 import {VSpeedType} from './VSpeedType';
+import {SpeedCalculator} from './SpeedCalculator';
 
 export class SpeedManager {
 	private readonly _speedRepository: SpeedRepository;
+	private readonly _speedCalculator: SpeedCalculator;
 
-	constructor(repository: SpeedRepository) {
+	constructor(repository: SpeedRepository, calculator: SpeedCalculator) {
 		this._speedRepository = repository;
+		this._speedCalculator = calculator;
+	}
+
+	get calculator(): SpeedCalculator {
+		return this._speedCalculator;
 	}
 
 	get repository(): SpeedRepository {
@@ -86,6 +93,32 @@ export class SpeedManager {
 			let dWeight = (weight - 61.4) / (82.5 - 61.4);
 			return 146 + 21 * dWeight;
 		}
+	}
+
+	getCleanApproachSpeed(weight: number = undefined): number {
+		return this._speedCalculator.cleanApproachSpeed(weight);
+	}
+
+	getSlatApproachSpeed(weight: number = undefined) {
+		if (this.repository.overridenSlatApproachSpeed) {
+			return this.repository.overridenSlatApproachSpeed;
+		}
+		return this.calculator.getSlatApproachSpeed(weight);
+	}
+
+	getFlapApproachSpeed(weight: number = undefined) {
+		if (this.repository.overridenFlapApproachSpeed) {
+			return this.repository.overridenFlapApproachSpeed;
+		}
+		return this.calculator.getFlapApproachSpeed(weight);
+	}
+
+	getManagedApproachSpeed(flapsHandleIndex = NaN) {
+		return this.getVRef(flapsHandleIndex) - 5;
+	}
+
+	getVRef(flapsHandleIndex: number = NaN) {
+		return this.calculator.getVRef(flapsHandleIndex);
 	}
 
 	private static _getRunwayCoefficient(runway: any): number {

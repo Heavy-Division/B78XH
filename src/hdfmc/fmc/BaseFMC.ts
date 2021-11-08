@@ -1,5 +1,6 @@
 import {SpeedRepository} from '../../hdsdk/Repositories/SpeedRepository';
 import {SpeedManager} from '../../hdsdk/Managers/SpeedManager';
+import {SpeedCalculator} from '../../hdsdk/Managers/SpeedCalculator';
 
 export class BaseFMC extends BaseAirliners {
 	public defaultInputErrorMessage: string = 'INVALID ENTRY';
@@ -1300,18 +1301,18 @@ export class BaseFMC extends BaseAirliners {
 			flapsHandleIndex = Simplane.getFlapsHandleIndex();
 		}
 		if (flapsHandleIndex === 0) {
-			return this.getCleanApproachSpeed();
+			return this.speedManager.getCleanApproachSpeed(this.getWeight(true));
 		} else if (flapsHandleIndex === 1) {
-			return this.getSlatApproachSpeed();
+			return this.speedManager.getSlatApproachSpeed(this.getWeight(true));
 		} else if (flapsHandleIndex === 2) {
-			return this.getFlapApproachSpeed();
+			return this.speedManager.getFlapApproachSpeed(this.getWeight(true));
 		} else {
 			return this.getVApp();
 		}
 	}
 
 	updateCleanApproachSpeed(): void {
-		let apprGreenDotSpeed = this.getCleanApproachSpeed();
+		let apprGreenDotSpeed = this.speedManager.getCleanApproachSpeed(this.getWeight(true));
 		if (isFinite(apprGreenDotSpeed)) {
 			SimVar.SetSimVarValue('L:AIRLINER_APPR_GREEN_DOT_SPD', 'Number', apprGreenDotSpeed).catch(console.error);
 		}
@@ -2237,7 +2238,7 @@ export class BaseFMC extends BaseAirliners {
 		super.Init();
 		this.dataManager = new FMCDataManager(this);
 		this._speedRepository = new SpeedRepository();
-		this._speedManager = new SpeedManager(this._speedRepository);
+		this._speedManager = new SpeedManager(this._speedRepository, new SpeedCalculator());
 		this.tempCurve = new Avionics.Curve();
 		this.tempCurve.interpolationFunction = Avionics.CurveTool.NumberInterpolation;
 		this.tempCurve.add(-10 * 3.28084, 21.50);
@@ -2539,7 +2540,7 @@ export class BaseFMC extends BaseAirliners {
 			}
 		}
 		if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_APPROACH) {
-			SimVar.SetSimVarValue('L:AIRLINER_MANAGED_APPROACH_SPEED', 'number', this.getManagedApproachSpeed()).catch(console.error);
+			SimVar.SetSimVarValue('L:AIRLINER_MANAGED_APPROACH_SPEED', 'number', this.speedManager.getManagedApproachSpeed()).catch(console.error);
 		}
 		this.updateRadioNavState();
 		this.updateHUDAirspeedColors();

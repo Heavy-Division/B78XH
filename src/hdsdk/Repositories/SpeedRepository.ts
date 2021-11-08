@@ -5,6 +5,8 @@ export class SpeedRepository {
 	private _isV1SpeedCustom: boolean = false;
 	private _isVRSpeedCustom: boolean = false;
 	private _isV2SpeedCustom: boolean = false;
+	private _overridenSlatApproachSpeed: number;
+	private _overridenFlapApproachSpeed: number;
 
 	public get v1Speed(): number {
 		return this._v1Speed;
@@ -52,5 +54,21 @@ export class SpeedRepository {
 
 	public set isV1SpeedCustom(value: boolean) {
 		this._isV1SpeedCustom = value;
+	}
+
+	public get overridenSlatApproachSpeed(): number {
+		return this._overridenSlatApproachSpeed;
+	}
+
+	public set overridenSlatApproachSpeed(value: number) {
+		this._overridenSlatApproachSpeed = value;
+	}
+
+	public get overridenFlapApproachSpeed(): number {
+		return this._overridenFlapApproachSpeed;
+	}
+
+	public set overridenFlapApproachSpeed(value: number) {
+		this._overridenFlapApproachSpeed = value;
 	}
 }
