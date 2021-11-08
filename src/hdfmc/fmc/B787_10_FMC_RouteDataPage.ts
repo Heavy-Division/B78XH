@@ -112,7 +112,7 @@ export class B787_10_FMC_RouteDataPage {
 							fuelCell = (fuelLeft * fuelModifier).toFixed(1);
 						}
 
-						rows[2 * i] = [etaCell, '>', waypoint.ident, fuelCell];
+						rows[2 * i] = [etaCell, waypoint.ident, fuelCell, '>'];
 					}
 				}
 			}
@@ -125,7 +125,7 @@ export class B787_10_FMC_RouteDataPage {
 		this.fmc._renderer.render([
 			['ETA', 'WIND', 'WAYPOINT', 'FUEL'],
 			...rows,
-			['-------------------------------WIND DATA'],
+			['------------------------------WIND DATA'],
 			['<LEGS', 'REQUEST>']
 		]);
 

@@ -7047,7 +7047,7 @@
                             if (isFinite(fuelLeft)) {
                                 fuelCell = (fuelLeft * fuelModifier).toFixed(1);
                             }
-                            rows[2 * i] = [etaCell, '>', waypoint.ident, fuelCell];
+                            rows[2 * i] = [etaCell, waypoint.ident, fuelCell, '>'];
                         }
                     }
                 }
@@ -7058,7 +7058,7 @@
             this.fmc._renderer.render([
                 ['ETA', 'WIND', 'WAYPOINT', 'FUEL'],
                 ...rows,
-                ['-------------------------------WIND DATA'],
+                ['------------------------------WIND DATA'],
                 ['<LEGS', 'REQUEST>']
             ]);
             this.fmc._renderer.lsk(6).event = () => {
