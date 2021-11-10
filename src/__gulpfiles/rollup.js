@@ -1,54 +1,39 @@
-const gulp = require('gulp');
-const rollup = require('gulp-rollup');
-const rename = require('gulp-rename');
+const exec = require('child_process').exec;
+const path = require('path');
 
-function rollupHDLogger() {
-	return gulp.src('build/hdlogger/**/*.js')
-	.pipe(rollup({
-			input: 'build/hdlogger/index.js',
-			output: {
-				format: 'umd',
-				sourcemap: true,
-				extend: true,
-				name: 'window'
-			}
-		})
-	)
-	.pipe(rename('hdlogger.js'))
-	.pipe(gulp.dest('dist'));
+const rollupPath = path.join(__dirname, '..', 'node_modules', '.bin', 'rollup');
+
+const configs = {
+	logger: ''.concat(' --config', ' ', path.join(__dirname, 'rollup-configs', 'logger.rollup.config.js')),
+	fmc: ''.concat(' --config', ' ', path.join(__dirname, 'rollup-configs', 'fmc.rollup.config.js')),
+	sdk: ''.concat(' --config', ' ', path.join(__dirname, 'rollup-configs', 'sdk.rollup.config.js'))
+};
+
+function rollupHDLogger(callback) {
+	exec(rollupPath + configs.logger, function (err, stdout, stderr) {
+			console.log(stdout);
+			console.log(stderr);
+			callback();
+		}
+	);
 }
 
-function rollupHDFMC() {
-	return gulp.src('build/hdfmc/**/*.js')
-	.pipe(rollup({
-			input: 'build/hdfmc/index.js',
-			output: {
-				format: 'umd',
-				sourcemap: true,
-				extend: true,
-				name: 'window'
-			},
-			'allowRealFiles': true
-		})
-	)
-	.pipe(rename('hdfmc.js'))
-	.pipe(gulp.dest('dist'));
+function rollupHDFMC(callback) {
+	exec(rollupPath + configs.fmc, function (err, stdout, stderr) {
+			console.log(stdout);
+			console.log(stderr);
+			callback();
+		}
+	);
 }
 
-function rollupHDSDK() {
-	return gulp.src('build/hdsdk/**/*.js')
-	.pipe(rollup({
-			input: 'build/hdsdk/index.js',
-			output: {
-				format: 'umd',
-				sourcemap: true,
-				extend: true,
-				name: 'window'
-			}
-		})
-	)
-	.pipe(rename('hdsdk.js'))
-	.pipe(gulp.dest('dist'));
+function rollupHDSDK(callback) {
+	exec(rollupPath + configs.sdk, function (err, stdout, stderr) {
+			console.log(stdout);
+			console.log(stderr);
+			callback();
+		}
+	);
 }
 
 exports.rollupHDSDK = rollupHDSDK;
