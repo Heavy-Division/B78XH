@@ -76,9 +76,6 @@ export class B787_10_FMC_RoutePage {
 	}
 
 	update(forceUpdate = false) {
-
-		console.log('UPDATE: ' + forceUpdate);
-
 		// check if active wpt changed
 		const actWptIndex = this._fmc.flightPlanManager.getActiveWaypointIndex();
 		if (this._activeWptIndex != actWptIndex) {
@@ -210,7 +207,6 @@ export class B787_10_FMC_RoutePage {
 	}
 
 	renderMainPage() {
-		console.log('RENDER Main PAGE');
 		this._fmc._renderer.renderTitle('RTE 1');
 		this._fmc._renderer.renderPages(1, this._pageCount);
 
@@ -596,11 +592,6 @@ export class B787_10_FMC_RoutePage {
 					tmpFoundActive = tmpFoundActive || (!foundActive && flightPlanManager.getActiveWaypointIndex() <= fpIndexes[i]);
 					if (tmpFoundActive) {
 						foundActive = true;
-					}
-
-					console.log("WP AIN: " + wp.infos.airwayIn + "; AOUT: " + wp.infos.airwayOut)
-					if (prev) {
-						console.log("PREV AIN: " + prev.infos.airwayIn + "; AOUT: " + prev.infos.airwayOut)
 					}
 
 					if (wp.infos.airwayIn !== undefined && prev && prev.infos.airwayOut === wp.infos.airwayIn) {

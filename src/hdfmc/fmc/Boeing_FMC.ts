@@ -1,5 +1,7 @@
 import {BaseFMC} from './BaseFMC';
 import * as HDSDK from './../../hdsdk/index';
+import {HDLogger} from '../../hdlogger';
+import {Level} from '../../hdlogger/levels/level';
 
 export class Boeing_FMC extends BaseFMC {
 
@@ -365,7 +367,7 @@ export class Boeing_FMC extends BaseFMC {
 
 	onEvent(_event): void {
 		super.onEvent(_event);
-		console.log('B747_8_FMC_MainDisplay onEvent ' + _event);
+		HDLogger.log('B787_10_BaseFMC onEvent ' + _event, Level.debug);
 		if (_event.indexOf('AP_LNAV') != -1) {
 			if (this._isMainRouteActivated) {
 				this._navModeSelector.onNavChangedEvent('NAV_PRESSED');

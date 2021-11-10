@@ -1,5 +1,7 @@
 import {B787_10_FMC} from './B787_10_FMC';
 import {B787_10_FMC_RoutePage} from './B787_10_FMC_RoutePage';
+import {HDLogger} from '../../hdlogger';
+import {Level} from '../../hdlogger/levels/level';
 
 export class B787_10_FMC_DepArrPage {
 	static ShowPage1(fmc: B787_10_FMC) {
@@ -535,23 +537,23 @@ export class B787_10_FMC_DepArrPage {
 			let displayedPageIndex = Math.min(currentPage, approachPages.length) - 1;
 			for (let i = 0; i < approachPages[displayedPageIndex].length; i++) {
 				let approachIndex = approachPages[displayedPageIndex][i].approachIndex;
-				console.log('approachIndex ' + approachIndex);
+				HDLogger.log('approachIndex ' + approachIndex, Level.debug);
 				rows[2 * i] = ['', '', '', approachPages[displayedPageIndex][i].text];
 				fmc._renderer.rsk(i + 1).event = () => {
 					if (approachIndex <= lastApproachIndex) {
-						console.log('approachIndex <= lastApproachIndex');
+						HDLogger.log('approachIndex <= lastApproachIndex', Level.debug);
 						fmc.flightPlanManager.pauseSync();
-						console.log('approachIndex ' + approachIndex);
+						HDLogger.log('approachIndex ' + approachIndex, Level.debug);
 						fmc.setApproachIndex(approachIndex, () => {
-							console.log('approach index set, selecting arrival');
+							HDLogger.log('approach index set, selecting arrival', Level.debug);
 							if (selectedArrival) {
 								let landingRunway = fmc.flightPlanManager.getApproachRunway();
-								console.log('approach runway: ' + landingRunway.designation);
+								HDLogger.log('approach runway: ' + landingRunway.designation, Level.debug);
 								if (landingRunway) {
 									let arrivalRunwayIndex = selectedArrival.runwayTransitions.findIndex(t => {
 										return t.name.indexOf('RW' + landingRunway.designation) != -1;
 									});
-									console.log('arrivalRunwayIndex ' + arrivalRunwayIndex);
+									HDLogger.log('arrivalRunwayIndex ' + arrivalRunwayIndex, Level.debug);
 									if (arrivalRunwayIndex >= -1) {
 										fmc.flightPlanManager.setArrivalRunwayIndex(arrivalRunwayIndex, () => {
 											fmc.flightPlanManager.resumeSync();
@@ -566,12 +568,12 @@ export class B787_10_FMC_DepArrPage {
 							B787_10_FMC_DepArrPage.ShowArrivalPage(fmc);
 						});
 					} else if (approachIndex > lastApproachIndex) {
-						console.log('approachIndex > lastApproachIndex');
+						HDLogger.log('approachIndex > lastApproachIndex', Level.debug);
 						let runwayApproachIndex = approachPages[displayedPageIndex][i].runwayIndex;
-						console.log('approachIndex ' + approachIndex);
+						HDLogger.log('approachIndex ' + approachIndex, Level.debug);
 						fmc.flightPlanManager.pauseSync();
 						fmc.ensureCurrentFlightPlanIsTemporary(() => {
-							console.log('starting to set vfrLandingRunway');
+							HDLogger.log('starting to set vfrLandingRunway', Level.debug);
 
 							fmc.modVfrRunway = true;
 							fmc.vfrLandingRunway = runways[runwayApproachIndex];
@@ -594,7 +596,7 @@ export class B787_10_FMC_DepArrPage {
 										}
 									}
 								}
-								console.log('completed setting vfrLandingRunway');
+								HDLogger.log('completed setting vfrLandingRunway', Level.debug);
 								fmc.flightPlanManager.resumeSync();
 								fmc.activateRoute();
 								B787_10_FMC_DepArrPage.ShowArrivalPage(fmc);
@@ -612,7 +614,7 @@ export class B787_10_FMC_DepArrPage {
 			}
 		}
 		if (selectedArrival) {
-			console.log('Selected Arrival');
+			HDLogger.log('Selected Arrival', Level.debug);
 			rows[0][0] = selectedArrival.name;
 			rows[0][1] = '<SEL>';
 			fmc._renderer.lsk(1).event = () => {

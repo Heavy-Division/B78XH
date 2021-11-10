@@ -1,5 +1,7 @@
 import {B787_10_FMC} from './B787_10_FMC';
 import {LNAV} from '../../hdsdk/Navigation/LNAV';
+import {HDLogger} from '../../hdlogger';
+import {Level} from '../../hdlogger/levels/level';
 
 /**
  * TODO: WIND_LEVELER is probably bugged in 787 I was talked about it with WT...
@@ -12,13 +14,13 @@ export class B787_10_FMC_LNAVDebug {
 
 	static async showPage(fmc: B787_10_FMC) {
 		fmc.cleanUpPage();
-		console.log('AP MANAGED MODE: ' + SimVar.GetSimVarValue('AUTOPILOT AVIONICS MANAGED', 'number'));
-		console.log('WING LEVELER: ' + SimVar.GetSimVarValue('AUTOPILOT WING LEVELER', 'number'));
-		console.log('BANK REF: ' + SimVar.GetSimVarValue('AUTOPILOT BANK HOLD REF', 'degrees'));
-		console.log('BANK HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT BANK HOLD', 'Bool'));
-		console.log('PITCH REF: ' + SimVar.GetSimVarValue('AUTOPILOT PITCH HOLD REF', 'degrees'));
-		console.log('PITCH HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT PITCH HOLD', 'Bool'));
-		console.log('APPROACH HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', 'boolean'));
+		HDLogger.log('AP MANAGED MODE: ' + SimVar.GetSimVarValue('AUTOPILOT AVIONICS MANAGED', 'number'), Level.debug);
+		HDLogger.log('WING LEVELER: ' + SimVar.GetSimVarValue('AUTOPILOT WING LEVELER', 'number'), Level.debug);
+		HDLogger.log('BANK REF: ' + SimVar.GetSimVarValue('AUTOPILOT BANK HOLD REF', 'degrees'), Level.debug);
+		HDLogger.log('BANK HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT BANK HOLD', 'Bool'), Level.debug);
+		HDLogger.log('PITCH REF: ' + SimVar.GetSimVarValue('AUTOPILOT PITCH HOLD REF', 'degrees'), Level.debug);
+		HDLogger.log('PITCH HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT PITCH HOLD', 'Bool'), Level.debug);
+		HDLogger.log('APPROACH HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', 'boolean'), Level.debug);
 
 		fmc.pageUpdate = () => {
 			this.updater += 1;

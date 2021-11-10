@@ -13,7 +13,8 @@ import {B787_10_FMC_DepArrPage} from './B787_10_FMC_DepArrPage';
 import {CJ4_FMC_PilotWaypoint_Manager} from './CJ4_FMC_PilotWaypoint_Manager';
 import {B787_10_FMC_IdentPage} from './B787_10_FMC_IdentPage';
 import * as HDSDK from './../../hdsdk/index';
-
+import {HDLogger, SocketIOHandler} from '../../hdlogger';
+import {Level} from '../../hdlogger/levels/level';
 
 export class B787_10_FMC extends Boeing_FMC {
 	protected _timeDivs: NodeListOf<HTMLElement>;
@@ -58,7 +59,7 @@ export class B787_10_FMC extends Boeing_FMC {
 	protected _lastFmcCommandCruiseSpeedType: any;
 
 	onInputAircraftSpecific = (input) => {
-		console.log('B787_10_FMC.onInputAircraftSpecific input = \'' + input + '\'');
+		HDLogger.log('B787_10_FMC.onInputAircraftSpecific input = \'' + input + '\'', Level.info);
 		if (input === 'LEGS') {
 			if (this.onLegs) {
 				this.onLegs();
@@ -266,7 +267,6 @@ export class B787_10_FMC extends Boeing_FMC {
 		let targetType = undefined;
 
 		for (let i = 0; i <= allWaypoints.length - 1; i++) {
-			console.log(allWaypoints[i].ident);
 			if (allWaypoints[i].legAltitudeDescription === 0) {
 				continue;
 			}
@@ -478,9 +478,9 @@ export class B787_10_FMC extends Boeing_FMC {
 	connectedCallback() {
 		super.connectedCallback();
 		RegisterViewListener('JS_LISTENER_KEYEVENT', () => {
-			console.log('JS_LISTENER_KEYEVENT registered.');
+			HDLogger.log('JS_LISTENER_KEYEVENT registered.', Level.info);
 			RegisterViewListener('JS_LISTENER_FACILITY', () => {
-				console.log('JS_LISTENER_FACILITY registered.');
+				HDLogger.log('JS_LISTENER_FACILITY registered.', Level.info);
 				this._registered = true;
 			}, true);
 		});
@@ -520,6 +520,7 @@ export class B787_10_FMC extends Boeing_FMC {
 		this._renderer.use(new HDSDK.SeparatorRendererMiddleware());
 
 		if (this.urlConfig.index == 1) {
+			HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
 			this._renderer.use(new HDSDK.SettableRendererMiddleware());
 			this._renderer.use(new HDSDK.SizeRendererMiddleware());
 			this._renderer.use(new HDSDK.ColorRendererMiddleware());
@@ -588,7 +589,7 @@ export class B787_10_FMC extends Boeing_FMC {
 			};
 
 			this._renderer.mk(4).event = () => {
-				console.log('NOT IMPLEMENTED');
+				HDLogger.log('NOT IMPLEMENTED', Level.info);
 			};
 
 			this._renderer.mk(5).event = () => {
@@ -596,7 +597,7 @@ export class B787_10_FMC extends Boeing_FMC {
 			};
 
 			this._renderer.mk(6).event = () => {
-				console.log('NOT IMPLEMENTED');
+				HDLogger.log('NOT IMPLEMENTED', Level.info);
 			};
 
 			this._renderer.mk(7).event = () => {
@@ -620,11 +621,11 @@ export class B787_10_FMC extends Boeing_FMC {
 			};
 
 			this._renderer.mk(12).event = () => {
-				console.log('NOT IMPLEMENTED');
+				HDLogger.log('NOT IMPLEMENTED', Level.info);
 			};
 
 			this._renderer.mk(13).event = () => {
-				console.log('NOT IMPLEMENTED');
+				HDLogger.log('NOT IMPLEMENTED', Level.info);
 			};
 
 			this._renderer.mk(14).event = () => {

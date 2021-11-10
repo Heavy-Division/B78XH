@@ -1,6 +1,8 @@
 import {SpeedRepository} from '../../hdsdk/Repositories/SpeedRepository';
 import {SpeedManager} from '../../hdsdk/Managers/SpeedManager';
 import {SpeedCalculator} from '../../hdsdk/Managers/SpeedCalculator';
+import {HDLogger} from '../../hdlogger';
+import {Level} from '../../hdlogger/levels/level';
 
 export class BaseFMC extends BaseAirliners {
 	public defaultInputErrorMessage: string = 'INVALID ENTRY';
@@ -1885,7 +1887,6 @@ export class BaseFMC extends BaseAirliners {
 
 	initRadioNav(_boot: boolean): void {
 		if (this.isPrimary) {
-			console.log('Init RadioNav');
 			{
 				if (_boot) {
 					this.vhf1Frequency = this.radioNav.getVHFActiveFrequency(this.instrumentIndex, 1);
@@ -2314,7 +2315,7 @@ export class BaseFMC extends BaseAirliners {
 				let callback = () => {
 					this.flightPlanManager.createNewFlightPlan();
 					let cruiseAlt = Math.floor(this.flightPlanManager.cruisingAltitude / 100);
-					console.log('FlightPlan Cruise Override. Cruising at FL' + cruiseAlt + ' instead of default FL' + this.cruiseFlightLevel);
+					HDLogger.log('FlightPlan Cruise Override. Cruising at FL' + cruiseAlt + ' instead of default FL' + this.cruiseFlightLevel, Level.info);
 					if (cruiseAlt > 0) {
 						this.cruiseFlightLevel = cruiseAlt;
 					}
@@ -2348,7 +2349,7 @@ export class BaseFMC extends BaseAirliners {
 					}
 				}
 			} else {
-				console.log('FMCMainDisplay - Frequency is a VOR FREQUENCY');
+				HDLogger.log('FMCMainDisplay - Frequency is a VOR FREQUENCY', Level.debug);
 				this.vor1Frequency = freq;
 			}
 			this._approachInitialized = true;
@@ -2558,7 +2559,7 @@ export class BaseFMC extends BaseAirliners {
 			} else if (input.length === 1 && BaseFMC._AvailableKeys.indexOf(input) !== -1) {
 				this.onLetterInput(input);
 			} else {
-				console.log('\'' + input + '\'');
+				HDLogger.log('\'' + input + '\'', Level.debug);
 			}
 		}
 	}
@@ -2729,12 +2730,12 @@ export class BaseFMC extends BaseAirliners {
 		if (!Simplane.getAutoPilotMachModeActive()) {
 			if (!SimVar.GetSimVarValue('AUTOPILOT AIRSPEED HOLD', 'Boolean')) {
 				SimVar.SetSimVarValue('K:AP_PANEL_SPEED_HOLD', 'Number', 1).catch(console.error);
-				console.log('Activating SPEED HOLD (Knots)');
+				HDLogger.log('Activating SPEED HOLD (Knots)', Level.debug);
 			}
 		} else {
 			if (!SimVar.GetSimVarValue('AUTOPILOT MACH HOLD', 'Boolean')) {
 				SimVar.SetSimVarValue('K:AP_PANEL_MACH_HOLD', 'Number', 1).catch(console.error);
-				console.log('Activating SPEED HOLD (Mach)');
+				HDLogger.log('Activating SPEED HOLD (Mach)', Level.debug);
 			}
 		}
 	}

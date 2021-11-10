@@ -9,6 +9,8 @@ import {RemoveSidParserMiddleware} from '../../hdsdk/integrations/SimBrief/Parse
 import {RemoveStarParserMiddleware} from '../../hdsdk/integrations/SimBrief/ParserMiddlewares/RemoveStarParserMiddleware';
 import {BreakNatsParserMiddleware} from '../../hdsdk/integrations/SimBrief/ParserMiddlewares/BreakNatsParserMiddleware';
 import {HDNavlog} from '../../hdsdk/integrations/SimBrief/HDNavlog/HDNavlog';
+import {HDLogger} from '../../hdlogger';
+import {Level} from '../../hdlogger/levels/level';
 
 export class B787_10_FMC_RouteRequestPage {
 	private readonly fmc: B787_10_FMC;
@@ -614,7 +616,7 @@ export class B787_10_FMC_RouteRequestPage {
 				 */
 
 				waypoints.forEach((waypoint) => {
-					console.log('IDENT: ' + waypoint.ident + '; AirwayIn: ' + waypoint.airwayIn + '; AirwayOut: ' + waypoint.airwayOut + '; Airway: ' + waypoint.airway);
+					HDLogger.log('IDENT: ' + waypoint.ident + '; AirwayIn: ' + waypoint.airwayIn + '; AirwayOut: ' + waypoint.airwayOut + '; Airway: ' + waypoint.airway, Level.debug);
 				});
 
 				/*

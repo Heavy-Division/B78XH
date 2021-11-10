@@ -36,7 +36,6 @@ export class B787_10_FMC_ProgressPage {
 		let waypointActive = fmc.flightPlanManager.getActiveWaypoint();
 		let waypointActiveDistance = fmc.flightPlanManager.getDistanceToActiveWaypoint();
 		if (waypointActive) {
-			console.log(waypointActive.cumulativeDistanceInFP);
 			waypointActiveCell = waypointActive.ident;
 			if (isFinite(waypointActiveDistance)) {
 				waypointActiveDistanceCell = waypointActiveDistance.toFixed(0) + ' ';
