@@ -10434,7 +10434,7 @@
                 }
                 let crzAltCell = '□□□□□';
                 if (fmc.cruiseFlightLevel) {
-                    crzAltCell = fmc.cruiseFlightLevel + 'FL';
+                    crzAltCell = 'FL' + fmc.cruiseFlightLevel;
                 }
                 fmc._renderer.rsk(1).event = () => {
                     let value = fmc.inOut;
