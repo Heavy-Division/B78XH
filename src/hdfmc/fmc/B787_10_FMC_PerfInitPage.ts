@@ -71,7 +71,7 @@ export class B787_10_FMC_PerfInitPage {
 			fmc._renderer.rsk(2).event = () => {
 				let value = fmc.inOut;
 				fmc.clearUserInput();
-				if (fmc.tryUpdateCostIndex(value, 10000)) {
+				if (fmc.tryUpdateCostIndex(Number(value), 10000)) {
 					B787_10_FMC_PerfInitPage.ShowPage1(fmc);
 				}
 			};

@@ -4216,7 +4216,7 @@
             return false;
         }
         tryUpdateCostIndex(costIndex, maxValue = 1000) {
-            let value = parseInt(costIndex);
+            let value = costIndex;
             if (isFinite(value)) {
                 if (value >= 0) {
                     if (value < maxValue) {
@@ -6748,11 +6748,12 @@
         constructor(data) {
             const general = data.general;
             this.flightNumber = general.flight_number;
-            this.costIndex = parseInt(general.cost_index);
+            this.costIndex = parseInt(general.costindex);
             this.initialAltitude = parseInt(general.initial_altitude);
             this.cruiseMach = parseFloat(general.cruise_mach);
             this.cruiseTrueAirspeed = parseInt(general.cruise_tas);
             this.route = general.route;
+            this.units = data.params.units;
             const fixes = data.navlog.fix;
             const destination = data.destination.icao_code;
             const lastWaypointIndex = (fixes[fixes.length - 1].ident === destination ? fixes.length - 2 : fixes.length - 1);
@@ -6764,6 +6765,161 @@
                 }).lastIndexOf(true);
                 this.enRouteTrans = data.navlog.fix[transIndex].ident;
             }
+        }
+    }
+
+    class HDWeights {
+        constructor(data) {
+            const weights = data.weights;
+            this._operatingEmpty = Number(weights.oew);
+            this._maxTakeoff = Number(weights.max_tow);
+            this._maxTakeoffStruct = Number(weights.max_tow_struct);
+            this._maxZeroFuel = Number(weights.max_zfw);
+            this._maxLanding = Number(weights.max_ldw);
+            this._estimatedTakeoff = Number(weights.est_tow);
+            this._estimatedZeroFuel = Number(weights.est_zfw);
+            this._estimatedLanding = Number(weights.est_ldw);
+            this._estimatedRamp = Number(weights.est_ramp);
+            this._cargo = Number(weights.cargo);
+            this._paxCount = Number(weights.pax_count);
+            this._paxWeight = Number(weights.pax_weight);
+            this._payload = Number(weights.payload);
+        }
+        get payload() {
+            return this._payload;
+        }
+        get paxWeight() {
+            return this._paxWeight;
+        }
+        get paxCount() {
+            return this._paxCount;
+        }
+        get cargo() {
+            return this._cargo;
+        }
+        get estimatedRamp() {
+            return this._estimatedRamp;
+        }
+        get estimatedLanding() {
+            return this._estimatedLanding;
+        }
+        get estimatedZeroFuel() {
+            return this._estimatedZeroFuel;
+        }
+        get estimatedTakeoff() {
+            return this._estimatedTakeoff;
+        }
+        get maxLanding() {
+            return this._maxLanding;
+        }
+        get maxZeroFuel() {
+            return this._maxZeroFuel;
+        }
+        get maxTakeoffStruct() {
+            return this._maxTakeoffStruct;
+        }
+        get maxTakeoff() {
+            return this._maxTakeoff;
+        }
+        get operatingEmpty() {
+            return this._operatingEmpty;
+        }
+    }
+
+    class HDFuel {
+        constructor(data) {
+            const fuel = data.fuel;
+            this._taxi = fuel.taxi;
+            this._enrouteBurn = fuel.enroute_burn;
+            this._contingency = fuel.contingency;
+            this._alternateBurn = fuel.alternate_burn;
+            this._reserve = fuel.reserve;
+            this._etops = fuel.etops;
+            this._extra = fuel.extra;
+            this._minTakeoff = fuel.min_takeoff;
+            this._plannedTakeoff = fuel.plan_takeoff;
+            this._plannedRamp = fuel.plan_ramp;
+            this._plannedLanding = fuel.plan_landing;
+            this._averageFlow = fuel.avg_fuel_flow;
+            this._maxTanks = fuel.max_tanks;
+        }
+        get taxi() {
+            return this._taxi;
+        }
+        set taxi(value) {
+            this._taxi = value;
+        }
+        get enrouteBurn() {
+            return this._enrouteBurn;
+        }
+        set enrouteBurn(value) {
+            this._enrouteBurn = value;
+        }
+        get alternateBurn() {
+            return this._alternateBurn;
+        }
+        set alternateBurn(value) {
+            this._alternateBurn = value;
+        }
+        get contingency() {
+            return this._contingency;
+        }
+        set contingency(value) {
+            this._contingency = value;
+        }
+        get reserve() {
+            return this._reserve;
+        }
+        set reserve(value) {
+            this._reserve = value;
+        }
+        get extra() {
+            return this._extra;
+        }
+        set extra(value) {
+            this._extra = value;
+        }
+        get minTakeoff() {
+            return this._minTakeoff;
+        }
+        set minTakeoff(value) {
+            this._minTakeoff = value;
+        }
+        get plannedTakeoff() {
+            return this._plannedTakeoff;
+        }
+        set plannedTakeoff(value) {
+            this._plannedTakeoff = value;
+        }
+        get plannedRamp() {
+            return this._plannedRamp;
+        }
+        set plannedRamp(value) {
+            this._plannedRamp = value;
+        }
+        get plannedLanding() {
+            return this._plannedLanding;
+        }
+        set plannedLanding(value) {
+            this._plannedLanding = value;
+        }
+        get maxTanks() {
+            return this._maxTanks;
+        }
+        set maxTanks(value) {
+            this._maxTanks = value;
+        }
+        get averageFlow() {
+            return this._averageFlow;
+        }
+        set averageFlow(value) {
+            this._averageFlow = value;
+        }
+        get etops() {
+            return this._etops;
+        }
+        set etops(value) {
+            this._etops = value;
         }
     }
 
@@ -6788,11 +6944,19 @@
         get fixes() {
             return this._fixes;
         }
+        get weights() {
+            return this._weights;
+        }
+        get fuel() {
+            return this._fuel;
+        }
         async parse() {
             this._rawNavlog = await this.simbrief.getFlightPlan();
             await this.parseOrigin();
             await this.parseDestination();
             await this.parseNavlogInfo();
+            await this.parseWeights();
+            await this.parseFuel();
             await this.transformNavlog();
             await this.parseWaypoints();
         }
@@ -6828,6 +6992,12 @@
         async parseNavlogInfo() {
             this._info = new HDNavlogInfo(this._rawNavlog);
         }
+        async parseWeights() {
+            this._weights = new HDWeights(this._rawNavlog);
+        }
+        async parseFuel() {
+            this._fuel = new HDFuel(this._rawNavlog);
+        }
     }
 
     class SimBriefImporter {
@@ -6845,6 +7015,12 @@
         }
         getDestination() {
             return this.parser.destination;
+        }
+        getFuel() {
+            return this.parser.fuel;
+        }
+        getWeights() {
+            return this.parser.weights;
         }
         async execute() {
             return new Promise(async (resolve) => {
@@ -10480,7 +10656,7 @@
                 fmc._renderer.rsk(2).event = () => {
                     let value = fmc.inOut;
                     fmc.clearUserInput();
-                    if (fmc.tryUpdateCostIndex(value, 10000)) {
+                    if (fmc.tryUpdateCostIndex(Number(value), 10000)) {
                         B787_10_FMC_PerfInitPage.ShowPage1(fmc);
                     }
                 };
@@ -13030,6 +13206,8 @@
                         this.destination = this.importer.getDestination();
                         this.fixes = this.importer.getFixes();
                         this.info = this.importer.getInfo();
+                        this.fuel = this.importer.getFuel();
+                        this.weights = this.importer.getWeights();
                         resolve();
                     });
                 }
@@ -13042,14 +13220,17 @@
             this.importer = importer;
         }
         async setToGame(configuration) {
-            console.log(this.info.sid);
-            console.log(this.origin.icao);
-            console.log(this.destination.icao);
             this.fmc.cleanUpPage();
             await this.setOrigin(this.origin.icao);
             await this.setDestination(this.destination.icao);
             await this.setOriginRunway(this.origin.plannedRunway);
             await this.setInitialCruiseAltitude(this.info.initialAltitude);
+            /**
+             * Be aware! Payload has to set before FuelBlock
+             */
+            await this.setPayload(this.weights);
+            await this.setFuel(this.fuel);
+            await this.setCostIndex(this.info.costIndex);
             if (this.info.sid !== 'DCT') {
                 await this.setDeparture(this.info.sid);
             }
@@ -13113,6 +13294,8 @@
             SimVar.SetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number', this.fmc._cruiseFlightLevel).catch((error) => {
                 HDLogger.log('Unable to set cruise altitude to LVAR');
             });
+        }
+        async setFuelBlock() {
         }
         async setOrigin(icao) {
             const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
@@ -13183,7 +13366,79 @@
                 resolve();
             });
         }
-        async setCostIndex() {
+        async setCostIndex(costIndex) {
+            if (this.fmc.tryUpdateCostIndex(costIndex, 10000)) {
+                HDLogger.log('CostIndex has been set to: ' + costIndex, Level.debug);
+            }
+            else {
+                HDLogger.log('CostIndex could not be updated (invalid value): ' + costIndex + '; CI RANGE 0 - 9999', Level.warning);
+            }
+        }
+        async setPayload(weights) {
+            const kgToPoundsCoefficient = 2.20462262;
+            const payload = (this.info.units === 'kgs' ? weights.payload * kgToPoundsCoefficient : weights.payload);
+            const emptyWeight = 298700;
+            /**
+             * Fuel needed to be able to keep APU/Engines turned on
+             * @type {number}
+             */
+            const fuel = 20;
+            SimVar.SetSimVarValue('FUEL TANK CENTER QUANTITY', 'Pounds', 0);
+            SimVar.SetSimVarValue('FUEL TANK LEFT MAIN QUANTITY', 'Pounds', fuel);
+            SimVar.SetSimVarValue('FUEL TANK RIGHT MAIN QUANTITY', 'Pounds', fuel);
+            SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:1', 'Pounds', 200);
+            SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:2', 'Pounds', 200);
+            SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:3', 'Pounds', 0);
+            SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:4', 'Pounds', 0);
+            SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:5', 'Pounds', 0);
+            SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:6', 'Pounds', 0);
+            SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:7', 'Pounds', 0);
+            HDLogger.log('SETTING ZFW to: ' + (emptyWeight + payload), Level.debug);
+            HDLogger.log('PAYLOAD : ' + (payload), Level.debug);
+            HDLogger.log('ZFW: ' + (emptyWeight), Level.debug);
+            this.fmc.trySetBlockFuel(0, true);
+            this.fmc.setZeroFuelWeight((emptyWeight + payload) / 1000, EmptyCallback.Void, true);
+        }
+        async setFuel(fuel) {
+            const poundsPerGallonCoefficient = 6.699999809265137;
+            const centerTankCapacity = 149034;
+            const sideTankCapacity = 37319;
+            const sideTanksTotalCapacity = sideTankCapacity * 2;
+            const block = (this.info.units === 'kgs' ? fuel.plannedRamp * 2.20462262 : fuel.plannedRamp);
+            const reserve = (this.info.units === 'kgs' ? fuel.reserve * 2.20462262 : fuel.reserve);
+            const needCenterTank = block > sideTanksTotalCapacity;
+            let leftToSet = 0;
+            let rightToSet = 0;
+            let centerToSet = 0;
+            HDLogger.log('BLOCK TO SET: ' + block, Level.debug);
+            HDLogger.log('RESERVES TO SET: ' + reserve, Level.debug);
+            HDLogger.log('NEED CENTER TANK: ' + needCenterTank, Level.debug);
+            if (!needCenterTank) {
+                let reminder = block % 2;
+                leftToSet = (block - reminder) / 2 + reminder;
+                rightToSet = (block - reminder) / 2;
+            }
+            else {
+                leftToSet = sideTankCapacity;
+                rightToSet = sideTankCapacity;
+                let remainingFuel = block - sideTanksTotalCapacity;
+                centerToSet = Math.min(remainingFuel, centerTankCapacity);
+            }
+            HDLogger.log('CENTER TO SET: ' + centerToSet, Level.debug);
+            HDLogger.log('LEFT TO SET: ' + leftToSet, Level.debug);
+            HDLogger.log('RIGHT TO SET: ' + rightToSet, Level.debug);
+            SimVar.SetSimVarValue('FUEL TANK CENTER QUANTITY', 'Gallons', centerToSet / poundsPerGallonCoefficient).catch(() => {
+                HDLogger.log('SETTING OF FUEL TANK CENTER QUANTITY FAILED', Level.error);
+            });
+            SimVar.SetSimVarValue('FUEL TANK LEFT MAIN QUANTITY', 'Gallons', leftToSet / poundsPerGallonCoefficient).catch(() => {
+                HDLogger.log('SETTING OF FUEL TANK LEFT QUANTITY FAILED', Level.error);
+            });
+            SimVar.SetSimVarValue('FUEL TANK RIGHT MAIN QUANTITY', 'Gallons', rightToSet / poundsPerGallonCoefficient).catch(() => {
+                HDLogger.log('SETTING OF FUEL TANK RIGHT QUANTITY FAILED', Level.error);
+            });
+            let total = centerToSet + leftToSet + rightToSet;
+            this.fmc.trySetBlockFuel(total, true);
+            this.fmc.setFuelReserves(reserve / 1000, true);
         }
         async insertWaypoint(fix, index) {
             return new Promise((resolve, reject) => {

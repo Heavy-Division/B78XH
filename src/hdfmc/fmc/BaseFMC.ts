@@ -515,8 +515,8 @@ export class BaseFMC extends BaseAirliners {
 		return false;
 	}
 
-	tryUpdateCostIndex(costIndex: string, maxValue = 1000): boolean {
-		let value = parseInt(costIndex);
+	tryUpdateCostIndex(costIndex: number, maxValue: number = 1000): boolean {
+		let value = costIndex;
 		if (isFinite(value)) {
 			if (value >= 0) {
 				if (value < maxValue) {

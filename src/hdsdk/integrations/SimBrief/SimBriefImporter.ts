@@ -4,6 +4,8 @@ import {INavlogImporter} from './INavlogImporter';
 import {HDDestination} from './HDNavlog/HDDestination';
 import {HDNavlogInfo} from './HDNavlog/HDNavlogInfo';
 import {HDOrigin} from './HDNavlog/HDOrigin';
+import {HDFuel} from './HDNavlog/HDFuel';
+import {HDWeights} from './HDNavlog/HDWeights';
 
 export class SimBriefImporter implements INavlogImporter {
 
@@ -27,6 +29,14 @@ export class SimBriefImporter implements INavlogImporter {
 
 	getDestination(): HDDestination {
 		return this.parser.destination;
+	}
+
+	public getFuel(): HDFuel {
+		return this.parser.fuel;
+	}
+
+	public getWeights(): HDWeights {
+		return this.parser.weights;
 	}
 
 	public async execute(): Promise<void> {

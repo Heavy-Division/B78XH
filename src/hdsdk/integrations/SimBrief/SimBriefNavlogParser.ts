@@ -5,6 +5,8 @@ import {HDDestination} from './HDNavlog/HDDestination';
 import {HDNavlog} from './HDNavlog/HDNavlog';
 import {HDNavlogInfo} from './HDNavlog/HDNavlogInfo';
 import {SimBrief} from './SimBrief';
+import {HDWeights} from './HDNavlog/HDWeights';
+import {HDFuel} from './HDNavlog/HDFuel';
 
 export class SimBriefNavlogParser {
 	private _rawNavlog: JSON = undefined;
@@ -15,6 +17,8 @@ export class SimBriefNavlogParser {
 	private _origin: HDOrigin;
 	private _destination: HDDestination;
 	private _info: HDNavlogInfo;
+	private _weights: HDWeights;
+	private _fuel: HDFuel;
 	private simbrief: SimBrief;
 
 
@@ -38,11 +42,21 @@ export class SimBriefNavlogParser {
 		return this._fixes;
 	}
 
+	get weights(): HDWeights {
+		return this._weights;
+	}
+
+	get fuel(): HDFuel {
+		return this._fuel;
+	}
+
 	async parse() {
 		this._rawNavlog = await this.simbrief.getFlightPlan();
 		await this.parseOrigin();
 		await this.parseDestination();
 		await this.parseNavlogInfo();
+		await this.parseWeights();
+		await this.parseFuel();
 		await this.transformNavlog();
 		await this.parseWaypoints();
 	}
@@ -86,5 +100,13 @@ export class SimBriefNavlogParser {
 
 	private async parseNavlogInfo() {
 		this._info = new HDNavlogInfo(this._rawNavlog);
+	}
+
+	private async parseWeights() {
+		this._weights = new HDWeights(this._rawNavlog);
+	}
+
+	private async parseFuel() {
+		this._fuel = new HDFuel(this._rawNavlog);
 	}
 }

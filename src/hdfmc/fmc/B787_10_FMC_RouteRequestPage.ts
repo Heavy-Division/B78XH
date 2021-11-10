@@ -328,7 +328,7 @@ export class B787_10_FMC_RouteRequestPage {
 			};
 
 			let updateCostIndex = () => {
-				this.fmc.tryUpdateCostIndex(this.flightPlan.general['cruise_profile'].replace('CI', ''));
+				//this.fmc.tryUpdateCostIndex(this.flightPlan.general['cruise_profile'].replace('CI', ''));
 			};
 
 			let updateCruiseAltitude = () => {
@@ -785,7 +785,7 @@ export class B787_10_FMC_RouteRequestPage {
 			};
 
 			let updateCostIndex = () => {
-				this.fmc.tryUpdateCostIndex(this.flightPlan.general['cruise_profile'].replace('CI', ''));
+				//this.fmc.tryUpdateCostIndex(this.flightPlan.general['cruise_profile'].replace('CI', ''));
 			};
 
 			let updateCruiseAltitude = () => {

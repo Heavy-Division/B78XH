@@ -6,6 +6,8 @@ import {HDDestination} from './HDDestination';
 import {B787_10_FMC} from '../../../../hdfmc';
 import {HDLogger} from '../../../../hdlogger';
 import {Level} from '../../../../hdlogger/levels/level';
+import {HDFuel} from './HDFuel';
+import {HDWeights} from './HDWeights';
 
 
 export class HDNavlog {
@@ -13,6 +15,8 @@ export class HDNavlog {
 	public destination: HDDestination = undefined;
 	public fixes: HDFix[] = undefined;
 	public info: HDNavlogInfo = undefined;
+	public fuel: HDFuel;
+	public weights: HDWeights;
 	private importer: INavlogImporter = undefined;
 	private readonly fmc: B787_10_FMC;
 
@@ -33,6 +37,8 @@ export class HDNavlog {
 					this.destination = this.importer.getDestination();
 					this.fixes = this.importer.getFixes();
 					this.info = this.importer.getInfo();
+					this.fuel = this.importer.getFuel();
+					this.weights = this.importer.getWeights();
 					resolve();
 				});
 			} else {
@@ -49,14 +55,17 @@ export class HDNavlog {
 		if (!configuration) {
 			configuration = this.defaultConfiguration;
 		}
-		console.log(this.info.sid);
-		console.log(this.origin.icao);
-		console.log(this.destination.icao);
 		this.fmc.cleanUpPage();
 		await this.setOrigin(this.origin.icao);
 		await this.setDestination(this.destination.icao);
 		await this.setOriginRunway(this.origin.plannedRunway);
 		await this.setInitialCruiseAltitude(this.info.initialAltitude);
+		/**
+		 * Be aware! Payload has to set before FuelBlock
+		 */
+		await this.setPayload(this.weights);
+		await this.setFuel(this.fuel);
+		await this.setCostIndex(this.info.costIndex);
 		if (this.info.sid !== 'DCT') {
 			await this.setDeparture(this.info.sid);
 		}
@@ -134,6 +143,10 @@ export class HDNavlog {
 		});
 	}
 
+	async setFuelBlock() {
+
+	}
+
 	async setOrigin(icao: string): Promise<boolean> {
 		const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
 		const fmc = this.fmc;
@@ -188,7 +201,7 @@ export class HDNavlog {
 		});
 	}
 
-	async insertWaypoints(fixes: HDFix[]) {
+	private async insertWaypoints(fixes: HDFix[]) {
 		return new Promise<void>(async (resolve, reject) => {
 			const total = fixes.length;
 			let iterator = 1;
@@ -205,8 +218,90 @@ export class HDNavlog {
 		});
 	}
 
-	async setCostIndex() {
+	private async setCostIndex(costIndex: number) {
+		if (this.fmc.tryUpdateCostIndex(costIndex, 10000)) {
+			HDLogger.log('CostIndex has been set to: ' + costIndex, Level.debug);
+		} else {
+			HDLogger.log('CostIndex could not be updated (invalid value): ' + costIndex + '; CI RANGE 0 - 9999', Level.warning);
+		}
+	}
 
+	private async setPayload(weights: HDWeights) {
+
+		const kgToPoundsCoefficient: number = 2.20462262;
+		const payload: number = (this.info.units === 'kgs' ? weights.payload * kgToPoundsCoefficient : weights.payload);
+		const emptyWeight: number = 298700;
+		/**
+		 * Fuel needed to be able to keep APU/Engines turned on
+		 * @type {number}
+		 */
+		const fuel: number = 20;
+
+		SimVar.SetSimVarValue('FUEL TANK CENTER QUANTITY', 'Pounds', 0);
+		SimVar.SetSimVarValue('FUEL TANK LEFT MAIN QUANTITY', 'Pounds', fuel);
+		SimVar.SetSimVarValue('FUEL TANK RIGHT MAIN QUANTITY', 'Pounds', fuel);
+		SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:1', 'Pounds', 200);
+		SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:2', 'Pounds', 200);
+		SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:3', 'Pounds', 0);
+		SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:4', 'Pounds', 0);
+		SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:5', 'Pounds', 0);
+		SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:6', 'Pounds', 0);
+		SimVar.SetSimVarValue('PAYLOAD STATION WEIGHT:7', 'Pounds', 0);
+		HDLogger.log('SETTING ZFW to: ' + (emptyWeight + payload), Level.debug);
+		HDLogger.log('PAYLOAD : ' + (payload), Level.debug);
+		HDLogger.log('ZFW: ' + (emptyWeight), Level.debug);
+		this.fmc.trySetBlockFuel(0, true);
+		this.fmc.setZeroFuelWeight((emptyWeight + payload) / 1000, EmptyCallback.Void, true);
+	}
+
+	private async setFuel(fuel: HDFuel) {
+
+		const poundsPerGallonCoefficient = 6.699999809265137;
+		const centerTankCapacity = 149034;
+		const sideTankCapacity = 37319;
+		const sideTanksTotalCapacity = sideTankCapacity * 2;
+		const block = (this.info.units === 'kgs' ? fuel.plannedRamp * 2.20462262 : fuel.plannedRamp);
+		const reserve = (this.info.units === 'kgs' ? fuel.reserve * 2.20462262 : fuel.reserve);
+		const needCenterTank = block > sideTanksTotalCapacity;
+		let leftToSet = 0;
+		let rightToSet = 0;
+		let centerToSet = 0;
+
+		HDLogger.log('BLOCK TO SET: ' + block, Level.debug);
+		HDLogger.log('RESERVES TO SET: ' + reserve, Level.debug);
+		HDLogger.log('NEED CENTER TANK: ' + needCenterTank, Level.debug);
+
+		if (!needCenterTank) {
+			let reminder = block % 2;
+			leftToSet = (block - reminder) / 2 + reminder;
+			rightToSet = (block - reminder) / 2;
+		} else {
+			leftToSet = sideTankCapacity;
+			rightToSet = sideTankCapacity;
+			let remainingFuel = block - sideTanksTotalCapacity;
+			centerToSet = Math.min(remainingFuel, centerTankCapacity);
+		}
+
+		HDLogger.log('CENTER TO SET: ' + centerToSet, Level.debug);
+
+		HDLogger.log('LEFT TO SET: ' + leftToSet, Level.debug);
+
+		HDLogger.log('RIGHT TO SET: ' + rightToSet, Level.debug);
+
+		SimVar.SetSimVarValue('FUEL TANK CENTER QUANTITY', 'Gallons', centerToSet / poundsPerGallonCoefficient).catch(() => {
+			HDLogger.log('SETTING OF FUEL TANK CENTER QUANTITY FAILED', Level.error);
+		});
+		SimVar.SetSimVarValue('FUEL TANK LEFT MAIN QUANTITY', 'Gallons', leftToSet / poundsPerGallonCoefficient).catch(() => {
+			HDLogger.log('SETTING OF FUEL TANK LEFT QUANTITY FAILED', Level.error);
+		});
+		SimVar.SetSimVarValue('FUEL TANK RIGHT MAIN QUANTITY', 'Gallons', rightToSet / poundsPerGallonCoefficient).catch(() => {
+			HDLogger.log('SETTING OF FUEL TANK RIGHT QUANTITY FAILED', Level.error);
+		});
+
+		let total = centerToSet + leftToSet + rightToSet;
+
+		this.fmc.trySetBlockFuel(total, true);
+		this.fmc.setFuelReserves(reserve / 1000, true);
 	}
 
 	async insertWaypoint(fix: HDFix, index): Promise<boolean> {

@@ -396,11 +396,12 @@
         constructor(data) {
             const general = data.general;
             this.flightNumber = general.flight_number;
-            this.costIndex = parseInt(general.cost_index);
+            this.costIndex = parseInt(general.costindex);
             this.initialAltitude = parseInt(general.initial_altitude);
             this.cruiseMach = parseFloat(general.cruise_mach);
             this.cruiseTrueAirspeed = parseInt(general.cruise_tas);
             this.route = general.route;
+            this.units = data.params.units;
             const fixes = data.navlog.fix;
             const destination = data.destination.icao_code;
             const lastWaypointIndex = (fixes[fixes.length - 1].ident === destination ? fixes.length - 2 : fixes.length - 1);
@@ -412,6 +413,161 @@
                 }).lastIndexOf(true);
                 this.enRouteTrans = data.navlog.fix[transIndex].ident;
             }
+        }
+    }
+
+    class HDWeights {
+        constructor(data) {
+            const weights = data.weights;
+            this._operatingEmpty = Number(weights.oew);
+            this._maxTakeoff = Number(weights.max_tow);
+            this._maxTakeoffStruct = Number(weights.max_tow_struct);
+            this._maxZeroFuel = Number(weights.max_zfw);
+            this._maxLanding = Number(weights.max_ldw);
+            this._estimatedTakeoff = Number(weights.est_tow);
+            this._estimatedZeroFuel = Number(weights.est_zfw);
+            this._estimatedLanding = Number(weights.est_ldw);
+            this._estimatedRamp = Number(weights.est_ramp);
+            this._cargo = Number(weights.cargo);
+            this._paxCount = Number(weights.pax_count);
+            this._paxWeight = Number(weights.pax_weight);
+            this._payload = Number(weights.payload);
+        }
+        get payload() {
+            return this._payload;
+        }
+        get paxWeight() {
+            return this._paxWeight;
+        }
+        get paxCount() {
+            return this._paxCount;
+        }
+        get cargo() {
+            return this._cargo;
+        }
+        get estimatedRamp() {
+            return this._estimatedRamp;
+        }
+        get estimatedLanding() {
+            return this._estimatedLanding;
+        }
+        get estimatedZeroFuel() {
+            return this._estimatedZeroFuel;
+        }
+        get estimatedTakeoff() {
+            return this._estimatedTakeoff;
+        }
+        get maxLanding() {
+            return this._maxLanding;
+        }
+        get maxZeroFuel() {
+            return this._maxZeroFuel;
+        }
+        get maxTakeoffStruct() {
+            return this._maxTakeoffStruct;
+        }
+        get maxTakeoff() {
+            return this._maxTakeoff;
+        }
+        get operatingEmpty() {
+            return this._operatingEmpty;
+        }
+    }
+
+    class HDFuel {
+        constructor(data) {
+            const fuel = data.fuel;
+            this._taxi = fuel.taxi;
+            this._enrouteBurn = fuel.enroute_burn;
+            this._contingency = fuel.contingency;
+            this._alternateBurn = fuel.alternate_burn;
+            this._reserve = fuel.reserve;
+            this._etops = fuel.etops;
+            this._extra = fuel.extra;
+            this._minTakeoff = fuel.min_takeoff;
+            this._plannedTakeoff = fuel.plan_takeoff;
+            this._plannedRamp = fuel.plan_ramp;
+            this._plannedLanding = fuel.plan_landing;
+            this._averageFlow = fuel.avg_fuel_flow;
+            this._maxTanks = fuel.max_tanks;
+        }
+        get taxi() {
+            return this._taxi;
+        }
+        set taxi(value) {
+            this._taxi = value;
+        }
+        get enrouteBurn() {
+            return this._enrouteBurn;
+        }
+        set enrouteBurn(value) {
+            this._enrouteBurn = value;
+        }
+        get alternateBurn() {
+            return this._alternateBurn;
+        }
+        set alternateBurn(value) {
+            this._alternateBurn = value;
+        }
+        get contingency() {
+            return this._contingency;
+        }
+        set contingency(value) {
+            this._contingency = value;
+        }
+        get reserve() {
+            return this._reserve;
+        }
+        set reserve(value) {
+            this._reserve = value;
+        }
+        get extra() {
+            return this._extra;
+        }
+        set extra(value) {
+            this._extra = value;
+        }
+        get minTakeoff() {
+            return this._minTakeoff;
+        }
+        set minTakeoff(value) {
+            this._minTakeoff = value;
+        }
+        get plannedTakeoff() {
+            return this._plannedTakeoff;
+        }
+        set plannedTakeoff(value) {
+            this._plannedTakeoff = value;
+        }
+        get plannedRamp() {
+            return this._plannedRamp;
+        }
+        set plannedRamp(value) {
+            this._plannedRamp = value;
+        }
+        get plannedLanding() {
+            return this._plannedLanding;
+        }
+        set plannedLanding(value) {
+            this._plannedLanding = value;
+        }
+        get maxTanks() {
+            return this._maxTanks;
+        }
+        set maxTanks(value) {
+            this._maxTanks = value;
+        }
+        get averageFlow() {
+            return this._averageFlow;
+        }
+        set averageFlow(value) {
+            this._averageFlow = value;
+        }
+        get etops() {
+            return this._etops;
+        }
+        set etops(value) {
+            this._etops = value;
         }
     }
 
@@ -436,11 +592,19 @@
         get fixes() {
             return this._fixes;
         }
+        get weights() {
+            return this._weights;
+        }
+        get fuel() {
+            return this._fuel;
+        }
         async parse() {
             this._rawNavlog = await this.simbrief.getFlightPlan();
             await this.parseOrigin();
             await this.parseDestination();
             await this.parseNavlogInfo();
+            await this.parseWeights();
+            await this.parseFuel();
             await this.transformNavlog();
             await this.parseWaypoints();
         }
@@ -476,6 +640,12 @@
         async parseNavlogInfo() {
             this._info = new HDNavlogInfo(this._rawNavlog);
         }
+        async parseWeights() {
+            this._weights = new HDWeights(this._rawNavlog);
+        }
+        async parseFuel() {
+            this._fuel = new HDFuel(this._rawNavlog);
+        }
     }
 
     class SimBriefImporter {
@@ -493,6 +663,12 @@
         }
         getDestination() {
             return this.parser.destination;
+        }
+        getFuel() {
+            return this.parser.fuel;
+        }
+        getWeights() {
+            return this.parser.weights;
         }
         async execute() {
             return new Promise(async (resolve) => {
