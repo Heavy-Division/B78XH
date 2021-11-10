@@ -6,7 +6,7 @@ function clean() {
 		'dist/**/*.js',
 		'hdsdk/**/*.js',
 		'hdfmc/**/*.js',
-		'hdloger/**/*.js'
+		'hdlogger/**/*.js'
 	]);
 }
 
@@ -16,7 +16,7 @@ function cleanAll() {
 		'build',
 		'hdsdk/**/*.js',
 		'hdfmc/**/*.js',
-		'hdloger/**/*.js'
+		'hdlogger/**/*.js'
 	]);
 }
 
