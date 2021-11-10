@@ -13049,6 +13049,7 @@
             await this.setOrigin(this.origin.icao);
             await this.setDestination(this.destination.icao);
             await this.setOriginRunway(this.origin.plannedRunway);
+            await this.setInitialCruiseAltitude(this.info.initialAltitude);
             if (this.info.sid !== 'DCT') {
                 await this.setDeparture(this.info.sid);
             }
@@ -13106,6 +13107,13 @@
             //departure.runwayTransitions[j].name.indexOf(selectedRunway.designation) !== -1
             await this.setDeparture(this.info.sid);
         }
+        async setInitialCruiseAltitude(cruiseAltitude) {
+            HDLogger.log('Setting CruiseAltitude to: ' + cruiseAltitude, Level.debug);
+            this.fmc._cruiseFlightLevel = Math.round(cruiseAltitude / 100);
+            SimVar.SetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number', this.fmc._cruiseFlightLevel).catch((error) => {
+                HDLogger.log('Unable to set cruise altitude to LVAR');
+            });
+        }
         async setOrigin(icao) {
             const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
             const fmc = this.fmc;
@@ -13161,11 +13169,16 @@
         }
         async insertWaypoints(fixes) {
             return new Promise(async (resolve, reject) => {
+                const total = fixes.length;
+                let iterator = 1;
                 for (const fix of fixes) {
                     const idx = this.fmc.flightPlanManager.getWaypointsCount() - 1;
-                    await this.insertWaypoint(fix, idx);
                     this.fmc.cleanUpPage();
-                    this.fmc._renderer.render(this.getProgress());
+                    this.fmc._renderer.render(this.getProgress(fix, iterator, total));
+                    HDLogger.log(fix.ident + ' ADDING TO FP', Level.debug);
+                    await this.insertWaypoint(fix, idx);
+                    HDLogger.log(fix.ident + ' ADDED TO FP', Level.info);
+                    iterator++;
                 }
                 resolve();
             });
@@ -13336,15 +13349,17 @@
                 });
             }
         */
-        getProgress() {
+        getProgress(fix, iterator, total) {
+            this.fmc._renderer.renderPages(iterator, total);
+            this.fmc._renderer.renderTitle('PROGRESS PAGE');
             return [
-                ['PROGRESS PAGE', '', '', ''],
                 ['', '', '', ''],
                 ['', '', '', ''],
                 ['', '', '', ''],
                 ['', '', '', ''],
                 ['', '', '', ''],
                 ['', '', '', ''],
+                ['Adding', fix.ident],
                 ['', '', '', ''],
                 ['', '', '', ''],
                 ['', '', '', ''],
@@ -13475,12 +13490,11 @@
                 const navlog = new HDNavlog(this.fmc);
                 navlog.setImporter(importer);
                 await navlog.import().catch((error) => {
-                    console.error(error);
+                    HDLogger.log(error, Level.error);
                 });
                 navlog.setToGame().then(() => {
                     B787_10_FMC_RoutePage.ShowPage1(this.fmc);
                 });
-                //await navlog.test();
             };
             /**
              * TODO: Refactor this... It is same as SimBrief just parsing log is different
@@ -16307,23 +16321,23 @@
                 let displayedPageIndex = Math.min(currentPage, approachPages.length) - 1;
                 for (let i = 0; i < approachPages[displayedPageIndex].length; i++) {
                     let approachIndex = approachPages[displayedPageIndex][i].approachIndex;
-                    console.log('approachIndex ' + approachIndex);
+                    HDLogger.log('approachIndex ' + approachIndex, Level.debug);
                     rows[2 * i] = ['', '', '', approachPages[displayedPageIndex][i].text];
                     fmc._renderer.rsk(i + 1).event = () => {
                         if (approachIndex <= lastApproachIndex) {
-                            console.log('approachIndex <= lastApproachIndex');
+                            HDLogger.log('approachIndex <= lastApproachIndex', Level.debug);
                             fmc.flightPlanManager.pauseSync();
-                            console.log('approachIndex ' + approachIndex);
+                            HDLogger.log('approachIndex ' + approachIndex, Level.debug);
                             fmc.setApproachIndex(approachIndex, () => {
-                                console.log('approach index set, selecting arrival');
+                                HDLogger.log('approach index set, selecting arrival', Level.debug);
                                 if (selectedArrival) {
                                     let landingRunway = fmc.flightPlanManager.getApproachRunway();
-                                    console.log('approach runway: ' + landingRunway.designation);
+                                    HDLogger.log('approach runway: ' + landingRunway.designation, Level.debug);
                                     if (landingRunway) {
                                         let arrivalRunwayIndex = selectedArrival.runwayTransitions.findIndex(t => {
                                             return t.name.indexOf('RW' + landingRunway.designation) != -1;
                                         });
-                                        console.log('arrivalRunwayIndex ' + arrivalRunwayIndex);
+                                        HDLogger.log('arrivalRunwayIndex ' + arrivalRunwayIndex, Level.debug);
                                         if (arrivalRunwayIndex >= -1) {
                                             fmc.flightPlanManager.setArrivalRunwayIndex(arrivalRunwayIndex, () => {
                                                 fmc.flightPlanManager.resumeSync();
@@ -16339,12 +16353,12 @@
                             });
                         }
                         else if (approachIndex > lastApproachIndex) {
-                            console.log('approachIndex > lastApproachIndex');
+                            HDLogger.log('approachIndex > lastApproachIndex', Level.debug);
                             let runwayApproachIndex = approachPages[displayedPageIndex][i].runwayIndex;
-                            console.log('approachIndex ' + approachIndex);
+                            HDLogger.log('approachIndex ' + approachIndex, Level.debug);
                             fmc.flightPlanManager.pauseSync();
                             fmc.ensureCurrentFlightPlanIsTemporary(() => {
-                                console.log('starting to set vfrLandingRunway');
+                                HDLogger.log('starting to set vfrLandingRunway', Level.debug);
                                 fmc.modVfrRunway = true;
                                 fmc.vfrLandingRunway = runways[runwayApproachIndex];
                                 fmc.vfrRunwayExtension = 5;
@@ -16365,7 +16379,7 @@
                                             }
                                         }
                                     }
-                                    console.log('completed setting vfrLandingRunway');
+                                    HDLogger.log('completed setting vfrLandingRunway', Level.debug);
                                     fmc.flightPlanManager.resumeSync();
                                     fmc.activateRoute();
                                     B787_10_FMC_DepArrPage.ShowArrivalPage(fmc);
@@ -16381,7 +16395,7 @@
                 }
             }
             if (selectedArrival) {
-                console.log('Selected Arrival');
+                HDLogger.log('Selected Arrival', Level.debug);
                 rows[0][0] = selectedArrival.name;
                 rows[0][1] = '<SEL>';
                 fmc._renderer.lsk(1).event = () => {

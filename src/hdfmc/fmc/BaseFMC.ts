@@ -115,7 +115,7 @@ export class BaseFMC extends BaseAirliners {
 	protected _labelElements: HTMLElement[][] = [];
 	protected _lineElements: HTMLElement[][] = [];
 	protected _inOutElement: HTMLInputElement | undefined;
-	protected _cruiseFlightLevel: number;
+	public _cruiseFlightLevel: number;
 	public dataManager: FMCDataManager;
 	public refAirport: WayPoint;
 	public refGate: string;

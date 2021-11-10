@@ -4,6 +4,8 @@ import {HDNavlogInfo} from './HDNavlogInfo';
 import {INavlogImporter} from '../INavlogImporter';
 import {HDDestination} from './HDDestination';
 import {B787_10_FMC} from '../../../../hdfmc';
+import {HDLogger} from '../../../../hdlogger';
+import {Level} from '../../../../hdlogger/levels/level';
 
 
 export class HDNavlog {
@@ -54,6 +56,7 @@ export class HDNavlog {
 		await this.setOrigin(this.origin.icao);
 		await this.setDestination(this.destination.icao);
 		await this.setOriginRunway(this.origin.plannedRunway);
+		await this.setInitialCruiseAltitude(this.info.initialAltitude);
 		if (this.info.sid !== 'DCT') {
 			await this.setDeparture(this.info.sid);
 		}
@@ -123,6 +126,14 @@ export class HDNavlog {
 		await this.setDeparture(this.info.sid);
 	}
 
+	async setInitialCruiseAltitude(cruiseAltitude: number) {
+		HDLogger.log('Setting CruiseAltitude to: ' + cruiseAltitude, Level.debug);
+		this.fmc._cruiseFlightLevel = Math.round(cruiseAltitude / 100);
+		SimVar.SetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number', this.fmc._cruiseFlightLevel).catch((error) => {
+			HDLogger.log('Unable to set cruise altitude to LVAR');
+		});
+	}
+
 	async setOrigin(icao: string): Promise<boolean> {
 		const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
 		const fmc = this.fmc;
@@ -179,11 +190,16 @@ export class HDNavlog {
 
 	async insertWaypoints(fixes: HDFix[]) {
 		return new Promise<void>(async (resolve, reject) => {
+			const total = fixes.length;
+			let iterator = 1;
 			for (const fix of fixes) {
 				const idx = this.fmc.flightPlanManager.getWaypointsCount() - 1;
-				await this.insertWaypoint(fix, idx);
 				this.fmc.cleanUpPage();
-				this.fmc._renderer.render(this.getProgress());
+				this.fmc._renderer.render(this.getProgress(fix, iterator, total));
+				HDLogger.log(fix.ident + ' ADDING TO FP', Level.debug);
+				await this.insertWaypoint(fix, idx);
+				HDLogger.log(fix.ident + ' ADDED TO FP', Level.info);
+				iterator++;
 			}
 			resolve();
 		});
@@ -380,15 +396,17 @@ export class HDNavlog {
 			});
 		}
 	*/
-	public getProgress(): string[][] {
+	public getProgress(fix, iterator, total): string[][] {
+		this.fmc._renderer.renderPages(iterator, total);
+		this.fmc._renderer.renderTitle('PROGRESS PAGE');
 		return [
-			['PROGRESS PAGE', '', '', ''],
 			['', '', '', ''],
 			['', '', '', ''],
 			['', '', '', ''],
 			['', '', '', ''],
 			['', '', '', ''],
 			['', '', '', ''],
+			['Adding', fix.ident],
 			['', '', '', ''],
 			['', '', '', ''],
 			['', '', '', ''],

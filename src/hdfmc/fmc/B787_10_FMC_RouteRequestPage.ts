@@ -147,13 +147,12 @@ export class B787_10_FMC_RouteRequestPage {
 			const navlog = new HDNavlog(this.fmc);
 			navlog.setImporter(importer);
 			await navlog.import().catch((error) => {
-				console.error(error);
+				HDLogger.log(error, Level.error);
 			});
 
 			navlog.setToGame().then(() => {
 				B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 			});
-			//await navlog.test();
 		};
 
 		/**
