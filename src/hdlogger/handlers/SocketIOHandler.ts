@@ -1,14 +1,12 @@
 import {Handler} from './Handler';
 import {Level} from '../levels/level';
-//import * as io from 'socket.io-client';
-
-import {io} from '../../node_modules/socket.io-client';
+import * as SocketClient from 'socket.io-client';
 
 export class SocketIOHandler implements Handler {
 	private socket: any;
 
 	constructor(server: any, port: number) {
-		this.socket = io('http://' + server + ':' + port + '/', {
+		this.socket = SocketClient.io('http://' + server + ':' + port + '/', {
 			auth: {
 				token: 'msfs'
 			},
