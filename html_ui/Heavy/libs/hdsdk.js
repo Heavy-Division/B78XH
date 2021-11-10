@@ -1,8 +1,8 @@
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
     typeof define === 'function' && define.amd ? define(['exports'], factory) :
-    (global = global || self, factory(global.window = global.window || {}));
-}(this, function (exports) { 'use strict';
+    (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.window = global.window || {}));
+})(this, (function (exports) { 'use strict';
 
     class SimBriefApi {
         /**
@@ -502,6 +502,7 @@
         }
     }
 
+    exports.HeavyInput = void 0;
     (function (HeavyInput) {
         class Converters {
             static inputToAltitude(input) {
@@ -623,6 +624,7 @@
         HeavyInput.Validators = Validators;
     })(exports.HeavyInput || (exports.HeavyInput = {}));
 
+    exports.FMCLineType = void 0;
     (function (FMCLineType) {
         FMCLineType[FMCLineType["LINE"] = 0] = "LINE";
         FMCLineType[FMCLineType["TITLE"] = 1] = "TITLE";
@@ -1516,6 +1518,7 @@
         }
     }
 
+    exports.HDSpeedPhase = void 0;
     (function (HDSpeedPhase) {
         HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_CLIMB"] = 0] = "SPEED_PHASE_CLIMB";
         HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_CRUISE"] = 1] = "SPEED_PHASE_CRUISE";
@@ -1523,6 +1526,7 @@
         HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_APPROACH"] = 3] = "SPEED_PHASE_APPROACH";
     })(exports.HDSpeedPhase || (exports.HDSpeedPhase = {}));
 
+    exports.HDSpeedType = void 0;
     (function (HDSpeedType) {
         HDSpeedType[HDSpeedType["SPEED_TYPE_ECON"] = 0] = "SPEED_TYPE_ECON";
         HDSpeedType[HDSpeedType["SPEED_TYPE_SELECTED"] = 1] = "SPEED_TYPE_SELECTED";
@@ -1896,7 +1900,6 @@
                         default:
                             return 133;
                     }
-                    break;
                 case exports.HDSpeedPhase.SPEED_PHASE_CRUISE:
                     switch (this.commandedSpeedType) {
                         case exports.HDSpeedType.SPEED_TYPE_RESTRICTION:
@@ -2067,6 +2070,7 @@
         }
     }
 
+    exports.HeavyDivision = void 0;
     (function (HeavyDivision) {
         class Configuration {
             static activeFlightPlanSynchronizationStrategy() {
@@ -2109,23 +2113,23 @@
         HeavyDivision.SimBrief = SimBrief;
     })(exports.HeavyDivision || (exports.HeavyDivision = {}));
 
-    exports.SimBrief = SimBrief;
-    exports.SimBriefCredentials = SimBriefCredentials;
-    exports.SimBriefApi = SimBriefApi;
-    exports.SimBriefOceanicWaypointConverter = SimBriefOceanicWaypointConverter;
-    exports.SimBriefNavlogParser = SimBriefNavlogParser;
-    exports.SimBriefImporter = SimBriefImporter;
-    exports.HeavyDataStorage = HeavyDataStorage;
-    exports.FMCRenderer = FMCRenderer;
     exports.ColorRendererMiddleware = ColorRendererMiddleware;
-    exports.SizeRendererMiddleware = SizeRendererMiddleware;
-    exports.SeparatorRendererMiddleware = SeparatorRendererMiddleware;
-    exports.SettableRendererMiddleware = SettableRendererMiddleware;
-    exports.HtmlEncodeRendererMiddleware = HtmlEncodeRendererMiddleware;
-    exports.HtmlDecodeRendererMiddleware = HtmlDecodeRendererMiddleware;
-    exports.SettableHighlighterRendererMiddleware = SettableHighlighterRendererMiddleware;
     exports.DefaultRendererTemplater = DefaultRendererTemplater;
+    exports.FMCRenderer = FMCRenderer;
+    exports.HeavyDataStorage = HeavyDataStorage;
+    exports.HtmlDecodeRendererMiddleware = HtmlDecodeRendererMiddleware;
+    exports.HtmlEncodeRendererMiddleware = HtmlEncodeRendererMiddleware;
     exports.NaturalRendererTemplater = NaturalRendererTemplater;
+    exports.SeparatorRendererMiddleware = SeparatorRendererMiddleware;
+    exports.SettableHighlighterRendererMiddleware = SettableHighlighterRendererMiddleware;
+    exports.SettableRendererMiddleware = SettableRendererMiddleware;
+    exports.SimBrief = SimBrief;
+    exports.SimBriefApi = SimBriefApi;
+    exports.SimBriefCredentials = SimBriefCredentials;
+    exports.SimBriefImporter = SimBriefImporter;
+    exports.SimBriefNavlogParser = SimBriefNavlogParser;
+    exports.SimBriefOceanicWaypointConverter = SimBriefOceanicWaypointConverter;
+    exports.SizeRendererMiddleware = SizeRendererMiddleware;
     exports.SpeedDirector = SpeedDirector;
 
     Object.defineProperty(exports, '__esModule', { value: true });
