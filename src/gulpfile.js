@@ -2,7 +2,9 @@ const buildTasks = require('./__gulpfiles/build');
 const rollupTasks = require('./__gulpfiles/rollup');
 const cleanTasks = require('./__gulpfiles/clean');
 const distributeTasks = require('./__gulpfiles/distribute');
+const copyTasks = require('./__gulpfiles/copy');
 const {monitorSource} = require('./__gulpfiles/monitor');
+const test = require('./__gulpfiles/test');
 /**
  * Global
  */
@@ -28,7 +30,8 @@ function testTask(callback) {
 	callback();
 }
 
-exports.buildB78XH = series(buildTasks.buildB78XH, rollupTasks.rollupHDSDK, rollupTasks.rollupHDLogger, rollupTasks.rollupHDFMC, cleanTasks.cleanBuild);
+//exports.buildB78XH = series(buildTasks.buildB78XH, rollupTasks.rollupHDSDK, rollupTasks.rollupHDLogger, rollupTasks.rollupHDFMC, cleanTasks.cleanBuild);
+exports.buildB78XH = series(buildTasks.buildB78XH, rollupTasks.rollupHDLogger, cleanTasks.cleanBuild);
 
 exports.clean = cleanTasks.clean;
 exports.cleanAll = cleanTasks.cleanAll;
@@ -45,3 +48,9 @@ exports.default = exports.buildAndDistribute;
  * @type {testTask}
  */
 exports.test = testTask;
+
+/**
+ * Task for testing resolving modules outside package root
+ */
+
+exports.loggerTest = series(test.loggerBuild, test.loggerRollup);
