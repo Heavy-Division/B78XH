@@ -9,6 +9,7 @@ const test = require('./__gulpfiles/test');
  * Global
  */
 const merge = require('deepmerge');
+const path = require('path');
 /**
  * Gulp
  */
@@ -25,13 +26,13 @@ const ts = require('gulp-typescript');
 const rollup = require('gulp-rollup');
 const bump = require('gulp-bump');
 const zip = require('gulp-zip');
+const {exec} = require('child_process');
 
 function testTask(callback) {
 	callback();
 }
 
-//exports.buildB78XH = series(buildTasks.buildB78XH, rollupTasks.rollupHDSDK, rollupTasks.rollupHDLogger, rollupTasks.rollupHDFMC, cleanTasks.cleanBuild);
-exports.buildB78XH = series(buildTasks.buildB78XH, rollupTasks.rollupHDLogger, cleanTasks.cleanBuild);
+exports.buildB78XH = series(buildTasks.buildB78XH, rollupTasks.rollupHDSDK, rollupTasks.rollupHDLogger, rollupTasks.rollupHDFMC, cleanTasks.cleanBuild);
 
 exports.clean = cleanTasks.clean;
 exports.cleanAll = cleanTasks.cleanAll;
@@ -52,5 +53,6 @@ exports.test = testTask;
 /**
  * Task for testing resolving modules outside package root
  */
+
 
 exports.loggerTest = series(test.loggerBuild, test.loggerRollup);
