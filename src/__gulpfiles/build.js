@@ -18,8 +18,8 @@ function buildB78XHTask() {
 	const res = gulp.src(paths).pipe(projects.b78xh());
 
 	return merge(
-		res.dts.pipe(gulp.dest('build/types')),
-		res.js.pipe(gulp.dest('build'))
+		res.dts.pipe(gulp.dest('./build/types')),
+		res.js.pipe(gulp.dest('./build'))
 	);
 }
 
