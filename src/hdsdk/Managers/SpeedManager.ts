@@ -5,6 +5,18 @@ import {SpeedCalculator} from './SpeedCalculator';
 export class SpeedManager {
 	private readonly _speedRepository: SpeedRepository;
 	private readonly _speedCalculator: SpeedCalculator;
+	/**
+	 * TODO: Should be this here???
+	 * @type {boolean}
+	 * @private
+	 */
+	private overSpeedLimitThreshold: boolean = false;
+	/**
+	 * TODO: Move to some kind of state class??
+	 * @type {boolean}
+	 * @private
+	 */
+	private _climbSpeedTransitionDeleted: boolean = false;
 
 	constructor(repository: SpeedRepository, calculator: SpeedCalculator) {
 		this._speedRepository = repository;
@@ -43,19 +55,19 @@ export class SpeedManager {
 		SimVar.SetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots', speed).catch(console.error);
 	}
 
-	public getComputedV1Speed(runway: any, weight: number, flaps: number) {
+	public getComputedV1Speed(runway: any, weight: number, flaps: number): number {
 		return SpeedManager.getComputedVSpeed(runway, weight, flaps, VSpeedType.v1);
 	}
 
-	public getComputedVRSpeed(runway: any, weight: number, flaps: number) {
+	public getComputedVRSpeed(runway: any, weight: number, flaps: number): number {
 		return SpeedManager.getComputedVSpeed(runway, weight, flaps, VSpeedType.vR);
 	}
 
-	public getComputedV2Speed(runway: any, weight: number, flaps: number) {
+	public getComputedV2Speed(runway: any, weight: number, flaps: number): number {
 		return SpeedManager.getComputedVSpeed(runway, weight, flaps, VSpeedType.v2);
 	}
 
-	private static getComputedVSpeed(runway: any, weight: number, flaps: number, type: VSpeedType) {
+	private static getComputedVSpeed(runway: any, weight: number, flaps: number, type: VSpeedType): number {
 		let runwayCoefficient = SpeedManager._getRunwayCoefficient(runway);
 		let dWeightCoefficient = SpeedManager._getWeightCoefficient(weight, type);
 		const flapsCoefficient = SpeedManager._getFlapsCoefficient(flaps);
@@ -84,7 +96,7 @@ export class SpeedManager {
 		return speed;
 	}
 
-	getVLS(weight: number): number {
+	public getVLS(weight: number): number {
 		let flapsHandleIndex = Simplane.getFlapsHandleIndex();
 		if (flapsHandleIndex === 4) {
 			let dWeight = (weight - 61.4) / (82.5 - 61.4);
@@ -95,30 +107,59 @@ export class SpeedManager {
 		}
 	}
 
-	getCleanApproachSpeed(weight: number = undefined): number {
+	public getCleanApproachSpeed(weight: number = undefined): number {
 		return this._speedCalculator.cleanApproachSpeed(weight);
 	}
 
-	getSlatApproachSpeed(weight: number = undefined) {
+	public getSlatApproachSpeed(weight: number = undefined): number {
 		if (this.repository.overridenSlatApproachSpeed) {
 			return this.repository.overridenSlatApproachSpeed;
 		}
 		return this.calculator.getSlatApproachSpeed(weight);
 	}
 
-	getFlapApproachSpeed(weight: number = undefined) {
+	public getFlapApproachSpeed(weight: number = undefined): number {
 		if (this.repository.overridenFlapApproachSpeed) {
 			return this.repository.overridenFlapApproachSpeed;
 		}
 		return this.calculator.getFlapApproachSpeed(weight);
 	}
 
-	getManagedApproachSpeed(flapsHandleIndex = NaN) {
+	public getManagedApproachSpeed(flapsHandleIndex = NaN): number {
 		return this.getVRef(flapsHandleIndex) - 5;
 	}
 
-	getVRef(flapsHandleIndex: number = NaN) {
+	public getVRef(flapsHandleIndex: number = NaN): number {
 		return this.calculator.getVRef(flapsHandleIndex);
+	}
+
+	public getClbManagedSpeed(costIndexCoefficient: number): number {
+		const result = this.calculator.getClbManagedSpeed(costIndexCoefficient, this.overSpeedLimitThreshold);
+		this.overSpeedLimitThreshold = result.overSpeedLimitThreshold;
+		if (!this._climbSpeedTransitionDeleted) {
+			result.speed = Math.min(result.speed, 250);
+		}
+		return result.speed;
+	}
+
+	public getEconClbManagedSpeed(costIndexCoefficient: number) {
+		return this.getEconCrzManagedSpeed(costIndexCoefficient);
+	}
+
+	public getEconCrzManagedSpeed(costIndexCoefficient: number) {
+		return this.getCrzManagedSpeed(costIndexCoefficient, true);
+	}
+
+	public getCrzManagedSpeed(costIndexCoefficient: number, highAltitude = false): number {
+		const result = this.calculator.getCrzManagedSpeed(costIndexCoefficient, this.overSpeedLimitThreshold, highAltitude);
+		this.overSpeedLimitThreshold = result.overSpeedLimitThreshold;
+		return result.speed;
+	}
+
+	public getDesManagedSpeed(costIndexCoefficient: number): number {
+		const result = this.calculator.getDesManagedSpeed(costIndexCoefficient, this.overSpeedLimitThreshold);
+		this.overSpeedLimitThreshold = result.overSpeedLimitThreshold;
+		return result.speed;
 	}
 
 	private static _getRunwayCoefficient(runway: any): number {
@@ -130,7 +171,7 @@ export class SpeedManager {
 		}
 	}
 
-	private static _getWeightCoefficient(weight: number, type: VSpeedType) {
+	private static _getWeightCoefficient(weight: number, type: VSpeedType): number {
 		let dWeightCoeff = (weight - 350) / (560 - 350);
 		dWeightCoeff = Utils.Clamp(dWeightCoeff, 0, 1);
 
@@ -144,7 +185,7 @@ export class SpeedManager {
 		}
 	}
 
-	private static _getFlapsCoefficient(flaps: number) {
+	private static _getFlapsCoefficient(flaps: number): number {
 		switch (flaps) {
 			case 5:
 				return 2 * 5;
@@ -163,7 +204,7 @@ export class SpeedManager {
 		}
 	}
 
-	private static _getIndexFromTemp(temp) {
+	private static _getIndexFromTemp(temp): number {
 		if (temp < -10) {
 			return 0;
 		}
@@ -224,7 +265,7 @@ export class SpeedManager {
 		return 19;
 	}
 
-	static _v1s = [
+	static _v1s: number[][] = [
 		[130, 156],
 		[128, 154],
 		[127, 151],
@@ -246,7 +287,7 @@ export class SpeedManager {
 		[117, 140],
 		[117, 140]
 	];
-	static _vRs = [
+	static _vRs: number[][] = [
 		[130, 158],
 		[128, 156],
 		[127, 154],
@@ -269,7 +310,7 @@ export class SpeedManager {
 		[117, 140]
 	];
 
-	static _v2s = [
+	static _v2s: number[][] = [
 		[135, 163],
 		[133, 160],
 		[132, 158],

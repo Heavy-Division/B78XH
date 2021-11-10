@@ -1516,6 +1516,557 @@
         }
     }
 
+    (function (HDSpeedPhase) {
+        HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_CLIMB"] = 0] = "SPEED_PHASE_CLIMB";
+        HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_CRUISE"] = 1] = "SPEED_PHASE_CRUISE";
+        HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_DESCENT"] = 2] = "SPEED_PHASE_DESCENT";
+        HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_APPROACH"] = 3] = "SPEED_PHASE_APPROACH";
+    })(exports.HDSpeedPhase || (exports.HDSpeedPhase = {}));
+
+    (function (HDSpeedType) {
+        HDSpeedType[HDSpeedType["SPEED_TYPE_ECON"] = 0] = "SPEED_TYPE_ECON";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_SELECTED"] = 1] = "SPEED_TYPE_SELECTED";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_RESTRICTION"] = 2] = "SPEED_TYPE_RESTRICTION";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_TRANSITION"] = 3] = "SPEED_TYPE_TRANSITION";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_ACCELERATION"] = 4] = "SPEED_TYPE_ACCELERATION";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_PROTECTED"] = 5] = "SPEED_TYPE_PROTECTED";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_WAYPOINT"] = 6] = "SPEED_TYPE_WAYPOINT";
+    })(exports.HDSpeedType || (exports.HDSpeedType = {}));
+
+    class HDSpeed {
+        constructor(speed) {
+            this._speed = Number(speed);
+        }
+        /**
+         * Speed getter
+         * @returns {number}
+         */
+        get speed() {
+            return this._speed;
+        }
+        /**
+         * Speed setter
+         * @param speed
+         */
+        set speed(speed) {
+            this._speed = Number(speed);
+        }
+        isValid() {
+            return this._speed && isFinite(this._speed);
+        }
+    }
+
+    class HDDescentSpeed extends HDSpeed {
+        constructor(speed, speedMach) {
+            super(speed);
+            this._speedMach = Number(speedMach);
+        }
+        get speedMach() {
+            return this._speedMach;
+        }
+        set speedMach(speedMach) {
+            this._speedMach = Number(speedMach);
+        }
+    }
+
+    class HDSpeedRestriction extends HDSpeed {
+        constructor(speed, altitude) {
+            super(speed);
+            this._altitude = Number(altitude);
+        }
+        get altitude() {
+            return this._altitude;
+        }
+        set altitude(altitude) {
+            this._altitude = Number(altitude);
+        }
+    }
+
+    class HDAccelerationSpeedRestriction extends HDSpeedRestriction {
+        constructor(speed, altitude, height) {
+            super(speed, altitude);
+            this._accelerationHeight = Number(height);
+        }
+        /**
+         * Acceleration height setter
+         * @param height
+         */
+        set accelerationHeight(height) {
+            this._accelerationHeight = Number(height);
+        }
+        /**
+         * Returns acceleration height
+         * @returns {number}
+         */
+        get accelerationHeight() {
+            return this._accelerationHeight;
+        }
+        /**
+         * TODO: logic for v2+10 - v2+25 has to be implemented
+         * @returns {boolean}
+         */
+        isValid() {
+            const planeAltitude = Simplane.getAltitude();
+            const v2speed = SimVar.GetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots');
+            this.speed = Number(v2speed + 25);
+            if (this._speed && isFinite(this._speed) && this._altitude && isFinite(this._altitude)) {
+                if (this._altitude > planeAltitude) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    class HDOverspeedProtection extends HDSpeed {
+        /**
+         * Speed getter
+         * @returns {number}
+         */
+        get speed() {
+            return Number(this.getFlapProtectionMaxSpeed(Simplane.getFlapsHandleIndex()));
+        }
+        /**
+         * Overspeed protection should be always valid
+         * @returns {boolean}
+         */
+        isValid() {
+            return true;
+        }
+        /**
+         * Flap protection speeds table
+         * @param handleIndex
+         * @returns {number}
+         */
+        getFlapProtectionMaxSpeed(handleIndex) {
+            switch (handleIndex) {
+                case 0:
+                    return 360;
+                case 1:
+                    return 255;
+                case 2:
+                    return 235;
+                case 3:
+                    return 225;
+                case 4:
+                    return 215;
+                case 5:
+                    return 210;
+                case 6:
+                    return 210;
+                case 7:
+                    return 205;
+                case 8:
+                    return 185;
+                case 9:
+                    return 175;
+            }
+            return 360;
+        }
+    }
+
+    class HDClimbSpeedRestriction extends HDSpeedRestriction {
+        isValid() {
+            const planeAltitude = Simplane.getAltitude();
+            if (this._speed && isFinite(this._speed) && this._altitude && isFinite(this._altitude)) {
+                if (this._altitude > planeAltitude) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    class HDSpeedTransition extends HDSpeedRestriction {
+        constructor(speed = 250, altitude = 10000, isDeleted = false) {
+            super(speed, altitude);
+            this._isDeleted = Boolean(isDeleted);
+        }
+        get isDeleted() {
+            return this._isDeleted;
+        }
+        set isDeleted(isDeleted) {
+            this._isDeleted = Boolean(isDeleted);
+        }
+        /**
+         * TODO implement above/bellow altitude check
+         * @param planeAltitude
+         * @returns {boolean}
+         */
+        isValid() {
+            const planeAltitude = Simplane.getAltitude();
+            if (this._speed && isFinite(this._speed) && !this._isDeleted) {
+                if (10000 > planeAltitude) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    class HDClimbSpeedTransition extends HDSpeedTransition {
+        constructor(speed = 250, altitude = 10000, isDeleted = false) {
+            super(speed, altitude, isDeleted);
+        }
+    }
+
+    class HDClimbSpeed extends HDSpeed {
+        constructor(speed) {
+            super(speed);
+        }
+    }
+
+    class HDCruiseSpeed extends HDSpeed {
+        constructor(speed, speedMach) {
+            super(speed);
+            this._speedMach = Number(speedMach);
+        }
+        get speedMach() {
+            return this._speedMach;
+        }
+        set speedMach(speedMach) {
+            this._speedMach = Number(speedMach);
+        }
+    }
+
+    class HDDescentSpeedRestriction extends HDSpeedRestriction {
+        /**
+         * TODO: Not implemented
+         * @returns {boolean}
+         */
+        isValid() {
+            return false;
+        }
+    }
+
+    class HDDescentSpeedTransition extends HDSpeedTransition {
+        constructor(speed = 240, altitude = 10000, isDeleted = false) {
+            super(speed, altitude, isDeleted);
+        }
+    }
+
+    class SpeedDirector {
+        constructor(speedManager) {
+            this._speedManager = speedManager;
+            /**
+             * TODO: FMC should be removed. All speed related values should be stored directly in SpeedDirector
+             * @private
+             */
+            this._commandedSpeedType = undefined;
+            this._lastCommandedSpeedType = undefined;
+            this._speedPhase = undefined;
+            this._lastSpeedPhase = undefined;
+            this._machMode = undefined;
+            this._lastMachMode = undefined;
+            this._lastSpeed = undefined;
+            this._speedCheck = undefined;
+            this.Init();
+        }
+        get descentSpeedEcon() {
+            return this._descentSpeedEcon;
+        }
+        set descentSpeedEcon(value) {
+            this._descentSpeedEcon = value;
+        }
+        get descentSpeedSelected() {
+            return this._descentSpeedSelected;
+        }
+        set descentSpeedSelected(value) {
+            this._descentSpeedSelected = value;
+        }
+        get descentSpeedTransition() {
+            return this._descentSpeedTransition;
+        }
+        set descentSpeedTransition(value) {
+            this._descentSpeedTransition = value;
+        }
+        get descentSpeedRestriction() {
+            return this._descentSpeedRestriction;
+        }
+        set descentSpeedRestriction(value) {
+            this._descentSpeedRestriction = value;
+        }
+        get cruiseSpeedEcon() {
+            return this._cruiseSpeedEcon;
+        }
+        set cruiseSpeedEcon(value) {
+            this._cruiseSpeedEcon = value;
+        }
+        get cruiseSpeedSelected() {
+            return this._cruiseSpeedSelected;
+        }
+        set cruiseSpeedSelected(value) {
+            this._cruiseSpeedSelected = value;
+        }
+        get climbSpeedEcon() {
+            return this._climbSpeedEcon;
+        }
+        set climbSpeedEcon(value) {
+            this._climbSpeedEcon = value;
+        }
+        get climbSpeedSelected() {
+            return this._climbSpeedSelected;
+        }
+        set climbSpeedSelected(value) {
+            this._climbSpeedSelected = value;
+        }
+        get climbSpeedTransition() {
+            return this._climbSpeedTransition;
+        }
+        set climbSpeedTransition(value) {
+            this._climbSpeedTransition = value;
+        }
+        get climbSpeedRestriction() {
+            return this._climbSpeedRestriction;
+        }
+        set climbSpeedRestriction(value) {
+            this._climbSpeedRestriction = value;
+        }
+        get accelerationSpeedRestriction() {
+            return this._accelerationSpeedRestriction;
+        }
+        set accelerationSpeedRestriction(value) {
+            this._accelerationSpeedRestriction = value;
+        }
+        Init() {
+            this._updateAltitude();
+            this._updateLastSpeed();
+            this._updateMachMode();
+            this._updateManagedSpeed();
+            this._initSpeeds();
+        }
+        _initSpeeds() {
+            this._accelerationSpeedRestriction = new HDAccelerationSpeedRestriction(this._speedManager.repository.v2Speed + 10, 1500, 1500);
+            this._overspeedProtection = new HDOverspeedProtection(null);
+            this._climbSpeedRestriction = new HDClimbSpeedRestriction(null, null);
+            this._climbSpeedTransition = new HDClimbSpeedTransition();
+            this._climbSpeedSelected = new HDClimbSpeed(null);
+            this._climbSpeedEcon = new HDClimbSpeed(this._speedManager.getEconClbManagedSpeed(0));
+            this._cruiseSpeedSelected = new HDCruiseSpeed(null, null);
+            this._cruiseSpeedEcon = new HDCruiseSpeed(this._speedManager.getEconCrzManagedSpeed(0), 0.85);
+            this._descentSpeedRestriction = new HDDescentSpeedRestriction(null, null);
+            this._descentSpeedTransition = new HDDescentSpeedTransition();
+            this._descentSpeedSelected = new HDDescentSpeed(null, null);
+            this._descentSpeedEcon = new HDDescentSpeed(282, null);
+            //		this._waypointSpeedConstraint = new WaypointSpeed(null, null);
+        }
+        get machModeActive() {
+            return this._machMode;
+        }
+        _updateMachMode() {
+            this._machMode = Simplane.getAutoPilotMachModeActive();
+            this._updateFmcIfNeeded();
+        }
+        _updateLastMachMode() {
+            this._lastMachMode = this._machMode;
+        }
+        _updateAltitude() {
+            this._planeAltitude = Simplane.getAltitude();
+        }
+        _updateManagedSpeed() {
+        }
+        _resolveMachKias(speed) {
+            if (this.machModeActive) {
+                const maxMachSpeed = 0.850;
+                const requestedSpeed = SimVar.GetGameVarValue('FROM KIAS TO MACH', 'number', speed.speed);
+                return Math.min(maxMachSpeed, requestedSpeed);
+            }
+            else {
+                return speed.speed;
+            }
+        }
+        get speed() {
+            switch (this.speedPhase) {
+                case exports.HDSpeedPhase.SPEED_PHASE_CLIMB:
+                    switch (this.commandedSpeedType) {
+                        case exports.HDSpeedType.SPEED_TYPE_RESTRICTION:
+                            return this._resolveMachKias(this._climbSpeedRestriction);
+                        case exports.HDSpeedType.SPEED_TYPE_TRANSITION:
+                            return this._resolveMachKias(this._climbSpeedTransition);
+                        case exports.HDSpeedType.SPEED_TYPE_SELECTED:
+                            return this._resolveMachKias(this._climbSpeedSelected);
+                        case exports.HDSpeedType.SPEED_TYPE_ACCELERATION:
+                            return this._resolveMachKias(this._accelerationSpeedRestriction);
+                        case exports.HDSpeedType.SPEED_TYPE_PROTECTED:
+                            return this._resolveMachKias(this._overspeedProtection);
+                        //					case SpeedType.SPEED_TYPE_WAYPOINT:
+                        //						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
+                        case exports.HDSpeedType.SPEED_TYPE_ECON:
+                            return this._resolveMachKias(this._climbSpeedEcon);
+                        default:
+                            return 133;
+                    }
+                    break;
+                case exports.HDSpeedPhase.SPEED_PHASE_CRUISE:
+                    switch (this.commandedSpeedType) {
+                        case exports.HDSpeedType.SPEED_TYPE_RESTRICTION:
+                        case exports.HDSpeedType.SPEED_TYPE_TRANSITION:
+                        case exports.HDSpeedType.SPEED_TYPE_ECON:
+                            return (this.machModeActive ? this._cruiseSpeedEcon.speedMach : this._cruiseSpeedEcon.speed);
+                        case exports.HDSpeedType.SPEED_TYPE_SELECTED:
+                            return (this.machModeActive ? (this._cruiseSpeedSelected.speedMach ? this._cruiseSpeedSelected.speedMach : this._resolveMachKias(this._cruiseSpeedSelected)) : this._cruiseSpeedSelected.speed);
+                        case exports.HDSpeedType.SPEED_TYPE_PROTECTED:
+                            return this._resolveMachKias(this._overspeedProtection);
+                        //					case SpeedType.SPEED_TYPE_WAYPOINT:
+                        //						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
+                    }
+                    break;
+                case exports.HDSpeedPhase.SPEED_PHASE_DESCENT:
+                    switch (this.commandedSpeedType) {
+                        case exports.HDSpeedType.SPEED_TYPE_RESTRICTION:
+                            return this._resolveMachKias(this._descentSpeedRestriction);
+                        case exports.HDSpeedType.SPEED_TYPE_TRANSITION:
+                            return this._resolveMachKias(this._descentSpeedTransition);
+                        case exports.HDSpeedType.SPEED_TYPE_SELECTED:
+                            return (this.machModeActive ? (this._descentSpeedSelected.speedMach ? this._descentSpeedSelected.speedMach : this._resolveMachKias(this._descentSpeedSelected)) : this._descentSpeedSelected.speed);
+                        case exports.HDSpeedType.SPEED_TYPE_ECON:
+                            return this._resolveMachKias(this._descentSpeedEcon);
+                        case exports.HDSpeedType.SPEED_TYPE_PROTECTED:
+                            return this._resolveMachKias(this._overspeedProtection);
+                        //					case SpeedType.SPEED_TYPE_WAYPOINT:
+                        //						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
+                    }
+                    break;
+                case exports.HDSpeedPhase.SPEED_PHASE_APPROACH:
+                    switch (this.commandedSpeedType) {
+                        case exports.HDSpeedType.SPEED_TYPE_RESTRICTION:
+                            return this._resolveMachKias(this._descentSpeedRestriction);
+                        case exports.HDSpeedType.SPEED_TYPE_TRANSITION:
+                            return this._resolveMachKias(this._descentSpeedTransition);
+                        case exports.HDSpeedType.SPEED_TYPE_SELECTED:
+                            return (this.machModeActive ? (this._descentSpeedSelected.speedMach ? this._descentSpeedSelected.speedMach : this._resolveMachKias(this._descentSpeedSelected)) : this._descentSpeedSelected.speed);
+                        case exports.HDSpeedType.SPEED_TYPE_ECON:
+                            return this._resolveMachKias(this._descentSpeedEcon);
+                        case exports.HDSpeedType.SPEED_TYPE_PROTECTED:
+                            return this._resolveMachKias(this._overspeedProtection);
+                        //					case SpeedType.SPEED_TYPE_WAYPOINT:
+                        //						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
+                    }
+                    break;
+            }
+        }
+        get speedPhase() {
+            return this._speedPhase;
+        }
+        get commandedSpeedType() {
+            return this._commandedSpeedType;
+        }
+        _updateLastSpeed() {
+            this._lastSpeed = (this.speed ? this.speed : undefined);
+        }
+        _updateCheckSpeed() {
+            this._speedCheck = this.speed;
+        }
+        update(flightPhase, costIndexCoefficient) {
+            this._costIndexCoefficient = costIndexCoefficient;
+            this._updateAltitude();
+            this._updateLastSpeed();
+            switch (flightPhase) {
+                case FlightPhase.FLIGHT_PHASE_PREFLIGHT:
+                case FlightPhase.FLIGHT_PHASE_TAXI:
+                case FlightPhase.FLIGHT_PHASE_TAKEOFF:
+                case FlightPhase.FLIGHT_PHASE_CLIMB:
+                case FlightPhase.FLIGHT_PHASE_GOAROUND:
+                    this._updateClimbSpeed();
+                    break;
+                case FlightPhase.FLIGHT_PHASE_CRUISE:
+                    this._updateCruiseSpeed();
+                    break;
+                case FlightPhase.FLIGHT_PHASE_DESCENT:
+                    this._updateDescentSpeed();
+                    break;
+                case FlightPhase.FLIGHT_PHASE_APPROACH:
+                    this._updateApproachSpeed();
+                    break;
+            }
+            this._updateCheckSpeed();
+        }
+        _updateClimbSpeed() {
+            let speed = {
+                [exports.HDSpeedType.SPEED_TYPE_RESTRICTION]: (this._climbSpeedRestriction && this._climbSpeedRestriction.isValid() ? this._climbSpeedRestriction.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_TRANSITION]: (this._climbSpeedTransition && this._climbSpeedTransition.isValid() ? this._climbSpeedTransition.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_ACCELERATION]: (this._accelerationSpeedRestriction && this._accelerationSpeedRestriction.isValid() ? this._accelerationSpeedRestriction.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_SELECTED]: (this._climbSpeedSelected && this._climbSpeedSelected.isValid() ? this._climbSpeedSelected.speed : false),
+                //[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_ECON]: (this._climbSpeedEcon && this._climbSpeedEcon.isValid() ? this._climbSpeedEcon.speed : false)
+            };
+            this._updateLastCommandedSpeed();
+            this._updateLastMachMode();
+            let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+                return speed[value] < speed[accumulator] ? value : accumulator;
+            }, exports.HDSpeedType.SPEED_TYPE_ECON);
+            this._updateCommandedSpeed(commandedSpeedKey, exports.HDSpeedPhase.SPEED_PHASE_CLIMB);
+            this._updateMachMode();
+        }
+        _updateCruiseSpeed() {
+            let speed = {
+                [exports.HDSpeedType.SPEED_TYPE_SELECTED]: (this._cruiseSpeedSelected && this._cruiseSpeedSelected.isValid() ? this._cruiseSpeedSelected.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+                //[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_ECON]: (this._cruiseSpeedEcon && this._cruiseSpeedEcon.isValid() ? this._cruiseSpeedEcon.speed : null)
+            };
+            this._updateLastCommandedSpeed();
+            this._updateLastMachMode();
+            let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+                return speed[value] < speed[accumulator] ? value : accumulator;
+            }, exports.HDSpeedType.SPEED_TYPE_ECON);
+            this._updateCommandedSpeed(commandedSpeedKey, exports.HDSpeedPhase.SPEED_PHASE_CRUISE);
+            this._updateMachMode();
+        }
+        _updateDescentSpeed() {
+            let speed = {
+                [exports.HDSpeedType.SPEED_TYPE_RESTRICTION]: (this._descentSpeedRestriction && this._descentSpeedRestriction.isValid() ? this._descentSpeedRestriction.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_TRANSITION]: (this._descentSpeedTransition && this._descentSpeedTransition.isValid() ? this._descentSpeedTransition.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_SELECTED]: (this._descentSpeedSelected && this._descentSpeedSelected.isValid() ? this._descentSpeedSelected.speed : false),
+                //[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_ECON]: (this._descentSpeedEcon && this._descentSpeedEcon.isValid() ? this._descentSpeedEcon.speed : false)
+            };
+            this._updateLastCommandedSpeed();
+            this._updateLastMachMode();
+            let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+                return speed[value] < speed[accumulator] ? value : accumulator;
+            }, exports.HDSpeedType.SPEED_TYPE_ECON);
+            this._updateCommandedSpeed(commandedSpeedKey, exports.HDSpeedPhase.SPEED_PHASE_DESCENT);
+            this._updateMachMode();
+        }
+        _updateApproachSpeed() {
+            let speed = {
+                [exports.HDSpeedType.SPEED_TYPE_RESTRICTION]: (this._descentSpeedRestriction && this._descentSpeedRestriction.isValid() ? this._descentSpeedRestriction.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_TRANSITION]: (this._descentSpeedTransition && this._descentSpeedTransition.isValid() ? this._descentSpeedTransition.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_SELECTED]: (this._descentSpeedSelected && this._descentSpeedSelected.isValid() ? this._descentSpeedSelected.speed : false),
+                [exports.HDSpeedType.SPEED_TYPE_ECON]: (this._descentSpeedEcon && this._descentSpeedEcon.isValid() ? this._descentSpeedEcon.speed : false)
+            };
+            this._updateLastCommandedSpeed();
+            this._updateLastMachMode();
+            let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+                return speed[value] < speed[accumulator] ? value : accumulator;
+            }, exports.HDSpeedType.SPEED_TYPE_ECON);
+            this._updateCommandedSpeed(commandedSpeedKey, exports.HDSpeedPhase.SPEED_PHASE_APPROACH);
+            this._updateMachMode();
+        }
+        _updateLastCommandedSpeed() {
+            this._lastCommandedSpeedType = this._commandedSpeedType;
+            this._lastSpeedPhase = this._speedPhase;
+        }
+        _updateCommandedSpeed(speedType, speedPhase) {
+            /**
+             * commandedSpeedType has to be retyped to NUMBER because array filter returns KEY as STRING
+             * @type {number}
+             */
+            this._commandedSpeedType = Number(speedType);
+            this._speedPhase = Number(speedPhase);
+            this._updateFmcIfNeeded();
+        }
+        _updateFmcIfNeeded() {
+            if (this._lastCommandedSpeedType !== this._commandedSpeedType || this._lastSpeedPhase !== this._speedPhase || this._lastMachMode !== this._machMode || this._lastSpeed !== this._speedCheck) {
+                SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
+            }
+        }
+    }
+
     (function (HeavyDivision) {
         class Configuration {
             static activeFlightPlanSynchronizationStrategy() {
@@ -1575,6 +2126,7 @@
     exports.SettableHighlighterRendererMiddleware = SettableHighlighterRendererMiddleware;
     exports.DefaultRendererTemplater = DefaultRendererTemplater;
     exports.NaturalRendererTemplater = NaturalRendererTemplater;
+    exports.SpeedDirector = SpeedDirector;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

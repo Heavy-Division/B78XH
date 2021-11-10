@@ -2,6 +2,73 @@ export class SpeedCalculator {
 	private flapsFallback;
 	private weightFallback;
 
+	getClbManagedSpeed(costIndexCoefficient: number, overSpeedLimitThreshold: boolean): { speed: number, overSpeedLimitThreshold: boolean } {
+		const formula = (costIndexCoefficient) => {
+			return 310 * (1 - costIndexCoefficient) + 330 * costIndexCoefficient;
+		};
+		let speed = this.calculate(formula, costIndexCoefficient);
+		if (overSpeedLimitThreshold) {
+			if (Simplane.getAltitude() < 9800) {
+				overSpeedLimitThreshold = false;
+			}
+		} else if (!overSpeedLimitThreshold) {
+			if (Simplane.getAltitude() >= 10000) {
+				/**
+				 * TODO: Figure out where to store property isFmcCurrentPageUpdatedAboveTenThousandFeet
+				 */
+				//if (!this._isFmcCurrentPageUpdatedAboveTenThousandFeet) {
+				//	SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+				//	this._isFmcCurrentPageUpdatedAboveTenThousandFeet = true;
+				//}
+				overSpeedLimitThreshold = true;
+			}
+		}
+		return {speed: speed, overSpeedLimitThreshold: overSpeedLimitThreshold};
+	}
+
+	public getCrzManagedSpeed(costIndexCoefficient: number, overSpeedLimitThreshold: boolean, highAltitude = false): { speed: number, overSpeedLimitThreshold: boolean } {
+		const formula = (costIndexCoefficient) => {
+			costIndexCoefficient = costIndexCoefficient * costIndexCoefficient;
+			return 310 * (1 - costIndexCoefficient) + 330 * costIndexCoefficient;
+		};
+		let speed = this.calculate(formula, costIndexCoefficient);
+		if (!highAltitude) {
+			if (overSpeedLimitThreshold) {
+				if (Simplane.getAltitude() < 9800) {
+					speed = Math.min(speed, 250);
+					overSpeedLimitThreshold = false;
+				}
+			} else if (!overSpeedLimitThreshold) {
+				if (Simplane.getAltitude() < 10000) {
+					speed = Math.min(speed, 250);
+				} else {
+					overSpeedLimitThreshold = true;
+				}
+			}
+		}
+		return {speed: speed, overSpeedLimitThreshold: overSpeedLimitThreshold};
+	}
+
+	public getDesManagedSpeed(costIndexCoefficient: number, overSpeedLimitThreshold: boolean): { speed: number, overSpeedLimitThreshold: boolean } {
+		const formula = (costIndexCoefficient) => {
+			return 280 * (1 - costIndexCoefficient) + 300 * costIndexCoefficient;
+		};
+		let speed = this.calculate(formula, costIndexCoefficient);
+		if (overSpeedLimitThreshold) {
+			if (Simplane.getAltitude() < 10700) {
+				speed = Math.min(speed, 240);
+				overSpeedLimitThreshold = false;
+			}
+		} else if (!overSpeedLimitThreshold) {
+			if (Simplane.getAltitude() < 10700) {
+				speed = Math.min(speed, 240);
+			} else {
+				overSpeedLimitThreshold = true;
+			}
+		}
+		return {speed: speed, overSpeedLimitThreshold: overSpeedLimitThreshold};
+	}
+
 	public cleanApproachSpeed(weight: number = undefined): number {
 		let formula = (weight) => {
 			let dWeight = (weight - 200) / (528 - 200);

@@ -69,6 +69,18 @@
 
     class SpeedManager {
         constructor(repository, calculator) {
+            /**
+             * TODO: Should be this here???
+             * @type {boolean}
+             * @private
+             */
+            this.overSpeedLimitThreshold = false;
+            /**
+             * TODO: Move to some kind of state class??
+             * @type {boolean}
+             * @private
+             */
+            this._climbSpeedTransitionDeleted = false;
             this._speedRepository = repository;
             this._speedCalculator = calculator;
         }
@@ -166,6 +178,30 @@
         }
         getVRef(flapsHandleIndex = NaN) {
             return this.calculator.getVRef(flapsHandleIndex);
+        }
+        getClbManagedSpeed(costIndexCoefficient) {
+            const result = this.calculator.getClbManagedSpeed(costIndexCoefficient, this.overSpeedLimitThreshold);
+            this.overSpeedLimitThreshold = result.overSpeedLimitThreshold;
+            if (!this._climbSpeedTransitionDeleted) {
+                result.speed = Math.min(result.speed, 250);
+            }
+            return result.speed;
+        }
+        getEconClbManagedSpeed(costIndexCoefficient) {
+            return this.getEconCrzManagedSpeed(costIndexCoefficient);
+        }
+        getEconCrzManagedSpeed(costIndexCoefficient) {
+            return this.getCrzManagedSpeed(costIndexCoefficient, true);
+        }
+        getCrzManagedSpeed(costIndexCoefficient, highAltitude = false) {
+            const result = this.calculator.getCrzManagedSpeed(costIndexCoefficient, this.overSpeedLimitThreshold, highAltitude);
+            this.overSpeedLimitThreshold = result.overSpeedLimitThreshold;
+            return result.speed;
+        }
+        getDesManagedSpeed(costIndexCoefficient) {
+            const result = this.calculator.getDesManagedSpeed(costIndexCoefficient, this.overSpeedLimitThreshold);
+            this.overSpeedLimitThreshold = result.overSpeedLimitThreshold;
+            return result.speed;
         }
         static _getRunwayCoefficient(runway) {
             if (runway) {
@@ -335,6 +371,75 @@
     ];
 
     class SpeedCalculator {
+        getClbManagedSpeed(costIndexCoefficient, overSpeedLimitThreshold) {
+            const formula = (costIndexCoefficient) => {
+                return 310 * (1 - costIndexCoefficient) + 330 * costIndexCoefficient;
+            };
+            let speed = this.calculate(formula, costIndexCoefficient);
+            if (overSpeedLimitThreshold) {
+                if (Simplane.getAltitude() < 9800) {
+                    overSpeedLimitThreshold = false;
+                }
+            }
+            else if (!overSpeedLimitThreshold) {
+                if (Simplane.getAltitude() >= 10000) {
+                    /**
+                     * TODO: Figure out where to store property isFmcCurrentPageUpdatedAboveTenThousandFeet
+                     */
+                    //if (!this._isFmcCurrentPageUpdatedAboveTenThousandFeet) {
+                    //	SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+                    //	this._isFmcCurrentPageUpdatedAboveTenThousandFeet = true;
+                    //}
+                    overSpeedLimitThreshold = true;
+                }
+            }
+            return { speed: speed, overSpeedLimitThreshold: overSpeedLimitThreshold };
+        }
+        getCrzManagedSpeed(costIndexCoefficient, overSpeedLimitThreshold, highAltitude = false) {
+            const formula = (costIndexCoefficient) => {
+                costIndexCoefficient = costIndexCoefficient * costIndexCoefficient;
+                return 310 * (1 - costIndexCoefficient) + 330 * costIndexCoefficient;
+            };
+            let speed = this.calculate(formula, costIndexCoefficient);
+            if (!highAltitude) {
+                if (overSpeedLimitThreshold) {
+                    if (Simplane.getAltitude() < 9800) {
+                        speed = Math.min(speed, 250);
+                        overSpeedLimitThreshold = false;
+                    }
+                }
+                else if (!overSpeedLimitThreshold) {
+                    if (Simplane.getAltitude() < 10000) {
+                        speed = Math.min(speed, 250);
+                    }
+                    else {
+                        overSpeedLimitThreshold = true;
+                    }
+                }
+            }
+            return { speed: speed, overSpeedLimitThreshold: overSpeedLimitThreshold };
+        }
+        getDesManagedSpeed(costIndexCoefficient, overSpeedLimitThreshold) {
+            const formula = (costIndexCoefficient) => {
+                return 280 * (1 - costIndexCoefficient) + 300 * costIndexCoefficient;
+            };
+            let speed = this.calculate(formula, costIndexCoefficient);
+            if (overSpeedLimitThreshold) {
+                if (Simplane.getAltitude() < 10700) {
+                    speed = Math.min(speed, 240);
+                    overSpeedLimitThreshold = false;
+                }
+            }
+            else if (!overSpeedLimitThreshold) {
+                if (Simplane.getAltitude() < 10700) {
+                    speed = Math.min(speed, 240);
+                }
+                else {
+                    overSpeedLimitThreshold = true;
+                }
+            }
+            return { speed: speed, overSpeedLimitThreshold: overSpeedLimitThreshold };
+        }
         cleanApproachSpeed(weight = undefined) {
             let formula = (weight) => {
                 let dWeight = (weight - 200) / (528 - 200);
@@ -402,8 +507,6 @@
                 return weight;
             }
         }
-        _getFlapsHandleIndex() {
-        }
         _getCurrentWeight(useLbs = false) {
             return (useLbs ? Simplane.getWeight() * 2.20462262 : Simplane.getWeight());
         }
@@ -437,8 +540,6 @@
             this.transitionAltitude = 5000;
             this.perfTOTemp = 20;
             this.overSpeedLimitThreshold = false;
-            this._overridenFlapApproachSpeed = NaN;
-            this._overridenSlatApproachSpeed = NaN;
             this.taxiFuelWeight = 0.2;
             this._routeFinalFuelWeight = NaN;
             this._routeFinalFuelTime = NaN;
@@ -1527,77 +1628,6 @@
                 }
             }
             return speed;
-        }
-        getFlapApproachSpeed(useCurrentWeight = true) {
-            if (isFinite(this._overridenFlapApproachSpeed)) {
-                return this._overridenFlapApproachSpeed;
-            }
-            let dWeight = ((useCurrentWeight ? this.getWeight() : this.zeroFuelWeight) - 42) / (75 - 42);
-            dWeight = Math.min(Math.max(dWeight, 0), 1);
-            let base = Math.max(150, this.speedManager.getVLS(this.getWeight()) + 5);
-            return base + 40 * dWeight;
-        }
-        setFlapApproachSpeed(s) {
-            if (s === BaseFMC.clrValue) {
-                this._overridenFlapApproachSpeed = NaN;
-                return true;
-            }
-            let v = parseFloat(s);
-            if (isFinite(v)) {
-                if (v > 0 && v < 300) {
-                    this._overridenFlapApproachSpeed = v;
-                    return true;
-                }
-            }
-            this.showErrorMessage(this.defaultInputErrorMessage);
-            return false;
-        }
-        getSlatApproachSpeed(useCurrentWeight = true) {
-            if (isFinite(this._overridenSlatApproachSpeed)) {
-                return this._overridenSlatApproachSpeed;
-            }
-            let dWeight = ((useCurrentWeight ? this.getWeight() : this.zeroFuelWeight) - 42) / (75 - 42);
-            dWeight = Math.min(Math.max(dWeight, 0), 1);
-            let base = Math.max(157, this.speedManager.getVLS(this.getWeight()) + 5);
-            return base + 40 * dWeight;
-        }
-        setSlatApproachSpeed(s) {
-            if (s === BaseFMC.clrValue) {
-                this._overridenSlatApproachSpeed = NaN;
-                return true;
-            }
-            let v = parseFloat(s);
-            if (isFinite(v)) {
-                if (v > 0 && v < 300) {
-                    this._overridenSlatApproachSpeed = v;
-                    return true;
-                }
-            }
-            this.showErrorMessage(this.defaultInputErrorMessage);
-            return false;
-        }
-        getCleanApproachSpeed() {
-            let dWeight = (this.getWeight() - 42) / (75 - 42);
-            dWeight = Math.min(Math.max(dWeight, 0), 1);
-            let base = Math.max(172, this.speedManager.getVLS(this.getWeight()) + 5);
-            return base + 40 * dWeight;
-        }
-        getManagedApproachSpeed(flapsHandleIndex = NaN) {
-            if (isNaN(flapsHandleIndex)) {
-                flapsHandleIndex = Simplane.getFlapsHandleIndex();
-            }
-            if (flapsHandleIndex === 0) {
-                return this.speedManager.getCleanApproachSpeed(this.getWeight(true));
-            }
-            else if (flapsHandleIndex === 1) {
-                return this.speedManager.getSlatApproachSpeed(this.getWeight(true));
-            }
-            else if (flapsHandleIndex === 2) {
-                return this.speedManager.getFlapApproachSpeed(this.getWeight(true));
-            }
-            else {
-                return this.getVApp();
-            }
         }
         updateCleanApproachSpeed() {
             let apprGreenDotSpeed = this.speedManager.getCleanApproachSpeed(this.getWeight(true));
@@ -3063,1588 +3093,6 @@
     BaseFMC.clrValue = ' CLR ';
     BaseFMC._AvailableKeys = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
 
-    class Boeing_FMC extends BaseFMC {
-        constructor() {
-            super();
-            this._forceNextAltitudeUpdate = false;
-            this._lastTargetAirspeed = 200;
-            this._isLNAVActive = false;
-            this._pendingLNAVActivation = false;
-            this._isVNAVActive = false;
-            this._pendingVNAVActivation = false;
-            this._isFLCHActive = false;
-            this._pendingFLCHActivation = false;
-            this._isSPDActive = false;
-            this._pendingSPDActivation = false;
-            this._isSpeedInterventionActive = false;
-            this._isHeadingHoldActive = false;
-            this._headingHoldValue = 0;
-            this._pendingHeadingSelActivation = false;
-            this._isVSpeedActive = false;
-            this._isAltitudeHoldActive = false;
-            this._altitudeHoldValue = 0;
-            this._onAltitudeHoldDeactivate = EmptyCallback.Void;
-            this._isRouteActivated = false;
-            this._fpHasChanged = false;
-            this._activatingDirectTo = false;
-            /**
-             * Reason of this property is wrong activeRoute function and wrong using of _isRouteActivated property.
-             * Normal behavior is that once route is activated by ACTIVATE prompt and EXEC all others modifications of route
-             * automatically activate EXEC for direct executing and storing the changes in FMC.
-             * When route is not activated by ACTIVATE prompt any changes do not activate EXEC and only way to activate
-             * the EXEC is use ACTIVATE prompt
-             *
-             * ASOBO behavior:
-             * _isRouteActivated is used as flag for awaiting changes for execution in a route and as EXEC illumination FLAG.
-             *
-             * STATES OF ROUTE:
-             *
-             * NOT ACTIVATED -> Route is not activated -> ACTIVATE prompt not pushed and EXECUTED, changes in route do not illuminate EXEC
-             * ACTIVATED -> Route is activated -> ACTIVATE prompt pushed and EXECUTED, changes in route illuminate EXEC
-             * MODIFIED -> Route is modified -> ACTIVATED and changes awaiting for execution (EXEC illuminating)
-             *
-             * This property holds ACTIVATED / NOT ACTIVATED state because of the misuse of _isRouteActivated in default Asobo implementation
-             * @type {boolean}
-             * @private
-             */
-            this._isMainRouteActivated = false;
-            this.dataHolder = new FMCDataHolder();
-            this.messageManager = new FMCMessagesManager();
-            this.onExec = undefined;
-            this.onExecPage = undefined;
-            this.onExecDefault = undefined;
-            this._navModeSelector = undefined;
-        }
-        setTakeOffFlap(s) {
-            let value = Number.parseInt(s);
-            if (isFinite(value)) {
-                /**
-                 * Only flaps 5, 10, 15, 17, 18, 20 can be set for takeoff
-                 */
-                if ([5, 10, 15, 17, 18, 20].indexOf(value) !== -1) {
-                    this._takeOffFlap = value;
-                    /**
-                     * Automatically clear all vSpeeds after flaps change
-                     */
-                    this.speedManager.clearVSpeeds();
-                    return true;
-                }
-            }
-            this.showErrorMessage(this.defaultInputErrorMessage);
-            return false;
-        }
-        // Property for EXEC handling
-        get fpHasChanged() {
-            return this._fpHasChanged;
-        }
-        set fpHasChanged(value) {
-            this._fpHasChanged = value;
-        }
-        /**
-         * Speed Intervention FIX
-         */
-        getIsSpeedInterventionActive() {
-            return this._isSpeedInterventionActive;
-        }
-        toggleSpeedIntervention() {
-            if (this.getIsSpeedInterventionActive()) {
-                this.deactivateSpeedIntervention();
-            }
-            else {
-                this.activateSpeedIntervention();
-            }
-        }
-        activateSpeedIntervention() {
-            if (!this.getIsVNAVActive()) {
-                return;
-            }
-            this._isSpeedInterventionActive = true;
-            if (Simplane.getAutoPilotMachModeActive()) {
-                let currentMach = Simplane.getAutoPilotMachHoldValue();
-                Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
-            }
-            else {
-                let currentSpeed = Simplane.getAutoPilotAirspeedHoldValue();
-                Coherent.call('AP_SPD_VAR_SET', 1, currentSpeed);
-            }
-            SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', 'number', 1);
-            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
-            if (this.aircraftType == Aircraft.AS01B) {
-                this.activateSPD();
-            }
-        }
-        deactivateSpeedIntervention() {
-            this._isSpeedInterventionActive = false;
-            SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', 'number', 0);
-            if (this.getIsVNAVActive()) {
-                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 2);
-            }
-        }
-        activateSPD() {
-            if (this.getIsVNAVActive() && this.aircraftType != Aircraft.AS01B) {
-                return;
-            }
-            let altitude = Simplane.getAltitudeAboveGround();
-            if (altitude < 400) {
-                this._pendingSPDActivation = true;
-            }
-            else {
-                this.doActivateSPD();
-            }
-            SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', 'number', 1);
-            this._isSPDActive = true;
-        }
-        doActivateSPD() {
-            this._pendingSPDActivation = false;
-            if (Simplane.getAutoPilotMachModeActive()) {
-                let currentMach = Simplane.getAutoPilotMachHoldValue();
-                Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
-                SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_ON', 'number', 1);
-            }
-            else {
-                let currentSpeed = Simplane.getAutoPilotAirspeedHoldValue();
-                Coherent.call('AP_SPD_VAR_SET', 1, currentSpeed);
-                SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_OFF', 'number', 1);
-            }
-            if (!this._isFLCHActive) {
-                this.setAPSpeedHoldMode();
-            }
-            this.setThrottleMode(ThrottleMode.AUTO);
-            let stayManagedSpeed = (this._pendingVNAVActivation || this._isVNAVActive) && !this._isSpeedInterventionActive;
-            if (!stayManagedSpeed) {
-                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
-            }
-        }
-        deactivateSPD() {
-            SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', 'number', 0);
-            this._isSPDActive = false;
-            this._pendingSPDActivation = false;
-        }
-        Init() {
-            super.Init();
-            this.maxCruiseFL = 450;
-            this.onDel = () => {
-                if (this.inOut.length === 0) {
-                    this.inOut = 'DELETE';
-                }
-            };
-            this.onClr = () => {
-                if (this.isDisplayingErrorMessage) {
-                    this.inOut = this.lastUserInput;
-                    this.isDisplayingErrorMessage = false;
-                }
-                else if (this.inOut.length > 0) {
-                    if (this.inOut === 'DELETE') {
-                        this.inOut = '';
-                    }
-                    else {
-                        this.inOut = this.inOut.substr(0, this.inOut.length - 1);
-                    }
-                }
-            };
-            this.onExec = () => {
-                if (this.onExecPage) {
-                    console.log('if this.onExecPage');
-                    this.onExecPage();
-                }
-                else {
-                    console.log('else this.onExecPage');
-                    this._isRouteActivated = false;
-                    this.fpHasChanged = false;
-                    this._activatingDirectTo = false;
-                }
-            };
-            this.onExecPage = undefined;
-            this.onExecDefault = () => {
-                if (this.getIsRouteActivated() && !this._activatingDirectTo) {
-                    this.insertTemporaryFlightPlan(() => {
-                        this.copyAirwaySelections();
-                        this._isRouteActivated = false;
-                        this._activatingDirectToExisting = false;
-                        this.fpHasChanged = false;
-                        SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
-                        if (this.refreshPageCallback) {
-                            this.refreshPageCallback();
-                        }
-                    });
-                }
-                else if (this.getIsRouteActivated() && this._activatingDirectTo) {
-                    const activeIndex = this.flightPlanManager.getActiveWaypointIndex();
-                    this.insertTemporaryFlightPlan(() => {
-                        this.flightPlanManager.activateDirectToByIndex(activeIndex, () => {
-                            this.copyAirwaySelections();
-                            this._isRouteActivated = false;
-                            this._activatingDirectToExisting = false;
-                            this._activatingDirectTo = false;
-                            this.fpHasChanged = false;
-                            SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
-                            if (this.refreshPageCallback) {
-                                this.refreshPageCallback();
-                            }
-                        });
-                    });
-                }
-                else {
-                    this.fpHasChanged = false;
-                    this._isRouteActivated = false;
-                    SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
-                    if (this.refreshPageCallback) {
-                        this._activatingDirectTo = false;
-                        this.fpHasChanged = false;
-                        this.refreshPageCallback();
-                    }
-                }
-            };
-            let flapAngles = [0, 1, 5, 10, 15, 17, 18, 20, 25, 30];
-            let flapIndex = Simplane.getFlapsHandleIndex(true);
-            if (flapIndex >= 1) {
-                this._takeOffFlap = flapAngles[flapIndex];
-            }
-        }
-        /**
-         * TODO: Better to use synchronizeTemporaryAndActiveFlightPlanWaypoints in future
-         * (implementation can be found in source code prior 0.1.10 version)
-         */
-        // Copy airway selections from temporary to active flightplan
-        copyAirwaySelections() {
-            const temporaryFPWaypoints = this.flightPlanManager.getWaypoints(1);
-            const activeFPWaypoints = this.flightPlanManager.getWaypoints(0);
-            for (let i = 0; i < activeFPWaypoints.length; i++) {
-                if (activeFPWaypoints[i].infos && temporaryFPWaypoints[i] && activeFPWaypoints[i].icao === temporaryFPWaypoints[i].icao && temporaryFPWaypoints[i].infos) {
-                    activeFPWaypoints[i].infos.airwayIn = temporaryFPWaypoints[i].infos.airwayIn;
-                    activeFPWaypoints[i].infos.airwayOut = temporaryFPWaypoints[i].infos.airwayOut;
-                }
-            }
-        }
-        onFMCFlightPlanLoaded() {
-            let runway = this.flightPlanManager.getDepartureRunway();
-            if (!runway) {
-                runway = this.flightPlanManager.getDetectedCurrentRunway();
-            }
-            const weight = this.getWeight(true);
-            const flaps = this.getTakeOffFlap();
-            let vRSpeed = this.speedManager.getComputedVRSpeed(runway, weight, flaps);
-            SimVar.SetSimVarValue('FLY ASSISTANT TAKEOFF SPEED ESTIMATED', 'Knots', vRSpeed);
-        }
-        activateRoute(directTo = false, callback = EmptyCallback.Void) {
-            if (directTo) {
-                this._activatingDirectTo = true;
-            }
-            this.fpHasChanged = true;
-            if (this._isMainRouteActivated) {
-                this._isRouteActivated = true;
-                SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 1);
-            }
-            callback();
-        }
-        eraseRouteModifications() {
-            this.fpHasChanged = false;
-            this._activatingDirectTo = false;
-            this._isRouteActivated = false;
-            SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
-        }
-        activateMainRoute(callback = EmptyCallback.Void) {
-            this._isMainRouteActivated = true;
-            this.activateRoute(false, callback);
-        }
-        //function added to set departure enroute transition index
-        setDepartureEnrouteTransitionIndex(departureEnrouteTransitionIndex, callback = EmptyCallback.Boolean) {
-            this.ensureCurrentFlightPlanIsTemporary(() => {
-                this.flightPlanManager.setDepartureEnRouteTransitionIndex(departureEnrouteTransitionIndex, () => {
-                    callback(true);
-                });
-            });
-        }
-        //function added to set arrival runway transition index
-        setArrivalRunwayTransitionIndex(arrivalRunwayTransitionIndex, callback = EmptyCallback.Boolean) {
-            this.ensureCurrentFlightPlanIsTemporary(() => {
-                this.flightPlanManager.setArrivalRunwayIndex(arrivalRunwayTransitionIndex, () => {
-                    callback(true);
-                });
-            });
-        }
-        setArrivalAndRunwayIndex(arrivalIndex, enrouteTransitionIndex, callback = EmptyCallback.Boolean) {
-            this.ensureCurrentFlightPlanIsTemporary(() => {
-                let landingRunway = this.vfrLandingRunway;
-                if (landingRunway === undefined) {
-                    landingRunway = this.flightPlanManager.getApproachRunway();
-                }
-                this.flightPlanManager.setArrivalProcIndex(arrivalIndex, () => {
-                    this.flightPlanManager.setArrivalEnRouteTransitionIndex(enrouteTransitionIndex, () => {
-                        if (landingRunway) {
-                            const arrival = this.flightPlanManager.getArrival();
-                            const arrivalRunwayIndex = arrival.runwayTransitions.findIndex(t => {
-                                return t.name.indexOf(landingRunway.designation) != -1;
-                            });
-                            if (arrivalRunwayIndex >= -1) {
-                                return this.flightPlanManager.setArrivalRunwayIndex(arrivalRunwayIndex, () => {
-                                    return callback(true);
-                                });
-                            }
-                        }
-                        return callback(true);
-                    });
-                });
-            });
-        }
-        toggleLNAV() {
-        }
-        toggleHeadingHold() {
-        }
-        activateAltitudeSel() {
-        }
-        onEvent(_event) {
-            super.onEvent(_event);
-            console.log('B747_8_FMC_MainDisplay onEvent ' + _event);
-            if (_event.indexOf('AP_LNAV') != -1) {
-                if (this._isMainRouteActivated) {
-                    this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
-                }
-                else {
-                    this.messageManager.showMessage('NO ACTIVE ROUTE', 'ACTIVATE ROUTE TO <br> ENGAGE LNAV');
-                }
-            }
-            else if (_event.indexOf('AP_VNAV') != -1) {
-                this.toggleVNAV();
-            }
-            else if (_event.indexOf('AP_FLCH') != -1) {
-                this.toggleFLCH();
-            }
-            else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
-                this._navModeSelector.onNavChangedEvent('HDG_HOLD_PRESSED');
-            }
-            else if (_event.indexOf('AP_HEADING_SEL') != -1) {
-                this._navModeSelector.onNavChangedEvent('HDG_SEL_PRESSED');
-            }
-            else if (_event.indexOf('AP_SPD') != -1) {
-                if (this.aircraftType === Aircraft.AS01B) {
-                    if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
-                        this.activateSPD();
-                    }
-                    else {
-                        this.deactivateSPD();
-                    }
-                }
-                else {
-                    if ((this.getIsAltitudeHoldActive() || this.getIsVSpeedActive()) && this.getIsTHRActive()) {
-                        this.toggleSPD();
-                    }
-                }
-            }
-            else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
-                this.toggleSpeedIntervention();
-            }
-            else if (_event.indexOf('AP_VSPEED') != -1) {
-                this.toggleVSpeed();
-            }
-            else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
-                this.activateAltitudeSel();
-            }
-            else if (_event.indexOf('AP_ALT_HOLD') != -1) {
-                this.toggleAltitudeHold();
-            }
-            else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
-                this.setAPSpeedHoldMode();
-                if (this.aircraftType == Aircraft.AS01B) {
-                    this.deactivateSPD();
-                }
-                this.setThrottleMode(ThrottleMode.TOGA);
-                if (Simplane.getIndicatedSpeed() > 80) {
-                    this.deactivateLNAV();
-                    this.deactivateVNAV();
-                }
-            }
-            else if (_event.indexOf('EXEC') != -1) {
-                this.onExec();
-            }
-        }
-        getIsLNAVArmed() {
-            return this._pendingLNAVActivation;
-        }
-        getIsLNAVActive() {
-            return this._isLNAVActive;
-        }
-        activateLNAV() {
-            if (this.flightPlanManager.getWaypointsCount() === 0) {
-                return;
-            }
-            Simplane.setAPLNAVArmed(1);
-            let altitude = Simplane.getAltitudeAboveGround();
-            if (altitude < 50) {
-                this._pendingLNAVActivation = true;
-            }
-            else {
-                this.doActivateLNAV();
-            }
-            this.deactivateHeadingHold();
-        }
-        doActivateLNAV() {
-            this._isLNAVActive = true;
-            this._pendingLNAVActivation = false;
-            if (SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', 'boolean')) {
-                return;
-            }
-            Simplane.setAPLNAVActive(1);
-            SimVar.SetSimVarValue('K:AP_NAV1_HOLD_ON', 'number', 1);
-        }
-        deactivateLNAV() {
-            this._pendingLNAVActivation = false;
-            this._isLNAVActive = false;
-            Simplane.setAPLNAVArmed(0);
-            Simplane.setAPLNAVActive(0);
-        }
-        getIsVNAVArmed() {
-            return this._pendingVNAVActivation;
-        }
-        getIsVNAVActive() {
-            return this._isVNAVActive;
-        }
-        toggleVNAV() {
-            if (this.getIsVNAVArmed()) {
-                this.deactivateVNAV();
-                SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 1);
-                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
-            }
-            else {
-                this.activateVNAV();
-            }
-        }
-        activateVNAV() {
-            if (this.flightPlanManager.getWaypointsCount() === 0) {
-                return;
-            }
-            Simplane.setAPVNAVArmed(1);
-            let altitude = Simplane.getAltitudeAboveGround();
-            if (altitude < 400) {
-                this._pendingVNAVActivation = true;
-            }
-            else {
-                this.doActivateVNAV();
-            }
-            this.deactivateAltitudeHold();
-            this.deactivateFLCH();
-            this.deactivateVSpeed();
-            if (this.aircraftType != Aircraft.AS01B) {
-                this.deactivateSPD();
-            }
-        }
-        doActivateVNAV() {
-            this._isVNAVActive = true;
-            Simplane.setAPVNAVActive(1);
-            SimVar.SetSimVarValue('K:FLIGHT_LEVEL_CHANGE_ON', 'Number', 1);
-            this._pendingVNAVActivation = false;
-            this.activateTHRREFMode();
-            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 2);
-            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 2);
-            if (this.aircraftType == Aircraft.AS01B) {
-                this.activateSPD();
-            }
-            this.setThrottleMode(ThrottleMode.CLIMB);
-        }
-        setThrottleMode(_mode) {
-            if (this.getIsSPDActive() && this.aircraftType == Aircraft.AS01B) {
-                Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
-            }
-            else {
-                Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', _mode);
-            }
-        }
-        deactivateVNAV() {
-            this._pendingVNAVActivation = false;
-            this._isVNAVActive = false;
-            this._pendingVNAVActivation = false;
-            Simplane.setAPVNAVArmed(0);
-            Simplane.setAPVNAVActive(0);
-            this.deactivateSpeedIntervention();
-        }
-        getIsFLCHArmed() {
-            return this._pendingFLCHActivation;
-        }
-        getIsFLCHActive() {
-            return this._isFLCHActive;
-        }
-        toggleFLCH() {
-            if (this.getIsFLCHArmed()) {
-                this.deactivateFLCH();
-            }
-            else {
-                this.activateFLCH();
-            }
-        }
-        activateFLCH() {
-            this._isFLCHActive = true;
-            Simplane.setAPFLCHActive(1);
-            this.deactivateVNAV();
-            this.deactivateAltitudeHold();
-            this.deactivateVSpeed();
-            let altitude = Simplane.getAltitudeAboveGround();
-            if (altitude < 400) {
-                this._pendingFLCHActivation = true;
-            }
-            else {
-                this.doActivateFLCH();
-            }
-        }
-        doActivateFLCH() {
-            this._pendingFLCHActivation = false;
-            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 1);
-            let displayedAltitude = Simplane.getAutoPilotDisplayedAltitudeLockValue();
-            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, displayedAltitude, this._forceNextAltitudeUpdate);
-            if (!Simplane.getAutoPilotFLCActive()) {
-                SimVar.SetSimVarValue('K:FLIGHT_LEVEL_CHANGE_ON', 'Number', 1);
-            }
-            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
-            this.setThrottleMode(ThrottleMode.CLIMB);
-            if (this.aircraftType != Aircraft.AS01B) {
-                this.activateSPD();
-            }
-        }
-        deactivateFLCH() {
-            this._isFLCHActive = false;
-            this._pendingFLCHActivation = false;
-            Simplane.setAPFLCHActive(0);
-            this.deactivateSpeedIntervention();
-        }
-        getIsSPDArmed() {
-            return this._pendingSPDActivation;
-        }
-        getIsSPDActive() {
-            return this._isSPDActive;
-        }
-        toggleSPD() {
-            if (this.getIsSPDArmed()) {
-                this.deactivateSPD();
-            }
-            else {
-                this.activateSPD();
-            }
-        }
-        activateTHRREFMode() {
-            let altitude = Simplane.getAltitudeAboveGround();
-            this.setThrottleMode(ThrottleMode.CLIMB);
-            let n1 = 100;
-            if (altitude < this.thrustReductionAltitude) {
-                n1 = this.getThrustTakeOffLimit();
-            }
-            else {
-                n1 = this.getThrustClimbLimit();
-            }
-            SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
-        }
-        getIsHeadingHoldActive() {
-            return this._isHeadingHoldActive;
-        }
-        activateHeadingHold() {
-            this.deactivateLNAV();
-            this._isHeadingHoldActive = true;
-            if (!SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean')) {
-                SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'Number', 1);
-            }
-            SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
-            this._headingHoldValue = Simplane.getHeadingMagnetic();
-            SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 2);
-            Coherent.call('HEADING_BUG_SET', 2, this._headingHoldValue);
-        }
-        deactivateHeadingHold() {
-            this._isHeadingHoldActive = false;
-            SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 0);
-        }
-        activateHeadingSel() {
-            this.deactivateHeadingHold();
-            this.deactivateLNAV();
-            SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
-            let altitude = Simplane.getAltitudeAboveGround();
-            if (altitude < 400) {
-                this._pendingHeadingSelActivation = true;
-            }
-            else {
-                this.doActivateHeadingSel();
-            }
-        }
-        doActivateHeadingSel() {
-            this._pendingHeadingSelActivation = false;
-            if (!SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean')) {
-                SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'Number', 1);
-            }
-        }
-        getIsTHRActive() {
-            return false;
-        }
-        getIsVSpeedActive() {
-            return this._isVSpeedActive;
-        }
-        toggleVSpeed() {
-            if (this.getIsVSpeedActive()) {
-                let altitude = Simplane.getAltitudeAboveGround();
-                if (altitude < 50) {
-                    this.deactivateVSpeed();
-                    this.deactivateSPD();
-                }
-                else {
-                    this.activateVSpeed();
-                }
-            }
-            else {
-                this.activateVSpeed();
-            }
-        }
-        activateVSpeed() {
-            this._isVSpeedActive = true;
-            this.deactivateVNAV();
-            this.deactivateAltitudeHold();
-            this.deactivateFLCH();
-            this.activateSPD();
-            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 1);
-            let displayedAltitude = Simplane.getAutoPilotDisplayedAltitudeLockValue();
-            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, displayedAltitude, this._forceNextAltitudeUpdate);
-            this.requestCall(() => {
-                let currentVSpeed = Simplane.getVerticalSpeed();
-                Coherent.call('AP_VS_VAR_SET_ENGLISH', 0, currentVSpeed);
-                if (!SimVar.GetSimVarValue('AUTOPILOT VERTICAL HOLD', 'Boolean')) {
-                    SimVar.SetSimVarValue('K:AP_PANEL_VS_HOLD', 'Number', 1);
-                }
-            }, 200);
-            SimVar.SetSimVarValue('L:AP_VS_ACTIVE', 'number', 1);
-        }
-        deactivateVSpeed() {
-            this._isVSpeedActive = false;
-            SimVar.SetSimVarValue('L:AP_VS_ACTIVE', 'number', 0);
-        }
-        toggleAltitudeHold() {
-            if (this.getIsAltitudeHoldActive()) {
-                let altitude = Simplane.getAltitudeAboveGround();
-                if (altitude < 50) {
-                    this.deactivateAltitudeHold();
-                    this.deactivateSPD();
-                }
-            }
-            else {
-                this.activateAltitudeHold();
-            }
-        }
-        getIsAltitudeHoldActive() {
-            return this._isAltitudeHoldActive;
-        }
-        activateAltitudeHold(useCurrentAutopilotTarget = false) {
-            this.deactivateVNAV();
-            this.deactivateFLCH();
-            this.deactivateVSpeed();
-            this.activateSPD();
-            this._isAltitudeHoldActive = true;
-            Simplane.setAPAltHoldActive(1);
-            if (useCurrentAutopilotTarget) {
-                this._altitudeHoldValue = Simplane.getAutoPilotAltitudeLockValue('feet');
-            }
-            else {
-                this._altitudeHoldValue = Simplane.getAltitude();
-                this._altitudeHoldValue = Math.round(this._altitudeHoldValue / 100) * 100;
-            }
-            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 1);
-            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, this._altitudeHoldValue, this._forceNextAltitudeUpdate);
-            if (!SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK', 'Boolean')) {
-                SimVar.SetSimVarValue('K:AP_PANEL_ALTITUDE_HOLD', 'Number', 1);
-            }
-        }
-        deactivateAltitudeHold() {
-            this._isAltitudeHoldActive = false;
-            Simplane.setAPAltHoldActive(0);
-            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, Simplane.getAutoPilotDisplayedAltitudeLockValue(), this._forceNextAltitudeUpdate);
-            if (this._onAltitudeHoldDeactivate) {
-                let cb = this._onAltitudeHoldDeactivate;
-                this._onAltitudeHoldDeactivate = undefined;
-                cb();
-            }
-        }
-        getThrustTakeOffLimit() {
-            return 100;
-        }
-        getThrustClimbLimit() {
-            return 100;
-        }
-        getVRef(flapsHandleIndex = NaN, useCurrentWeight = true) {
-            return 200;
-        }
-        getTakeOffManagedSpeed() {
-            let altitude = Simplane.getAltitudeAboveGround();
-            if (altitude < 35) {
-                return this.speedManager.repository.v2Speed + 15;
-            }
-            return 250;
-        }
-        getIsRouteActivated() {
-            return this._isRouteActivated;
-        }
-        setBoeingDirectTo(directToWaypointIdent, directToWaypointIndex, callback = EmptyCallback.Boolean) {
-            let waypoints = this.flightPlanManager.getWaypoints();
-            let waypointIndex = waypoints.findIndex(w => {
-                return w.ident === directToWaypointIdent;
-            });
-            if (waypointIndex === -1) {
-                waypoints = this.flightPlanManager.getApproachWaypoints();
-                if (waypoints) {
-                    let waypoint = waypoints.find(w => {
-                        return w.ident === directToWaypointIdent;
-                    });
-                    if (waypoint) {
-                        return this.flightPlanManager.activateDirectTo(waypoint.icao, () => {
-                            return callback(true);
-                        });
-                    }
-                }
-            }
-            if (waypointIndex > -1) {
-                this.ensureCurrentFlightPlanIsTemporary(() => {
-                    this.flightPlanManager.removeWaypointFromTo(directToWaypointIndex, waypointIndex, true, () => {
-                        callback(true);
-                    });
-                });
-            }
-            else {
-                callback(false);
-            }
-        }
-        updateHUDAirspeedColors() {
-            let crossSpeed = Simplane.getCrossoverSpeed();
-            let cruiseMach = Simplane.getCruiseMach();
-            let crossSpeedFactor = Simplane.getCrossoverSpeedFactor(crossSpeed, cruiseMach);
-            let stallSpeed = Simplane.getStallSpeed();
-            SimVar.SetSimVarValue('L:HUD_AIRSPEED_WHITE_START', 'number', Simplane.getDesignSpeeds().VS0 * crossSpeedFactor);
-            SimVar.SetSimVarValue('L:HUD_AIRSPEED_WHITE_END', 'number', Simplane.getMaxSpeed(this.aircraftType) * crossSpeedFactor);
-            SimVar.SetSimVarValue('L:HUD_AIRSPEED_GREEN_START', 'number', stallSpeed * crossSpeedFactor);
-            SimVar.SetSimVarValue('L:HUD_AIRSPEED_GREEN_END', 'number', stallSpeed * Math.sqrt(1.3) * crossSpeedFactor);
-            SimVar.SetSimVarValue('L:HUD_AIRSPEED_YELLOW_START', 'number', stallSpeed * Math.sqrt(1.3) * crossSpeedFactor);
-            SimVar.SetSimVarValue('L:HUD_AIRSPEED_YELLOW_END', 'number', Simplane.getMaxSpeed(this.aircraftType) * crossSpeedFactor);
-            SimVar.SetSimVarValue('L:HUD_AIRSPEED_RED_START', 'number', Simplane.getMaxSpeed(this.aircraftType) * crossSpeedFactor);
-            SimVar.SetSimVarValue('L:HUD_AIRSPEED_RED_END', 'number', (Simplane.getDesignSpeeds().VMax + 100) * crossSpeedFactor);
-        }
-        /**
-         * Registers a periodic page refresh with the FMC display.
-         * @param {number} interval The interval, in ms, to run the supplied action.
-         * @param {function} action An action to run at each interval. Can return a bool to indicate if the page refresh should stop.
-         * @param {boolean} runImmediately If true, the action will run as soon as registered, and then after each
-         * interval. If false, it will start after the supplied interval.
-         */
-        registerPeriodicPageRefresh(action, interval, runImmediately) {
-            this.unregisterPeriodicPageRefresh();
-            const refreshHandler = () => {
-                const isBreak = action();
-                if (isBreak) {
-                    return;
-                }
-                this._pageRefreshTimer = window.setTimeout(refreshHandler, interval);
-            };
-            if (runImmediately) {
-                refreshHandler();
-            }
-            else {
-                this._pageRefreshTimer = window.setTimeout(refreshHandler, interval);
-            }
-        }
-        /**
-         * Unregisters a periodic page refresh with the FMC display.
-         */
-        unregisterPeriodicPageRefresh() {
-            if (this._pageRefreshTimer) {
-                clearInterval(this._pageRefreshTimer);
-            }
-        }
-        clearDisplay() {
-            super.clearDisplay();
-            this.unregisterPeriodicPageRefresh();
-        }
-        /**
-         * FMC Renderer extensions
-         * TODO: Standalone rendered should be created.
-         */
-        setTemplate(template) {
-            return;
-            if (template[0]) {
-                this.setTitle(template[0][0]);
-                this.setPageCurrent(template[0][1]);
-                this.setPageCount(template[0][2]);
-            }
-            for (let i = 0; i < 6; i++) {
-                let tIndex = 2 * i + 1;
-                if (template[tIndex]) {
-                    if (template[tIndex][1] !== undefined) {
-                        this.setLabel(template[tIndex][0], i, 0);
-                        this.setLabel(template[tIndex][1], i, 1);
-                        this.setLabel(template[tIndex][2], i, 2);
-                        this.setLabel(template[tIndex][3], i, 3);
-                    }
-                    else {
-                        this.setLabel(template[tIndex][0], i, -1);
-                    }
-                }
-                tIndex = 2 * i + 2;
-                if (template[tIndex]) {
-                    if (template[tIndex][1] !== undefined) {
-                        this.setLine(template[tIndex][0], i, 0);
-                        this.setLine(template[tIndex][1], i, 1);
-                        this.setLine(template[tIndex][2], i, 2);
-                        this.setLine(template[tIndex][3], i, 3);
-                    }
-                    else {
-                        this.setLine(template[tIndex][0], i, -1);
-                    }
-                }
-            }
-            if (template[13]) {
-                this.setInOut(template[13][0]);
-            }
-        }
-        /**
-         * Convert text to settable FMC design
-         * @param content
-         * @param width
-         * @returns {string}
-         */
-        makeSettable(content, width = undefined) {
-            return '[settable=' + String(width) + ']' + content + '[/settable]';
-            //return '[settable]' + content + '[/settable]';
-        }
-        /**
-         * Convert/set text to colored text
-         * @param content
-         * @param color
-         * @returns {string}
-         */
-        colorizeContent(content, color) {
-            return '[color=' + color + ']' + content + '[/color]';
-        }
-        /**
-         * Convert/set text size
-         * @param content
-         * @param size
-         * @returns {string}
-         */
-        resizeContent(content, size) {
-            return '[size=' + size + ']' + content + '[/size]';
-        }
-        /**
-         * setTitle with settable/size/color support
-         * @param content
-         */
-        setTitle(content) {
-            if (content !== '') {
-                let re3 = /\[settable\](.*?)\[\/settable\]/g;
-                content = content.replace(re3, '<div class="settable"><span>$1</span></div>');
-                let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
-                content = content.replace(re2, '<tspan class="$1">$2</tspan>');
-                let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
-                content = content.replace(re, '<tspan class="$1">$2</tspan>');
-                let color = content.split('[color]')[1];
-            }
-            let color = content.split('[color]')[1];
-            if (!color) {
-                color = 'white';
-            }
-            this._title = content.split('[color]')[0];
-            this._titleElement.classList.remove('white', 'blue', 'yellow', 'green', 'red');
-            this._titleElement.classList.add(color);
-            this._titleElement.innerHTML = this._title;
-        }
-        /**
-         * setlabel with settable/size/color support
-         * @param content
-         */
-        setLabel(label, row, col = -1) {
-            if (col >= this._labelElements[row].length) {
-                return;
-            }
-            if (!this._labels[row]) {
-                this._labels[row] = [];
-            }
-            if (!label) {
-                label = '';
-            }
-            if (col === -1) {
-                for (let i = 0; i < this._labelElements[row].length; i++) {
-                    this._labels[row][i] = '';
-                    this._labelElements[row][i].textContent = '';
-                }
-                col = 0;
-            }
-            if (label === '__FMCSEPARATOR') {
-                label = '---------------------------------------';
-            }
-            if (label !== '') {
-                label = label.replace('\<', '&lt');
-                let re3 = /\[settable\](.*?)\[\/settable\]/g;
-                //content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
-                label = label.replace(re3, '<div class="settable"><span>$1</span></div>');
-                let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
-                label = label.replace(re2, '<tspan class="$1">$2</tspan>');
-                let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
-                label = label.replace(re, '<tspan class="$1">$2</tspan>');
-                let color = label.split('[color]')[1];
-                if (!color) {
-                    color = 'white';
-                }
-                let e = this._labelElements[row][col];
-                e.classList.remove('white', 'blue', 'yellow', 'green', 'red');
-                e.classList.add(color);
-                label = label.split('[color]')[0];
-            }
-            this._labels[row][col] = label;
-            this._labelElements[row][col].innerHTML = '<bdi>' + label + '</bdi>';
-        }
-        /**
-         * setline with settable/size/color support
-         * @param content
-         */
-        setLine(content, row, col = -1) {
-            if (col >= this._lineElements[row].length) {
-                return;
-            }
-            if (!content) {
-                content = '';
-            }
-            if (!this._lines[row]) {
-                this._lines[row] = [];
-            }
-            if (col === -1) {
-                for (let i = 0; i < this._lineElements[row].length; i++) {
-                    this._lines[row][i] = '';
-                    this._lineElements[row][i].textContent = '';
-                }
-                col = 0;
-            }
-            if (content === '__FMCSEPARATOR') {
-                content = '---------------------------------------';
-            }
-            if (content !== '') {
-                content = content.replace('\<', '&lt');
-                if (content.indexOf('[s-text]') !== -1) {
-                    content = content.replace('[s-text]', '');
-                    this._lineElements[row][col].classList.add('s-text');
-                }
-                else {
-                    this._lineElements[row][col].classList.remove('s-text');
-                }
-                let re3 = /\[settable\](.*?)\[\/settable\]/g;
-                //content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
-                content = content.replace(re3, '<div class="settable"><span>$1</span></div>');
-                let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
-                content = content.replace(re2, '<tspan class="$1">$2</tspan>');
-                let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
-                content = content.replace(re, '<tspan class="$1">$2</tspan>');
-                let color = content.split('[color]')[1];
-                if (!color) {
-                    color = 'white';
-                }
-                let e = this._lineElements[row][col];
-                e.classList.remove('white', 'blue', 'yellow', 'green', 'red', 'magenta');
-                e.classList.add(color);
-                content = content.split('[color]')[0];
-            }
-            this._lines[row][col] = content;
-            this._lineElements[row][col].innerHTML = '<bdi>' + this._lines[row][col] + '</bdi>';
-        }
-        trySetTransAltitude(s) {
-            if (!/^\d+$/.test(s)) {
-                this.showErrorMessage('FORMAT ERROR');
-                return false;
-            }
-            let v = parseInt(s);
-            if (isFinite(v) && v > 0) {
-                this.transitionAltitude = v;
-                SimVar.SetSimVarValue('L:AIRLINER_TRANS_ALT', 'Number', this.transitionAltitude);
-                return true;
-            }
-            this.showErrorMessage(this.defaultInputErrorMessage);
-            return false;
-        }
-        /**
-         * TODO: Should be moved to SpeedDirector class
-         * @param s
-         * @returns {boolean}
-         */
-        trySetAccelerationHeight(s) {
-            let accelerationHeight = parseInt(s);
-            let origin = this.flightPlanManager.getOrigin();
-            if (origin) {
-                if (isFinite(accelerationHeight)) {
-                    let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
-                    let roundedHeight = Math.round(accelerationHeight / 100) * 100;
-                    if (this.trySetAccelerationAltitude(String(roundedHeight + elevation))) {
-                        this._speedDirector._accelerationSpeedRestriction.accelerationHeight = roundedHeight;
-                        return true;
-                    }
-                }
-            }
-            this.showErrorMessage(this.defaultInputErrorMessage);
-            return false;
-        }
-        /**
-         * TODO: Should be moved to SpeedDirector class
-         * @param s
-         * @returns {boolean}
-         */
-        trySetAccelerationAltitude(s) {
-            let accelerationHeight = parseInt(s);
-            if (isFinite(accelerationHeight)) {
-                this._speedDirector._accelerationSpeedRestriction.altitude = accelerationHeight;
-                SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', accelerationHeight);
-                return true;
-            }
-            this.showErrorMessage(this.defaultInputErrorMessage);
-            return false;
-        }
-        /**
-         * TODO: Should be moved to SpeedDirector/ThrustDirector
-         * TODO: Probably should be better to make ThrustDirector because thr reduction is not speed thing
-         * @param s
-         * @returns {boolean}
-         */
-        trySetThrustReductionHeight(s) {
-            let thrustReductionHeight = parseInt(s);
-            let origin = this.flightPlanManager.getOrigin();
-            if (origin) {
-                if (isFinite(thrustReductionHeight)) {
-                    let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
-                    let roundedHeight = Math.round(thrustReductionHeight / 100) * 100;
-                    if (this.trySetThrustReductionAltitude(String(roundedHeight + elevation))) {
-                        this.thrustReductionHeight = roundedHeight;
-                        this.isThrustReductionAltitudeCustomValue = true;
-                        return true;
-                    }
-                }
-            }
-            this.showErrorMessage(this.defaultInputErrorMessage);
-            return false;
-        }
-        /**
-         * TODO: Should be moved to SpeedDirector class
-         * @param s
-         * @returns {boolean}
-         */
-        trySetThrustReductionAltitude(s) {
-            let thrustReductionHeight = parseInt(s);
-            if (isFinite(thrustReductionHeight)) {
-                this.thrustReductionAltitude = thrustReductionHeight;
-                SimVar.SetSimVarValue('L:AIRLINER_THR_RED_ALT', 'Number', this.thrustReductionAltitude);
-                return true;
-            }
-            this.showErrorMessage(this.defaultInputErrorMessage);
-            return false;
-        }
-        /**
-         * TODO: Should be moved to SpeedDirector class or the function should be only bypass for new function in SpeedDirector
-         */
-        recalculateTHRRedAccTransAlt() {
-            /**
-             * TODO: HotFix!!! Need to be fixed in future... SpeedDirector is not normally accessible from here
-             */
-            if (this._speedDirector === undefined) {
-                this._speedDirector = new SpeedDirector(this);
-            }
-            let origin = this.flightPlanManager.getOrigin();
-            if (origin) {
-                this._recalculateOriginTransitionAltitude(origin);
-                this._recalculateThrustReductionAltitude(origin);
-                this._recalculateAccelerationAltitude(origin);
-            }
-            let destination = this.flightPlanManager.getDestination();
-            if (destination) {
-                this._recalculateDestinationTransitionAltitude(destination);
-            }
-        }
-        /**
-         * TODO: Should be moved into SpeedDirector/ThrustDirector??
-         * @param origin
-         * @private
-         */
-        _recalculateThrustReductionAltitude(origin) {
-            if (origin) {
-                if (origin.infos instanceof AirportInfo) {
-                    if (!this.isThrustReductionAltitudeCustomValue) {
-                        const elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
-                        this.thrustReductionAltitude = elevation + 1500;
-                        this.thrustReductionHeight = 1500;
-                        SimVar.SetSimVarValue('L:AIRLINER_THR_RED_ALT', 'Number', this.thrustReductionAltitude);
-                    }
-                }
-            }
-        }
-        /**
-         * TODO: Should be moved into SpeedDirector
-         * @param origin
-         * @private
-         */
-        _recalculateAccelerationAltitude(origin) {
-            if (origin) {
-                if (origin.infos instanceof AirportInfo) {
-                    const elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
-                    this._speedDirector._accelerationSpeedRestriction.altitude = elevation + this._speedDirector._accelerationSpeedRestriction.accelerationHeight;
-                    SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', this._speedDirector._accelerationSpeedRestriction.altitude);
-                }
-            }
-        }
-        _recalculateOriginTransitionAltitude(origin) {
-            if (origin) {
-                if (origin.infos instanceof AirportInfo) {
-                    if (isFinite(origin.infos.transitionAltitude)) {
-                        this.transitionAltitude = origin.infos.transitionAltitude;
-                    }
-                }
-            }
-        }
-        _recalculateDestinationTransitionAltitude(destination) {
-            if (destination) {
-                if (destination.infos instanceof AirportInfo) {
-                    if (isFinite(destination.infos.transitionAltitude)) {
-                        this.perfApprTransAlt = destination.infos.transitionAltitude;
-                    }
-                }
-            }
-        }
-        setAPManagedSpeedMach(_mach, _aircraft) {
-            if (isFinite(_mach)) {
-                if (Simplane.getAutoPilotMachModeActive()) {
-                    Coherent.call('AP_MACH_VAR_SET', 2, _mach);
-                    SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_ON', 'number', 1);
-                }
-            }
-        }
-        getThrustTakeOffTemp() {
-            return this._thrustTakeOffTemp;
-        }
-        checkFmcPreFlight() {
-            if (!this.dataHolder.preFlightDataHolder.finished) {
-                this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature = (!!this.getThrustTakeOffTemp());
-                this.dataHolder.preFlightDataHolder.thrustLim.completed = (this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature);
-                this.dataHolder.preFlightDataHolder.takeOff.flaps = (!!this.getTakeOffFlap());
-                this.dataHolder.preFlightDataHolder.takeOff.v1 = (!!this.speedManager.repository.v1Speed);
-                this.dataHolder.preFlightDataHolder.takeOff.vR = (!!this.speedManager.repository.vRSpeed);
-                this.dataHolder.preFlightDataHolder.takeOff.v2 = (!!this.speedManager.repository.v2Speed);
-                this.dataHolder.preFlightDataHolder.takeOff.completed = (this.dataHolder.preFlightDataHolder.takeOff.v1 && this.dataHolder.preFlightDataHolder.takeOff.vR && this.dataHolder.preFlightDataHolder.takeOff.v2 && this.dataHolder.preFlightDataHolder.takeOff.flaps);
-                this.dataHolder.preFlightDataHolder.perfInit.cruiseAltitude = (!!this.cruiseFlightLevel);
-                this.dataHolder.preFlightDataHolder.perfInit.costIndex = (!!this.costIndex);
-                this.dataHolder.preFlightDataHolder.perfInit.reserves = (!!this.getFuelReserves());
-                this.dataHolder.preFlightDataHolder.perfInit.completed = (this.dataHolder.preFlightDataHolder.perfInit.cruiseAltitude && this.dataHolder.preFlightDataHolder.perfInit.costIndex && this.dataHolder.preFlightDataHolder.perfInit.reserves);
-                this.dataHolder.preFlightDataHolder.route.origin = (!!this.flightPlanManager.getOrigin());
-                this.dataHolder.preFlightDataHolder.route.destination = (!!this.flightPlanManager.getDestination());
-                this.dataHolder.preFlightDataHolder.route.activated = true;
-                this.dataHolder.preFlightDataHolder.route.completed = (this.dataHolder.preFlightDataHolder.route.activated && this.dataHolder.preFlightDataHolder.route.destination && this.dataHolder.preFlightDataHolder.route.origin);
-                this.dataHolder.preFlightDataHolder.completed = (this.dataHolder.preFlightDataHolder.thrustLim.completed && this.dataHolder.preFlightDataHolder.takeOff.completed && this.dataHolder.preFlightDataHolder.perfInit.completed && this.dataHolder.preFlightDataHolder.route.completed);
-            }
-        }
-        showFMCPreFlightComplete(airspeed) {
-            if (this.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF && airspeed < 80) {
-                this.checkFmcPreFlight();
-            }
-            else {
-                this.dataHolder.preFlightDataHolder.finished = true;
-            }
-        }
-        /**
-         * TODO: This should be in FlightPhaseManager
-         */
-        checkUpdateFlightPhase() {
-            let airSpeed = Simplane.getTrueSpeed();
-            this.showFMCPreFlightComplete(airSpeed);
-            if (airSpeed > 10) {
-                if (this.currentFlightPhase === 0) {
-                    this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_TAKEOFF;
-                }
-                if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_TAKEOFF) {
-                    let enterClimbPhase = false;
-                    let agl = Simplane.getAltitude();
-                    let altValue = isFinite(this.thrustReductionAltitude) ? this.thrustReductionAltitude : 1500;
-                    if (agl > altValue) {
-                        this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CLIMB;
-                        enterClimbPhase = true;
-                    }
-                    if (enterClimbPhase) {
-                        let origin = this.flightPlanManager.getOrigin();
-                        if (origin) {
-                            origin.altitudeWasReached = Simplane.getAltitude();
-                            origin.timeWasReached = SimVar.GetGlobalVarValue('ZULU TIME', 'seconds');
-                            origin.fuelWasReached = SimVar.GetSimVarValue('FUEL TOTAL QUANTITY', 'gallons') * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms') / 1000;
-                        }
-                    }
-                }
-                if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
-                    let altitude = SimVar.GetSimVarValue('PLANE ALTITUDE', 'feet');
-                    let cruiseFlightLevel = this.cruiseFlightLevel * 100;
-                    if (isFinite(cruiseFlightLevel)) {
-                        if (altitude >= 0.96 * cruiseFlightLevel) {
-                            this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CRUISE;
-                            Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
-                        }
-                    }
-                }
-                if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
-                    SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_CLIMB', 'number', 0);
-                    //console.log('TO TD: ' + SimVar.GetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number'));
-                    //console.log('DIS TD: ' + SimVar.GetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number'));
-                    /**
-                     * Basic TOD to destination
-                     */
-                    let cruiseAltitude = SimVar.GetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number');
-                    let showTopOfDescent = false;
-                    if (isFinite(cruiseAltitude)) {
-                        let destination = this.flightPlanManager.getDestination();
-                        if (destination) {
-                            let firstTODWaypoint = this.getWaypointForTODCalculation();
-                            if (firstTODWaypoint) {
-                                let totalDistance = 0;
-                                const destinationElevation = firstTODWaypoint.targetAltitude;
-                                const descentAltitudeDelta = Math.abs(destinationElevation - cruiseAltitude) / 100;
-                                const todDistance = descentAltitudeDelta / 3.3;
-                                const indicatedSpeed = Simplane.getIndicatedSpeed();
-                                let speedToLose = 0;
-                                if (indicatedSpeed > 220) {
-                                    speedToLose = indicatedSpeed - 220;
-                                }
-                                const distanceForSpeedReducing = speedToLose / 10;
-                                totalDistance = todDistance + distanceForSpeedReducing + firstTODWaypoint.distanceFromDestinationToWaypoint;
-                                let todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(totalDistance, true);
-                                let todLatLongAltCoordinates = new LatLongAlt(todCoordinates.lat, todCoordinates.long);
-                                let planeCoordinates = new LatLongAlt(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
-                                let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todLatLongAltCoordinates);
-                                SimVar.SetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number', distanceToTOD);
-                                SimVar.SetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number', totalDistance);
-                                if (distanceToTOD < 50) {
-                                    if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
-                                        SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
-                                        SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
-                                    }
-                                }
-                                if (distanceToTOD > 1) {
-                                    showTopOfDescent = true;
-                                }
-                                else {
-                                    showTopOfDescent = false;
-                                    let lastFlightPhase = this.currentFlightPhase;
-                                    this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
-                                    Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
-                                    if (lastFlightPhase !== FlightPhase.FLIGHT_PHASE_DESCENT) {
-                                        SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
-                                    }
-                                }
-                                if (showTopOfDescent) {
-                                    SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 1);
-                                }
-                                else {
-                                    SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
-                                }
-                            }
-                        }
-                    }
-                }
-                if (this.currentFlightPhase !== FlightPhase.FLIGHT_PHASE_APPROACH) {
-                    if (this.flightPlanManager.decelWaypoint) {
-                        let lat = SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude');
-                        let long = Simplane.getCurrentLon();
-                        let planeLla = new LatLongAlt(lat, long);
-                        let dist = Avionics.Utils.computeGreatCircleDistance(this.flightPlanManager.decelWaypoint.infos.coordinates, planeLla);
-                        if (dist < 3) {
-                            this.tryGoInApproachPhase();
-                        }
-                    }
-                }
-                if (this.currentFlightPhase !== FlightPhase.FLIGHT_PHASE_APPROACH) {
-                    let destination = this.flightPlanManager.getDestination();
-                    if (destination) {
-                        let lat = SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude');
-                        let long = Simplane.getCurrentLon();
-                        let planeLla = new LatLongAlt(lat, long);
-                        let dist = Avionics.Utils.computeGreatCircleDistance(destination.infos.coordinates, planeLla);
-                        if (dist < 20) {
-                            this.tryGoInApproachPhase();
-                        }
-                    }
-                }
-            }
-            if (Simplane.getCurrentFlightPhase() != this.currentFlightPhase) {
-                Simplane.setCurrentFlightPhase(this.currentFlightPhase);
-                this.onFlightPhaseChanged();
-            }
-        }
-        getWaypointForTODCalculation() {
-            let getWaypoint = (allWaypoints) => {
-                for (let i = 0; i <= allWaypoints.length - 1; i++) {
-                    if (allWaypoints[i].legAltitudeDescription === 0) {
-                        continue;
-                    }
-                    if (allWaypoints[i].legAltitudeDescription === 1 && isFinite(allWaypoints[i].legAltitude1)) {
-                        return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
-                    }
-                    if (allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)) {
-                        continue;
-                        //return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
-                    }
-                    if (allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)) {
-                        return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
-                    }
-                    if (allWaypoints[i].legAltitudeDescription === 4 && isFinite(allWaypoints[i].legAltitude1) && isFinite(allWaypoints[i].legAltitude2)) {
-                        if (allWaypoints[i].legAltitude1 === allWaypoints[i].legAltitude2) {
-                            return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
-                        }
-                        if (allWaypoints[i].legAltitude1 < allWaypoints[i].legAltitude2) {
-                            let middle = (allWaypoints[i].legAltitude2 - allWaypoints[i].legAltitude1) / 2;
-                            return {
-                                fix: allWaypoints[i],
-                                targetAltitude: Math.round(allWaypoints[i].legAltitude1 + middle)
-                            };
-                        }
-                        if (allWaypoints[i].legAltitude1 > allWaypoints[i].legAltitude2) {
-                            let middle = (allWaypoints[i].legAltitude1 - allWaypoints[i].legAltitude2) / 2;
-                            return {
-                                fix: allWaypoints[i],
-                                targetAltitude: Math.round(allWaypoints[i].legAltitude2 + middle)
-                            };
-                        }
-                    }
-                }
-                return undefined;
-            };
-            let waypoint = undefined;
-            let destination = this.flightPlanManager.getDestination();
-            if (destination) {
-                let arrivalSegment = this.flightPlanManager.getCurrentFlightPlan().arrival;
-                let approachSegment = this.flightPlanManager.getCurrentFlightPlan().approach;
-                waypoint = getWaypoint(arrivalSegment.waypoints);
-                if (!waypoint) {
-                    waypoint = getWaypoint(approachSegment.waypoints);
-                }
-                if (!waypoint) {
-                    waypoint = {
-                        fix: destination,
-                        targetAltitude: Math.round(parseFloat(destination.infos.oneWayRunways[0].elevation) * 3.28)
-                    };
-                }
-                if (waypoint) {
-                    if (approachSegment.waypoints.length > 0) {
-                        const cumulativeToApproach = approachSegment.waypoints[approachSegment.waypoints.length - 1].cumulativeDistanceInFP;
-                        waypoint.distanceFromDestinationToWaypoint = cumulativeToApproach - waypoint.fix.cumulativeDistanceInFP;
-                    }
-                    else {
-                        waypoint.distanceFromDestinationToWaypoint = destination.cumulativeDistanceInFP - waypoint.fix.cumulativeDistanceInFP;
-                    }
-                }
-            }
-            return waypoint;
-        }
-    }
-    BaseFMC.clrValue = 'DELETE';
-
-    class B787_10_FMC_PosInitPage {
-        static ShowPage1(fmc) {
-            let currPos = new LatLong(SimVar.GetSimVarValue('GPS POSITION LAT', 'degree latitude'), SimVar.GetSimVarValue('GPS POSITION LON', 'degree longitude')).toDegreeString();
-            console.log(currPos);
-            let date = new Date();
-            let dateString = fastToFixed(date.getHours(), 0).padStart(2, '0') + fastToFixed(date.getMinutes(), 0).padStart(2, '0') + 'z';
-            let lastPos = '';
-            if (fmc.lastPos) {
-                lastPos = fmc.lastPos;
-            }
-            let refAirport = '□□□□';
-            if (fmc.refAirport && fmc.refAirport.ident) {
-                refAirport = fmc.refAirport.ident;
-            }
-            let refAirportCoordinates = '';
-            if (fmc.refAirport && fmc.refAirport.infos && fmc.refAirport.infos.coordinates) {
-                refAirportCoordinates = fmc.refAirport.infos.coordinates.toDegreeString();
-            }
-            let gate = '-----';
-            if (fmc.refGate) {
-                gate = fmc.refGate;
-            }
-            let heading = '---';
-            heading = fmc.makeSettable(heading) + 'sdfsdf°';
-            if (fmc.refHeading) {
-                heading = fmc.makeSettable(fastToFixed(fmc.refHeading, 0).padStart(3, '0')) + '°';
-            }
-            let irsPos = '□□□°□□.□ □□□□°□□.□';
-            if (fmc.initCoordinates) {
-                irsPos = fmc.initCoordinates;
-            }
-            fmc.cleanUpPage();
-            fmc._renderer.renderTitle('POS INIT');
-            fmc._renderer.renderPages(1, 3);
-            fmc._renderer.render([
-                ['', 'LAST POS'],
-                ['', lastPos],
-                ['REF AIRPORT'],
-                [fmc.makeSettable(refAirport), refAirportCoordinates],
-                ['GATE'],
-                [fmc.makeSettable(gate)],
-                ['UTC (GPS)', 'GPS POS'],
-                [dateString, currPos],
-                ['SET HDG', 'SET IRS POS'],
-                [heading, fmc.makeSettable(irsPos)],
-                ['__FMCSEPARATOR'],
-                ['<INDEX', 'ROUTE>']
-            ]);
-            if (fmc.lastPos) {
-                fmc._renderer.rsk(1).event = () => {
-                    fmc.inOut = fmc.lastPos;
-                };
-            }
-            fmc._renderer.lsk(2).event = async () => {
-                let value = fmc.inOut;
-                fmc.inOut = '';
-                if (await fmc.tryUpdateRefAirport(value)) {
-                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
-                }
-            };
-            if (refAirportCoordinates) {
-                fmc._renderer.rsk(2).event = () => {
-                    fmc.inOut = refAirportCoordinates;
-                };
-            }
-            fmc._renderer.lsk(3).event = async () => {
-                let value = fmc.inOut;
-                fmc.inOut = '';
-                if (fmc.tryUpdateGate(value)) {
-                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
-                }
-            };
-            fmc._renderer.rsk(4).event = () => {
-                fmc.inOut = currPos;
-            };
-            fmc._renderer.lsk(5).event = async () => {
-                let value = fmc.inOut;
-                fmc.inOut = '';
-                if (await fmc.tryUpdateHeading(value)) {
-                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
-                }
-            };
-            fmc._renderer.rsk(5).event = async () => {
-                let value = fmc.inOut;
-                fmc.inOut = '';
-                if (await fmc.tryUpdateIrsCoordinatesDisplay(value)) {
-                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
-                }
-            };
-            fmc._renderer.lsk(6).event = () => {
-                B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
-            };
-            fmc._renderer.rsk(6).event = () => {
-                /**
-                 * TODO
-                 */
-                //B787_10_FMC_RoutePage.ShowPage1(fmc);
-            };
-            fmc.onPrevPage = () => {
-                B787_10_FMC_PosInitPage.ShowPage3(fmc);
-            };
-            fmc.onNextPage = () => {
-                B787_10_FMC_PosInitPage.ShowPage2(fmc);
-            };
-        }
-        static ShowPage2(fmc) {
-            fmc.cleanUpPage();
-            fmc.setTemplate([
-                ['POS REF', '2', '3'],
-                ['FMC POS (GPS L)', 'GS'],
-                [''],
-                ['IRS(3)'],
-                [''],
-                ['RNP/ACTUAL', 'DME DME'],
-                [''],
-                [''],
-                [''],
-                ['-----------------', 'GPS NAV'],
-                ['<PURGE', '<INHIBIT'],
-                [''],
-                ['<INDEX', '<BRG/DIST']
-            ]);
-            fmc._renderer.lsk(6).event = () => {
-                B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
-            };
-            fmc._renderer.rsk(6).event = () => {
-            };
-            fmc.onPrevPage = () => {
-                B787_10_FMC_PosInitPage.ShowPage1(fmc);
-            };
-            fmc.onNextPage = () => {
-                B787_10_FMC_PosInitPage.ShowPage3(fmc);
-            };
-        }
-        static ShowPage3(fmc) {
-            fmc.cleanUpPage();
-            fmc.setTemplate([
-                ['POS REF', '2', '3'],
-                ['IRS L', 'GS'],
-                ['000°/0.0NM', '290KT'],
-                ['IRS C', 'GS'],
-                ['000°/0.0NM', '290KT'],
-                ['IRS R', 'GS'],
-                ['000°/0.0NM', '290KT'],
-                ['GPS L', 'GS'],
-                ['000°/0.0NM', '290KT'],
-                ['GPS R', 'GS'],
-                ['000°/0.0NM', '290KT'],
-                ['__FMCSEPARATOR'],
-                ['<INDEX', '<LAT/LON']
-            ]);
-            fmc._renderer.lsk(6).event = () => {
-                B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
-            };
-            fmc._renderer.rsk(6).event = () => {
-            };
-            fmc.onPrevPage = () => {
-                B787_10_FMC_PosInitPage.ShowPage2(fmc);
-            };
-            fmc.onNextPage = () => {
-                B787_10_FMC_PosInitPage.ShowPage1(fmc);
-            };
-        }
-    }
-
-    class B787_10_FMC_IdentPage {
-        static ShowPage1(fmc) {
-            fmc.cleanUpPage();
-            B787_10_FMC_IdentPage._updateCounter = 0;
-            fmc.pageUpdate = () => {
-                if (B787_10_FMC_IdentPage._updateCounter >= 50) {
-                    B787_10_FMC_IdentPage.ShowPage1(fmc);
-                }
-                else {
-                    B787_10_FMC_IdentPage._updateCounter++;
-                }
-            };
-            let date = fmc.getNavDataDateRange();
-            fmc._renderer.renderTitle('IDENT');
-            fmc._renderer.render([
-                ['MODEL', 'ENGINES'],
-                ['787-10', 'GEnx-1B76'],
-                ['NAV DATA', 'ACTIVE'],
-                ['AIRAC', date.toString()],
-                ['DRAG/FF'],
-                [''],
-                ['OP PROGRAM', 'CO DATA'],
-                [fmc.fmcManVersion, 'VS1001'],
-                ['OPC'],
-                [fmc.fmcBakVersion, ''],
-                ['__FMCSEPARATOR'],
-                ['<INDEX', 'POS INIT>']
-            ]);
-            if (fmc.urlConfig.index == 1) {
-                fmc._renderer.lsk(6).event = () => {
-                    B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
-                };
-                fmc._renderer.rsk(6).event = () => {
-                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
-                };
-            }
-            /**
-             * Set periodic page refresh if version of HD mode is not loaded from misc file
-             */
-            if (fmc.fmcManVersion.includes('XXXX-X-X') || fmc.fmcBakVersion.includes('XXXX-X-X')) {
-                fmc.registerPeriodicPageRefresh(() => {
-                    B787_10_FMC_IdentPage.ShowPage1(fmc);
-                    return true;
-                }, 100, false);
-            }
-        }
-    }
-    B787_10_FMC_IdentPage._updateCounter = 0;
-
     class SimBriefApi {
         /**
          * Constructor
@@ -6027,6 +4475,559 @@
         }
     }
 
+    var HDSpeedPhase;
+    (function (HDSpeedPhase) {
+        HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_CLIMB"] = 0] = "SPEED_PHASE_CLIMB";
+        HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_CRUISE"] = 1] = "SPEED_PHASE_CRUISE";
+        HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_DESCENT"] = 2] = "SPEED_PHASE_DESCENT";
+        HDSpeedPhase[HDSpeedPhase["SPEED_PHASE_APPROACH"] = 3] = "SPEED_PHASE_APPROACH";
+    })(HDSpeedPhase || (HDSpeedPhase = {}));
+
+    var HDSpeedType;
+    (function (HDSpeedType) {
+        HDSpeedType[HDSpeedType["SPEED_TYPE_ECON"] = 0] = "SPEED_TYPE_ECON";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_SELECTED"] = 1] = "SPEED_TYPE_SELECTED";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_RESTRICTION"] = 2] = "SPEED_TYPE_RESTRICTION";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_TRANSITION"] = 3] = "SPEED_TYPE_TRANSITION";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_ACCELERATION"] = 4] = "SPEED_TYPE_ACCELERATION";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_PROTECTED"] = 5] = "SPEED_TYPE_PROTECTED";
+        HDSpeedType[HDSpeedType["SPEED_TYPE_WAYPOINT"] = 6] = "SPEED_TYPE_WAYPOINT";
+    })(HDSpeedType || (HDSpeedType = {}));
+
+    class HDSpeed {
+        constructor(speed) {
+            this._speed = Number(speed);
+        }
+        /**
+         * Speed getter
+         * @returns {number}
+         */
+        get speed() {
+            return this._speed;
+        }
+        /**
+         * Speed setter
+         * @param speed
+         */
+        set speed(speed) {
+            this._speed = Number(speed);
+        }
+        isValid() {
+            return this._speed && isFinite(this._speed);
+        }
+    }
+
+    class HDDescentSpeed extends HDSpeed {
+        constructor(speed, speedMach) {
+            super(speed);
+            this._speedMach = Number(speedMach);
+        }
+        get speedMach() {
+            return this._speedMach;
+        }
+        set speedMach(speedMach) {
+            this._speedMach = Number(speedMach);
+        }
+    }
+
+    class HDSpeedRestriction extends HDSpeed {
+        constructor(speed, altitude) {
+            super(speed);
+            this._altitude = Number(altitude);
+        }
+        get altitude() {
+            return this._altitude;
+        }
+        set altitude(altitude) {
+            this._altitude = Number(altitude);
+        }
+    }
+
+    class HDAccelerationSpeedRestriction extends HDSpeedRestriction {
+        constructor(speed, altitude, height) {
+            super(speed, altitude);
+            this._accelerationHeight = Number(height);
+        }
+        /**
+         * Acceleration height setter
+         * @param height
+         */
+        set accelerationHeight(height) {
+            this._accelerationHeight = Number(height);
+        }
+        /**
+         * Returns acceleration height
+         * @returns {number}
+         */
+        get accelerationHeight() {
+            return this._accelerationHeight;
+        }
+        /**
+         * TODO: logic for v2+10 - v2+25 has to be implemented
+         * @returns {boolean}
+         */
+        isValid() {
+            const planeAltitude = Simplane.getAltitude();
+            const v2speed = SimVar.GetSimVarValue('L:AIRLINER_V2_SPEED', 'Knots');
+            this.speed = Number(v2speed + 25);
+            if (this._speed && isFinite(this._speed) && this._altitude && isFinite(this._altitude)) {
+                if (this._altitude > planeAltitude) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    class HDOverspeedProtection extends HDSpeed {
+        /**
+         * Speed getter
+         * @returns {number}
+         */
+        get speed() {
+            return Number(this.getFlapProtectionMaxSpeed(Simplane.getFlapsHandleIndex()));
+        }
+        /**
+         * Overspeed protection should be always valid
+         * @returns {boolean}
+         */
+        isValid() {
+            return true;
+        }
+        /**
+         * Flap protection speeds table
+         * @param handleIndex
+         * @returns {number}
+         */
+        getFlapProtectionMaxSpeed(handleIndex) {
+            switch (handleIndex) {
+                case 0:
+                    return 360;
+                case 1:
+                    return 255;
+                case 2:
+                    return 235;
+                case 3:
+                    return 225;
+                case 4:
+                    return 215;
+                case 5:
+                    return 210;
+                case 6:
+                    return 210;
+                case 7:
+                    return 205;
+                case 8:
+                    return 185;
+                case 9:
+                    return 175;
+            }
+            return 360;
+        }
+    }
+
+    class HDClimbSpeedRestriction extends HDSpeedRestriction {
+        isValid() {
+            const planeAltitude = Simplane.getAltitude();
+            if (this._speed && isFinite(this._speed) && this._altitude && isFinite(this._altitude)) {
+                if (this._altitude > planeAltitude) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    class HDSpeedTransition extends HDSpeedRestriction {
+        constructor(speed = 250, altitude = 10000, isDeleted = false) {
+            super(speed, altitude);
+            this._isDeleted = Boolean(isDeleted);
+        }
+        get isDeleted() {
+            return this._isDeleted;
+        }
+        set isDeleted(isDeleted) {
+            this._isDeleted = Boolean(isDeleted);
+        }
+        /**
+         * TODO implement above/bellow altitude check
+         * @param planeAltitude
+         * @returns {boolean}
+         */
+        isValid() {
+            const planeAltitude = Simplane.getAltitude();
+            if (this._speed && isFinite(this._speed) && !this._isDeleted) {
+                if (10000 > planeAltitude) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    class HDClimbSpeedTransition extends HDSpeedTransition {
+        constructor(speed = 250, altitude = 10000, isDeleted = false) {
+            super(speed, altitude, isDeleted);
+        }
+    }
+
+    class HDClimbSpeed extends HDSpeed {
+        constructor(speed) {
+            super(speed);
+        }
+    }
+
+    class HDCruiseSpeed extends HDSpeed {
+        constructor(speed, speedMach) {
+            super(speed);
+            this._speedMach = Number(speedMach);
+        }
+        get speedMach() {
+            return this._speedMach;
+        }
+        set speedMach(speedMach) {
+            this._speedMach = Number(speedMach);
+        }
+    }
+
+    class HDDescentSpeedRestriction extends HDSpeedRestriction {
+        /**
+         * TODO: Not implemented
+         * @returns {boolean}
+         */
+        isValid() {
+            return false;
+        }
+    }
+
+    class HDDescentSpeedTransition extends HDSpeedTransition {
+        constructor(speed = 240, altitude = 10000, isDeleted = false) {
+            super(speed, altitude, isDeleted);
+        }
+    }
+
+    class SpeedDirector {
+        constructor(speedManager) {
+            this._speedManager = speedManager;
+            /**
+             * TODO: FMC should be removed. All speed related values should be stored directly in SpeedDirector
+             * @private
+             */
+            this._commandedSpeedType = undefined;
+            this._lastCommandedSpeedType = undefined;
+            this._speedPhase = undefined;
+            this._lastSpeedPhase = undefined;
+            this._machMode = undefined;
+            this._lastMachMode = undefined;
+            this._lastSpeed = undefined;
+            this._speedCheck = undefined;
+            this.Init();
+        }
+        get descentSpeedEcon() {
+            return this._descentSpeedEcon;
+        }
+        set descentSpeedEcon(value) {
+            this._descentSpeedEcon = value;
+        }
+        get descentSpeedSelected() {
+            return this._descentSpeedSelected;
+        }
+        set descentSpeedSelected(value) {
+            this._descentSpeedSelected = value;
+        }
+        get descentSpeedTransition() {
+            return this._descentSpeedTransition;
+        }
+        set descentSpeedTransition(value) {
+            this._descentSpeedTransition = value;
+        }
+        get descentSpeedRestriction() {
+            return this._descentSpeedRestriction;
+        }
+        set descentSpeedRestriction(value) {
+            this._descentSpeedRestriction = value;
+        }
+        get cruiseSpeedEcon() {
+            return this._cruiseSpeedEcon;
+        }
+        set cruiseSpeedEcon(value) {
+            this._cruiseSpeedEcon = value;
+        }
+        get cruiseSpeedSelected() {
+            return this._cruiseSpeedSelected;
+        }
+        set cruiseSpeedSelected(value) {
+            this._cruiseSpeedSelected = value;
+        }
+        get climbSpeedEcon() {
+            return this._climbSpeedEcon;
+        }
+        set climbSpeedEcon(value) {
+            this._climbSpeedEcon = value;
+        }
+        get climbSpeedSelected() {
+            return this._climbSpeedSelected;
+        }
+        set climbSpeedSelected(value) {
+            this._climbSpeedSelected = value;
+        }
+        get climbSpeedTransition() {
+            return this._climbSpeedTransition;
+        }
+        set climbSpeedTransition(value) {
+            this._climbSpeedTransition = value;
+        }
+        get climbSpeedRestriction() {
+            return this._climbSpeedRestriction;
+        }
+        set climbSpeedRestriction(value) {
+            this._climbSpeedRestriction = value;
+        }
+        get accelerationSpeedRestriction() {
+            return this._accelerationSpeedRestriction;
+        }
+        set accelerationSpeedRestriction(value) {
+            this._accelerationSpeedRestriction = value;
+        }
+        Init() {
+            this._updateAltitude();
+            this._updateLastSpeed();
+            this._updateMachMode();
+            this._updateManagedSpeed();
+            this._initSpeeds();
+        }
+        _initSpeeds() {
+            this._accelerationSpeedRestriction = new HDAccelerationSpeedRestriction(this._speedManager.repository.v2Speed + 10, 1500, 1500);
+            this._overspeedProtection = new HDOverspeedProtection(null);
+            this._climbSpeedRestriction = new HDClimbSpeedRestriction(null, null);
+            this._climbSpeedTransition = new HDClimbSpeedTransition();
+            this._climbSpeedSelected = new HDClimbSpeed(null);
+            this._climbSpeedEcon = new HDClimbSpeed(this._speedManager.getEconClbManagedSpeed(0));
+            this._cruiseSpeedSelected = new HDCruiseSpeed(null, null);
+            this._cruiseSpeedEcon = new HDCruiseSpeed(this._speedManager.getEconCrzManagedSpeed(0), 0.85);
+            this._descentSpeedRestriction = new HDDescentSpeedRestriction(null, null);
+            this._descentSpeedTransition = new HDDescentSpeedTransition();
+            this._descentSpeedSelected = new HDDescentSpeed(null, null);
+            this._descentSpeedEcon = new HDDescentSpeed(282, null);
+            //		this._waypointSpeedConstraint = new WaypointSpeed(null, null);
+        }
+        get machModeActive() {
+            return this._machMode;
+        }
+        _updateMachMode() {
+            this._machMode = Simplane.getAutoPilotMachModeActive();
+            this._updateFmcIfNeeded();
+        }
+        _updateLastMachMode() {
+            this._lastMachMode = this._machMode;
+        }
+        _updateAltitude() {
+            this._planeAltitude = Simplane.getAltitude();
+        }
+        _updateManagedSpeed() {
+        }
+        _resolveMachKias(speed) {
+            if (this.machModeActive) {
+                const maxMachSpeed = 0.850;
+                const requestedSpeed = SimVar.GetGameVarValue('FROM KIAS TO MACH', 'number', speed.speed);
+                return Math.min(maxMachSpeed, requestedSpeed);
+            }
+            else {
+                return speed.speed;
+            }
+        }
+        get speed() {
+            switch (this.speedPhase) {
+                case HDSpeedPhase.SPEED_PHASE_CLIMB:
+                    switch (this.commandedSpeedType) {
+                        case HDSpeedType.SPEED_TYPE_RESTRICTION:
+                            return this._resolveMachKias(this._climbSpeedRestriction);
+                        case HDSpeedType.SPEED_TYPE_TRANSITION:
+                            return this._resolveMachKias(this._climbSpeedTransition);
+                        case HDSpeedType.SPEED_TYPE_SELECTED:
+                            return this._resolveMachKias(this._climbSpeedSelected);
+                        case HDSpeedType.SPEED_TYPE_ACCELERATION:
+                            return this._resolveMachKias(this._accelerationSpeedRestriction);
+                        case HDSpeedType.SPEED_TYPE_PROTECTED:
+                            return this._resolveMachKias(this._overspeedProtection);
+                        //					case SpeedType.SPEED_TYPE_WAYPOINT:
+                        //						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
+                        case HDSpeedType.SPEED_TYPE_ECON:
+                            return this._resolveMachKias(this._climbSpeedEcon);
+                        default:
+                            return 133;
+                    }
+                    break;
+                case HDSpeedPhase.SPEED_PHASE_CRUISE:
+                    switch (this.commandedSpeedType) {
+                        case HDSpeedType.SPEED_TYPE_RESTRICTION:
+                        case HDSpeedType.SPEED_TYPE_TRANSITION:
+                        case HDSpeedType.SPEED_TYPE_ECON:
+                            return (this.machModeActive ? this._cruiseSpeedEcon.speedMach : this._cruiseSpeedEcon.speed);
+                        case HDSpeedType.SPEED_TYPE_SELECTED:
+                            return (this.machModeActive ? (this._cruiseSpeedSelected.speedMach ? this._cruiseSpeedSelected.speedMach : this._resolveMachKias(this._cruiseSpeedSelected)) : this._cruiseSpeedSelected.speed);
+                        case HDSpeedType.SPEED_TYPE_PROTECTED:
+                            return this._resolveMachKias(this._overspeedProtection);
+                        //					case SpeedType.SPEED_TYPE_WAYPOINT:
+                        //						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
+                    }
+                    break;
+                case HDSpeedPhase.SPEED_PHASE_DESCENT:
+                    switch (this.commandedSpeedType) {
+                        case HDSpeedType.SPEED_TYPE_RESTRICTION:
+                            return this._resolveMachKias(this._descentSpeedRestriction);
+                        case HDSpeedType.SPEED_TYPE_TRANSITION:
+                            return this._resolveMachKias(this._descentSpeedTransition);
+                        case HDSpeedType.SPEED_TYPE_SELECTED:
+                            return (this.machModeActive ? (this._descentSpeedSelected.speedMach ? this._descentSpeedSelected.speedMach : this._resolveMachKias(this._descentSpeedSelected)) : this._descentSpeedSelected.speed);
+                        case HDSpeedType.SPEED_TYPE_ECON:
+                            return this._resolveMachKias(this._descentSpeedEcon);
+                        case HDSpeedType.SPEED_TYPE_PROTECTED:
+                            return this._resolveMachKias(this._overspeedProtection);
+                        //					case SpeedType.SPEED_TYPE_WAYPOINT:
+                        //						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
+                    }
+                    break;
+                case HDSpeedPhase.SPEED_PHASE_APPROACH:
+                    switch (this.commandedSpeedType) {
+                        case HDSpeedType.SPEED_TYPE_RESTRICTION:
+                            return this._resolveMachKias(this._descentSpeedRestriction);
+                        case HDSpeedType.SPEED_TYPE_TRANSITION:
+                            return this._resolveMachKias(this._descentSpeedTransition);
+                        case HDSpeedType.SPEED_TYPE_SELECTED:
+                            return (this.machModeActive ? (this._descentSpeedSelected.speedMach ? this._descentSpeedSelected.speedMach : this._resolveMachKias(this._descentSpeedSelected)) : this._descentSpeedSelected.speed);
+                        case HDSpeedType.SPEED_TYPE_ECON:
+                            return this._resolveMachKias(this._descentSpeedEcon);
+                        case HDSpeedType.SPEED_TYPE_PROTECTED:
+                            return this._resolveMachKias(this._overspeedProtection);
+                        //					case SpeedType.SPEED_TYPE_WAYPOINT:
+                        //						return (this.machModeActive ? (this._waypointSpeedConstraint.speedMach ? this._waypointSpeedConstraint.speedMach : this._resolveMachKias(this._waypointSpeedConstraint)) : this._waypointSpeedConstraint.speed);
+                    }
+                    break;
+            }
+        }
+        get speedPhase() {
+            return this._speedPhase;
+        }
+        get commandedSpeedType() {
+            return this._commandedSpeedType;
+        }
+        _updateLastSpeed() {
+            this._lastSpeed = (this.speed ? this.speed : undefined);
+        }
+        _updateCheckSpeed() {
+            this._speedCheck = this.speed;
+        }
+        update(flightPhase, costIndexCoefficient) {
+            this._costIndexCoefficient = costIndexCoefficient;
+            this._updateAltitude();
+            this._updateLastSpeed();
+            switch (flightPhase) {
+                case FlightPhase.FLIGHT_PHASE_PREFLIGHT:
+                case FlightPhase.FLIGHT_PHASE_TAXI:
+                case FlightPhase.FLIGHT_PHASE_TAKEOFF:
+                case FlightPhase.FLIGHT_PHASE_CLIMB:
+                case FlightPhase.FLIGHT_PHASE_GOAROUND:
+                    this._updateClimbSpeed();
+                    break;
+                case FlightPhase.FLIGHT_PHASE_CRUISE:
+                    this._updateCruiseSpeed();
+                    break;
+                case FlightPhase.FLIGHT_PHASE_DESCENT:
+                    this._updateDescentSpeed();
+                    break;
+                case FlightPhase.FLIGHT_PHASE_APPROACH:
+                    this._updateApproachSpeed();
+                    break;
+            }
+            this._updateCheckSpeed();
+        }
+        _updateClimbSpeed() {
+            let speed = {
+                [HDSpeedType.SPEED_TYPE_RESTRICTION]: (this._climbSpeedRestriction && this._climbSpeedRestriction.isValid() ? this._climbSpeedRestriction.speed : false),
+                [HDSpeedType.SPEED_TYPE_TRANSITION]: (this._climbSpeedTransition && this._climbSpeedTransition.isValid() ? this._climbSpeedTransition.speed : false),
+                [HDSpeedType.SPEED_TYPE_ACCELERATION]: (this._accelerationSpeedRestriction && this._accelerationSpeedRestriction.isValid() ? this._accelerationSpeedRestriction.speed : false),
+                [HDSpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+                [HDSpeedType.SPEED_TYPE_SELECTED]: (this._climbSpeedSelected && this._climbSpeedSelected.isValid() ? this._climbSpeedSelected.speed : false),
+                //[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
+                [HDSpeedType.SPEED_TYPE_ECON]: (this._climbSpeedEcon && this._climbSpeedEcon.isValid() ? this._climbSpeedEcon.speed : false)
+            };
+            this._updateLastCommandedSpeed();
+            this._updateLastMachMode();
+            let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+                return speed[value] < speed[accumulator] ? value : accumulator;
+            }, HDSpeedType.SPEED_TYPE_ECON);
+            this._updateCommandedSpeed(commandedSpeedKey, HDSpeedPhase.SPEED_PHASE_CLIMB);
+            this._updateMachMode();
+        }
+        _updateCruiseSpeed() {
+            let speed = {
+                [HDSpeedType.SPEED_TYPE_SELECTED]: (this._cruiseSpeedSelected && this._cruiseSpeedSelected.isValid() ? this._cruiseSpeedSelected.speed : false),
+                [HDSpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+                //[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
+                [HDSpeedType.SPEED_TYPE_ECON]: (this._cruiseSpeedEcon && this._cruiseSpeedEcon.isValid() ? this._cruiseSpeedEcon.speed : null)
+            };
+            this._updateLastCommandedSpeed();
+            this._updateLastMachMode();
+            let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+                return speed[value] < speed[accumulator] ? value : accumulator;
+            }, HDSpeedType.SPEED_TYPE_ECON);
+            this._updateCommandedSpeed(commandedSpeedKey, HDSpeedPhase.SPEED_PHASE_CRUISE);
+            this._updateMachMode();
+        }
+        _updateDescentSpeed() {
+            let speed = {
+                [HDSpeedType.SPEED_TYPE_RESTRICTION]: (this._descentSpeedRestriction && this._descentSpeedRestriction.isValid() ? this._descentSpeedRestriction.speed : false),
+                [HDSpeedType.SPEED_TYPE_TRANSITION]: (this._descentSpeedTransition && this._descentSpeedTransition.isValid() ? this._descentSpeedTransition.speed : false),
+                [HDSpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+                [HDSpeedType.SPEED_TYPE_SELECTED]: (this._descentSpeedSelected && this._descentSpeedSelected.isValid() ? this._descentSpeedSelected.speed : false),
+                //[SpeedType.SPEED_TYPE_WAYPOINT]: (this._waypointSpeedConstraint && this._waypointSpeedConstraint.isValid() ? this._waypointSpeedConstraint.speed : false),
+                [HDSpeedType.SPEED_TYPE_ECON]: (this._descentSpeedEcon && this._descentSpeedEcon.isValid() ? this._descentSpeedEcon.speed : false)
+            };
+            this._updateLastCommandedSpeed();
+            this._updateLastMachMode();
+            let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+                return speed[value] < speed[accumulator] ? value : accumulator;
+            }, HDSpeedType.SPEED_TYPE_ECON);
+            this._updateCommandedSpeed(commandedSpeedKey, HDSpeedPhase.SPEED_PHASE_DESCENT);
+            this._updateMachMode();
+        }
+        _updateApproachSpeed() {
+            let speed = {
+                [HDSpeedType.SPEED_TYPE_RESTRICTION]: (this._descentSpeedRestriction && this._descentSpeedRestriction.isValid() ? this._descentSpeedRestriction.speed : false),
+                [HDSpeedType.SPEED_TYPE_TRANSITION]: (this._descentSpeedTransition && this._descentSpeedTransition.isValid() ? this._descentSpeedTransition.speed : false),
+                [HDSpeedType.SPEED_TYPE_PROTECTED]: (this._overspeedProtection && this._overspeedProtection.isValid() ? this._overspeedProtection.speed : false),
+                [HDSpeedType.SPEED_TYPE_SELECTED]: (this._descentSpeedSelected && this._descentSpeedSelected.isValid() ? this._descentSpeedSelected.speed : false),
+                [HDSpeedType.SPEED_TYPE_ECON]: (this._descentSpeedEcon && this._descentSpeedEcon.isValid() ? this._descentSpeedEcon.speed : false)
+            };
+            this._updateLastCommandedSpeed();
+            this._updateLastMachMode();
+            let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
+                return speed[value] < speed[accumulator] ? value : accumulator;
+            }, HDSpeedType.SPEED_TYPE_ECON);
+            this._updateCommandedSpeed(commandedSpeedKey, HDSpeedPhase.SPEED_PHASE_APPROACH);
+            this._updateMachMode();
+        }
+        _updateLastCommandedSpeed() {
+            this._lastCommandedSpeedType = this._commandedSpeedType;
+            this._lastSpeedPhase = this._speedPhase;
+        }
+        _updateCommandedSpeed(speedType, speedPhase) {
+            /**
+             * commandedSpeedType has to be retyped to NUMBER because array filter returns KEY as STRING
+             * @type {number}
+             */
+            this._commandedSpeedType = Number(speedType);
+            this._speedPhase = Number(speedPhase);
+            this._updateFmcIfNeeded();
+        }
+        _updateFmcIfNeeded() {
+            if (this._lastCommandedSpeedType !== this._commandedSpeedType || this._lastSpeedPhase !== this._speedPhase || this._lastMachMode !== this._machMode || this._lastSpeed !== this._speedCheck) {
+                SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'Number', 1);
+            }
+        }
+    }
+
     var HeavyDivision;
     (function (HeavyDivision) {
         class Configuration {
@@ -6069,6 +5070,1588 @@
         }
         HeavyDivision.SimBrief = SimBrief;
     })(HeavyDivision || (HeavyDivision = {}));
+
+    class Boeing_FMC extends BaseFMC {
+        constructor() {
+            super();
+            this._forceNextAltitudeUpdate = false;
+            this._lastTargetAirspeed = 200;
+            this._isLNAVActive = false;
+            this._pendingLNAVActivation = false;
+            this._isVNAVActive = false;
+            this._pendingVNAVActivation = false;
+            this._isFLCHActive = false;
+            this._pendingFLCHActivation = false;
+            this._isSPDActive = false;
+            this._pendingSPDActivation = false;
+            this._isSpeedInterventionActive = false;
+            this._isHeadingHoldActive = false;
+            this._headingHoldValue = 0;
+            this._pendingHeadingSelActivation = false;
+            this._isVSpeedActive = false;
+            this._isAltitudeHoldActive = false;
+            this._altitudeHoldValue = 0;
+            this._onAltitudeHoldDeactivate = EmptyCallback.Void;
+            this._isRouteActivated = false;
+            this._fpHasChanged = false;
+            this._activatingDirectTo = false;
+            /**
+             * Reason of this property is wrong activeRoute function and wrong using of _isRouteActivated property.
+             * Normal behavior is that once route is activated by ACTIVATE prompt and EXEC all others modifications of route
+             * automatically activate EXEC for direct executing and storing the changes in FMC.
+             * When route is not activated by ACTIVATE prompt any changes do not activate EXEC and only way to activate
+             * the EXEC is use ACTIVATE prompt
+             *
+             * ASOBO behavior:
+             * _isRouteActivated is used as flag for awaiting changes for execution in a route and as EXEC illumination FLAG.
+             *
+             * STATES OF ROUTE:
+             *
+             * NOT ACTIVATED -> Route is not activated -> ACTIVATE prompt not pushed and EXECUTED, changes in route do not illuminate EXEC
+             * ACTIVATED -> Route is activated -> ACTIVATE prompt pushed and EXECUTED, changes in route illuminate EXEC
+             * MODIFIED -> Route is modified -> ACTIVATED and changes awaiting for execution (EXEC illuminating)
+             *
+             * This property holds ACTIVATED / NOT ACTIVATED state because of the misuse of _isRouteActivated in default Asobo implementation
+             * @type {boolean}
+             * @private
+             */
+            this._isMainRouteActivated = false;
+            this.dataHolder = new FMCDataHolder();
+            this.messageManager = new FMCMessagesManager();
+            this.onExec = undefined;
+            this.onExecPage = undefined;
+            this.onExecDefault = undefined;
+            this._navModeSelector = undefined;
+        }
+        setTakeOffFlap(s) {
+            let value = Number.parseInt(s);
+            if (isFinite(value)) {
+                /**
+                 * Only flaps 5, 10, 15, 17, 18, 20 can be set for takeoff
+                 */
+                if ([5, 10, 15, 17, 18, 20].indexOf(value) !== -1) {
+                    this._takeOffFlap = value;
+                    /**
+                     * Automatically clear all vSpeeds after flaps change
+                     */
+                    this.speedManager.clearVSpeeds();
+                    return true;
+                }
+            }
+            this.showErrorMessage(this.defaultInputErrorMessage);
+            return false;
+        }
+        // Property for EXEC handling
+        get fpHasChanged() {
+            return this._fpHasChanged;
+        }
+        set fpHasChanged(value) {
+            this._fpHasChanged = value;
+        }
+        /**
+         * Speed Intervention FIX
+         */
+        getIsSpeedInterventionActive() {
+            return this._isSpeedInterventionActive;
+        }
+        toggleSpeedIntervention() {
+            if (this.getIsSpeedInterventionActive()) {
+                this.deactivateSpeedIntervention();
+            }
+            else {
+                this.activateSpeedIntervention();
+            }
+        }
+        activateSpeedIntervention() {
+            if (!this.getIsVNAVActive()) {
+                return;
+            }
+            this._isSpeedInterventionActive = true;
+            if (Simplane.getAutoPilotMachModeActive()) {
+                let currentMach = Simplane.getAutoPilotMachHoldValue();
+                Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
+            }
+            else {
+                let currentSpeed = Simplane.getAutoPilotAirspeedHoldValue();
+                Coherent.call('AP_SPD_VAR_SET', 1, currentSpeed);
+            }
+            SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', 'number', 1);
+            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
+            if (this.aircraftType == Aircraft.AS01B) {
+                this.activateSPD();
+            }
+        }
+        deactivateSpeedIntervention() {
+            this._isSpeedInterventionActive = false;
+            SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', 'number', 0);
+            if (this.getIsVNAVActive()) {
+                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 2);
+            }
+        }
+        activateSPD() {
+            if (this.getIsVNAVActive() && this.aircraftType != Aircraft.AS01B) {
+                return;
+            }
+            let altitude = Simplane.getAltitudeAboveGround();
+            if (altitude < 400) {
+                this._pendingSPDActivation = true;
+            }
+            else {
+                this.doActivateSPD();
+            }
+            SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', 'number', 1);
+            this._isSPDActive = true;
+        }
+        doActivateSPD() {
+            this._pendingSPDActivation = false;
+            if (Simplane.getAutoPilotMachModeActive()) {
+                let currentMach = Simplane.getAutoPilotMachHoldValue();
+                Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
+                SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_ON', 'number', 1);
+            }
+            else {
+                let currentSpeed = Simplane.getAutoPilotAirspeedHoldValue();
+                Coherent.call('AP_SPD_VAR_SET', 1, currentSpeed);
+                SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_OFF', 'number', 1);
+            }
+            if (!this._isFLCHActive) {
+                this.setAPSpeedHoldMode();
+            }
+            this.setThrottleMode(ThrottleMode.AUTO);
+            let stayManagedSpeed = (this._pendingVNAVActivation || this._isVNAVActive) && !this._isSpeedInterventionActive;
+            if (!stayManagedSpeed) {
+                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
+            }
+        }
+        deactivateSPD() {
+            SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', 'number', 0);
+            this._isSPDActive = false;
+            this._pendingSPDActivation = false;
+        }
+        Init() {
+            super.Init();
+            this.maxCruiseFL = 450;
+            this.onDel = () => {
+                if (this.inOut.length === 0) {
+                    this.inOut = 'DELETE';
+                }
+            };
+            this.onClr = () => {
+                if (this.isDisplayingErrorMessage) {
+                    this.inOut = this.lastUserInput;
+                    this.isDisplayingErrorMessage = false;
+                }
+                else if (this.inOut.length > 0) {
+                    if (this.inOut === 'DELETE') {
+                        this.inOut = '';
+                    }
+                    else {
+                        this.inOut = this.inOut.substr(0, this.inOut.length - 1);
+                    }
+                }
+            };
+            this.onExec = () => {
+                if (this.onExecPage) {
+                    console.log('if this.onExecPage');
+                    this.onExecPage();
+                }
+                else {
+                    console.log('else this.onExecPage');
+                    this._isRouteActivated = false;
+                    this.fpHasChanged = false;
+                    this._activatingDirectTo = false;
+                }
+            };
+            this.onExecPage = undefined;
+            this.onExecDefault = () => {
+                if (this.getIsRouteActivated() && !this._activatingDirectTo) {
+                    this.insertTemporaryFlightPlan(() => {
+                        this.copyAirwaySelections();
+                        this._isRouteActivated = false;
+                        this._activatingDirectToExisting = false;
+                        this.fpHasChanged = false;
+                        SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+                        if (this.refreshPageCallback) {
+                            this.refreshPageCallback();
+                        }
+                    });
+                }
+                else if (this.getIsRouteActivated() && this._activatingDirectTo) {
+                    const activeIndex = this.flightPlanManager.getActiveWaypointIndex();
+                    this.insertTemporaryFlightPlan(() => {
+                        this.flightPlanManager.activateDirectToByIndex(activeIndex, () => {
+                            this.copyAirwaySelections();
+                            this._isRouteActivated = false;
+                            this._activatingDirectToExisting = false;
+                            this._activatingDirectTo = false;
+                            this.fpHasChanged = false;
+                            SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+                            if (this.refreshPageCallback) {
+                                this.refreshPageCallback();
+                            }
+                        });
+                    });
+                }
+                else {
+                    this.fpHasChanged = false;
+                    this._isRouteActivated = false;
+                    SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+                    if (this.refreshPageCallback) {
+                        this._activatingDirectTo = false;
+                        this.fpHasChanged = false;
+                        this.refreshPageCallback();
+                    }
+                }
+            };
+            let flapAngles = [0, 1, 5, 10, 15, 17, 18, 20, 25, 30];
+            let flapIndex = Simplane.getFlapsHandleIndex(true);
+            if (flapIndex >= 1) {
+                this._takeOffFlap = flapAngles[flapIndex];
+            }
+        }
+        /**
+         * TODO: Better to use synchronizeTemporaryAndActiveFlightPlanWaypoints in future
+         * (implementation can be found in source code prior 0.1.10 version)
+         */
+        // Copy airway selections from temporary to active flightplan
+        copyAirwaySelections() {
+            const temporaryFPWaypoints = this.flightPlanManager.getWaypoints(1);
+            const activeFPWaypoints = this.flightPlanManager.getWaypoints(0);
+            for (let i = 0; i < activeFPWaypoints.length; i++) {
+                if (activeFPWaypoints[i].infos && temporaryFPWaypoints[i] && activeFPWaypoints[i].icao === temporaryFPWaypoints[i].icao && temporaryFPWaypoints[i].infos) {
+                    activeFPWaypoints[i].infos.airwayIn = temporaryFPWaypoints[i].infos.airwayIn;
+                    activeFPWaypoints[i].infos.airwayOut = temporaryFPWaypoints[i].infos.airwayOut;
+                }
+            }
+        }
+        onFMCFlightPlanLoaded() {
+            let runway = this.flightPlanManager.getDepartureRunway();
+            if (!runway) {
+                runway = this.flightPlanManager.getDetectedCurrentRunway();
+            }
+            const weight = this.getWeight(true);
+            const flaps = this.getTakeOffFlap();
+            let vRSpeed = this.speedManager.getComputedVRSpeed(runway, weight, flaps);
+            SimVar.SetSimVarValue('FLY ASSISTANT TAKEOFF SPEED ESTIMATED', 'Knots', vRSpeed);
+        }
+        activateRoute(directTo = false, callback = EmptyCallback.Void) {
+            if (directTo) {
+                this._activatingDirectTo = true;
+            }
+            this.fpHasChanged = true;
+            if (this._isMainRouteActivated) {
+                this._isRouteActivated = true;
+                SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 1);
+            }
+            callback();
+        }
+        eraseRouteModifications() {
+            this.fpHasChanged = false;
+            this._activatingDirectTo = false;
+            this._isRouteActivated = false;
+            SimVar.SetSimVarValue('L:FMC_EXEC_ACTIVE', 'number', 0);
+        }
+        activateMainRoute(callback = EmptyCallback.Void) {
+            this._isMainRouteActivated = true;
+            this.activateRoute(false, callback);
+        }
+        //function added to set departure enroute transition index
+        setDepartureEnrouteTransitionIndex(departureEnrouteTransitionIndex, callback = EmptyCallback.Boolean) {
+            this.ensureCurrentFlightPlanIsTemporary(() => {
+                this.flightPlanManager.setDepartureEnRouteTransitionIndex(departureEnrouteTransitionIndex, () => {
+                    callback(true);
+                });
+            });
+        }
+        //function added to set arrival runway transition index
+        setArrivalRunwayTransitionIndex(arrivalRunwayTransitionIndex, callback = EmptyCallback.Boolean) {
+            this.ensureCurrentFlightPlanIsTemporary(() => {
+                this.flightPlanManager.setArrivalRunwayIndex(arrivalRunwayTransitionIndex, () => {
+                    callback(true);
+                });
+            });
+        }
+        setArrivalAndRunwayIndex(arrivalIndex, enrouteTransitionIndex, callback = EmptyCallback.Boolean) {
+            this.ensureCurrentFlightPlanIsTemporary(() => {
+                let landingRunway = this.vfrLandingRunway;
+                if (landingRunway === undefined) {
+                    landingRunway = this.flightPlanManager.getApproachRunway();
+                }
+                this.flightPlanManager.setArrivalProcIndex(arrivalIndex, () => {
+                    this.flightPlanManager.setArrivalEnRouteTransitionIndex(enrouteTransitionIndex, () => {
+                        if (landingRunway) {
+                            const arrival = this.flightPlanManager.getArrival();
+                            const arrivalRunwayIndex = arrival.runwayTransitions.findIndex(t => {
+                                return t.name.indexOf(landingRunway.designation) != -1;
+                            });
+                            if (arrivalRunwayIndex >= -1) {
+                                return this.flightPlanManager.setArrivalRunwayIndex(arrivalRunwayIndex, () => {
+                                    return callback(true);
+                                });
+                            }
+                        }
+                        return callback(true);
+                    });
+                });
+            });
+        }
+        toggleLNAV() {
+        }
+        toggleHeadingHold() {
+        }
+        activateAltitudeSel() {
+        }
+        onEvent(_event) {
+            super.onEvent(_event);
+            console.log('B747_8_FMC_MainDisplay onEvent ' + _event);
+            if (_event.indexOf('AP_LNAV') != -1) {
+                if (this._isMainRouteActivated) {
+                    this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
+                }
+                else {
+                    this.messageManager.showMessage('NO ACTIVE ROUTE', 'ACTIVATE ROUTE TO <br> ENGAGE LNAV');
+                }
+            }
+            else if (_event.indexOf('AP_VNAV') != -1) {
+                this.toggleVNAV();
+            }
+            else if (_event.indexOf('AP_FLCH') != -1) {
+                this.toggleFLCH();
+            }
+            else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
+                this._navModeSelector.onNavChangedEvent('HDG_HOLD_PRESSED');
+            }
+            else if (_event.indexOf('AP_HEADING_SEL') != -1) {
+                this._navModeSelector.onNavChangedEvent('HDG_SEL_PRESSED');
+            }
+            else if (_event.indexOf('AP_SPD') != -1) {
+                if (this.aircraftType === Aircraft.AS01B) {
+                    if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
+                        this.activateSPD();
+                    }
+                    else {
+                        this.deactivateSPD();
+                    }
+                }
+                else {
+                    if ((this.getIsAltitudeHoldActive() || this.getIsVSpeedActive()) && this.getIsTHRActive()) {
+                        this.toggleSPD();
+                    }
+                }
+            }
+            else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
+                this.toggleSpeedIntervention();
+            }
+            else if (_event.indexOf('AP_VSPEED') != -1) {
+                this.toggleVSpeed();
+            }
+            else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
+                this.activateAltitudeSel();
+            }
+            else if (_event.indexOf('AP_ALT_HOLD') != -1) {
+                this.toggleAltitudeHold();
+            }
+            else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
+                this.setAPSpeedHoldMode();
+                if (this.aircraftType == Aircraft.AS01B) {
+                    this.deactivateSPD();
+                }
+                this.setThrottleMode(ThrottleMode.TOGA);
+                if (Simplane.getIndicatedSpeed() > 80) {
+                    this.deactivateLNAV();
+                    this.deactivateVNAV();
+                }
+            }
+            else if (_event.indexOf('EXEC') != -1) {
+                this.onExec();
+            }
+        }
+        getIsLNAVArmed() {
+            return this._pendingLNAVActivation;
+        }
+        getIsLNAVActive() {
+            return this._isLNAVActive;
+        }
+        activateLNAV() {
+            if (this.flightPlanManager.getWaypointsCount() === 0) {
+                return;
+            }
+            Simplane.setAPLNAVArmed(1);
+            let altitude = Simplane.getAltitudeAboveGround();
+            if (altitude < 50) {
+                this._pendingLNAVActivation = true;
+            }
+            else {
+                this.doActivateLNAV();
+            }
+            this.deactivateHeadingHold();
+        }
+        doActivateLNAV() {
+            this._isLNAVActive = true;
+            this._pendingLNAVActivation = false;
+            if (SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', 'boolean')) {
+                return;
+            }
+            Simplane.setAPLNAVActive(1);
+            SimVar.SetSimVarValue('K:AP_NAV1_HOLD_ON', 'number', 1);
+        }
+        deactivateLNAV() {
+            this._pendingLNAVActivation = false;
+            this._isLNAVActive = false;
+            Simplane.setAPLNAVArmed(0);
+            Simplane.setAPLNAVActive(0);
+        }
+        getIsVNAVArmed() {
+            return this._pendingVNAVActivation;
+        }
+        getIsVNAVActive() {
+            return this._isVNAVActive;
+        }
+        toggleVNAV() {
+            if (this.getIsVNAVArmed()) {
+                this.deactivateVNAV();
+                SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 1);
+                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
+            }
+            else {
+                this.activateVNAV();
+            }
+        }
+        activateVNAV() {
+            if (this.flightPlanManager.getWaypointsCount() === 0) {
+                return;
+            }
+            Simplane.setAPVNAVArmed(1);
+            let altitude = Simplane.getAltitudeAboveGround();
+            if (altitude < 400) {
+                this._pendingVNAVActivation = true;
+            }
+            else {
+                this.doActivateVNAV();
+            }
+            this.deactivateAltitudeHold();
+            this.deactivateFLCH();
+            this.deactivateVSpeed();
+            if (this.aircraftType != Aircraft.AS01B) {
+                this.deactivateSPD();
+            }
+        }
+        doActivateVNAV() {
+            this._isVNAVActive = true;
+            Simplane.setAPVNAVActive(1);
+            SimVar.SetSimVarValue('K:FLIGHT_LEVEL_CHANGE_ON', 'Number', 1);
+            this._pendingVNAVActivation = false;
+            this.activateTHRREFMode();
+            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 2);
+            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 2);
+            if (this.aircraftType == Aircraft.AS01B) {
+                this.activateSPD();
+            }
+            this.setThrottleMode(ThrottleMode.CLIMB);
+        }
+        setThrottleMode(_mode) {
+            if (this.getIsSPDActive() && this.aircraftType == Aircraft.AS01B) {
+                Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+            }
+            else {
+                Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', _mode);
+            }
+        }
+        deactivateVNAV() {
+            this._pendingVNAVActivation = false;
+            this._isVNAVActive = false;
+            this._pendingVNAVActivation = false;
+            Simplane.setAPVNAVArmed(0);
+            Simplane.setAPVNAVActive(0);
+            this.deactivateSpeedIntervention();
+        }
+        getIsFLCHArmed() {
+            return this._pendingFLCHActivation;
+        }
+        getIsFLCHActive() {
+            return this._isFLCHActive;
+        }
+        toggleFLCH() {
+            if (this.getIsFLCHArmed()) {
+                this.deactivateFLCH();
+            }
+            else {
+                this.activateFLCH();
+            }
+        }
+        activateFLCH() {
+            this._isFLCHActive = true;
+            Simplane.setAPFLCHActive(1);
+            this.deactivateVNAV();
+            this.deactivateAltitudeHold();
+            this.deactivateVSpeed();
+            let altitude = Simplane.getAltitudeAboveGround();
+            if (altitude < 400) {
+                this._pendingFLCHActivation = true;
+            }
+            else {
+                this.doActivateFLCH();
+            }
+        }
+        doActivateFLCH() {
+            this._pendingFLCHActivation = false;
+            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 1);
+            let displayedAltitude = Simplane.getAutoPilotDisplayedAltitudeLockValue();
+            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, displayedAltitude, this._forceNextAltitudeUpdate);
+            if (!Simplane.getAutoPilotFLCActive()) {
+                SimVar.SetSimVarValue('K:FLIGHT_LEVEL_CHANGE_ON', 'Number', 1);
+            }
+            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', 'number', 1);
+            this.setThrottleMode(ThrottleMode.CLIMB);
+            if (this.aircraftType != Aircraft.AS01B) {
+                this.activateSPD();
+            }
+        }
+        deactivateFLCH() {
+            this._isFLCHActive = false;
+            this._pendingFLCHActivation = false;
+            Simplane.setAPFLCHActive(0);
+            this.deactivateSpeedIntervention();
+        }
+        getIsSPDArmed() {
+            return this._pendingSPDActivation;
+        }
+        getIsSPDActive() {
+            return this._isSPDActive;
+        }
+        toggleSPD() {
+            if (this.getIsSPDArmed()) {
+                this.deactivateSPD();
+            }
+            else {
+                this.activateSPD();
+            }
+        }
+        activateTHRREFMode() {
+            let altitude = Simplane.getAltitudeAboveGround();
+            this.setThrottleMode(ThrottleMode.CLIMB);
+            let n1 = 100;
+            if (altitude < this.thrustReductionAltitude) {
+                n1 = this.getThrustTakeOffLimit();
+            }
+            else {
+                n1 = this.getThrustClimbLimit();
+            }
+            SimVar.SetSimVarValue('AUTOPILOT THROTTLE MAX THRUST', 'number', n1);
+        }
+        getIsHeadingHoldActive() {
+            return this._isHeadingHoldActive;
+        }
+        activateHeadingHold() {
+            this.deactivateLNAV();
+            this._isHeadingHoldActive = true;
+            if (!SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean')) {
+                SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'Number', 1);
+            }
+            SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 1);
+            this._headingHoldValue = Simplane.getHeadingMagnetic();
+            SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 2);
+            Coherent.call('HEADING_BUG_SET', 2, this._headingHoldValue);
+        }
+        deactivateHeadingHold() {
+            this._isHeadingHoldActive = false;
+            SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 0);
+        }
+        activateHeadingSel() {
+            this.deactivateHeadingHold();
+            this.deactivateLNAV();
+            SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
+            let altitude = Simplane.getAltitudeAboveGround();
+            if (altitude < 400) {
+                this._pendingHeadingSelActivation = true;
+            }
+            else {
+                this.doActivateHeadingSel();
+            }
+        }
+        doActivateHeadingSel() {
+            this._pendingHeadingSelActivation = false;
+            if (!SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean')) {
+                SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'Number', 1);
+            }
+        }
+        getIsTHRActive() {
+            return false;
+        }
+        getIsVSpeedActive() {
+            return this._isVSpeedActive;
+        }
+        toggleVSpeed() {
+            if (this.getIsVSpeedActive()) {
+                let altitude = Simplane.getAltitudeAboveGround();
+                if (altitude < 50) {
+                    this.deactivateVSpeed();
+                    this.deactivateSPD();
+                }
+                else {
+                    this.activateVSpeed();
+                }
+            }
+            else {
+                this.activateVSpeed();
+            }
+        }
+        activateVSpeed() {
+            this._isVSpeedActive = true;
+            this.deactivateVNAV();
+            this.deactivateAltitudeHold();
+            this.deactivateFLCH();
+            this.activateSPD();
+            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 1);
+            let displayedAltitude = Simplane.getAutoPilotDisplayedAltitudeLockValue();
+            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, displayedAltitude, this._forceNextAltitudeUpdate);
+            this.requestCall(() => {
+                let currentVSpeed = Simplane.getVerticalSpeed();
+                Coherent.call('AP_VS_VAR_SET_ENGLISH', 0, currentVSpeed);
+                if (!SimVar.GetSimVarValue('AUTOPILOT VERTICAL HOLD', 'Boolean')) {
+                    SimVar.SetSimVarValue('K:AP_PANEL_VS_HOLD', 'Number', 1);
+                }
+            }, 200);
+            SimVar.SetSimVarValue('L:AP_VS_ACTIVE', 'number', 1);
+        }
+        deactivateVSpeed() {
+            this._isVSpeedActive = false;
+            SimVar.SetSimVarValue('L:AP_VS_ACTIVE', 'number', 0);
+        }
+        toggleAltitudeHold() {
+            if (this.getIsAltitudeHoldActive()) {
+                let altitude = Simplane.getAltitudeAboveGround();
+                if (altitude < 50) {
+                    this.deactivateAltitudeHold();
+                    this.deactivateSPD();
+                }
+            }
+            else {
+                this.activateAltitudeHold();
+            }
+        }
+        getIsAltitudeHoldActive() {
+            return this._isAltitudeHoldActive;
+        }
+        activateAltitudeHold(useCurrentAutopilotTarget = false) {
+            this.deactivateVNAV();
+            this.deactivateFLCH();
+            this.deactivateVSpeed();
+            this.activateSPD();
+            this._isAltitudeHoldActive = true;
+            Simplane.setAPAltHoldActive(1);
+            if (useCurrentAutopilotTarget) {
+                this._altitudeHoldValue = Simplane.getAutoPilotAltitudeLockValue('feet');
+            }
+            else {
+                this._altitudeHoldValue = Simplane.getAltitude();
+                this._altitudeHoldValue = Math.round(this._altitudeHoldValue / 100) * 100;
+            }
+            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', 'number', 1);
+            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, this._altitudeHoldValue, this._forceNextAltitudeUpdate);
+            if (!SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK', 'Boolean')) {
+                SimVar.SetSimVarValue('K:AP_PANEL_ALTITUDE_HOLD', 'Number', 1);
+            }
+        }
+        deactivateAltitudeHold() {
+            this._isAltitudeHoldActive = false;
+            Simplane.setAPAltHoldActive(0);
+            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, Simplane.getAutoPilotDisplayedAltitudeLockValue(), this._forceNextAltitudeUpdate);
+            if (this._onAltitudeHoldDeactivate) {
+                let cb = this._onAltitudeHoldDeactivate;
+                this._onAltitudeHoldDeactivate = undefined;
+                cb();
+            }
+        }
+        getThrustTakeOffLimit() {
+            return 100;
+        }
+        getThrustClimbLimit() {
+            return 100;
+        }
+        getVRef(flapsHandleIndex = NaN, useCurrentWeight = true) {
+            return 200;
+        }
+        getTakeOffManagedSpeed() {
+            let altitude = Simplane.getAltitudeAboveGround();
+            if (altitude < 35) {
+                return this.speedManager.repository.v2Speed + 15;
+            }
+            return 250;
+        }
+        getIsRouteActivated() {
+            return this._isRouteActivated;
+        }
+        setBoeingDirectTo(directToWaypointIdent, directToWaypointIndex, callback = EmptyCallback.Boolean) {
+            let waypoints = this.flightPlanManager.getWaypoints();
+            let waypointIndex = waypoints.findIndex(w => {
+                return w.ident === directToWaypointIdent;
+            });
+            if (waypointIndex === -1) {
+                waypoints = this.flightPlanManager.getApproachWaypoints();
+                if (waypoints) {
+                    let waypoint = waypoints.find(w => {
+                        return w.ident === directToWaypointIdent;
+                    });
+                    if (waypoint) {
+                        return this.flightPlanManager.activateDirectTo(waypoint.icao, () => {
+                            return callback(true);
+                        });
+                    }
+                }
+            }
+            if (waypointIndex > -1) {
+                this.ensureCurrentFlightPlanIsTemporary(() => {
+                    this.flightPlanManager.removeWaypointFromTo(directToWaypointIndex, waypointIndex, true, () => {
+                        callback(true);
+                    });
+                });
+            }
+            else {
+                callback(false);
+            }
+        }
+        updateHUDAirspeedColors() {
+            let crossSpeed = Simplane.getCrossoverSpeed();
+            let cruiseMach = Simplane.getCruiseMach();
+            let crossSpeedFactor = Simplane.getCrossoverSpeedFactor(crossSpeed, cruiseMach);
+            let stallSpeed = Simplane.getStallSpeed();
+            SimVar.SetSimVarValue('L:HUD_AIRSPEED_WHITE_START', 'number', Simplane.getDesignSpeeds().VS0 * crossSpeedFactor);
+            SimVar.SetSimVarValue('L:HUD_AIRSPEED_WHITE_END', 'number', Simplane.getMaxSpeed(this.aircraftType) * crossSpeedFactor);
+            SimVar.SetSimVarValue('L:HUD_AIRSPEED_GREEN_START', 'number', stallSpeed * crossSpeedFactor);
+            SimVar.SetSimVarValue('L:HUD_AIRSPEED_GREEN_END', 'number', stallSpeed * Math.sqrt(1.3) * crossSpeedFactor);
+            SimVar.SetSimVarValue('L:HUD_AIRSPEED_YELLOW_START', 'number', stallSpeed * Math.sqrt(1.3) * crossSpeedFactor);
+            SimVar.SetSimVarValue('L:HUD_AIRSPEED_YELLOW_END', 'number', Simplane.getMaxSpeed(this.aircraftType) * crossSpeedFactor);
+            SimVar.SetSimVarValue('L:HUD_AIRSPEED_RED_START', 'number', Simplane.getMaxSpeed(this.aircraftType) * crossSpeedFactor);
+            SimVar.SetSimVarValue('L:HUD_AIRSPEED_RED_END', 'number', (Simplane.getDesignSpeeds().VMax + 100) * crossSpeedFactor);
+        }
+        /**
+         * Registers a periodic page refresh with the FMC display.
+         * @param {number} interval The interval, in ms, to run the supplied action.
+         * @param {function} action An action to run at each interval. Can return a bool to indicate if the page refresh should stop.
+         * @param {boolean} runImmediately If true, the action will run as soon as registered, and then after each
+         * interval. If false, it will start after the supplied interval.
+         */
+        registerPeriodicPageRefresh(action, interval, runImmediately) {
+            this.unregisterPeriodicPageRefresh();
+            const refreshHandler = () => {
+                const isBreak = action();
+                if (isBreak) {
+                    return;
+                }
+                this._pageRefreshTimer = window.setTimeout(refreshHandler, interval);
+            };
+            if (runImmediately) {
+                refreshHandler();
+            }
+            else {
+                this._pageRefreshTimer = window.setTimeout(refreshHandler, interval);
+            }
+        }
+        /**
+         * Unregisters a periodic page refresh with the FMC display.
+         */
+        unregisterPeriodicPageRefresh() {
+            if (this._pageRefreshTimer) {
+                clearInterval(this._pageRefreshTimer);
+            }
+        }
+        clearDisplay() {
+            super.clearDisplay();
+            this.unregisterPeriodicPageRefresh();
+        }
+        /**
+         * FMC Renderer extensions
+         * TODO: Standalone rendered should be created.
+         */
+        setTemplate(template) {
+            return;
+            if (template[0]) {
+                this.setTitle(template[0][0]);
+                this.setPageCurrent(template[0][1]);
+                this.setPageCount(template[0][2]);
+            }
+            for (let i = 0; i < 6; i++) {
+                let tIndex = 2 * i + 1;
+                if (template[tIndex]) {
+                    if (template[tIndex][1] !== undefined) {
+                        this.setLabel(template[tIndex][0], i, 0);
+                        this.setLabel(template[tIndex][1], i, 1);
+                        this.setLabel(template[tIndex][2], i, 2);
+                        this.setLabel(template[tIndex][3], i, 3);
+                    }
+                    else {
+                        this.setLabel(template[tIndex][0], i, -1);
+                    }
+                }
+                tIndex = 2 * i + 2;
+                if (template[tIndex]) {
+                    if (template[tIndex][1] !== undefined) {
+                        this.setLine(template[tIndex][0], i, 0);
+                        this.setLine(template[tIndex][1], i, 1);
+                        this.setLine(template[tIndex][2], i, 2);
+                        this.setLine(template[tIndex][3], i, 3);
+                    }
+                    else {
+                        this.setLine(template[tIndex][0], i, -1);
+                    }
+                }
+            }
+            if (template[13]) {
+                this.setInOut(template[13][0]);
+            }
+        }
+        /**
+         * Convert text to settable FMC design
+         * @param content
+         * @param width
+         * @returns {string}
+         */
+        makeSettable(content, width = undefined) {
+            return '[settable=' + String(width) + ']' + content + '[/settable]';
+            //return '[settable]' + content + '[/settable]';
+        }
+        /**
+         * Convert/set text to colored text
+         * @param content
+         * @param color
+         * @returns {string}
+         */
+        colorizeContent(content, color) {
+            return '[color=' + color + ']' + content + '[/color]';
+        }
+        /**
+         * Convert/set text size
+         * @param content
+         * @param size
+         * @returns {string}
+         */
+        resizeContent(content, size) {
+            return '[size=' + size + ']' + content + '[/size]';
+        }
+        /**
+         * setTitle with settable/size/color support
+         * @param content
+         */
+        setTitle(content) {
+            if (content !== '') {
+                let re3 = /\[settable\](.*?)\[\/settable\]/g;
+                content = content.replace(re3, '<div class="settable"><span>$1</span></div>');
+                let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+                content = content.replace(re2, '<tspan class="$1">$2</tspan>');
+                let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+                content = content.replace(re, '<tspan class="$1">$2</tspan>');
+                let color = content.split('[color]')[1];
+            }
+            let color = content.split('[color]')[1];
+            if (!color) {
+                color = 'white';
+            }
+            this._title = content.split('[color]')[0];
+            this._titleElement.classList.remove('white', 'blue', 'yellow', 'green', 'red');
+            this._titleElement.classList.add(color);
+            this._titleElement.innerHTML = this._title;
+        }
+        /**
+         * setlabel with settable/size/color support
+         * @param content
+         */
+        setLabel(label, row, col = -1) {
+            if (col >= this._labelElements[row].length) {
+                return;
+            }
+            if (!this._labels[row]) {
+                this._labels[row] = [];
+            }
+            if (!label) {
+                label = '';
+            }
+            if (col === -1) {
+                for (let i = 0; i < this._labelElements[row].length; i++) {
+                    this._labels[row][i] = '';
+                    this._labelElements[row][i].textContent = '';
+                }
+                col = 0;
+            }
+            if (label === '__FMCSEPARATOR') {
+                label = '---------------------------------------';
+            }
+            if (label !== '') {
+                label = label.replace('\<', '&lt');
+                let re3 = /\[settable\](.*?)\[\/settable\]/g;
+                //content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
+                label = label.replace(re3, '<div class="settable"><span>$1</span></div>');
+                let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+                label = label.replace(re2, '<tspan class="$1">$2</tspan>');
+                let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+                label = label.replace(re, '<tspan class="$1">$2</tspan>');
+                let color = label.split('[color]')[1];
+                if (!color) {
+                    color = 'white';
+                }
+                let e = this._labelElements[row][col];
+                e.classList.remove('white', 'blue', 'yellow', 'green', 'red');
+                e.classList.add(color);
+                label = label.split('[color]')[0];
+            }
+            this._labels[row][col] = label;
+            this._labelElements[row][col].innerHTML = '<bdi>' + label + '</bdi>';
+        }
+        /**
+         * setline with settable/size/color support
+         * @param content
+         */
+        setLine(content, row, col = -1) {
+            if (col >= this._lineElements[row].length) {
+                return;
+            }
+            if (!content) {
+                content = '';
+            }
+            if (!this._lines[row]) {
+                this._lines[row] = [];
+            }
+            if (col === -1) {
+                for (let i = 0; i < this._lineElements[row].length; i++) {
+                    this._lines[row][i] = '';
+                    this._lineElements[row][i].textContent = '';
+                }
+                col = 0;
+            }
+            if (content === '__FMCSEPARATOR') {
+                content = '---------------------------------------';
+            }
+            if (content !== '') {
+                content = content.replace('\<', '&lt');
+                if (content.indexOf('[s-text]') !== -1) {
+                    content = content.replace('[s-text]', '');
+                    this._lineElements[row][col].classList.add('s-text');
+                }
+                else {
+                    this._lineElements[row][col].classList.remove('s-text');
+                }
+                let re3 = /\[settable\](.*?)\[\/settable\]/g;
+                //content = content.replace(re3, '<div style="padding-top: 4px"><span class="settable">$1</span></div>')
+                content = content.replace(re3, '<div class="settable"><span>$1</span></div>');
+                let re2 = /\[size=([a-z-]+)\](.*?)\[\/size\]/g;
+                content = content.replace(re2, '<tspan class="$1">$2</tspan>');
+                let re = /\[color=([a-z-]+)\](.*?)\[\/color\]/g;
+                content = content.replace(re, '<tspan class="$1">$2</tspan>');
+                let color = content.split('[color]')[1];
+                if (!color) {
+                    color = 'white';
+                }
+                let e = this._lineElements[row][col];
+                e.classList.remove('white', 'blue', 'yellow', 'green', 'red', 'magenta');
+                e.classList.add(color);
+                content = content.split('[color]')[0];
+            }
+            this._lines[row][col] = content;
+            this._lineElements[row][col].innerHTML = '<bdi>' + this._lines[row][col] + '</bdi>';
+        }
+        trySetTransAltitude(s) {
+            if (!/^\d+$/.test(s)) {
+                this.showErrorMessage('FORMAT ERROR');
+                return false;
+            }
+            let v = parseInt(s);
+            if (isFinite(v) && v > 0) {
+                this.transitionAltitude = v;
+                SimVar.SetSimVarValue('L:AIRLINER_TRANS_ALT', 'Number', this.transitionAltitude);
+                return true;
+            }
+            this.showErrorMessage(this.defaultInputErrorMessage);
+            return false;
+        }
+        /**
+         * TODO: Should be moved to SpeedDirector class
+         * @param s
+         * @returns {boolean}
+         */
+        trySetAccelerationHeight(s) {
+            let accelerationHeight = parseInt(s);
+            let origin = this.flightPlanManager.getOrigin();
+            if (origin) {
+                if (isFinite(accelerationHeight)) {
+                    let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+                    let roundedHeight = Math.round(accelerationHeight / 100) * 100;
+                    if (this.trySetAccelerationAltitude(String(roundedHeight + elevation))) {
+                        this._speedDirector.accelerationSpeedRestriction.accelerationHeight = roundedHeight;
+                        return true;
+                    }
+                }
+            }
+            this.showErrorMessage(this.defaultInputErrorMessage);
+            return false;
+        }
+        /**
+         * TODO: Should be moved to SpeedDirector class
+         * @param s
+         * @returns {boolean}
+         */
+        trySetAccelerationAltitude(s) {
+            let accelerationHeight = parseInt(s);
+            if (isFinite(accelerationHeight)) {
+                this._speedDirector.accelerationSpeedRestriction.altitude = accelerationHeight;
+                SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', accelerationHeight);
+                return true;
+            }
+            this.showErrorMessage(this.defaultInputErrorMessage);
+            return false;
+        }
+        /**
+         * TODO: Should be moved to SpeedDirector/ThrustDirector
+         * TODO: Probably should be better to make ThrustDirector because thr reduction is not speed thing
+         * @param s
+         * @returns {boolean}
+         */
+        trySetThrustReductionHeight(s) {
+            let thrustReductionHeight = parseInt(s);
+            let origin = this.flightPlanManager.getOrigin();
+            if (origin) {
+                if (isFinite(thrustReductionHeight)) {
+                    let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+                    let roundedHeight = Math.round(thrustReductionHeight / 100) * 100;
+                    if (this.trySetThrustReductionAltitude(String(roundedHeight + elevation))) {
+                        this.thrustReductionHeight = roundedHeight;
+                        this.isThrustReductionAltitudeCustomValue = true;
+                        return true;
+                    }
+                }
+            }
+            this.showErrorMessage(this.defaultInputErrorMessage);
+            return false;
+        }
+        /**
+         * TODO: Should be moved to SpeedDirector class
+         * @param s
+         * @returns {boolean}
+         */
+        trySetThrustReductionAltitude(s) {
+            let thrustReductionHeight = parseInt(s);
+            if (isFinite(thrustReductionHeight)) {
+                this.thrustReductionAltitude = thrustReductionHeight;
+                SimVar.SetSimVarValue('L:AIRLINER_THR_RED_ALT', 'Number', this.thrustReductionAltitude);
+                return true;
+            }
+            this.showErrorMessage(this.defaultInputErrorMessage);
+            return false;
+        }
+        /**
+         * TODO: Should be moved to SpeedDirector class or the function should be only bypass for new function in SpeedDirector
+         */
+        recalculateTHRRedAccTransAlt() {
+            /**
+             * TODO: HotFix!!! Need to be fixed in future... SpeedDirector is not normally accessible from here
+             */
+            if (this._speedDirector === undefined) {
+                this._speedDirector = new SpeedDirector(this.speedManager);
+            }
+            let origin = this.flightPlanManager.getOrigin();
+            if (origin) {
+                this._recalculateOriginTransitionAltitude(origin);
+                this._recalculateThrustReductionAltitude(origin);
+                this._recalculateAccelerationAltitude(origin);
+            }
+            let destination = this.flightPlanManager.getDestination();
+            if (destination) {
+                this._recalculateDestinationTransitionAltitude(destination);
+            }
+        }
+        /**
+         * TODO: Should be moved into SpeedDirector/ThrustDirector??
+         * @param origin
+         * @private
+         */
+        _recalculateThrustReductionAltitude(origin) {
+            if (origin) {
+                if (origin.infos instanceof AirportInfo) {
+                    if (!this.isThrustReductionAltitudeCustomValue) {
+                        const elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+                        this.thrustReductionAltitude = elevation + 1500;
+                        this.thrustReductionHeight = 1500;
+                        SimVar.SetSimVarValue('L:AIRLINER_THR_RED_ALT', 'Number', this.thrustReductionAltitude);
+                    }
+                }
+            }
+        }
+        /**
+         * TODO: Should be moved into SpeedDirector
+         * @param origin
+         * @private
+         */
+        _recalculateAccelerationAltitude(origin) {
+            if (origin) {
+                if (origin.infos instanceof AirportInfo) {
+                    const elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
+                    this._speedDirector.accelerationSpeedRestriction.altitude = elevation + this._speedDirector.accelerationSpeedRestriction.accelerationHeight;
+                    SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', this._speedDirector.accelerationSpeedRestriction.altitude);
+                }
+            }
+        }
+        _recalculateOriginTransitionAltitude(origin) {
+            if (origin) {
+                if (origin.infos instanceof AirportInfo) {
+                    if (isFinite(origin.infos.transitionAltitude)) {
+                        this.transitionAltitude = origin.infos.transitionAltitude;
+                    }
+                }
+            }
+        }
+        _recalculateDestinationTransitionAltitude(destination) {
+            if (destination) {
+                if (destination.infos instanceof AirportInfo) {
+                    if (isFinite(destination.infos.transitionAltitude)) {
+                        this.perfApprTransAlt = destination.infos.transitionAltitude;
+                    }
+                }
+            }
+        }
+        setAPManagedSpeedMach(_mach, _aircraft) {
+            if (isFinite(_mach)) {
+                if (Simplane.getAutoPilotMachModeActive()) {
+                    Coherent.call('AP_MACH_VAR_SET', 2, _mach);
+                    SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_ON', 'number', 1);
+                }
+            }
+        }
+        getThrustTakeOffTemp() {
+            return this._thrustTakeOffTemp;
+        }
+        checkFmcPreFlight() {
+            if (!this.dataHolder.preFlightDataHolder.finished) {
+                this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature = (!!this.getThrustTakeOffTemp());
+                this.dataHolder.preFlightDataHolder.thrustLim.completed = (this.dataHolder.preFlightDataHolder.thrustLim.assumedTemperature);
+                this.dataHolder.preFlightDataHolder.takeOff.flaps = (!!this.getTakeOffFlap());
+                this.dataHolder.preFlightDataHolder.takeOff.v1 = (!!this.speedManager.repository.v1Speed);
+                this.dataHolder.preFlightDataHolder.takeOff.vR = (!!this.speedManager.repository.vRSpeed);
+                this.dataHolder.preFlightDataHolder.takeOff.v2 = (!!this.speedManager.repository.v2Speed);
+                this.dataHolder.preFlightDataHolder.takeOff.completed = (this.dataHolder.preFlightDataHolder.takeOff.v1 && this.dataHolder.preFlightDataHolder.takeOff.vR && this.dataHolder.preFlightDataHolder.takeOff.v2 && this.dataHolder.preFlightDataHolder.takeOff.flaps);
+                this.dataHolder.preFlightDataHolder.perfInit.cruiseAltitude = (!!this.cruiseFlightLevel);
+                this.dataHolder.preFlightDataHolder.perfInit.costIndex = (!!this.costIndex);
+                this.dataHolder.preFlightDataHolder.perfInit.reserves = (!!this.getFuelReserves());
+                this.dataHolder.preFlightDataHolder.perfInit.completed = (this.dataHolder.preFlightDataHolder.perfInit.cruiseAltitude && this.dataHolder.preFlightDataHolder.perfInit.costIndex && this.dataHolder.preFlightDataHolder.perfInit.reserves);
+                this.dataHolder.preFlightDataHolder.route.origin = (!!this.flightPlanManager.getOrigin());
+                this.dataHolder.preFlightDataHolder.route.destination = (!!this.flightPlanManager.getDestination());
+                this.dataHolder.preFlightDataHolder.route.activated = true;
+                this.dataHolder.preFlightDataHolder.route.completed = (this.dataHolder.preFlightDataHolder.route.activated && this.dataHolder.preFlightDataHolder.route.destination && this.dataHolder.preFlightDataHolder.route.origin);
+                this.dataHolder.preFlightDataHolder.completed = (this.dataHolder.preFlightDataHolder.thrustLim.completed && this.dataHolder.preFlightDataHolder.takeOff.completed && this.dataHolder.preFlightDataHolder.perfInit.completed && this.dataHolder.preFlightDataHolder.route.completed);
+            }
+        }
+        showFMCPreFlightComplete(airspeed) {
+            if (this.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF && airspeed < 80) {
+                this.checkFmcPreFlight();
+            }
+            else {
+                this.dataHolder.preFlightDataHolder.finished = true;
+            }
+        }
+        /**
+         * TODO: This should be in FlightPhaseManager
+         */
+        checkUpdateFlightPhase() {
+            let airSpeed = Simplane.getTrueSpeed();
+            this.showFMCPreFlightComplete(airSpeed);
+            if (airSpeed > 10) {
+                if (this.currentFlightPhase === 0) {
+                    this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_TAKEOFF;
+                }
+                if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_TAKEOFF) {
+                    let enterClimbPhase = false;
+                    let agl = Simplane.getAltitude();
+                    let altValue = isFinite(this.thrustReductionAltitude) ? this.thrustReductionAltitude : 1500;
+                    if (agl > altValue) {
+                        this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CLIMB;
+                        enterClimbPhase = true;
+                    }
+                    if (enterClimbPhase) {
+                        let origin = this.flightPlanManager.getOrigin();
+                        if (origin) {
+                            origin.altitudeWasReached = Simplane.getAltitude();
+                            origin.timeWasReached = SimVar.GetGlobalVarValue('ZULU TIME', 'seconds');
+                            origin.fuelWasReached = SimVar.GetSimVarValue('FUEL TOTAL QUANTITY', 'gallons') * SimVar.GetSimVarValue('FUEL WEIGHT PER GALLON', 'kilograms') / 1000;
+                        }
+                    }
+                }
+                if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
+                    let altitude = SimVar.GetSimVarValue('PLANE ALTITUDE', 'feet');
+                    let cruiseFlightLevel = this.cruiseFlightLevel * 100;
+                    if (isFinite(cruiseFlightLevel)) {
+                        if (altitude >= 0.96 * cruiseFlightLevel) {
+                            this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_CRUISE;
+                            Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+                        }
+                    }
+                }
+                if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
+                    SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_CLIMB', 'number', 0);
+                    //console.log('TO TD: ' + SimVar.GetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number'));
+                    //console.log('DIS TD: ' + SimVar.GetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number'));
+                    /**
+                     * Basic TOD to destination
+                     */
+                    let cruiseAltitude = SimVar.GetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number');
+                    let showTopOfDescent = false;
+                    if (isFinite(cruiseAltitude)) {
+                        let destination = this.flightPlanManager.getDestination();
+                        if (destination) {
+                            let firstTODWaypoint = this.getWaypointForTODCalculation();
+                            if (firstTODWaypoint) {
+                                let totalDistance = 0;
+                                const destinationElevation = firstTODWaypoint.targetAltitude;
+                                const descentAltitudeDelta = Math.abs(destinationElevation - cruiseAltitude) / 100;
+                                const todDistance = descentAltitudeDelta / 3.3;
+                                const indicatedSpeed = Simplane.getIndicatedSpeed();
+                                let speedToLose = 0;
+                                if (indicatedSpeed > 220) {
+                                    speedToLose = indicatedSpeed - 220;
+                                }
+                                const distanceForSpeedReducing = speedToLose / 10;
+                                totalDistance = todDistance + distanceForSpeedReducing + firstTODWaypoint.distanceFromDestinationToWaypoint;
+                                let todCoordinates = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(totalDistance, true);
+                                let todLatLongAltCoordinates = new LatLongAlt(todCoordinates.lat, todCoordinates.long);
+                                let planeCoordinates = new LatLongAlt(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'), SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude'));
+                                let distanceToTOD = Avionics.Utils.computeGreatCircleDistance(planeCoordinates, todLatLongAltCoordinates);
+                                SimVar.SetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number', distanceToTOD);
+                                SimVar.SetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number', totalDistance);
+                                if (distanceToTOD < 50) {
+                                    if (!SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number')) {
+                                        SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number', 1);
+                                        SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+                                    }
+                                }
+                                if (distanceToTOD > 1) {
+                                    showTopOfDescent = true;
+                                }
+                                else {
+                                    showTopOfDescent = false;
+                                    let lastFlightPhase = this.currentFlightPhase;
+                                    this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
+                                    Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+                                    if (lastFlightPhase !== FlightPhase.FLIGHT_PHASE_DESCENT) {
+                                        SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
+                                    }
+                                }
+                                if (showTopOfDescent) {
+                                    SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 1);
+                                }
+                                else {
+                                    SimVar.SetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number', 0);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (this.currentFlightPhase !== FlightPhase.FLIGHT_PHASE_APPROACH) {
+                    if (this.flightPlanManager.decelWaypoint) {
+                        let lat = SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude');
+                        let long = Simplane.getCurrentLon();
+                        let planeLla = new LatLongAlt(lat, long);
+                        let dist = Avionics.Utils.computeGreatCircleDistance(this.flightPlanManager.decelWaypoint.infos.coordinates, planeLla);
+                        if (dist < 3) {
+                            this.tryGoInApproachPhase();
+                        }
+                    }
+                }
+                if (this.currentFlightPhase !== FlightPhase.FLIGHT_PHASE_APPROACH) {
+                    let destination = this.flightPlanManager.getDestination();
+                    if (destination) {
+                        let lat = SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude');
+                        let long = Simplane.getCurrentLon();
+                        let planeLla = new LatLongAlt(lat, long);
+                        let dist = Avionics.Utils.computeGreatCircleDistance(destination.infos.coordinates, planeLla);
+                        if (dist < 20) {
+                            this.tryGoInApproachPhase();
+                        }
+                    }
+                }
+            }
+            if (Simplane.getCurrentFlightPhase() != this.currentFlightPhase) {
+                Simplane.setCurrentFlightPhase(this.currentFlightPhase);
+                this.onFlightPhaseChanged();
+            }
+        }
+        getWaypointForTODCalculation() {
+            let getWaypoint = (allWaypoints) => {
+                for (let i = 0; i <= allWaypoints.length - 1; i++) {
+                    if (allWaypoints[i].legAltitudeDescription === 0) {
+                        continue;
+                    }
+                    if (allWaypoints[i].legAltitudeDescription === 1 && isFinite(allWaypoints[i].legAltitude1)) {
+                        return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
+                    }
+                    if (allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)) {
+                        continue;
+                        //return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+                    }
+                    if (allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)) {
+                        return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
+                    }
+                    if (allWaypoints[i].legAltitudeDescription === 4 && isFinite(allWaypoints[i].legAltitude1) && isFinite(allWaypoints[i].legAltitude2)) {
+                        if (allWaypoints[i].legAltitude1 === allWaypoints[i].legAltitude2) {
+                            return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
+                        }
+                        if (allWaypoints[i].legAltitude1 < allWaypoints[i].legAltitude2) {
+                            let middle = (allWaypoints[i].legAltitude2 - allWaypoints[i].legAltitude1) / 2;
+                            return {
+                                fix: allWaypoints[i],
+                                targetAltitude: Math.round(allWaypoints[i].legAltitude1 + middle)
+                            };
+                        }
+                        if (allWaypoints[i].legAltitude1 > allWaypoints[i].legAltitude2) {
+                            let middle = (allWaypoints[i].legAltitude1 - allWaypoints[i].legAltitude2) / 2;
+                            return {
+                                fix: allWaypoints[i],
+                                targetAltitude: Math.round(allWaypoints[i].legAltitude2 + middle)
+                            };
+                        }
+                    }
+                }
+                return undefined;
+            };
+            let waypoint = undefined;
+            let destination = this.flightPlanManager.getDestination();
+            if (destination) {
+                let arrivalSegment = this.flightPlanManager.getCurrentFlightPlan().arrival;
+                let approachSegment = this.flightPlanManager.getCurrentFlightPlan().approach;
+                waypoint = getWaypoint(arrivalSegment.waypoints);
+                if (!waypoint) {
+                    waypoint = getWaypoint(approachSegment.waypoints);
+                }
+                if (!waypoint) {
+                    waypoint = {
+                        fix: destination,
+                        targetAltitude: Math.round(parseFloat(destination.infos.oneWayRunways[0].elevation) * 3.28)
+                    };
+                }
+                if (waypoint) {
+                    if (approachSegment.waypoints.length > 0) {
+                        const cumulativeToApproach = approachSegment.waypoints[approachSegment.waypoints.length - 1].cumulativeDistanceInFP;
+                        waypoint.distanceFromDestinationToWaypoint = cumulativeToApproach - waypoint.fix.cumulativeDistanceInFP;
+                    }
+                    else {
+                        waypoint.distanceFromDestinationToWaypoint = destination.cumulativeDistanceInFP - waypoint.fix.cumulativeDistanceInFP;
+                    }
+                }
+            }
+            return waypoint;
+        }
+    }
+    BaseFMC.clrValue = 'DELETE';
+
+    class B787_10_FMC_PosInitPage {
+        static ShowPage1(fmc) {
+            let currPos = new LatLong(SimVar.GetSimVarValue('GPS POSITION LAT', 'degree latitude'), SimVar.GetSimVarValue('GPS POSITION LON', 'degree longitude')).toDegreeString();
+            console.log(currPos);
+            let date = new Date();
+            let dateString = fastToFixed(date.getHours(), 0).padStart(2, '0') + fastToFixed(date.getMinutes(), 0).padStart(2, '0') + 'z';
+            let lastPos = '';
+            if (fmc.lastPos) {
+                lastPos = fmc.lastPos;
+            }
+            let refAirport = '□□□□';
+            if (fmc.refAirport && fmc.refAirport.ident) {
+                refAirport = fmc.refAirport.ident;
+            }
+            let refAirportCoordinates = '';
+            if (fmc.refAirport && fmc.refAirport.infos && fmc.refAirport.infos.coordinates) {
+                refAirportCoordinates = fmc.refAirport.infos.coordinates.toDegreeString();
+            }
+            let gate = '-----';
+            if (fmc.refGate) {
+                gate = fmc.refGate;
+            }
+            let heading = '---';
+            heading = fmc.makeSettable(heading) + 'sdfsdf°';
+            if (fmc.refHeading) {
+                heading = fmc.makeSettable(fastToFixed(fmc.refHeading, 0).padStart(3, '0')) + '°';
+            }
+            let irsPos = '□□□°□□.□ □□□□°□□.□';
+            if (fmc.initCoordinates) {
+                irsPos = fmc.initCoordinates;
+            }
+            fmc.cleanUpPage();
+            fmc._renderer.renderTitle('POS INIT');
+            fmc._renderer.renderPages(1, 3);
+            fmc._renderer.render([
+                ['', 'LAST POS'],
+                ['', lastPos],
+                ['REF AIRPORT'],
+                [fmc.makeSettable(refAirport), refAirportCoordinates],
+                ['GATE'],
+                [fmc.makeSettable(gate)],
+                ['UTC (GPS)', 'GPS POS'],
+                [dateString, currPos],
+                ['SET HDG', 'SET IRS POS'],
+                [heading, fmc.makeSettable(irsPos)],
+                ['__FMCSEPARATOR'],
+                ['<INDEX', 'ROUTE>']
+            ]);
+            if (fmc.lastPos) {
+                fmc._renderer.rsk(1).event = () => {
+                    fmc.inOut = fmc.lastPos;
+                };
+            }
+            fmc._renderer.lsk(2).event = async () => {
+                let value = fmc.inOut;
+                fmc.inOut = '';
+                if (await fmc.tryUpdateRefAirport(value)) {
+                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
+                }
+            };
+            if (refAirportCoordinates) {
+                fmc._renderer.rsk(2).event = () => {
+                    fmc.inOut = refAirportCoordinates;
+                };
+            }
+            fmc._renderer.lsk(3).event = async () => {
+                let value = fmc.inOut;
+                fmc.inOut = '';
+                if (fmc.tryUpdateGate(value)) {
+                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
+                }
+            };
+            fmc._renderer.rsk(4).event = () => {
+                fmc.inOut = currPos;
+            };
+            fmc._renderer.lsk(5).event = async () => {
+                let value = fmc.inOut;
+                fmc.inOut = '';
+                if (await fmc.tryUpdateHeading(value)) {
+                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
+                }
+            };
+            fmc._renderer.rsk(5).event = async () => {
+                let value = fmc.inOut;
+                fmc.inOut = '';
+                if (await fmc.tryUpdateIrsCoordinatesDisplay(value)) {
+                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
+                }
+            };
+            fmc._renderer.lsk(6).event = () => {
+                B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
+            };
+            fmc._renderer.rsk(6).event = () => {
+                /**
+                 * TODO
+                 */
+                //B787_10_FMC_RoutePage.ShowPage1(fmc);
+            };
+            fmc.onPrevPage = () => {
+                B787_10_FMC_PosInitPage.ShowPage3(fmc);
+            };
+            fmc.onNextPage = () => {
+                B787_10_FMC_PosInitPage.ShowPage2(fmc);
+            };
+        }
+        static ShowPage2(fmc) {
+            fmc.cleanUpPage();
+            fmc.setTemplate([
+                ['POS REF', '2', '3'],
+                ['FMC POS (GPS L)', 'GS'],
+                [''],
+                ['IRS(3)'],
+                [''],
+                ['RNP/ACTUAL', 'DME DME'],
+                [''],
+                [''],
+                [''],
+                ['-----------------', 'GPS NAV'],
+                ['<PURGE', '<INHIBIT'],
+                [''],
+                ['<INDEX', '<BRG/DIST']
+            ]);
+            fmc._renderer.lsk(6).event = () => {
+                B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
+            };
+            fmc._renderer.rsk(6).event = () => {
+            };
+            fmc.onPrevPage = () => {
+                B787_10_FMC_PosInitPage.ShowPage1(fmc);
+            };
+            fmc.onNextPage = () => {
+                B787_10_FMC_PosInitPage.ShowPage3(fmc);
+            };
+        }
+        static ShowPage3(fmc) {
+            fmc.cleanUpPage();
+            fmc.setTemplate([
+                ['POS REF', '2', '3'],
+                ['IRS L', 'GS'],
+                ['000°/0.0NM', '290KT'],
+                ['IRS C', 'GS'],
+                ['000°/0.0NM', '290KT'],
+                ['IRS R', 'GS'],
+                ['000°/0.0NM', '290KT'],
+                ['GPS L', 'GS'],
+                ['000°/0.0NM', '290KT'],
+                ['GPS R', 'GS'],
+                ['000°/0.0NM', '290KT'],
+                ['__FMCSEPARATOR'],
+                ['<INDEX', '<LAT/LON']
+            ]);
+            fmc._renderer.lsk(6).event = () => {
+                B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
+            };
+            fmc._renderer.rsk(6).event = () => {
+            };
+            fmc.onPrevPage = () => {
+                B787_10_FMC_PosInitPage.ShowPage2(fmc);
+            };
+            fmc.onNextPage = () => {
+                B787_10_FMC_PosInitPage.ShowPage1(fmc);
+            };
+        }
+    }
+
+    class B787_10_FMC_IdentPage {
+        static ShowPage1(fmc) {
+            fmc.cleanUpPage();
+            B787_10_FMC_IdentPage._updateCounter = 0;
+            fmc.pageUpdate = () => {
+                if (B787_10_FMC_IdentPage._updateCounter >= 50) {
+                    B787_10_FMC_IdentPage.ShowPage1(fmc);
+                }
+                else {
+                    B787_10_FMC_IdentPage._updateCounter++;
+                }
+            };
+            let date = fmc.getNavDataDateRange();
+            fmc._renderer.renderTitle('IDENT');
+            fmc._renderer.render([
+                ['MODEL', 'ENGINES'],
+                ['787-10', 'GEnx-1B76'],
+                ['NAV DATA', 'ACTIVE'],
+                ['AIRAC', date.toString()],
+                ['DRAG/FF'],
+                [''],
+                ['OP PROGRAM', 'CO DATA'],
+                [fmc.fmcManVersion, 'VS1001'],
+                ['OPC'],
+                [fmc.fmcBakVersion, ''],
+                ['__FMCSEPARATOR'],
+                ['<INDEX', 'POS INIT>']
+            ]);
+            if (fmc.urlConfig.index == 1) {
+                fmc._renderer.lsk(6).event = () => {
+                    B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
+                };
+                fmc._renderer.rsk(6).event = () => {
+                    B787_10_FMC_PosInitPage.ShowPage1(fmc);
+                };
+            }
+            /**
+             * Set periodic page refresh if version of HD mode is not loaded from misc file
+             */
+            if (fmc.fmcManVersion.includes('XXXX-X-X') || fmc.fmcBakVersion.includes('XXXX-X-X')) {
+                fmc.registerPeriodicPageRefresh(() => {
+                    B787_10_FMC_IdentPage.ShowPage1(fmc);
+                    return true;
+                }, 100, false);
+            }
+        }
+    }
+    B787_10_FMC_IdentPage._updateCounter = 0;
 
     class B787_10_FMC_TakeOffRefPage {
         static ShowPage1(fmc) {
@@ -6281,8 +6864,8 @@
                 }
             };
             let accelHtCell = '';
-            if (isFinite(fmc._speedDirector._accelerationSpeedRestriction.accelerationHeight)) {
-                accelHtCell = fastToFixed(fmc._speedDirector._accelerationSpeedRestriction.accelerationHeight);
+            if (isFinite(fmc._speedDirector.accelerationSpeedRestriction.accelerationHeight)) {
+                accelHtCell = fastToFixed(fmc._speedDirector.accelerationSpeedRestriction.accelerationHeight);
             }
             else {
                 accelHtCell = '---';
@@ -7574,7 +8157,7 @@
                     if (waypoint.fix.icao !== '$DISCO') {
                         let row = '';
                         if (SegmentType.Enroute === waypointSegment.type) {
-                            row = Math.round(this._fmc.getCrzManagedSpeed(true)) + '/';
+                            row = Math.round(this._fmc.speedManager.getCrzManagedSpeed(this._fmc.getCostIndexFactor(), true)) + '/';
                             if (this._fmc.cruiseFlightLevel) {
                                 row += 'FL' + this._fmc.cruiseFlightLevel;
                             }
@@ -8651,19 +9234,19 @@
         getClimbPageTitle() {
             let cell = '';
             switch (this.fmc._speedDirector.commandedSpeedType) {
-                case SpeedType.SPEED_TYPE_RESTRICTION:
-                    if (this.fmc._speedDirector._climbSpeedRestriction) {
-                        cell = cell + fastToFixed(this.fmc._speedDirector._climbSpeedRestriction.speed) + 'KT ';
+                case HDSpeedType.SPEED_TYPE_RESTRICTION:
+                    if (this.fmc._speedDirector.climbSpeedRestriction) {
+                        cell = cell + fastToFixed(this.fmc._speedDirector.climbSpeedRestriction.speed) + 'KT ';
                     }
                     break;
-                case SpeedType.SPEED_TYPE_TRANSITION:
-                    cell = cell + fastToFixed(this.fmc.getCrzManagedSpeed(), 0) + 'KT';
+                case HDSpeedType.SPEED_TYPE_TRANSITION:
+                    cell = cell + fastToFixed(this.fmc.speedManager.getCrzManagedSpeed(this.fmc.getCostIndexFactor()), 0) + 'KT';
                     break;
-                case SpeedType.SPEED_TYPE_SELECTED:
-                    let selectedClimbSpeed = fastToFixed(this.fmc._speedDirector._climbSpeedSelected.speed) || '';
+                case HDSpeedType.SPEED_TYPE_SELECTED:
+                    let selectedClimbSpeed = fastToFixed(this.fmc._speedDirector.climbSpeedSelected.speed) || '';
                     cell = cell + selectedClimbSpeed + 'KT';
                     break;
-                case SpeedType.SPEED_TYPE_ECON:
+                case HDSpeedType.SPEED_TYPE_ECON:
                     cell = cell + 'ECON';
                     break;
                 default:
@@ -8700,12 +9283,12 @@
             /**
              * TODO better type check (remove double retyping )
              */
-            if (this.fmc._speedDirector._climbSpeedRestriction) {
-                speedRestrictionSpeedValue = String(this.fmc._speedDirector._climbSpeedRestriction.speed) || '';
-                speedRestrictionAltitudeValue = String(this.fmc._speedDirector._climbSpeedRestriction.altitude) || '';
+            if (this.fmc._speedDirector.climbSpeedRestriction) {
+                speedRestrictionSpeedValue = String(this.fmc._speedDirector.climbSpeedRestriction.speed) || '';
+                speedRestrictionAltitudeValue = String(this.fmc._speedDirector.climbSpeedRestriction.altitude) || '';
             }
             if (speedRestrictionSpeedValue && isFinite(Number(speedRestrictionSpeedValue)) && speedRestrictionAltitudeValue && isFinite(Number(speedRestrictionAltitudeValue))) {
-                if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_RESTRICTION && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
+                if (this.fmc._speedDirector.commandedSpeedType === HDSpeedType.SPEED_TYPE_RESTRICTION && this.fmc._speedDirector.speedPhase === HDSpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
                     speedRestrictionSpeedValue = this.fmc.colorizeContent(speedRestrictionSpeedValue, 'magenta');
                 }
                 cell = speedRestrictionSpeedValue + '/' + speedRestrictionAltitudeValue;
@@ -8715,14 +9298,14 @@
         }
         getClimbSpeedTransitionCell() {
             let cell = '';
-            if (this.fmc._speedDirector._climbSpeedTransition.isDeleted || Simplane.getAltitude() > 10000) {
+            if (this.fmc._speedDirector.climbSpeedTransition.isDeleted || Simplane.getAltitude() > 10000) {
                 return '';
             }
-            let speed = this.fmc._speedDirector._climbSpeedTransition.speed;
+            let speed = this.fmc._speedDirector.climbSpeedTransition.speed;
             if (isFinite(speed)) {
                 cell = fastToFixed(speed, 0);
             }
-            if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_TRANSITION && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
+            if (this.fmc._speedDirector.commandedSpeedType === HDSpeedType.SPEED_TYPE_TRANSITION && this.fmc._speedDirector.speedPhase === HDSpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
                 cell = this.fmc.colorizeContent(cell, 'magenta');
             }
             cell = cell + '/10000';
@@ -8732,12 +9315,12 @@
             return this.fmc.makeSettable(fastToFixed(this.fmc.transitionAltitude, 0));
         }
         getSelectedClimbSpeedCell() {
-            let selectedClimbSpeed = this.fmc._speedDirector._climbSpeedSelected.speed || NaN;
+            let selectedClimbSpeed = this.fmc._speedDirector.climbSpeedSelected.speed || NaN;
             let cell = '';
             if (selectedClimbSpeed && isFinite(selectedClimbSpeed)) {
                 cell = selectedClimbSpeed + '';
             }
-            if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_SELECTED && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
+            if (this.fmc._speedDirector.commandedSpeedType === HDSpeedType.SPEED_TYPE_SELECTED && this.fmc._speedDirector.speedPhase === HDSpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
                 cell = this.fmc.colorizeContent(cell, 'magenta');
             }
             if (cell) {
@@ -8746,12 +9329,12 @@
             return cell;
         }
         getEconClimbPromptCell() {
-            let selectedClimbSpeed = this.fmc._speedDirector._climbSpeedSelected.speed || NaN;
+            let selectedClimbSpeed = this.fmc._speedDirector.climbSpeedSelected.speed || NaN;
             return (selectedClimbSpeed && isFinite(selectedClimbSpeed)) ? '<ECON' : '';
         }
         getEconClimbSpeedCell() {
             let cell = '';
-            let speedNumber = this.fmc._speedDirector._resolveMachKias(this.fmc._speedDirector._climbSpeedEcon);
+            let speedNumber = this.fmc._speedDirector._resolveMachKias(this.fmc._speedDirector.climbSpeedEcon);
             let isMach = false;
             if (speedNumber < 1 && speedNumber > 0) {
                 isMach = true;
@@ -8766,7 +9349,7 @@
             else {
                 cell = fastToFixed(speedNumber, 0);
             }
-            if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_ECON && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
+            if (this.fmc._speedDirector.commandedSpeedType === HDSpeedType.SPEED_TYPE_ECON && this.fmc._speedDirector.speedPhase === HDSpeedPhase.SPEED_PHASE_CLIMB && this.fmc.getIsVNAVActive()) {
                 cell = this.fmc.colorizeContent(cell, 'magenta');
             }
             if (cell) {
@@ -8790,7 +9373,7 @@
                 this.fmc.clearUserInput();
                 let storeToFMC = async (value, force = false) => {
                     if (HeavyInput.Validators.speedRange(value) || force) {
-                        this.fmc._speedDirector._climbSpeedSelected.speed = value;
+                        this.fmc._speedDirector.climbSpeedSelected.speed = value;
                     }
                 };
                 if (value === 'DELETE') {
@@ -8805,13 +9388,13 @@
                     });
                 }
             };
-            if (!this.fmc._speedDirector._climbSpeedTransition.isDeleted) {
+            if (!this.fmc._speedDirector.climbSpeedTransition.isDeleted) {
                 this.fmc._renderer.lsk(3).event = () => {
                     let value = this.fmc.inOut;
                     this.fmc.clearUserInput();
                     if (value === 'DELETE') {
                         this.fmc.inOut = '';
-                        this.fmc._speedDirector._climbSpeedTransition.isDeleted = true;
+                        this.fmc._speedDirector.climbSpeedTransition.isDeleted = true;
                         SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
                         return;
                     }
@@ -8827,8 +9410,8 @@
                 if (value === 'DELETE') {
                     this.fmc.inOut = '';
                     value = '';
-                    this.fmc._speedDirector._climbSpeedRestriction.speed = null;
-                    this.fmc._speedDirector._climbSpeedRestriction.altitude = null;
+                    this.fmc._speedDirector.climbSpeedRestriction.speed = null;
+                    this.fmc._speedDirector.climbSpeedRestriction.altitude = null;
                     this.showPage1();
                 }
                 if (value.length > 0) {
@@ -8839,8 +9422,8 @@
                         let roundedAltitude = Math.round(altitude / 100) * 100;
                         let valueToCheck = speed + '/' + roundedAltitude;
                         if (HeavyInput.Validators.speedRestriction(valueToCheck, this.fmc.cruiseFlightLevel * 100)) {
-                            this.fmc._speedDirector._climbSpeedRestriction.speed = speed;
-                            this.fmc._speedDirector._climbSpeedRestriction.altitude = roundedAltitude;
+                            this.fmc._speedDirector.climbSpeedRestriction.speed = speed;
+                            this.fmc._speedDirector.climbSpeedRestriction.altitude = roundedAltitude;
                         }
                         else {
                             this.fmc.showErrorMessage(this.fmc.defaultInputErrorMessage);
@@ -8851,10 +9434,10 @@
                     });
                 }
             };
-            let selectedClimbSpeed = this.fmc._speedDirector._climbSpeedSelected.speed || NaN;
+            let selectedClimbSpeed = this.fmc._speedDirector.climbSpeedSelected.speed || NaN;
             if (selectedClimbSpeed && isFinite(selectedClimbSpeed)) {
                 this.fmc._renderer.lsk(5).event = () => {
-                    this.fmc._speedDirector._climbSpeedSelected.speed = null;
+                    this.fmc._speedDirector.climbSpeedSelected.speed = null;
                     this.showPage1();
                 };
             }
@@ -8939,10 +9522,10 @@
             }
              */
             switch (this.fmc._speedDirector.commandedSpeedType) {
-                case SpeedType.SPEED_TYPE_SELECTED:
-                    cell = cell + this.fmc._speedDirector._cruiseSpeedSelected.speed + 'KT';
+                case HDSpeedType.SPEED_TYPE_SELECTED:
+                    cell = cell + this.fmc._speedDirector.cruiseSpeedSelected.speed + 'KT';
                     break;
-                case SpeedType.SPEED_TYPE_ECON:
+                case HDSpeedType.SPEED_TYPE_ECON:
                     cell = cell + 'ECON';
                     break;
                 default:
@@ -8964,15 +9547,15 @@
             return cell;
         }
         getSelectedCruiseSpeedCell() {
-            if (!this.fmc._speedDirector._cruiseSpeedSelected.isValid()) {
+            if (!this.fmc._speedDirector.cruiseSpeedSelected.isValid()) {
                 return '';
             }
-            let selectedCruiseSpeed = fastToFixed(this.fmc._speedDirector._cruiseSpeedSelected.speed, 0) || NaN;
+            let selectedCruiseSpeed = fastToFixed(this.fmc._speedDirector.cruiseSpeedSelected.speed, 0) || NaN;
             let cell = '';
             if (selectedCruiseSpeed && isFinite(Number(selectedCruiseSpeed))) {
                 cell = selectedCruiseSpeed + '';
             }
-            if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_SELECTED && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CRUISE && this.fmc.getIsVNAVActive()) {
+            if (this.fmc._speedDirector.commandedSpeedType === HDSpeedType.SPEED_TYPE_SELECTED && this.fmc._speedDirector.speedPhase === HDSpeedPhase.SPEED_PHASE_CRUISE && this.fmc.getIsVNAVActive()) {
                 cell = this.fmc.colorizeContent(cell, 'magenta');
             }
             if (cell) {
@@ -8982,21 +9565,21 @@
             return cell;
         }
         getEconCruisePromptCell() {
-            let selectedCruiseSpeed = this.fmc._speedDirector._cruiseSpeedSelected.speed || NaN;
+            let selectedCruiseSpeed = this.fmc._speedDirector.cruiseSpeedSelected.speed || NaN;
             return (selectedCruiseSpeed && isFinite(selectedCruiseSpeed)) ? '<ECON' : '';
         }
         getEconCruiseSpeedCell() {
             let cell = '';
-            if (this.fmc._speedDirector.commandedSpeedType === SpeedType.SPEED_TYPE_ECON && this.fmc._speedDirector.speedPhase === SpeedPhase.SPEED_PHASE_CRUISE && this.fmc.getIsVNAVActive()) {
+            if (this.fmc._speedDirector.commandedSpeedType === HDSpeedType.SPEED_TYPE_ECON && this.fmc._speedDirector.speedPhase === HDSpeedPhase.SPEED_PHASE_CRUISE && this.fmc.getIsVNAVActive()) {
                 if (Simplane.getAutoPilotMachModeActive()) {
-                    let mach = fastToFixed(this.fmc._speedDirector._cruiseSpeedEcon.speedMach, 3);
+                    let mach = fastToFixed(this.fmc._speedDirector.cruiseSpeedEcon.speedMach, 3);
                     if (mach.charAt(0) === '0') {
                         mach = mach.substring(1);
                     }
                     cell = mach;
                 }
                 else {
-                    cell = fastToFixed(this.fmc._speedDirector._cruiseSpeedEcon.speed, 0);
+                    cell = fastToFixed(this.fmc._speedDirector.cruiseSpeedEcon.speed, 0);
                 }
                 cell = this.fmc.colorizeContent(cell, 'magenta');
             }
@@ -9029,7 +9612,7 @@
                 this.fmc.clearUserInput();
                 let storeToFMC = async (value, force = false) => {
                     if (HeavyInput.Validators.speedRange(value) || force) {
-                        this.fmc._speedDirector._cruiseSpeedSelected.speed = value;
+                        this.fmc._speedDirector.cruiseSpeedSelected.speed = value;
                     }
                 };
                 if (value === 'DELETE') {
@@ -9044,10 +9627,10 @@
                     });
                 }
             };
-            let selectedCruiseSpeed = this.fmc._speedDirector._cruiseSpeedSelected.speed || NaN;
+            let selectedCruiseSpeed = this.fmc._speedDirector.cruiseSpeedSelected.speed || NaN;
             if (selectedCruiseSpeed && isFinite(selectedCruiseSpeed)) {
                 this.fmc._renderer.lsk(5).event = () => {
-                    this.fmc._speedDirector._cruiseSpeedSelected.speed = null;
+                    this.fmc._speedDirector.cruiseSpeedSelected.speed = null;
                     this.showPage2();
                 };
             }
@@ -9097,7 +9680,7 @@
         showPage3() {
             this.fmc.cleanUpPage();
             let speedTransCell = '---';
-            let speed = this.fmc.getDesManagedSpeed();
+            let speed = this.fmc.speedManager.getDesManagedSpeed(this.fmc.getCostIndexFactor());
             if (isFinite(speed)) {
                 speedTransCell = speed.toFixed(0);
             }
@@ -13255,36 +13838,11 @@
                 targetType: targetType
             };
         }
-        getFlapProtectionMaxSpeed(handleIndex) {
-            switch (handleIndex) {
-                case 0:
-                    return 360;
-                case 1:
-                    return 255;
-                case 2:
-                    return 235;
-                case 3:
-                    return 225;
-                case 4:
-                    return 215;
-                case 5:
-                    return 210;
-                case 6:
-                    return 210;
-                case 7:
-                    return 205;
-                case 8:
-                    return 185;
-                case 9:
-                    return 175;
-            }
-            return 360;
-        }
         getEconClbManagedSpeed() {
             return this.getEconCrzManagedSpeed();
         }
         getEconCrzManagedSpeed() {
-            return this.getCrzManagedSpeed(true);
+            return this.speedManager.getCrzManagedSpeed(this.getCostIndexFactor(), true);
         }
         _overrideDefaultAsoboValues() {
             /**
@@ -13597,82 +14155,6 @@
                 });
             }
         }
-        getFlapTakeOffSpeed() {
-            let dWeight = (this.getWeight(true) - 500) / (900 - 500);
-            return 134 + 40 * dWeight;
-        }
-        getSlatTakeOffSpeed() {
-            let dWeight = (this.getWeight(true) - 500) / (900 - 500);
-            return 183 + 40 * dWeight;
-        }
-        getClbManagedSpeed() {
-            let dCI = this.getCostIndexFactor();
-            let speed = 310 * (1 - dCI) + 330 * dCI;
-            if (this.overSpeedLimitThreshold) {
-                if (Simplane.getAltitude() < 9800) {
-                    if (!this._climbSpeedTransitionDeleted) {
-                        speed = Math.min(speed, 250);
-                    }
-                    this.overSpeedLimitThreshold = false;
-                }
-            }
-            else if (!this.overSpeedLimitThreshold) {
-                if (Simplane.getAltitude() < 10000) {
-                    if (!this._climbSpeedTransitionDeleted) {
-                        speed = Math.min(speed, 250);
-                    }
-                }
-                else {
-                    if (!this._isFmcCurrentPageUpdatedAboveTenThousandFeet) {
-                        SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
-                        this._isFmcCurrentPageUpdatedAboveTenThousandFeet = true;
-                    }
-                    this.overSpeedLimitThreshold = true;
-                }
-            }
-            return speed;
-        }
-        getCrzManagedSpeed(highAltitude = false) {
-            let dCI = this.getCostIndexFactor();
-            dCI = dCI * dCI;
-            let speed = 310 * (1 - dCI) + 330 * dCI;
-            if (!highAltitude) {
-                if (this.overSpeedLimitThreshold) {
-                    if (Simplane.getAltitude() < 9800) {
-                        speed = Math.min(speed, 250);
-                        this.overSpeedLimitThreshold = false;
-                    }
-                }
-                else if (!this.overSpeedLimitThreshold) {
-                    if (Simplane.getAltitude() < 10000) {
-                        speed = Math.min(speed, 250);
-                    }
-                    else {
-                        this.overSpeedLimitThreshold = true;
-                    }
-                }
-            }
-            return speed;
-        }
-        getDesManagedSpeed() {
-            let dCI = this.getCostIndexFactor();
-            let speed = 280 * (1 - dCI) + 300 * dCI;
-            if (this.overSpeedLimitThreshold) {
-                if (Simplane.getAltitude() < 10700) {
-                    speed = Math.min(speed, 240);
-                    this.overSpeedLimitThreshold = false;
-                }
-            }
-            else if (!this.overSpeedLimitThreshold) {
-                if (Simplane.getAltitude() < 10700) {
-                    speed = Math.min(speed, 240);
-                }
-                else {
-                    this.overSpeedLimitThreshold = true;
-                }
-            }
-            return speed;
-        }
         setSelectedApproachFlapSpeed(s) {
             let flap = NaN;
             let speed = NaN;
@@ -13863,7 +14345,7 @@
                     }
                 }
                 if (this._speedDirector === undefined) {
-                    this._speedDirector = new SpeedDirector(this);
+                    this._speedDirector = new SpeedDirector(this._speedManager);
                 }
                 else {
                     try {
@@ -13876,7 +14358,7 @@
                          this._speedDirector._waypointSpeedConstraint.speed = activeWaypoint.speedConstraint;
                          }
                          */
-                        this._speedDirector.update(this.currentFlightPhase);
+                        this._speedDirector.update(this.currentFlightPhase, this.getCostIndexFactor());
                     }
                     catch (error) {
                         console.error(error);

@@ -7,4 +7,7 @@ export * from './integrations/SimBrief/SimBriefImporter';
 export * from './utils/HeavyDataStorage';
 export * from './utils/input/HeavyInput';
 export * from './utils/output/FMC/FMCRendererModule';
+export * from './Directors/SpeedDirector';
+export * from './models/speeds/HDSpeedType';
+export * from './models/speeds/HDSpeedPhase';
 export * from './utils/HeavyDivision';

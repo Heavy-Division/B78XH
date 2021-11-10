@@ -28,8 +28,6 @@ export class BaseFMC extends BaseAirliners {
 	public transitionAltitude: number = 5000;
 	protected perfTOTemp: number = 20;
 	protected overSpeedLimitThreshold: boolean = false;
-	protected _overridenFlapApproachSpeed: number = NaN;
-	protected _overridenSlatApproachSpeed: number = NaN;
 	protected taxiFuelWeight: number = 0.2;
 	protected _routeFinalFuelWeight: number = NaN;
 	protected _routeFinalFuelTime: number = NaN;
@@ -1235,80 +1233,6 @@ export class BaseFMC extends BaseAirliners {
 			}
 		}
 		return speed;
-	}
-
-	getFlapApproachSpeed(useCurrentWeight: boolean = true): number {
-		if (isFinite(this._overridenFlapApproachSpeed)) {
-			return this._overridenFlapApproachSpeed;
-		}
-		let dWeight = ((useCurrentWeight ? this.getWeight() : this.zeroFuelWeight) - 42) / (75 - 42);
-		dWeight = Math.min(Math.max(dWeight, 0), 1);
-		let base = Math.max(150, this.speedManager.getVLS(this.getWeight()) + 5);
-		return base + 40 * dWeight;
-	}
-
-	setFlapApproachSpeed(s: string): boolean {
-		if (s === BaseFMC.clrValue) {
-			this._overridenFlapApproachSpeed = NaN;
-			return true;
-		}
-		let v = parseFloat(s);
-		if (isFinite(v)) {
-			if (v > 0 && v < 300) {
-				this._overridenFlapApproachSpeed = v;
-				return true;
-			}
-		}
-		this.showErrorMessage(this.defaultInputErrorMessage);
-		return false;
-	}
-
-	getSlatApproachSpeed(useCurrentWeight: boolean = true): number {
-		if (isFinite(this._overridenSlatApproachSpeed)) {
-			return this._overridenSlatApproachSpeed;
-		}
-		let dWeight = ((useCurrentWeight ? this.getWeight() : this.zeroFuelWeight) - 42) / (75 - 42);
-		dWeight = Math.min(Math.max(dWeight, 0), 1);
-		let base = Math.max(157, this.speedManager.getVLS(this.getWeight()) + 5);
-		return base + 40 * dWeight;
-	}
-
-	setSlatApproachSpeed(s: string): boolean {
-		if (s === BaseFMC.clrValue) {
-			this._overridenSlatApproachSpeed = NaN;
-			return true;
-		}
-		let v = parseFloat(s);
-		if (isFinite(v)) {
-			if (v > 0 && v < 300) {
-				this._overridenSlatApproachSpeed = v;
-				return true;
-			}
-		}
-		this.showErrorMessage(this.defaultInputErrorMessage);
-		return false;
-	}
-
-	getCleanApproachSpeed(): number {
-		let dWeight = (this.getWeight() - 42) / (75 - 42);
-		dWeight = Math.min(Math.max(dWeight, 0), 1);
-		let base = Math.max(172, this.speedManager.getVLS(this.getWeight()) + 5);
-		return base + 40 * dWeight;
-	}
-
-	getManagedApproachSpeed(flapsHandleIndex: number = NaN): number {
-		if (isNaN(flapsHandleIndex)) {
-			flapsHandleIndex = Simplane.getFlapsHandleIndex();
-		}
-		if (flapsHandleIndex === 0) {
-			return this.speedManager.getCleanApproachSpeed(this.getWeight(true));
-		} else if (flapsHandleIndex === 1) {
-			return this.speedManager.getSlatApproachSpeed(this.getWeight(true));
-		} else if (flapsHandleIndex === 2) {
-			return this.speedManager.getFlapApproachSpeed(this.getWeight(true));
-		} else {
-			return this.getVApp();
-		}
 	}
 
 	updateCleanApproachSpeed(): void {

@@ -177,7 +177,7 @@ export class B787_10_FMC_LegsPage {
 					let row = '';
 
 					if (SegmentType.Enroute === waypointSegment.type) {
-						row = Math.round(this._fmc.getCrzManagedSpeed(true)) + '/';
+						row = Math.round(this._fmc.speedManager.getCrzManagedSpeed(this._fmc.getCostIndexFactor(), true)) + '/';
 						if (this._fmc.cruiseFlightLevel) {
 							row += 'FL' + this._fmc.cruiseFlightLevel;
 						} else {

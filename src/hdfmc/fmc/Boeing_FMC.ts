@@ -1,4 +1,5 @@
 import {BaseFMC} from './BaseFMC';
+import * as HDSDK from './../../hdsdk/index';
 
 export class Boeing_FMC extends BaseFMC {
 
@@ -55,7 +56,7 @@ export class Boeing_FMC extends BaseFMC {
 	public onExecDefault: () => void = undefined;
 	private _pageRefreshTimer: number;
 	protected _navModeSelector: B78XHNavModeSelector = undefined;
-	public _speedDirector: SpeedDirector;
+	public _speedDirector: HDSDK.SpeedDirector;
 	public _thrustTakeOffTemp: number;
 	public thrustReductionHeight: number;
 	protected isThrustReductionAltitudeCustomValue: boolean;
@@ -1072,7 +1073,7 @@ export class Boeing_FMC extends BaseFMC {
 				let elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
 				let roundedHeight = Math.round(accelerationHeight / 100) * 100;
 				if (this.trySetAccelerationAltitude(String(roundedHeight + elevation))) {
-					this._speedDirector._accelerationSpeedRestriction.accelerationHeight = roundedHeight;
+					this._speedDirector.accelerationSpeedRestriction.accelerationHeight = roundedHeight;
 					return true;
 				}
 			}
@@ -1089,7 +1090,7 @@ export class Boeing_FMC extends BaseFMC {
 	trySetAccelerationAltitude(s: string): boolean {
 		let accelerationHeight = parseInt(s);
 		if (isFinite(accelerationHeight)) {
-			this._speedDirector._accelerationSpeedRestriction.altitude = accelerationHeight;
+			this._speedDirector.accelerationSpeedRestriction.altitude = accelerationHeight;
 			SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', accelerationHeight);
 			return true;
 		}
@@ -1145,7 +1146,7 @@ export class Boeing_FMC extends BaseFMC {
 		 * TODO: HotFix!!! Need to be fixed in future... SpeedDirector is not normally accessible from here
 		 */
 		if (this._speedDirector === undefined) {
-			this._speedDirector = new SpeedDirector(this);
+			this._speedDirector = new HDSDK.SpeedDirector(this.speedManager);
 		}
 
 		let origin = this.flightPlanManager.getOrigin();
@@ -1187,8 +1188,8 @@ export class Boeing_FMC extends BaseFMC {
 		if (origin) {
 			if (origin.infos instanceof AirportInfo) {
 				const elevation = Math.round(parseFloat(origin.infos.oneWayRunways[0].elevation) * 3.28);
-				this._speedDirector._accelerationSpeedRestriction.altitude = elevation + this._speedDirector._accelerationSpeedRestriction.accelerationHeight;
-				SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', this._speedDirector._accelerationSpeedRestriction.altitude);
+				this._speedDirector.accelerationSpeedRestriction.altitude = elevation + this._speedDirector.accelerationSpeedRestriction.accelerationHeight;
+				SimVar.SetSimVarValue('L:AIRLINER_ACC_ALT', 'Number', this._speedDirector.accelerationSpeedRestriction.altitude);
 			}
 		}
 	}

@@ -347,38 +347,12 @@ export class B787_10_FMC extends Boeing_FMC {
 		};
 	}
 
-	getFlapProtectionMaxSpeed(handleIndex) {
-		switch (handleIndex) {
-			case 0:
-				return 360;
-			case 1:
-				return 255;
-			case 2:
-				return 235;
-			case 3:
-				return 225;
-			case 4:
-				return 215;
-			case 5:
-				return 210;
-			case 6:
-				return 210;
-			case 7:
-				return 205;
-			case 8:
-				return 185;
-			case 9:
-				return 175;
-		}
-		return 360;
-	}
-
 	getEconClbManagedSpeed() {
 		return this.getEconCrzManagedSpeed();
 	}
 
 	getEconCrzManagedSpeed() {
-		return this.getCrzManagedSpeed(true);
+		return this.speedManager.getCrzManagedSpeed(this.getCostIndexFactor(), true);
 	}
 
 	/**
@@ -813,81 +787,6 @@ export class B787_10_FMC extends Boeing_FMC {
 		}
 	}
 
-	getFlapTakeOffSpeed() {
-		let dWeight = (this.getWeight(true) - 500) / (900 - 500);
-		return 134 + 40 * dWeight;
-	}
-
-	getSlatTakeOffSpeed() {
-		let dWeight = (this.getWeight(true) - 500) / (900 - 500);
-		return 183 + 40 * dWeight;
-	}
-
-	getClbManagedSpeed() {
-		let dCI = this.getCostIndexFactor();
-		let speed = 310 * (1 - dCI) + 330 * dCI;
-		if (this.overSpeedLimitThreshold) {
-			if (Simplane.getAltitude() < 9800) {
-				if (!this._climbSpeedTransitionDeleted) {
-					speed = Math.min(speed, 250);
-				}
-				this.overSpeedLimitThreshold = false;
-			}
-		} else if (!this.overSpeedLimitThreshold) {
-			if (Simplane.getAltitude() < 10000) {
-				if (!this._climbSpeedTransitionDeleted) {
-					speed = Math.min(speed, 250);
-				}
-			} else {
-				if (!this._isFmcCurrentPageUpdatedAboveTenThousandFeet) {
-					SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
-					this._isFmcCurrentPageUpdatedAboveTenThousandFeet = true;
-				}
-				this.overSpeedLimitThreshold = true;
-			}
-		}
-		return speed;
-	}
-
-	getCrzManagedSpeed(highAltitude = false) {
-		let dCI = this.getCostIndexFactor();
-		dCI = dCI * dCI;
-		let speed = 310 * (1 - dCI) + 330 * dCI;
-		if (!highAltitude) {
-			if (this.overSpeedLimitThreshold) {
-				if (Simplane.getAltitude() < 9800) {
-					speed = Math.min(speed, 250);
-					this.overSpeedLimitThreshold = false;
-				}
-			} else if (!this.overSpeedLimitThreshold) {
-				if (Simplane.getAltitude() < 10000) {
-					speed = Math.min(speed, 250);
-				} else {
-					this.overSpeedLimitThreshold = true;
-				}
-			}
-		}
-		return speed;
-	}
-
-	getDesManagedSpeed() {
-		let dCI = this.getCostIndexFactor();
-		let speed = 280 * (1 - dCI) + 300 * dCI;
-		if (this.overSpeedLimitThreshold) {
-			if (Simplane.getAltitude() < 10700) {
-				speed = Math.min(speed, 240);
-				this.overSpeedLimitThreshold = false;
-			}
-		} else if (!this.overSpeedLimitThreshold) {
-			if (Simplane.getAltitude() < 10700) {
-				speed = Math.min(speed, 240);
-			} else {
-				this.overSpeedLimitThreshold = true;
-			}
-		}
-		return speed;
-	}
-
 	setSelectedApproachFlapSpeed(s) {
 		let flap = NaN;
 		let speed = NaN;
@@ -1098,7 +997,7 @@ export class B787_10_FMC extends Boeing_FMC {
 			}
 
 			if (this._speedDirector === undefined) {
-				this._speedDirector = new SpeedDirector(this);
+				this._speedDirector = new HDSDK.SpeedDirector(this._speedManager);
 			} else {
 				try {
 					/*
@@ -1110,7 +1009,7 @@ export class B787_10_FMC extends Boeing_FMC {
 					 this._speedDirector._waypointSpeedConstraint.speed = activeWaypoint.speedConstraint;
 					 }
 					 */
-					this._speedDirector.update(this.currentFlightPhase);
+					this._speedDirector.update(this.currentFlightPhase, this.getCostIndexFactor());
 				} catch (error) {
 					console.error(error);
 				}
