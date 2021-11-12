@@ -287,6 +287,8 @@
             this.lat = this.rawData.pos_lat;
             this.lon = this.rawData.pos_long;
             this.mora = this.rawData.mora;
+            this.airwayIn = undefined;
+            this.airwayOut = undefined;
         }
         convertIdent(ident) {
             /**

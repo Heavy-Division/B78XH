@@ -1,5 +1,5 @@
-import {Handler} from "./Handler";
-import {Level} from "../levels/level";
+import {Handler} from './Handler';
+import {Level} from '../levels/level';
 
 export class ConsoleHandler implements Handler {
 	public log(message: string, level: Level = Level.none): void {
@@ -8,10 +8,10 @@ export class ConsoleHandler implements Handler {
 				console.log(message);
 				break;
 			case Level.debug:
-				console.info(Level[level] + ': ' + message);
+				console.log(Level[level] + ': ' + message);
 				break;
 			case Level.info:
-				console.info(Level[level] + ': ' + message);
+				console.log(Level[level] + ': ' + message);
 				break;
 			case Level.warning:
 				console.warn(Level[level] + ': ' + message);
@@ -20,7 +20,7 @@ export class ConsoleHandler implements Handler {
 				console.warn(Level[level] + ': ' + message);
 				break;
 			case Level.fatal:
-				console.warn(Level[level] + ': ' + message)
+				console.warn(Level[level] + ': ' + message);
 				break;
 
 		}

@@ -13,7 +13,7 @@ import {B787_10_FMC_DepArrPage} from './B787_10_FMC_DepArrPage';
 import {CJ4_FMC_PilotWaypoint_Manager} from './CJ4_FMC_PilotWaypoint_Manager';
 import {B787_10_FMC_IdentPage} from './B787_10_FMC_IdentPage';
 import * as HDSDK from './../../hdsdk/index';
-import {HDLogger, SocketIOHandler} from '../../hdlogger';
+import {ConsoleHandler, HDLogger, SocketIOHandler} from '../../hdlogger';
 import {Level} from '../../hdlogger/levels/level';
 
 export class B787_10_FMC extends Boeing_FMC {
@@ -520,7 +520,8 @@ export class B787_10_FMC extends Boeing_FMC {
 		this._renderer.use(new HDSDK.SeparatorRendererMiddleware());
 
 		if (this.urlConfig.index == 1) {
-			HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
+			//HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
+			//HDLogger.addHandler(new ConsoleHandler());
 			this._renderer.use(new HDSDK.SettableRendererMiddleware());
 			this._renderer.use(new HDSDK.SizeRendererMiddleware());
 			this._renderer.use(new HDSDK.ColorRendererMiddleware());

@@ -8,6 +8,8 @@ export class HDFix {
 	public name: string;
 	public type: HDFixType;
 	public airway: string;
+	public airwayIn: string;
+	public airwayOut: string;
 	public lat: number;
 	public lon: number;
 	public mora: number;
@@ -58,6 +60,8 @@ export class HDFix {
 		this.lat = this.rawData.pos_lat as number;
 		this.lon = this.rawData.pos_long as number;
 		this.mora = this.rawData.mora as number;
+		this.airwayIn = undefined;
+		this.airwayOut = undefined;
 	}
 
 	private convertIdent(ident: string): string {

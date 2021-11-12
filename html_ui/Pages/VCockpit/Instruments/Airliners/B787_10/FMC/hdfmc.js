@@ -3768,29 +3768,6 @@
         connect: lookup,
     });
 
-    class SocketIOHandler {
-        constructor(server, port) {
-            this.socket = lookup('http://' + server + ':' + port + '/', {
-                auth: {
-                    token: 'msfs'
-                },
-                transports: ['websocket']
-            });
-        }
-        log(message, level) {
-            switch (level) {
-                case Level.none:
-                case Level.debug:
-                case Level.info:
-                case Level.warning:
-                case Level.error:
-                case Level.fatal:
-                    this.socket.emit('log', JSON.stringify({ message: message, level: Level[level] }));
-                    break;
-            }
-        }
-    }
-
     class BaseFMC extends BaseAirliners {
         constructor() {
             super();
@@ -6639,6 +6616,8 @@
             this.lat = this.rawData.pos_lat;
             this.lon = this.rawData.pos_long;
             this.mora = this.rawData.mora;
+            this.airwayIn = undefined;
+            this.airwayOut = undefined;
         }
         convertIdent(ident) {
             /**
@@ -13192,6 +13171,20 @@
             this.fixes = undefined;
             this.info = undefined;
             this.importer = undefined;
+            this._progress = [
+                ['ORIGIN', '', ''],
+                ['', '', '[color=yellow]WAITING[/color]'],
+                ['DESTINATION', '', ''],
+                ['', '', '[color=yellow]WAITING[/color]'],
+                ['PAYLOAD', '', ''],
+                ['', '', '[color=yellow]WAITING[/color]'],
+                ['FUEL BLOCK', '', ''],
+                ['', '', '[color=yellow]WAITING[/color]'],
+                ['WAYPOINT', 'AIRWAY', 'PROGRESS'],
+                ['', '', '[color=yellow]WAITING[/color]'],
+                ['', '', ''],
+                ['', '', '']
+            ];
             this.defaultConfiguration = {
                 withSid: true,
                 withStar: true
@@ -13208,6 +13201,10 @@
                         this.info = this.importer.getInfo();
                         this.fuel = this.importer.getFuel();
                         this.weights = this.importer.getWeights();
+                        this._progress[1][0] = this.origin.icao;
+                        this._progress[3][0] = this.destination.icao;
+                        this._progress[5][0] = String(this.weights.payload);
+                        this._progress[7][0] = String(this.fuel.plannedRamp);
                         resolve();
                     });
                 }
@@ -13219,8 +13216,22 @@
         setImporter(importer) {
             this.importer = importer;
         }
-        async setToGame(configuration) {
+        /**
+         * TODO: Use better name / make handlers with strategies
+         * @param {{}} configuration
+         * @returns {Promise<void>}
+         */
+        async setToGameIngame(configuration) {
             this.fmc.cleanUpPage();
+            this.updateProgress();
+            await Promise.all([
+                this.setInitialCruiseAltitude(this.info.initialAltitude),
+                this.asyncSetCostIndex(this.info.costIndex)
+            ]).then(() => {
+                HDLogger.log('INITIAL DATA SET');
+            }).catch((error) => {
+                HDLogger.log(error, Level.fatal);
+            });
             await this.setOrigin(this.origin.icao);
             await this.setDestination(this.destination.icao);
             await this.setOriginRunway(this.origin.plannedRunway);
@@ -13230,7 +13241,202 @@
              */
             await this.setPayload(this.weights);
             await this.setFuel(this.fuel);
-            await this.setCostIndex(this.info.costIndex);
+            if (this.info.sid !== 'DCT') {
+                await this.setDeparture(this.info.sid);
+            }
+            this._progress[9][2] = this.fmc.colorizeContent('PREPARING', 'yellow');
+            this.updateProgress();
+            const fixesForPreload = this.getReferenceFixesForAirwaysPreload(this.fixes);
+            const airways = {};
+            for (const fix of fixesForPreload) {
+                var icaos = [];
+                const waypoint = await this.asyncGetOrSelectWaypointByIdentFast(fix.ident, fix);
+                if (waypoint.infos instanceof WayPointInfo) {
+                    await waypoint.infos.UpdateAirway(fix.airway);
+                    for (const airway of waypoint.infos.airways) {
+                        for (const icao of airway.icaos) {
+                            icaos.push(String(icao.substring(7, 12)));
+                        }
+                        airways[airway.name] = icaos;
+                    }
+                }
+            }
+            this.preloadedAirwaysData = airways;
+            if (this.isSimBriefRouteValidIngame(this.fixes)) {
+                HDLogger.log('SB Route is valid ingame route: USING SB import strategy', Level.debug);
+                await this.insertWaypoints(this.fixes);
+            }
+            else {
+                HDLogger.log('SB Route is NOT valid ingame route: CHECKING errors', Level.debug);
+                const errors = this.getProblemsOfRoute(this.fixes);
+                this.fixRoute(errors, this.fixes);
+                if (this.isSimBriefRouteValidIngame(this.fixes)) {
+                    HDLogger.log('SB Route is fixed and the route is valid ingame route now: USING SB import strategy', Level.debug);
+                    await this.insertWaypoints(this.fixes);
+                }
+                else {
+                    HDLogger.log('SB Route is NOT valid after fixes', Level.error);
+                }
+            }
+        }
+        fixRoute(errors, fixes) {
+            for (const error of errors) {
+                HDLogger.log('APPLYING FIX TO: ' + error.fix.ident + '; FIX TYPE: ' + error.apply, Level.info);
+                fixes[error.index].airway = 'DCT';
+            }
+        }
+        getProblemsOfRoute(fixes) {
+            const errors = [];
+            for (let i = 0; i < fixes.length - 1; i++) {
+                if (fixes[i].airway === 'DCT') {
+                    continue;
+                }
+                this.logK(this.preloadedAirwaysData);
+                if (!this.preloadedAirwaysData.hasOwnProperty(fixes[i].airway)) {
+                    errors.push({
+                        fix: fixes[i],
+                        index: i,
+                        reason: 'InGame waypoints does not use AIRWAY: ' + fixes[i].airway,
+                        apply: 'DIRECT'
+                    });
+                }
+                else {
+                    const isFixOnAirway = this.preloadedAirwaysData[fixes[i].airway].findIndex((icao) => {
+                        return icao == fixes[i].ident || icao.trim() == fixes[i].ident;
+                    });
+                    if (isFixOnAirway === -1) {
+                        errors.push({
+                            fix: fixes[i],
+                            index: i,
+                            reason: 'Waypoint ' + fixes[i] + ' is not on AIRWAY: ' + fixes[i].airway,
+                            apply: 'DIRECT'
+                        });
+                    }
+                }
+            }
+            return errors;
+        }
+        isSimBriefRouteValidIngame(fixes) {
+            for (const fix of fixes) {
+                if (fix.airway === 'DCT') {
+                    continue;
+                }
+                if (this.preloadedAirwaysData.hasOwnProperty(fix.airway)) {
+                    const isFixOnAirway = this.preloadedAirwaysData[fix.airway].findIndex((icao) => {
+                        //HDLogger.log(icao + ':' + fix.ident, Level.debug);
+                        return icao == fix.ident || icao.trim() == fix.ident;
+                    });
+                    if (isFixOnAirway === -1) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        async preloadAirways() {
+        }
+        getReferenceFixesForAirwaysPreload(fixes) {
+            const airways = [...new Set(fixes.map(fix => fix.airway))];
+            const referenceWaypoints = [];
+            for (const airway of airways) {
+                const found = this.fixes.find((fix) => fix.airway === airway && airway !== 'DCT');
+                if (found !== undefined) {
+                    referenceWaypoints.push(found);
+                }
+            }
+            return referenceWaypoints;
+        }
+        test() {
+            /*
+            HDLogger.log('before', Level.fatal);
+
+            const airways = {};
+
+            for (const waypoint of waypoints) {
+                var icaos: string[] = [];
+                for (const airway of waypoint.infos.airways) {
+                    for (const icao of airway.icaos) {
+                        icaos.push(String(icao.substring(7, 12)));
+                    }
+                    airways[airway.name] = icaos;
+                }
+
+                this.logK(airways);
+
+                //HDLogger.log(waypoint.ident + ' ' + ''.concat(airways + ' '), Level.fatal);
+
+
+            }
+
+            Object.keys(airways).forEach((airway) => {
+                HDLogger.log(airway + ':: ' + ''.concat(airways[airway] + '; '), Level.fatal);
+            });
+
+            var iterator = 0;
+
+            for (const waypoint of waypoints) {
+                const index = waypoint.infos.airways[0].icaos.findIndex((icao) => {
+                    return icao == this.fixes[iterator].airway;
+                });
+
+                            for (const route of waypoint.infos.routes) {
+                                this.logK(route);
+                                HDLogger.log(route.name + ' : ' + route.type, Level.info);
+                            }
+
+                //HDLogger.log(waypoint.ident + ':' + this.fixes[iterator].ident + '(' + this.fixes[iterator].airway + ')' + ' FOUND ON AIRWAY: ' + (index === -1 ? false : true), Level.fatal);
+                iterator++;
+            }
+
+            HDLogger.log('after', Level.fatal);
+            */
+        }
+        async parseAirways(fixes) {
+            for (let i = 0; i <= fixes.length - 1; i++) {
+                fixes[i - 1];
+                const current = fixes[i];
+                const next = fixes[i + 1];
+                ({
+                    ident: current.ident,
+                    airway: current.airway,
+                    airwayIn: undefined,
+                    airwayOut: undefined,
+                    lat: current.lat,
+                    long: current.lon
+                });
+                if (current.airway !== 'DCT') {
+                    current.airwayIn = current.airway;
+                }
+                if (next) {
+                    if (next.airway !== 'DCT') {
+                        current.airwayOut = next.airway;
+                    }
+                }
+            }
+        }
+        async setToGame(configuration) {
+            this.fmc.cleanUpPage();
+            this.updateProgress();
+            await Promise.all([
+                this.setInitialCruiseAltitude(this.info.initialAltitude),
+                this.asyncSetCostIndex(this.info.costIndex)
+            ]).then(() => {
+                HDLogger.log('INITIAL DATA SET');
+            }).catch((error) => {
+                HDLogger.log(error, Level.fatal);
+            });
+            /**
+             * TODO: It is not possible to use promiseAll for origin and destination
+             * need to figured out in future because await is not good for performance
+             */
+            await this.setOrigin(this.origin.icao);
+            await this.setDestination(this.destination.icao);
+            await this.setOriginRunway(this.origin.plannedRunway);
+            /**
+             * Be aware! Payload has to set before FuelBlock
+             */
+            await this.setPayload(this.weights);
+            await this.setFuel(this.fuel);
             if (this.info.sid !== 'DCT') {
                 await this.setDeparture(this.info.sid);
             }
@@ -13288,29 +13494,6 @@
             //departure.runwayTransitions[j].name.indexOf(selectedRunway.designation) !== -1
             await this.setDeparture(this.info.sid);
         }
-        async setInitialCruiseAltitude(cruiseAltitude) {
-            HDLogger.log('Setting CruiseAltitude to: ' + cruiseAltitude, Level.debug);
-            this.fmc._cruiseFlightLevel = Math.round(cruiseAltitude / 100);
-            SimVar.SetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number', this.fmc._cruiseFlightLevel).catch((error) => {
-                HDLogger.log('Unable to set cruise altitude to LVAR');
-            });
-        }
-        async setFuelBlock() {
-        }
-        async setOrigin(icao) {
-            const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
-            const fmc = this.fmc;
-            return new Promise((resolve, reject) => {
-                if (!airport) {
-                    fmc.showErrorMessage('NOT IN DATABASE');
-                    resolve(false);
-                }
-                fmc.flightPlanManager.setOrigin(airport.icao, () => {
-                    fmc.tmpOrigin = airport.ident;
-                    resolve(true);
-                });
-            });
-        }
         async setOriginRunway(runwayName) {
             return new Promise((resolve, reject) => {
                 const origin = this.fmc.flightPlanManager.getOrigin();
@@ -13336,45 +13519,30 @@
                 }
             });
         }
-        async setDestination(icao) {
-            const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
-            const fmc = this.fmc;
-            return new Promise((resolve, reject) => {
-                if (!airport) {
-                    fmc.showErrorMessage('NOT IN DATABASE');
-                    resolve(false);
-                }
-                fmc.flightPlanManager.setDestination(airport.icao, () => {
-                    fmc.tmpOrigin = airport.ident;
-                    resolve(true);
-                });
-            });
-        }
         async insertWaypoints(fixes) {
             return new Promise(async (resolve, reject) => {
+                await this.parseAirways(fixes);
+                this.updateProgress();
                 const total = fixes.length;
                 let iterator = 1;
                 for (const fix of fixes) {
+                    this.updateProgress();
+                    this._progress[9][0] = fix.ident;
+                    this._progress[9][1] = fix.airway;
+                    this._progress[9][2] = this.fmc.colorizeContent('(' + iterator + '/' + total + ')', 'blue');
                     const idx = this.fmc.flightPlanManager.getWaypointsCount() - 1;
-                    this.fmc.cleanUpPage();
-                    this.fmc._renderer.render(this.getProgress(fix, iterator, total));
                     HDLogger.log(fix.ident + ' ADDING TO FP', Level.debug);
                     await this.insertWaypoint(fix, idx);
                     HDLogger.log(fix.ident + ' ADDED TO FP', Level.info);
                     iterator++;
                 }
+                this._progress[9][2] = this.fmc.colorizeContent('DONE', 'green');
                 resolve();
             });
         }
-        async setCostIndex(costIndex) {
-            if (this.fmc.tryUpdateCostIndex(costIndex, 10000)) {
-                HDLogger.log('CostIndex has been set to: ' + costIndex, Level.debug);
-            }
-            else {
-                HDLogger.log('CostIndex could not be updated (invalid value): ' + costIndex + '; CI RANGE 0 - 9999', Level.warning);
-            }
-        }
         async setPayload(weights) {
+            this._progress[5][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
+            this.updateProgress();
             const kgToPoundsCoefficient = 2.20462262;
             const payload = (this.info.units === 'kgs' ? weights.payload * kgToPoundsCoefficient : weights.payload);
             const emptyWeight = 298700;
@@ -13398,8 +13566,12 @@
             HDLogger.log('ZFW: ' + (emptyWeight), Level.debug);
             this.fmc.trySetBlockFuel(0, true);
             this.fmc.setZeroFuelWeight((emptyWeight + payload) / 1000, EmptyCallback.Void, true);
+            this._progress[5][2] = this.fmc.colorizeContent('DONE', 'green');
+            this.updateProgress();
         }
         async setFuel(fuel) {
+            this._progress[7][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
+            this.updateProgress();
             const poundsPerGallonCoefficient = 6.699999809265137;
             const centerTankCapacity = 149034;
             const sideTankCapacity = 37319;
@@ -13439,10 +13611,12 @@
             let total = centerToSet + leftToSet + rightToSet;
             this.fmc.trySetBlockFuel(total, true);
             this.fmc.setFuelReserves(reserve / 1000, true);
+            this._progress[7][2] = this.fmc.colorizeContent('DONE', 'green');
+            this.updateProgress();
         }
         async insertWaypoint(fix, index) {
             return new Promise((resolve, reject) => {
-                this.fmc.ensureCurrentFlightPlanIsTemporary((result) => {
+                this.fmc.ensureCurrentFlightPlanIsTemporary(async (result) => {
                     if (!result) {
                         reject();
                     }
@@ -13458,18 +13632,26 @@
                         });
                     }
                     else {
-                        this.getOrSelectWaypointByIdentFast(fix.ident, fix, (waypoint) => {
+                        await this.getOrSelectWaypointByIdentFast(fix.ident, fix, async (waypoint) => {
                             if (!waypoint) {
                                 this.fmc.showErrorMessage('NOT IN DATABASE');
                                 return resolve(false);
                             }
-                            this.fmc.flightPlanManager.addWaypoint(waypoint.icao, index, () => {
-                                return resolve(true);
+                            const asyncAddWaypoint = (ident, index) => new Promise(resolve => this.fmc.flightPlanManager.addWaypoint(ident, index, resolve));
+                            await asyncAddWaypoint(waypoint.icao, index).then(() => {
+                                const fpWaypoint = this.fmc.flightPlanManager.getWaypoint(index);
+                                fpWaypoint.infos.airwayIn = fix.airwayIn;
+                                fpWaypoint.infos.airwayOut = fix.airwayOut;
+                                HDLogger.log('4: IDENT: ' + waypoint.icao + ' ; INDEX: ' + index, Level.fatal);
+                                resolve(true);
                             });
                         });
                     }
                 });
             });
+        }
+        asyncGetOrSelectWaypointByIdentFast(ident, fix) {
+            return new Promise(resolve => this.getOrSelectWaypointByIdentFast(ident, fix, resolve));
         }
         getOrSelectWaypointByIdentFast(ident, waypoint, callback) {
             this.fmc.dataManager.GetWaypointsByIdent(ident).then((waypoints) => {
@@ -13489,85 +13671,18 @@
                 }
             });
         }
-        /**
-         * TODO: Not IMPLEMENTED
-         * @param {HDFix[]} fixes
-         * @returns {Promise<void>}
-         */
-        async insertWaypointsIngame(fixes) {
-            return new Promise(async (resolve) => {
-                for (const fix of fixes) {
-                    if (fix.airway !== 'DCT') {
-                        const lastWaypoint = this.fmc.flightPlanManager.getWaypoint(this.fmc.flightPlanManager.getWaypointsCount() - 1);
-                        if (lastWaypoint.infos instanceof WayPointInfo) {
-                            lastWaypoint.infos.UpdateAirway(fix.airway).then(async () => {
-                                lastWaypoint.infos.airways.find(a => {
-                                    return a.name === fix.airway;
-                                });
-                            });
-                        }
-                    }
-                    else {
-                        const idx = this.fmc.flightPlanManager.getWaypointsCount() - 1;
-                        await this.insertWaypoint(fix, idx);
-                    }
-                }
-            });
-        }
-        async findSidIndex(sid) {
-            const origin = await this.fmc.dataManager.GetAirportByIdent(this.origin.icao);
-            let index = -1;
-            if (origin.infos instanceof AirportInfo) {
-                index = origin.infos.departures.findIndex((departure) => {
-                    return departure.name === sid;
-                });
-            }
-            return index;
-        }
-        async findStarIndex(star) {
-            const destination = await this.fmc.dataManager.GetAirportByIdent(this.destination.icao);
-            let index = -1;
-            if (destination.infos instanceof AirportInfo) {
-                index = destination.infos.arrivals.findIndex((arrival) => {
-                    return arrival.name === star;
-                });
-            }
-            return index;
-        }
         async setDeparture(sid) {
             const index = await this.findSidIndex(sid);
-            await this.fmc.setDepartureIndex(index);
-            const trans = await this.findTransIndex(index);
-            await this.fmc.setDepartureEnrouteTransitionIndex(trans);
-        }
-        async setEnRouteTrans() {
+            const [transIndex] = await Promise.all([this.findTransIndex(index), this.asyncSetDepartureIndex(index)]);
+            await this.asyncSetDepartureEnrouteTransitionIndex(transIndex);
         }
         async setDepartureProcIndex(index) {
-            // SIDS console.log(airport.departures[0].name);
-            //
-            // Last leg is TRANS
-            // console.log(airport.departures[0].runwayTransitions[0].legs[0].fixIcao);
-            // Where is fucking difference??
-            // console.log(airport.departures[0].enRouteTransitions[0].name);
             await this.fmc.ensureCurrentFlightPlanIsTemporary(async () => {
                 await this.fmc.flightPlanManager.setDepartureProcIndex(index);
                 const transIndex = await this.findTransIndex(index);
                 await this.fmc.setDepartureEnrouteTransitionIndex(transIndex, () => {
                     console.log('TRANS SET: ' + transIndex);
                 });
-                //await this.fmc.flightPlanManager.setDepartureRunwayIndex(0);
-            });
-        }
-        async findTransIndex(departureIndex) {
-            return new Promise(async (resolve) => {
-                const origin = await this.fmc.dataManager.GetAirportByIdent(this.origin.icao);
-                if (origin.infos instanceof AirportInfo) {
-                    const index = origin.infos.departures[departureIndex].enRouteTransitions.findIndex((trans) => {
-                        return trans.name === this.info.enRouteTrans;
-                    });
-                    resolve(index);
-                }
-                resolve(-1);
             });
         }
         logK(object) {
@@ -13575,54 +13690,161 @@
                 console.log(key);
             });
         }
+        updateProgress() {
+            HDLogger.log('UPDATING DISPLAY', Level.info);
+            this.fmc._renderer.renderTitle('FLIGHT PLAN');
+            this.fmc._renderer.render(this._progress);
+        }
         /**
-         *
-         * setDepartureProcIndex -> SID
-         * setDepartureRunwayIndex -> Enroute Trans
-         *
+         * Promise like setInitialCruiseAltitude
+         * @param {number} cruiseAltitude
+         * @returns {Promise<boolean>}
          */
-        /*
-            setDepartureIndex(departureIndex: number, callback = EmptyCallback.Boolean) {
-                this.ensureCurrentFlightPlanIsTemporary(() => {
-                    let currentRunway = this.flightPlanManager.getDepartureRunway();
-                    this.flightPlanManager.setDepartureProcIndex(departureIndex, () => {
-                        if (currentRunway) {
-                            let departure = this.flightPlanManager.getDeparture();
-                            if (departure) {
-                                let departureRunwayIndex = departure.runwayTransitions.findIndex(t => {
-                                    return t.name.indexOf(currentRunway.designation) != -1;
-                                });
-                                if (departureRunwayIndex >= -1) {
-                                    return this.flightPlanManager.setDepartureRunwayIndex(departureRunwayIndex, () => {
-                                        return callback(true);
-                                    });
-                                }
-                            }
-                        }
-                        return callback(true);
-                    });
+        setInitialCruiseAltitude(cruiseAltitude) {
+            const cruiseFlightLevel = Math.round(cruiseAltitude / 100);
+            HDLogger.log('Setting CruiseAltitude to: ' + cruiseAltitude, Level.debug);
+            return SimVar.SetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number', cruiseFlightLevel)
+                .then(() => {
+                this.fmc._cruiseFlightLevel = cruiseFlightLevel;
+                HDLogger.log('CruiseAltitude set to: ' + cruiseAltitude, Level.debug);
+                return true;
+            }).catch((error) => {
+                HDLogger.log('Unable to set cruise altitude to LVAR');
+                return false;
+            });
+        }
+        /**
+         * Promise like setOrigin
+         * @param {string} icao
+         * @returns {Promise<boolean>}
+         */
+        setOrigin(icao) {
+            this._progress[1][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
+            this.updateProgress();
+            return this.fmc.dataManager.GetAirportByIdent(icao).then((airport) => {
+                HDLogger.log('AIRPORT: ' + airport, Level.fatal);
+                if (!airport) {
+                    HDLogger.log('ORIGIN NOT IN DATABASE: ' + icao, Level.warning);
+                    this.fmc.showErrorMessage('NOT IN DATABASE');
+                    this._progress[1][2] = this.fmc.colorizeContent('FAILED', 'red');
+                    this.updateProgress();
+                    return false;
+                }
+                this.fmc.flightPlanManager.setOrigin(airport.icao, () => {
+                    this.fmc.tmpOrigin = airport.ident;
+                    HDLogger.log('ORIGIN set to: ' + icao, Level.debug);
+                    this._progress[1][2] = this.fmc.colorizeContent('DONE', 'green');
+                    this.updateProgress();
+                    return true;
                 });
-            }
-        */
-        getProgress(fix, iterator, total) {
-            this.fmc._renderer.renderPages(iterator, total);
-            this.fmc._renderer.renderTitle('PROGRESS PAGE');
-            return [
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['Adding', fix.ident],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', ''],
-                ['', '', '', '']
-            ];
+            });
+        }
+        /**
+         * Promise like setDestination
+         * @param {string} icao
+         * @returns {Promise<boolean>}
+         */
+        setDestination(icao) {
+            this._progress[3][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
+            this.updateProgress();
+            return this.fmc.dataManager.GetAirportByIdent(icao).then((airport) => {
+                if (!airport) {
+                    HDLogger.log('DESTINATION NOT IN DATABASE: ' + icao, Level.warning);
+                    this.fmc.showErrorMessage('NOT IN DATABASE');
+                    this._progress[3][2] = this.fmc.colorizeContent('FAILED', 'red');
+                    this.updateProgress();
+                    return false;
+                }
+                this.fmc.flightPlanManager.setDestination(airport.icao, () => {
+                    HDLogger.log('DESTINATION set to: ' + icao, Level.debug);
+                    this.fmc.tmpOrigin = airport.ident;
+                    this._progress[3][2] = this.fmc.colorizeContent('DONE', 'green');
+                    this.updateProgress();
+                    return true;
+                });
+            });
+        }
+        /**
+         * Promise like findSidIndex function
+         * @param {string} sid
+         * @returns {Promise<number>}
+         */
+        findSidIndex(sid) {
+            return this.fmc.dataManager.GetAirportByIdent(this.origin.icao).then((origin) => {
+                if (origin.infos instanceof AirportInfo) {
+                    return origin.infos.departures.findIndex((departure) => {
+                        return departure.name === sid;
+                    });
+                }
+            });
+        }
+        /**
+         * Promise like findStarIndex function
+         * @param {string} star
+         * @returns {Promise<number>}
+         */
+        findStarIndex(star) {
+            return this.fmc.dataManager.GetAirportByIdent(this.destination.icao).then((destination) => {
+                if (destination.infos instanceof AirportInfo) {
+                    return destination.infos.arrivals.findIndex((arrival) => {
+                        return arrival.name === star;
+                    });
+                }
+            });
+        }
+        /**
+         * Promise like findTransIndex function
+         * @param {number} departureIndex
+         * @returns {Promise<number>}
+         */
+        findTransIndex(departureIndex) {
+            return this.fmc.dataManager.GetAirportByIdent(this.origin.icao).then((origin) => {
+                if (origin.infos instanceof AirportInfo) {
+                    const index = origin.infos.departures[departureIndex].enRouteTransitions.findIndex((trans) => {
+                        return trans.name === this.info.enRouteTrans;
+                    });
+                    return index;
+                }
+            });
+        }
+        /**
+         * Async wrapper for setDepartureIndex function
+         * @param index
+         * @returns {Promise<boolean>}
+         * @private
+         */
+        asyncSetDepartureIndex(index) {
+            return new Promise((resolve) => {
+                this.fmc.setDepartureIndex(index, resolve);
+            });
+        }
+        /**
+         * Async wrapper for setDepartureEnrouteTransitionIndex function
+         * @param index
+         * @returns {Promise<boolean>}
+         * @private
+         */
+        asyncSetDepartureEnrouteTransitionIndex(index) {
+            return new Promise((resolve) => {
+                this.fmc.setDepartureEnrouteTransitionIndex(index, resolve);
+            });
+        }
+        /**
+         * Async wraper for setCostIndex
+         * @param {number} costIndex
+         * @private
+         */
+        asyncSetCostIndex(costIndex) {
+            return new Promise(((resolve) => {
+                if (this.fmc.tryUpdateCostIndex(costIndex, 10000)) {
+                    HDLogger.log('CostIndex has been set to: ' + costIndex, Level.debug);
+                    resolve(true);
+                }
+                else {
+                    HDLogger.log('CostIndex could not be updated (invalid value): ' + costIndex + '; CI RANGE 0 - 9999', Level.warning);
+                    resolve(false);
+                }
+            }));
         }
     }
 
@@ -13747,9 +13969,16 @@
                 await navlog.import().catch((error) => {
                     HDLogger.log(error, Level.error);
                 });
-                navlog.setToGame().then(() => {
-                    B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-                });
+                if (HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
+                    navlog.setToGameIngame().then(() => {
+                        B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                    });
+                }
+                else {
+                    navlog.setToGame().then(() => {
+                        B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                    });
+                }
             };
             /**
              * TODO: Refactor this... It is same as SimBrief just parsing log is different
@@ -17378,7 +17607,8 @@
              */
             this._renderer.use(new SeparatorRendererMiddleware());
             if (this.urlConfig.index == 1) {
-                HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
+                //HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
+                //HDLogger.addHandler(new ConsoleHandler());
                 this._renderer.use(new SettableRendererMiddleware());
                 this._renderer.use(new SizeRendererMiddleware());
                 this._renderer.use(new ColorRendererMiddleware());
