@@ -35,9 +35,10 @@ export class HDNavlog {
 		['', '', '']
 	];
 
-	private defaultConfiguration = {
+	private defaultConfiguration: { withSid: boolean, withStar: boolean, routeOnly: boolean } = {
 		withSid: true,
-		withStar: true
+		withStar: true,
+		routeOnly: false
 	};
 
 	private preloadedAirwaysData: {};
@@ -77,7 +78,7 @@ export class HDNavlog {
 	 * @param {{}} configuration
 	 * @returns {Promise<void>}
 	 */
-	public async setToGameIngame(configuration?: {}) {
+	public async setToGameIngame(configuration?: { withSid: boolean, withStar: boolean, routeOnly: boolean }) {
 		if (!configuration) {
 			configuration = this.defaultConfiguration;
 		}
@@ -100,9 +101,14 @@ export class HDNavlog {
 		/**
 		 * Be aware! Payload has to set before FuelBlock
 		 */
-		await this.setPayload(this.weights);
-		await this.setFuel(this.fuel);
-		if (this.info.sid !== 'DCT') {
+		if (!configuration.routeOnly) {
+			await this.setPayload(this.weights);
+			await this.setFuel(this.fuel);
+		} else {
+			this._progress[5][2] = this.fmc.colorizeContent('SKIPPED', 'orange');
+			this._progress[7][2] = this.fmc.colorizeContent('SKIPPED', 'orange');
+		}
+		if (this.info.sid !== 'DCT' && configuration.withSid === true) {
 			await this.setDeparture(this.info.sid);
 		}
 
@@ -294,7 +300,7 @@ export class HDNavlog {
 		}
 	}
 
-	public async setToGame(configuration?: {}) {
+	public async setToGame(configuration?: { withSid: boolean, withStar: boolean, routeOnly: boolean }) {
 		if (!configuration) {
 			configuration = this.defaultConfiguration;
 		}
@@ -320,9 +326,14 @@ export class HDNavlog {
 		/**
 		 * Be aware! Payload has to set before FuelBlock
 		 */
-		await this.setPayload(this.weights);
-		await this.setFuel(this.fuel);
-		if (this.info.sid !== 'DCT') {
+		if (!configuration.routeOnly) {
+			await this.setPayload(this.weights);
+			await this.setFuel(this.fuel);
+		} else {
+			this._progress[5][2] = this.fmc.colorizeContent('SKIPPED', 'orange');
+			this._progress[7][2] = this.fmc.colorizeContent('SKIPPED', 'orange');
+		}
+		if (this.info.sid !== 'DCT' && configuration.withSid === true) {
 			await this.setDeparture(this.info.sid);
 		}
 

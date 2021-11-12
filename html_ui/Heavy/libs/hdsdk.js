@@ -1126,12 +1126,16 @@
          * @param {boolean} state
          */
         renderExec(state) {
-            if (this.exec) {
+            if (this.execs) {
                 if (state === true) {
-                    this.exec.style.fill = '#65ff3a';
+                    for (const exec of this.execs) {
+                        exec.style.fill = '#65ff3a';
+                    }
                 }
                 else {
-                    this.exec.style.fill = '#354b4f';
+                    for (const exec of this.execs) {
+                        exec.style.fill = '#354b4f';
+                    }
                 }
             }
         }
@@ -1192,7 +1196,11 @@
         loadElements(container) {
             this.loadTitles(container);
             this.loadLines(container);
-            this.loadExec(container);
+            /**
+             * Exec require document or body to be able to highlight both buttons. This is not a good practice
+             * but it does not have performance impact because the elements are cached in memory
+             */
+            this.loadExec(document.body);
             this.loadPageTitle(container);
             this.loadPages(container);
             this.loadSelectKeys(container);
@@ -1258,9 +1266,9 @@
          * @private
          */
         loadExec(container) {
-            const execRect = container.querySelector('#exec-emit');
-            if (execRect) {
-                this.exec = execRect;
+            const execRects = container.getElementsByClassName('exec-emit-class');
+            if (execRects) {
+                this.execs = execRects;
             }
         }
         /**
@@ -1274,7 +1282,6 @@
             const textElement = container.querySelector(id);
             if (textElement) {
                 return textElement;
-                //return textElement.getElementsByTagName('tspan')[0];
             }
             return undefined;
         }

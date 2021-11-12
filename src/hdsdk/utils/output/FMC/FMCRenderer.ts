@@ -29,7 +29,7 @@ class FMCRenderer implements IRenderer {
 	private selectKeys: SelectKey[] = [];
 	private mainKeys: MainKey[] = [];
 
-	private exec: SVGRectElement;
+	private execs: SVGRectElement[];
 
 	private static linesPrefixes: string[] = ['LL', 'CLL', 'CL', 'CRL', 'RL'];
 	private static titlesPrefixes: string[] = ['LT', 'CLT', 'CT', 'CRT', 'RT'];
@@ -197,11 +197,15 @@ class FMCRenderer implements IRenderer {
 	 * @param {boolean} state
 	 */
 	public renderExec(state: boolean): void {
-		if (this.exec) {
+		if (this.execs) {
 			if (state === true) {
-				this.exec.style.fill = '#65ff3a';
+				for (const exec of this.execs) {
+					exec.style.fill = '#65ff3a';
+				}
 			} else {
-				this.exec.style.fill = '#354b4f';
+				for (const exec of this.execs) {
+					exec.style.fill = '#354b4f';
+				}
 			}
 		}
 	}
@@ -268,7 +272,11 @@ class FMCRenderer implements IRenderer {
 	private loadElements(container: HTMLElement) {
 		this.loadTitles(container);
 		this.loadLines(container);
-		this.loadExec(container);
+		/**
+		 * Exec require document or body to be able to highlight both buttons. This is not a good practice
+		 * but it does not have performance impact because the elements are cached in memory
+		 */
+		this.loadExec(document.body);
 		this.loadPageTitle(container);
 		this.loadPages(container);
 		this.loadSelectKeys(container);
@@ -339,9 +347,9 @@ class FMCRenderer implements IRenderer {
 	 * @private
 	 */
 	private loadExec(container: HTMLElement): void {
-		const execRect = container.querySelector('#exec-emit') as SVGRectElement;
-		if (execRect) {
-			this.exec = execRect;
+		const execRects = container.getElementsByClassName('exec-emit-class') as unknown as SVGRectElement[];
+		if (execRects) {
+			this.execs = execRects;
 		}
 	}
 
@@ -356,7 +364,6 @@ class FMCRenderer implements IRenderer {
 		const textElement = container.querySelector(id);
 		if (textElement) {
 			return textElement as HTMLElement;
-			//return textElement.getElementsByTagName('tspan')[0];
 		}
 		return undefined;
 	}

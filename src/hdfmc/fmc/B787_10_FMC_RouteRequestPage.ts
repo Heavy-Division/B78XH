@@ -150,12 +150,19 @@ export class B787_10_FMC_RouteRequestPage {
 				HDLogger.log(error, Level.error);
 			});
 
+			const configuration = {
+				withSid: HDSDK.HeavyDivision.SimBrief.importSid(),
+				withStar: HDSDK.HeavyDivision.SimBrief.importStar(),
+				routeOnly: HDSDK.HeavyDivision.SimBrief.importRouteOnly()
+			};
+
+
 			if (HDSDK.HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
-				navlog.setToGameIngame().then(() => {
+				navlog.setToGameIngame(configuration).then(() => {
 					B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 				});
 			} else {
-				navlog.setToGame().then(() => {
+				navlog.setToGame(configuration).then(() => {
 					B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 				});
 			}

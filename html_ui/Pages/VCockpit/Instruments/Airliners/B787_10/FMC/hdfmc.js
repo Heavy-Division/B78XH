@@ -7455,12 +7455,16 @@
          * @param {boolean} state
          */
         renderExec(state) {
-            if (this.exec) {
+            if (this.execs) {
                 if (state === true) {
-                    this.exec.style.fill = '#65ff3a';
+                    for (const exec of this.execs) {
+                        exec.style.fill = '#65ff3a';
+                    }
                 }
                 else {
-                    this.exec.style.fill = '#354b4f';
+                    for (const exec of this.execs) {
+                        exec.style.fill = '#354b4f';
+                    }
                 }
             }
         }
@@ -7521,7 +7525,11 @@
         loadElements(container) {
             this.loadTitles(container);
             this.loadLines(container);
-            this.loadExec(container);
+            /**
+             * Exec require document or body to be able to highlight both buttons. This is not a good practice
+             * but it does not have performance impact because the elements are cached in memory
+             */
+            this.loadExec(document.body);
             this.loadPageTitle(container);
             this.loadPages(container);
             this.loadSelectKeys(container);
@@ -7587,9 +7595,9 @@
          * @private
          */
         loadExec(container) {
-            const execRect = container.querySelector('#exec-emit');
-            if (execRect) {
-                this.exec = execRect;
+            const execRects = container.getElementsByClassName('exec-emit-class');
+            if (execRects) {
+                this.execs = execRects;
             }
         }
         /**
@@ -7603,7 +7611,6 @@
             const textElement = container.querySelector(id);
             if (textElement) {
                 return textElement;
-                //return textElement.getElementsByTagName('tspan')[0];
             }
             return undefined;
         }
@@ -9303,7 +9310,7 @@
                 color = 'white';
             }
             this._title = content.split('[color]')[0];
-            this._titleElement.classList.remove('white', 'blue', 'yellow', 'green', 'red');
+            this._titleElement.classList.remove('white', 'blue', 'yellow', 'orange', 'green', 'red');
             this._titleElement.classList.add(color);
             this._titleElement.innerHTML = this._title;
         }
@@ -9345,7 +9352,7 @@
                     color = 'white';
                 }
                 let e = this._labelElements[row][col];
-                e.classList.remove('white', 'blue', 'yellow', 'green', 'red');
+                e.classList.remove('white', 'blue', 'yellow', 'orange', 'green', 'red');
                 e.classList.add(color);
                 label = label.split('[color]')[0];
             }
@@ -13187,7 +13194,8 @@
             ];
             this.defaultConfiguration = {
                 withSid: true,
-                withStar: true
+                withStar: true,
+                routeOnly: false
             };
             this.fmc = fmc;
         }
@@ -13222,6 +13230,9 @@
          * @returns {Promise<void>}
          */
         async setToGameIngame(configuration) {
+            if (!configuration) {
+                configuration = this.defaultConfiguration;
+            }
             this.fmc.cleanUpPage();
             this.updateProgress();
             await Promise.all([
@@ -13239,9 +13250,15 @@
             /**
              * Be aware! Payload has to set before FuelBlock
              */
-            await this.setPayload(this.weights);
-            await this.setFuel(this.fuel);
-            if (this.info.sid !== 'DCT') {
+            if (!configuration.routeOnly) {
+                await this.setPayload(this.weights);
+                await this.setFuel(this.fuel);
+            }
+            else {
+                this._progress[5][2] = this.fmc.colorizeContent('SKIPPED', 'orange');
+                this._progress[7][2] = this.fmc.colorizeContent('SKIPPED', 'orange');
+            }
+            if (this.info.sid !== 'DCT' && configuration.withSid === true) {
                 await this.setDeparture(this.info.sid);
             }
             this._progress[9][2] = this.fmc.colorizeContent('PREPARING', 'yellow');
@@ -13415,6 +13432,9 @@
             }
         }
         async setToGame(configuration) {
+            if (!configuration) {
+                configuration = this.defaultConfiguration;
+            }
             this.fmc.cleanUpPage();
             this.updateProgress();
             await Promise.all([
@@ -13435,9 +13455,15 @@
             /**
              * Be aware! Payload has to set before FuelBlock
              */
-            await this.setPayload(this.weights);
-            await this.setFuel(this.fuel);
-            if (this.info.sid !== 'DCT') {
+            if (!configuration.routeOnly) {
+                await this.setPayload(this.weights);
+                await this.setFuel(this.fuel);
+            }
+            else {
+                this._progress[5][2] = this.fmc.colorizeContent('SKIPPED', 'orange');
+                this._progress[7][2] = this.fmc.colorizeContent('SKIPPED', 'orange');
+            }
+            if (this.info.sid !== 'DCT' && configuration.withSid === true) {
                 await this.setDeparture(this.info.sid);
             }
             await this.insertWaypoints(this.fixes);
@@ -13969,13 +13995,18 @@
                 await navlog.import().catch((error) => {
                     HDLogger.log(error, Level.error);
                 });
+                const configuration = {
+                    withSid: HeavyDivision.SimBrief.importSid(),
+                    withStar: HeavyDivision.SimBrief.importStar(),
+                    routeOnly: HeavyDivision.SimBrief.importRouteOnly()
+                };
                 if (HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
-                    navlog.setToGameIngame().then(() => {
+                    navlog.setToGameIngame(configuration).then(() => {
                         B787_10_FMC_RoutePage.ShowPage1(this.fmc);
                     });
                 }
                 else {
-                    navlog.setToGame().then(() => {
+                    navlog.setToGame(configuration).then(() => {
                         B787_10_FMC_RoutePage.ShowPage1(this.fmc);
                     });
                 }
@@ -17612,8 +17643,6 @@
                 this._renderer.use(new SettableRendererMiddleware());
                 this._renderer.use(new SizeRendererMiddleware());
                 this._renderer.use(new ColorRendererMiddleware());
-                ////this._renderer.use(new HDSDK.SettableHighlighterRendererMiddleware());
-                this._renderer.renderExec(false);
                 /**
                  * Reset TOD
                  */
@@ -18311,7 +18340,7 @@
                     }
                     //this.tryExecuteBAL();
                 }
-                //this._execLight.style.backgroundColor = this.getIsRouteActivated() ? '#00ff00' : 'black';
+                this._renderer.renderExec(this.getIsRouteActivated());
                 this.updateAutopilotCooldown = this._apCooldown;
             }
         }

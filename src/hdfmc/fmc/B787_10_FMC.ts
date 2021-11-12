@@ -525,9 +525,6 @@ export class B787_10_FMC extends Boeing_FMC {
 			this._renderer.use(new HDSDK.SettableRendererMiddleware());
 			this._renderer.use(new HDSDK.SizeRendererMiddleware());
 			this._renderer.use(new HDSDK.ColorRendererMiddleware());
-			////this._renderer.use(new HDSDK.SettableHighlighterRendererMiddleware());
-
-			this._renderer.renderExec(false);
 
 			/**
 			 * Reset TOD
@@ -1301,7 +1298,7 @@ export class B787_10_FMC extends Boeing_FMC {
 				//this.tryExecuteBAL();
 			}
 
-			//this._execLight.style.backgroundColor = this.getIsRouteActivated() ? '#00ff00' : 'black';
+			this._renderer.renderExec(this.getIsRouteActivated());
 			this.updateAutopilotCooldown = this._apCooldown;
 		}
 	}
