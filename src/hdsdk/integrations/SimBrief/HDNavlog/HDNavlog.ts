@@ -283,11 +283,21 @@ export class HDNavlog {
 		}
 
 		if (!origin) {
-			return Promise.reject('NOT ABLE TO FIND ORIGIN');
+			return Promise.reject(this.fmc.colorizeContent('FP IMPORT FAILED: ORIGIN NOT FOUND', 'red'));
 		}
 
 
-		await this.setDestination(this.destination.icao);
+		let destination = undefined;
+		for (let i = 0; i <= 5; i++) {
+			destination = await this.setDestination(this.destination.icao);
+			if (destination) {
+				break;
+			}
+		}
+
+		if (!destination) {
+			return Promise.reject(this.fmc.colorizeContent('FAILED: DESTINATION NOT FOUND', 'red'));
+		}
 
 		await this.setOriginRunway(this.origin.plannedRunway);
 		/**
@@ -626,7 +636,6 @@ export class HDNavlog {
 		this._progress[1][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
 		this.updateProgress();
 		const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
-		HDLogger.log('AIRPORT: ' + airport, Level.fatal);
 		if (!airport) {
 			HDLogger.log('ORIGIN NOT IN DATABASE: ' + icao, Level.warning);
 			this.fmc.showErrorMessage('NOT IN DATABASE');
@@ -642,25 +651,20 @@ export class HDNavlog {
 	 * @param {string} icao
 	 * @returns {Promise<boolean>}
 	 */
-	setDestination(icao: string): Promise<boolean> {
+	async setDestination(icao: string): Promise<boolean> {
 		this._progress[3][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
 		this.updateProgress();
-		return this.fmc.dataManager.GetAirportByIdent(icao).then((airport) => {
-			if (!airport) {
-				HDLogger.log('DESTINATION NOT IN DATABASE: ' + icao, Level.warning);
-				this.fmc.showErrorMessage('NOT IN DATABASE');
-				this._progress[3][2] = this.fmc.colorizeContent('FAILED', 'red');
-				this.updateProgress();
-				return false;
-			}
-			this.fmc.flightPlanManager.setDestination(airport.icao, () => {
-				HDLogger.log('DESTINATION set to: ' + icao, Level.debug);
-				this.fmc.tmpOrigin = airport.ident;
-				this._progress[3][2] = this.fmc.colorizeContent('DONE', 'green');
-				this.updateProgress();
-				return true;
-			});
-		});
+		const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
+
+		if (!airport) {
+			HDLogger.log('DESTINATION NOT IN DATABASE: ' + icao, Level.warning);
+			this.fmc.showErrorMessage('NOT IN DATABASE');
+			this._progress[3][2] = this.fmc.colorizeContent('FAILED', 'red');
+			this.updateProgress();
+			return false;
+		}
+
+		return await this.asyncSetDestination(airport);
 	}
 
 	/**
@@ -758,6 +762,18 @@ export class HDNavlog {
 				this.fmc.tmpOrigin = airport.ident;
 				HDLogger.log('ORIGIN set to: ' + airport.icao, Level.debug);
 				this._progress[1][2] = this.fmc.colorizeContent('DONE', 'green');
+				this.updateProgress();
+				resolve(true);
+			});
+		});
+	}
+
+	private asyncSetDestination(airport: any): Promise<boolean> {
+		return new Promise<boolean>((resolve) => {
+			this.fmc.flightPlanManager.setDestination(airport.icao, () => {
+				this.fmc.tmpDestination = airport.ident;
+				HDLogger.log('DESTINATION set to: ' + airport.icao, Level.debug);
+				this._progress[3][2] = this.fmc.colorizeContent('DONE', 'green');
 				this.updateProgress();
 				resolve(true);
 			});
