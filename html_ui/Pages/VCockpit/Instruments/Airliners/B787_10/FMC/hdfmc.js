@@ -13404,7 +13404,16 @@
              * TODO: It is not possible to use promiseAll for origin and destination
              * need to figured out in future because await is not good for performance
              */
-            await this.setOrigin(this.origin.icao);
+            let origin = undefined;
+            for (let i = 0; i <= 5; i++) {
+                origin = await this.setOrigin(this.origin.icao);
+                if (origin) {
+                    break;
+                }
+            }
+            if (!origin) {
+                return Promise.reject('NOT ABLE TO FIND ORIGIN');
+            }
             await this.setDestination(this.destination.icao);
             await this.setOriginRunway(this.origin.plannedRunway);
             /**
@@ -13702,26 +13711,19 @@
          * @param {string} icao
          * @returns {Promise<boolean>}
          */
-        setOrigin(icao) {
+        async setOrigin(icao) {
             this._progress[1][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
             this.updateProgress();
-            return this.fmc.dataManager.GetAirportByIdent(icao).then((airport) => {
-                HDLogger.log('AIRPORT: ' + airport, Level.fatal);
-                if (!airport) {
-                    HDLogger.log('ORIGIN NOT IN DATABASE: ' + icao, Level.warning);
-                    this.fmc.showErrorMessage('NOT IN DATABASE');
-                    this._progress[1][2] = this.fmc.colorizeContent('FAILED', 'red');
-                    this.updateProgress();
-                    return false;
-                }
-                this.fmc.flightPlanManager.setOrigin(airport.icao, () => {
-                    this.fmc.tmpOrigin = airport.ident;
-                    HDLogger.log('ORIGIN set to: ' + icao, Level.debug);
-                    this._progress[1][2] = this.fmc.colorizeContent('DONE', 'green');
-                    this.updateProgress();
-                    return true;
-                });
-            });
+            const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
+            HDLogger.log('AIRPORT: ' + airport, Level.fatal);
+            if (!airport) {
+                HDLogger.log('ORIGIN NOT IN DATABASE: ' + icao, Level.warning);
+                this.fmc.showErrorMessage('NOT IN DATABASE');
+                this._progress[1][2] = this.fmc.colorizeContent('FAILED', 'red');
+                this.updateProgress();
+                return false;
+            }
+            return await this.asyncSetOrigin(airport);
         }
         /**
          * Promise like setDestination
@@ -13829,6 +13831,17 @@
                     resolve(false);
                 }
             }));
+        }
+        asyncSetOrigin(airport) {
+            return new Promise((resolve) => {
+                this.fmc.flightPlanManager.setOrigin(airport.icao, () => {
+                    this.fmc.tmpOrigin = airport.ident;
+                    HDLogger.log('ORIGIN set to: ' + airport.icao, Level.debug);
+                    this._progress[1][2] = this.fmc.colorizeContent('DONE', 'green');
+                    this.updateProgress();
+                    resolve(true);
+                });
+            });
         }
     }
 
@@ -13961,12 +13974,18 @@
                 if (HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
                     navlog.setToGameIngame(configuration).then(() => {
                         B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-                    });
+                    }).catch((reason => {
+                        this.fmc.cleanUpPage();
+                        this.fmc._renderer.renderTitle(reason);
+                    }));
                 }
                 else {
                     navlog.setToGame(configuration).then(() => {
                         B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-                    });
+                    }).catch((reason => {
+                        this.fmc.cleanUpPage();
+                        this.fmc._renderer.renderTitle(reason);
+                    }));
                 }
             };
             /**
