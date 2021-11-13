@@ -3768,6 +3768,29 @@
         connect: lookup,
     });
 
+    class SocketIOHandler {
+        constructor(server, port) {
+            this.socket = lookup('http://' + server + ':' + port + '/', {
+                auth: {
+                    token: 'msfs'
+                },
+                transports: ['websocket']
+            });
+        }
+        log(message, level) {
+            switch (level) {
+                case Level.none:
+                case Level.debug:
+                case Level.info:
+                case Level.warning:
+                case Level.error:
+                case Level.fatal:
+                    this.socket.emit('log', JSON.stringify({ message: message, level: Level[level] }));
+                    break;
+            }
+        }
+    }
+
     class BaseFMC extends BaseAirliners {
         constructor() {
             super();
@@ -7327,6 +7350,7 @@
         renderTitle(title) {
             if (this.title) {
                 this.title.innerHTML = title;
+                this.title = this.applyMiddlewares(this.title);
             }
         }
         /**
@@ -13412,9 +13436,18 @@
                 }
             }
             if (!origin) {
-                return Promise.reject('NOT ABLE TO FIND ORIGIN');
+                return Promise.reject(this.fmc.colorizeContent('FP IMPORT FAILED: ORIGIN NOT FOUND', 'red'));
             }
-            await this.setDestination(this.destination.icao);
+            let destination = undefined;
+            for (let i = 0; i <= 5; i++) {
+                destination = await this.setDestination(this.destination.icao);
+                if (destination) {
+                    break;
+                }
+            }
+            if (!destination) {
+                return Promise.reject(this.fmc.colorizeContent('FAILED: DESTINATION NOT FOUND', 'red'));
+            }
             await this.setOriginRunway(this.origin.plannedRunway);
             /**
              * Be aware! Payload has to set before FuelBlock
@@ -13715,7 +13748,6 @@
             this._progress[1][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
             this.updateProgress();
             const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
-            HDLogger.log('AIRPORT: ' + airport, Level.fatal);
             if (!airport) {
                 HDLogger.log('ORIGIN NOT IN DATABASE: ' + icao, Level.warning);
                 this.fmc.showErrorMessage('NOT IN DATABASE');
@@ -13730,25 +13762,18 @@
          * @param {string} icao
          * @returns {Promise<boolean>}
          */
-        setDestination(icao) {
+        async setDestination(icao) {
             this._progress[3][2] = this.fmc.colorizeContent('IMPORTING', 'blue');
             this.updateProgress();
-            return this.fmc.dataManager.GetAirportByIdent(icao).then((airport) => {
-                if (!airport) {
-                    HDLogger.log('DESTINATION NOT IN DATABASE: ' + icao, Level.warning);
-                    this.fmc.showErrorMessage('NOT IN DATABASE');
-                    this._progress[3][2] = this.fmc.colorizeContent('FAILED', 'red');
-                    this.updateProgress();
-                    return false;
-                }
-                this.fmc.flightPlanManager.setDestination(airport.icao, () => {
-                    HDLogger.log('DESTINATION set to: ' + icao, Level.debug);
-                    this.fmc.tmpOrigin = airport.ident;
-                    this._progress[3][2] = this.fmc.colorizeContent('DONE', 'green');
-                    this.updateProgress();
-                    return true;
-                });
-            });
+            const airport = await this.fmc.dataManager.GetAirportByIdent(icao);
+            if (!airport) {
+                HDLogger.log('DESTINATION NOT IN DATABASE: ' + icao, Level.warning);
+                this.fmc.showErrorMessage('NOT IN DATABASE');
+                this._progress[3][2] = this.fmc.colorizeContent('FAILED', 'red');
+                this.updateProgress();
+                return false;
+            }
+            return await this.asyncSetDestination(airport);
         }
         /**
          * Promise like findSidIndex function
@@ -13838,6 +13863,17 @@
                     this.fmc.tmpOrigin = airport.ident;
                     HDLogger.log('ORIGIN set to: ' + airport.icao, Level.debug);
                     this._progress[1][2] = this.fmc.colorizeContent('DONE', 'green');
+                    this.updateProgress();
+                    resolve(true);
+                });
+            });
+        }
+        asyncSetDestination(airport) {
+            return new Promise((resolve) => {
+                this.fmc.flightPlanManager.setDestination(airport.icao, () => {
+                    this.fmc.tmpDestination = airport.ident;
+                    HDLogger.log('DESTINATION set to: ' + airport.icao, Level.debug);
+                    this._progress[3][2] = this.fmc.colorizeContent('DONE', 'green');
                     this.updateProgress();
                     resolve(true);
                 });
@@ -13973,18 +14009,28 @@
                 };
                 if (HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
                     navlog.setToGameIngame(configuration).then(() => {
-                        B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                        this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
+                        setTimeout(() => {
+                            B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                        }, 2000);
                     }).catch((reason => {
-                        this.fmc.cleanUpPage();
                         this.fmc._renderer.renderTitle(reason);
+                        setTimeout(() => {
+                            B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                        }, 2000);
                     }));
                 }
                 else {
                     navlog.setToGame(configuration).then(() => {
-                        B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                        this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
+                        setTimeout(() => {
+                            B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                        }, 2000);
                     }).catch((reason => {
-                        this.fmc.cleanUpPage();
                         this.fmc._renderer.renderTitle(reason);
+                        setTimeout(() => {
+                            B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                        }, 2000);
                     }));
                 }
             };
@@ -17615,7 +17661,7 @@
              */
             this._renderer.use(new SeparatorRendererMiddleware());
             if (this.urlConfig.index == 1) {
-                //HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
+                HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
                 //HDLogger.addHandler(new ConsoleHandler());
                 this._renderer.use(new SettableRendererMiddleware());
                 this._renderer.use(new SizeRendererMiddleware());

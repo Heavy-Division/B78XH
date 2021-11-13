@@ -998,6 +998,7 @@
         renderTitle(title) {
             if (this.title) {
                 this.title.innerHTML = title;
+                this.title = this.applyMiddlewares(this.title);
             }
         }
         /**
