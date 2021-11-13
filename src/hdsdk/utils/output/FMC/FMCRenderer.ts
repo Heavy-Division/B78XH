@@ -56,6 +56,7 @@ class FMCRenderer implements IRenderer {
 	public renderTitle(title: string): void {
 		if (this.title) {
 			this.title.innerHTML = title;
+			this.title = this.applyMiddlewares(this.title);
 		}
 	}
 
