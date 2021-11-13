@@ -161,6 +161,8 @@ declare class NavSystem extends BaseInstrument {
 
 declare class FacilityLoader {
 	getFacilityRaw(icao: string, timeout?: number): Promise<any>;
+
+	getFacility(icao: string): Promise<any>;
 }
 
 declare class WayPointInfo {
