@@ -221,14 +221,19 @@
             "date": 132812738710000000
         },
         {
+            "path": "ModelBehaviorDefs/Temporary/Common/Autopilot.xml",
+            "size": 11747,
+            "date": 132813027245940940
+        },
+        {
             "path": "ModelBehaviorDefs/Temporary/Common/Electrical.xml",
-            "size": 3337,
-            "date": 132812738710000000
+            "size": 2340,
+            "date": 132813028354922320
         },
         {
             "path": "ModelBehaviorDefs/Temporary/Common/Index.xml",
-            "size": 79,
-            "date": 132812738710000000
+            "size": 124,
+            "date": 132812987807654560
         },
         {
             "path": "SimObjects/Airplanes/Asobo_B787_10/engines.cfg",
@@ -481,14 +486,14 @@
             "date": 132812867906041740
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ApproachPage.js",
-            "size": 3251,
-            "date": 132812867906041740
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_DepArrPage.js",
             "size": 28012,
             "date": 132812867906051740
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_ApproachPage.js",
+            "size": 3251,
+            "date": 132812867906041740
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/B787_10_FMC_FMCCommPage.js",
