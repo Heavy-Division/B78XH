@@ -225,53 +225,6 @@ export class HDNavlog {
 		return referenceWaypoints;
 	}
 
-
-	test() {
-		/*
-		HDLogger.log('before', Level.fatal);
-
-		const airways = {};
-
-		for (const waypoint of waypoints) {
-			var icaos: string[] = [];
-			for (const airway of waypoint.infos.airways) {
-				for (const icao of airway.icaos) {
-					icaos.push(String(icao.substring(7, 12)));
-				}
-				airways[airway.name] = icaos;
-			}
-
-			this.logK(airways);
-
-			//HDLogger.log(waypoint.ident + ' ' + ''.concat(airways + ' '), Level.fatal);
-
-
-		}
-
-		Object.keys(airways).forEach((airway) => {
-			HDLogger.log(airway + ':: ' + ''.concat(airways[airway] + '; '), Level.fatal);
-		});
-
-		var iterator = 0;
-
-		for (const waypoint of waypoints) {
-			const index = waypoint.infos.airways[0].icaos.findIndex((icao) => {
-				return icao == this.fixes[iterator].airway;
-			});
-
-						for (const route of waypoint.infos.routes) {
-							this.logK(route);
-							HDLogger.log(route.name + ' : ' + route.type, Level.info);
-						}
-
-			//HDLogger.log(waypoint.ident + ':' + this.fixes[iterator].ident + '(' + this.fixes[iterator].airway + ')' + ' FOUND ON AIRWAY: ' + (index === -1 ? false : true), Level.fatal);
-			iterator++;
-		}
-
-		HDLogger.log('after', Level.fatal);
-		*/
-	}
-
 	async parseAirways(fixes: HDFix[]) {
 		let waypoints = [];
 		for (let i = 0; i <= fixes.length - 1; i++) {
@@ -554,19 +507,26 @@ export class HDNavlog {
 						resolve(true);
 					});
 				} else {
-					await this.getOrSelectWaypointByIdentFast(fix.ident, fix, async (waypoint) => {
-						if (!waypoint) {
-							this.fmc.showErrorMessage('NOT IN DATABASE');
-							return resolve(false);
+					let waypoint = undefined;
+					for (let i = 0; i <= 5; i++) {
+						waypoint = await this.asyncGetOrSelectWaypointByIdentFast(fix.ident, fix);
+						if (waypoint) {
+							break;
 						}
-						const asyncAddWaypoint = (ident, index) => new Promise<void>(resolve => this.fmc.flightPlanManager.addWaypoint(ident, index, resolve));
-						await asyncAddWaypoint(waypoint.icao, index).then(() => {
-							const fpWaypoint = this.fmc.flightPlanManager.getWaypoint(index);
-							fpWaypoint.infos.airwayIn = fix.airwayIn;
-							fpWaypoint.infos.airwayOut = fix.airwayOut;
-							HDLogger.log('4: IDENT: ' + waypoint.icao + ' ; INDEX: ' + index, Level.fatal);
-							resolve(true);
-						});
+					}
+
+					if (!waypoint) {
+						this.fmc.showErrorMessage('NOT IN DATABASE');
+						return resolve(false);
+					}
+
+					const asyncAddWaypoint = (ident, index) => new Promise<void>(resolve => this.fmc.flightPlanManager.addWaypoint(ident, index, resolve));
+					await asyncAddWaypoint(waypoint.icao, index).then(() => {
+						const fpWaypoint = this.fmc.flightPlanManager.getWaypoint(index);
+						fpWaypoint.infos.airwayIn = fix.airwayIn;
+						fpWaypoint.infos.airwayOut = fix.airwayOut;
+						HDLogger.log('4: IDENT: ' + waypoint.icao + ' ; INDEX: ' + index, Level.fatal);
+						resolve(true);
 					});
 				}
 			});
@@ -582,9 +542,6 @@ export class HDNavlog {
 			if (!waypoints || waypoints.length === 0) {
 				return callback(undefined);
 			}
-			if (waypoints.length === 1) {
-				return callback(waypoints[0]);
-			}
 
 			const precisions = [4, 3, 2, 1];
 			for (const precision of precisions) {
@@ -594,6 +551,7 @@ export class HDNavlog {
 					}
 				}
 			}
+			return callback(undefined);
 		});
 	}
 
