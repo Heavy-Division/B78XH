@@ -5,7 +5,7 @@ import {Level} from '../../hdlogger/levels/level';
 
 export class Boeing_FMC extends BaseFMC {
 
-	protected _forceNextAltitudeUpdate: boolean = false;
+	public _forceNextAltitudeUpdate: boolean = false;
 	protected _lastTargetAirspeed: number = 200;
 	protected _isLNAVActive: boolean = false;
 	protected _pendingLNAVActivation: boolean = false;

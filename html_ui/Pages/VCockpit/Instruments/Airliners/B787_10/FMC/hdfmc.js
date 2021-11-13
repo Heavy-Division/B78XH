@@ -3768,29 +3768,6 @@
         connect: lookup,
     });
 
-    class SocketIOHandler {
-        constructor(server, port) {
-            this.socket = lookup('http://' + server + ':' + port + '/', {
-                auth: {
-                    token: 'msfs'
-                },
-                transports: ['websocket']
-            });
-        }
-        log(message, level) {
-            switch (level) {
-                case Level.none:
-                case Level.debug:
-                case Level.info:
-                case Level.warning:
-                case Level.error:
-                case Level.fatal:
-                    this.socket.emit('log', JSON.stringify({ message: message, level: Level[level] }));
-                    break;
-            }
-        }
-    }
-
     class BaseFMC extends BaseAirliners {
         constructor() {
             super();
@@ -17661,7 +17638,7 @@
              */
             this._renderer.use(new SeparatorRendererMiddleware());
             if (this.urlConfig.index == 1) {
-                HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
+                //HDLogger.addHandler(new SocketIOHandler('localhost', 3000));
                 //HDLogger.addHandler(new ConsoleHandler());
                 this._renderer.use(new SettableRendererMiddleware());
                 this._renderer.use(new SizeRendererMiddleware());

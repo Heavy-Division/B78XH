@@ -353,6 +353,8 @@ declare class SimVar {
 
 declare class Simplane {
 
+	static getAutoPilotActive(): boolean;
+
 	static getWeight(): number;
 
 	static getHeadingMagnetic(): number;

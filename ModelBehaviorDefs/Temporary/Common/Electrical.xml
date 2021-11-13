@@ -1,0 +1,79 @@
+<ModelBehaviors>
+
+    <Template Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+        <Switch Param="NODE_ID">
+            <Default>
+                <Parameters Type="Default">
+                    <ID>1</ID>
+                    <INTERACTION_TYPE>PUSH</INTERACTION_TYPE>
+                </Parameters>
+                <UseTemplate Name="ASOBO_ELECTRICAL_ExternalPower_Template">
+                </UseTemplate>
+            </Default>
+
+            <!--
+            ____________________________________________________________________________________
+            OVERRIDE SECTION START
+
+            This section replace default animation setting
+            ____________________________________________________________________________________
+            -->
+            <Case Value="ELECTRICAL_Switch_ExternalPower_FWD_1">
+                <UseTemplate Name="ASOBO_ELECTRICAL_ExternalPower_Template">
+                    <ID>1</ID>
+                    <NODE_ID>ELECTRICAL_Switch_ExternalPower_FWD_1</NODE_ID>
+                    <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_FWD_1</ANIM_NAME>
+                    <INTERACTION_TYPE>PUSH</INTERACTION_TYPE>
+                    <SWAP_SEQ_CONDITION>FALSE</SWAP_SEQ_CONDITION>
+                </UseTemplate>
+            </Case>
+            <Case Value="ELECTRICAL_Switch_ExternalPower_FWD_2">
+                <UseTemplate Name="ASOBO_ELECTRICAL_ExternalPower_Template">
+                    <ID>2</ID>
+                    <NODE_ID>ELECTRICAL_Switch_ExternalPower_FWD_2</NODE_ID>
+                    <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_FWD_2</ANIM_NAME>
+                    <INTERACTION_TYPE>PUSH</INTERACTION_TYPE>
+                    <SWAP_SEQ_CONDITION>FALSE</SWAP_SEQ_CONDITION>
+                </UseTemplate>
+            </Case>
+            <Case Value="ELECTRICAL_Switch_ExternalPower_AFT">
+                <UseTemplate Name="ASOBO_ELECTRICAL_ExternalPower_Template">
+                    <ID>3</ID>
+                    <NODE_ID>ELECTRICAL_Switch_ExternalPower_AFT</NODE_ID>
+                    <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_AFT</ANIM_NAME>
+                    <INTERACTION_TYPE>PUSH</INTERACTION_TYPE>
+                    <SWAP_SEQ_CONDITION>FALSE</SWAP_SEQ_CONDITION>
+                </UseTemplate>
+            </Case>
+
+        </Switch>
+    </Template>
+
+    <!--
+    <Template Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+        <Switch Param="NODE_ID">
+            <Default>
+                <Parameters Type="Default">
+                    <ID>1</ID>
+                    <INTERACTION_TYPE>PUSH</INTERACTION_TYPE>
+                </Parameters>
+                <UseTemplate Name="ASOBO_ELECTRICAL_ExternalPower_Template">
+                </UseTemplate>
+            </Default>
+-->
+    <!--
+    ____________________________________________________________________________________
+    OVERRIDE SECTION START
+
+    This section replace default animation setting
+    ____________________________________________________________________________________
+    -->
+    <!--
+                <Case Value="ELECTRICAL_Switch_ExternalPower_FWD_1">
+                    <UseTemplate Name="ASOBO_ELECTRICAL_ExternalPower_Template">
+                        <
+                    </UseTemplate>
+                </Case>
+            </Switch>
+        </Template>-->
+</ModelBehaviors>
