@@ -1,0 +1,25 @@
+<ModelBehaviors>
+    <Template Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+        <Switch Param="ANIM_NAME">
+            <!--
+            <Default>
+                <Parameters Type="Default">
+                    <ID>1</ID>
+                    <INTERACTION_TYPE>PUSH</INTERACTION_TYPE>
+                </Parameters>
+                <UseTemplate Name="ASOBO_ELECTRICAL_ExternalPower_Template">
+                </UseTemplate>
+            </Default>
+            -->
+            <!--
+            ____________________________________________________________________________________
+            OVERRIDE SECTION START
+
+            This section replace default animation setting
+            ____________________________________________________________________________________
+            -->
+            <Case Value="ELECTRICAL_Switch_ExternalPower_FWD_1">
+            </Case>
+        </Switch>
+    </Template>
+</ModelBehaviors>
