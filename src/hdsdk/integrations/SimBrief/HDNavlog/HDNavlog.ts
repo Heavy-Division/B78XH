@@ -8,7 +8,6 @@ import {HDLogger} from '../../../../hdlogger';
 import {Level} from '../../../../hdlogger/levels/level';
 import {HDFuel} from './HDFuel';
 import {HDWeights} from './HDWeights';
-import {e} from 'mathjs';
 
 
 export class HDNavlog {
