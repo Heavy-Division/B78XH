@@ -1,5 +1,6 @@
 import {B787_10_FMC} from './B787_10_FMC';
 import {B787_10_FMC_InitRefIndexPage} from './B787_10_FMC_InitRefIndexPage';
+import {B787_10_FMC_RoutePage} from './B787_10_FMC_RoutePage';
 
 export class B787_10_FMC_PosInitPage {
 	static ShowPage1(fmc: B787_10_FMC) {
@@ -96,10 +97,7 @@ export class B787_10_FMC_PosInitPage {
 			B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
 		};
 		fmc._renderer.rsk(6).event = () => {
-			/**
-			 * TODO
-			 */
-			//B787_10_FMC_RoutePage.ShowPage1(fmc);
+			B787_10_FMC_RoutePage.ShowPage1(fmc);
 		};
 		fmc.onPrevPage = () => {
 			B787_10_FMC_PosInitPage.ShowPage3(fmc);
