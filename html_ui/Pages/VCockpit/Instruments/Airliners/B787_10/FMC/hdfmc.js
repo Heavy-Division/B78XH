@@ -12011,15 +12011,15 @@
             this._fmc._renderer.renderPages(this._currentPage + 1, this._pageCount);
             this._fmc._renderer.render([
                 ['VIA', 'TO'],
-                this._rows[idx] ? this._rows[idx].getTemplate()[0] : [''],
-                this._rows[idx] ? this._rows[idx].getTemplate()[1] : [''],
-                this._rows[idx + 1] ? this._rows[idx + 1].getTemplate()[0] : [''],
-                this._rows[idx + 1] ? this._rows[idx + 1].getTemplate()[1] : [''],
-                this._rows[idx + 2] ? this._rows[idx + 2].getTemplate()[0] : [''],
-                this._rows[idx + 2] ? this._rows[idx + 2].getTemplate()[1] : [''],
-                this._rows[idx + 3] ? this._rows[idx + 3].getTemplate()[0] : [''],
-                this._rows[idx + 3] ? this._rows[idx + 3].getTemplate()[1] : [''],
-                this._rows[idx + 4] ? this._rows[idx + 4].getTemplate()[0] : [''],
+                this._rows[idx] ? this._rows[idx].getTemplate(this._fmc)[0] : [''],
+                this._rows[idx] ? this._rows[idx].getTemplate(this._fmc)[1] : [''],
+                this._rows[idx + 1] ? this._rows[idx + 1].getTemplate(this._fmc)[0] : [''],
+                this._rows[idx + 1] ? this._rows[idx + 1].getTemplate(this._fmc)[1] : [''],
+                this._rows[idx + 2] ? this._rows[idx + 2].getTemplate(this._fmc)[0] : [''],
+                this._rows[idx + 2] ? this._rows[idx + 2].getTemplate(this._fmc)[1] : [''],
+                this._rows[idx + 3] ? this._rows[idx + 3].getTemplate(this._fmc)[0] : [''],
+                this._rows[idx + 3] ? this._rows[idx + 3].getTemplate(this._fmc)[1] : [''],
+                this._rows[idx + 4] ? this._rows[idx + 4].getTemplate(this._fmc)[0] : [''],
                 ['__FMCSEPARATOR'],
                 [this._lsk6Field, this._activateCell]
             ]);
@@ -12506,21 +12506,21 @@
         set isDeparture(val) {
             this._isDeparture = val;
         }
-        getTemplate() {
+        getTemplate(fmc) {
             let row1tmpl, row2tmpl = ['', ''];
             if (this._airwayIn === undefined) {
                 if (this._ident !== '-----') {
-                    row1tmpl = ['DIRECT', this._ident];
+                    row1tmpl = [fmc.makeSettable('DIRECT', 150), fmc.makeSettable(this._ident, 150)];
                 }
                 else {
-                    row1tmpl = ['-----', this._ident];
+                    row1tmpl = [fmc.makeSettable('-----', 150), fmc.makeSettable(this._ident, 150)];
                 }
             }
             else {
-                row1tmpl = [this._airwayIn, this._ident];
+                row1tmpl = [fmc.makeSettable(this._airwayIn, 150), fmc.makeSettable(this._ident, 150)];
                 if (this._ident === '-----') {
-                    row1tmpl[1] = '□□□□□';
-                    row2tmpl = ['----', '----', 'DISCONTINUITY'];
+                    row1tmpl[1] = fmc.makeSettable('□□□□□');
+                    row2tmpl = ['', '------------- DISCONTINUITY -------------', ''];
                 }
             }
             if (this._isActive) {
