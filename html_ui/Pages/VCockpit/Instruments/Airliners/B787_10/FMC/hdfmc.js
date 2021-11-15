@@ -12979,7 +12979,7 @@
             this._fmc._renderer.lsk(3).event = () => this.changeHoldCourse(currentHold);
             this._fmc._renderer.lsk(4).event = () => this.changeHoldTime(currentHold);
             this._fmc._renderer.lsk(5).event = () => this.changeHoldDistance(currentHold);
-            this._fmc._renderer.rsk(1).event = () => this.toggleSpeedType(currentHold);
+            //this._fmc._renderer.rsk(1).event = () => this.toggleSpeedType(currentHold);
             this._fmc._renderer.rsk(4).event = () => this.changeEFCTime(currentHold);
             if (numHolds < 6) {
                 this._fmc._renderer.rsk(5).event = () => B787_10_FMC_LegsPage.ShowPage1(this._fmc, true);
@@ -13166,11 +13166,11 @@
                 [' QUAD/RADIAL', 'MAX KIAS '],
                 ['--/---°', this.getMaxKIAS(holdDetails).toFixed(0)],
                 [' INBD CRS/DIR', 'FIX ETA '],
-                [`${holdDetails.holdCourse.toFixed(0).padStart(3, '0')}${holdDetails.isHoldCourseTrue ? 'T' : ''}°/${holdDetails.turnDirection === HoldTurnDirection.Left ? 'L' : 'R'} TURN`, `${etaDisplay}`],
+                [this._fmc.makeSettable(`${holdDetails.holdCourse.toFixed(0).padStart(3, '0')}${holdDetails.isHoldCourseTrue ? 'T' : ''}°/${holdDetails.turnDirection === HoldTurnDirection.Left ? 'L' : 'R'} TURN`), `${etaDisplay}`],
                 [' LEG TIME', 'EFC TIME '],
-                [`${(holdDetails.legTime / 60).toFixed(1)} MIN`, efcTime],
+                [this._fmc.makeSettable((holdDetails.legTime / 60).toFixed(1)) + ' MIN', efcTime],
                 [' LEG DIST'],
-                [`${holdDetails.legDistance.toFixed(1)} NM`, `${numPages < 6 ? 'NEW HOLD>' : ''}`],
+                [this._fmc.makeSettable(holdDetails.legDistance.toFixed(1)) + 'NM', `${numPages < 6 ? 'NEW HOLD>' : ''}`],
                 ['__FMCSEPARATOR'],
                 [`${this._state.isModifying ? '<ERASE' : ''}`, `${this.isHoldExiting(currentHold) ? 'CANCEL EXIT>' : this.isHoldActive(currentHold) ? 'EXIT HOLD>' : ''}`]
             ];
