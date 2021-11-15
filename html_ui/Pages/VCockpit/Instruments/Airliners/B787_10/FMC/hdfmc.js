@@ -9825,7 +9825,7 @@
                 gate = fmc.refGate;
             }
             let heading = '---';
-            heading = fmc.makeSettable(heading) + 'sdfsdf°';
+            heading = fmc.makeSettable(heading) + '°';
             if (fmc.refHeading) {
                 heading = fmc.makeSettable(fastToFixed(fmc.refHeading, 0).padStart(3, '0')) + '°';
             }
@@ -18741,7 +18741,6 @@
     registerInstrument('b787-10-fmc', B787_10_FMC);
 
     exports.B787_10_FMC = B787_10_FMC;
-    exports.B787_10_FMC_ApproachPage = B787_10_FMC_ApproachPage;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

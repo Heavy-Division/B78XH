@@ -24,7 +24,7 @@ export class B787_10_FMC_PosInitPage {
 			gate = fmc.refGate;
 		}
 		let heading = '---';
-		heading = fmc.makeSettable(heading) + 'sdfsdf°';
+		heading = fmc.makeSettable(heading) + '°';
 		if (fmc.refHeading) {
 			heading = fmc.makeSettable(fastToFixed(fmc.refHeading, 0).padStart(3, '0')) + '°';
 		}
