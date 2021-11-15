@@ -418,34 +418,43 @@ export class B787_10_FMC_RoutePage {
 
 			if (value === BaseFMC.clrValue) {
 				this._fmc.clearUserInput();
-				this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
-					const waypoints = this._fmc.flightPlanManager.getWaypoints();
-					const current = waypoints[wpIdx];
-					const currentIn = current.infos.airwayIn;
-					const currentOut = current.infos.airwayOut;
-					let numberOfWaypointsToDelete = 0;
-
-					for (let i = wpIdx - 1; i > 0; i--) {
-						if (waypoints[i].infos.airwayIn === currentIn || waypoints[i].infos.airwayOut === currentOut) {
-							numberOfWaypointsToDelete++;
-						} else {
-							break;
-						}
-					}
-
-					const startIndex = wpIdx - numberOfWaypointsToDelete;
-
-					for (let i = 0; i <= numberOfWaypointsToDelete; i++) {
-						const last = i === numberOfWaypointsToDelete;
-						this._fmc.removeWaypoint(startIndex, () => {
-							if (last) {
-								this._fmc.activateRoute(false, () => {
-									this.update(true);
-								});
-							}
+				if (row.isDeparture) {
+					this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
+						this._fmc.removeDeparture();
+						this._fmc.activateRoute(false, () => {
+							this.update(true);
 						});
-					}
-				});
+					});
+				} else {
+					this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
+						const waypoints = this._fmc.flightPlanManager.getWaypoints();
+						const current = waypoints[wpIdx];
+						const currentIn = current.infos.airwayIn;
+						const currentOut = current.infos.airwayOut;
+						let numberOfWaypointsToDelete = 0;
+
+						for (let i = wpIdx - 1; i > 0; i--) {
+							if (waypoints[i].infos.airwayIn === currentIn || waypoints[i].infos.airwayOut === currentOut) {
+								numberOfWaypointsToDelete++;
+							} else {
+								break;
+							}
+						}
+
+						const startIndex = wpIdx - numberOfWaypointsToDelete;
+
+						for (let i = 0; i <= numberOfWaypointsToDelete; i++) {
+							const last = i === numberOfWaypointsToDelete;
+							this._fmc.removeWaypoint(startIndex, () => {
+								if (last) {
+									this._fmc.activateRoute(false, () => {
+										this.update(true);
+									});
+								}
+							});
+						}
+					});
+				}
 			} else if (value.length > 0) {
 				this._fmc.clearUserInput();
 				if (this._airwayInput !== '') {
@@ -614,7 +623,7 @@ export class B787_10_FMC_RoutePage {
 				lastDepartureWaypoint = departureWaypoints[lastDepartureIdx];
 				if (lastDepartureWaypoint) {
 					foundActive = flightPlanManager.getActiveWaypointIndex() <= lastDepartureIdx;
-					allRows.push(new FpRow(lastDepartureWaypoint.ident, lastDepartureIdx + 1, departure.name, undefined, foundActive));
+					allRows.push(new FpRow(lastDepartureWaypoint.ident, lastDepartureIdx + 1, departure.name, undefined, foundActive, true));
 				}
 			}
 
@@ -714,13 +723,15 @@ class FpRow {
 	private _airwayIn: any;
 	private _airwayOut: any;
 	private _isActive: boolean;
+	private _isDeparture: boolean;
 
-	constructor(ident = '-----', fpIdx = Infinity, airwayIn = undefined, airwayOut = undefined, isActive = false) {
+	constructor(ident = '-----', fpIdx = Infinity, airwayIn = undefined, airwayOut = undefined, isActive = false, isDeparture = false) {
 		this._ident = ident;
 		this._fpIdx = fpIdx;
 		this._airwayIn = airwayIn;
 		this._airwayOut = airwayOut;
 		this._isActive = isActive;
+		this._isDeparture = isDeparture;
 	}
 
 	get ident() {
@@ -753,6 +764,15 @@ class FpRow {
 
 	set airwayIn(val) {
 		this._airwayIn = val;
+	}
+
+
+	get isDeparture() {
+		return this._isDeparture;
+	}
+
+	set isDeparture(val) {
+		this._isDeparture = val;
 	}
 
 	getTemplate() {
