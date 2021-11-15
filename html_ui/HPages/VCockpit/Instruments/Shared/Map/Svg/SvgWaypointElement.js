@@ -257,6 +257,11 @@ class SvgWaypointElement extends SvgMapElement {
 					offsetX = -1.5;
 					offsetY = -2;
 				}
+				if (this.ident === 'T/D' || this.ident === 'DES') {
+					offsetX = -2;
+					offsetY = -3;
+				}
+
 				this._image.setAttribute('x', x + offsetX + '');
 				this._image.setAttribute('y', y + offsetY + '');
 				if (this.source instanceof AirportInfo) {
