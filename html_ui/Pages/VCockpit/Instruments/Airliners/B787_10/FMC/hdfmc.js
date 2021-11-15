@@ -12954,10 +12954,10 @@
         bindHoldListInputs(currentHolds) {
             for (let i = 0; i < 6; i++) {
                 if (i < 5 && currentHolds[i] !== undefined) {
-                    this._fmc.onLeftInput[i] = () => B787_10_FMC_HoldsPage.showHoldPage(this._fmc, currentHolds[i].waypoint.ident);
+                    this._fmc._renderer.lsk(i + 1).event = () => B787_10_FMC_HoldsPage.showHoldPage(this._fmc, currentHolds[i].waypoint.ident);
                 }
                 else if (i >= 5 && currentHolds[i] !== undefined) {
-                    this._fmc.onRightInput[i - 5] = () => B787_10_FMC_HoldsPage.showHoldPage(this._fmc, currentHolds[i].waypoint.ident);
+                    this._fmc._renderer.rsk(i - 5 + 1).event = () => B787_10_FMC_HoldsPage.showHoldPage(this._fmc, currentHolds[i].waypoint.ident);
                 }
             }
             if (this._state.isModifying) {
