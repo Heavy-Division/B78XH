@@ -11860,7 +11860,7 @@
                 this._offset = 0;
             }
             else {
-                this._offset = ((this._currentPage - 1) * 5) + 1;
+                this._offset = ((this._currentPage - 1) * 5);
             }
         }
         gotoNextPage() {
@@ -11937,8 +11937,9 @@
                     this._activateCell = 'ACTIVATE>';
                 }
                 else {
+                    this._fmc.fpHasChanged = true;
                     this._activateCell = 'PERF INIT>';
-                    this._lsk6Field = '<RTE 2';
+                    this._lsk6Field = '<ERASE';
                 }
             }
             else if (this._fmc.flightPlanManager.getCurrentFlightPlanIndex() === 0) {
@@ -12112,6 +12113,10 @@
                         this._fmc.fpHasChanged = false;
                         this._fmc.eraseTemporaryFlightPlan(() => {
                             this._fmc.eraseRouteModifications();
+                            /**
+                             * TODO: Check for better approach
+                             */
+                            this._fmc.flightPlanManager._updateFlightPlanVersion();
                             this.update(true);
                         });
                     }
@@ -12181,8 +12186,31 @@
                 const wpIdx = row.fpIdx;
                 if (value === BaseFMC.clrValue) {
                     this._fmc.clearUserInput();
-                    this._fmc.removeWaypoint(wpIdx, () => {
-                        this.update(true);
+                    this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
+                        const waypoints = this._fmc.flightPlanManager.getWaypoints();
+                        const current = waypoints[wpIdx];
+                        const currentIn = current.infos.airwayIn;
+                        const currentOut = current.infos.airwayOut;
+                        let numberOfWaypointsToDelete = 0;
+                        for (let i = wpIdx - 1; i > 0; i--) {
+                            if (waypoints[i].infos.airwayIn === currentIn || waypoints[i].infos.airwayOut === currentOut) {
+                                numberOfWaypointsToDelete++;
+                            }
+                            else {
+                                break;
+                            }
+                        }
+                        const startIndex = wpIdx - numberOfWaypointsToDelete;
+                        for (let i = 0; i <= numberOfWaypointsToDelete; i++) {
+                            const last = i === numberOfWaypointsToDelete;
+                            this._fmc.removeWaypoint(startIndex, () => {
+                                if (last) {
+                                    this._fmc.activateRoute(false, () => {
+                                        this.update(true);
+                                    });
+                                }
+                            });
+                        }
                     });
                 }
                 else if (value.length > 0) {
@@ -12332,10 +12360,15 @@
             const flightPlanManager = fmc.flightPlanManager;
             let lastDepartureWaypoint = undefined;
             let foundActive = false; // haaaaackyyy
+            let departure = undefined;
+            let departureWaypoints = undefined;
             if (flightPlanManager) {
-                const departure = flightPlanManager.getDeparture();
+                /**
+                 * Departure
+                 */
+                departure = flightPlanManager.getDeparture();
                 if (departure) {
-                    const departureWaypoints = flightPlanManager.getDepartureWaypointsMap();
+                    departureWaypoints = flightPlanManager.getDepartureWaypointsMap();
                     const lastDepartureIdx = departureWaypoints.length - 1;
                     lastDepartureWaypoint = departureWaypoints[lastDepartureIdx];
                     if (lastDepartureWaypoint) {
@@ -12343,14 +12376,20 @@
                         allRows.push(new FpRow(lastDepartureWaypoint.ident, lastDepartureIdx + 1, departure.name, undefined, foundActive));
                     }
                 }
-                else {
-                    allRows.push(new FpRow());
-                }
+                /**
+                 * Enroute
+                 */
                 const fpIndexes = [];
                 const routeWaypoints = flightPlanManager.getEnRouteWaypoints(fpIndexes);
                 let tmpFoundActive = false;
                 for (let i = 0; i < routeWaypoints.length; i++) {
-                    const prev = (i == 0) ? lastDepartureWaypoint : routeWaypoints[i - 1]; // check with dep on first waypoint
+                    let prev = undefined;
+                    if (i == 0 && lastDepartureWaypoint) {
+                        prev = lastDepartureWaypoint;
+                    }
+                    else {
+                        prev = routeWaypoints[i - 1];
+                    }
                     const wp = routeWaypoints[i];
                     if (wp) {
                         tmpFoundActive = tmpFoundActive || (!foundActive && flightPlanManager.getActiveWaypointIndex() <= fpIndexes[i]);
@@ -14036,6 +14075,16 @@
                                             });
                                         }
                                         else {
+                                            const prev = this._fmc.flightPlanManager.getWaypoint(selectedWpIndex - 1);
+                                            const next = this._fmc.flightPlanManager.getWaypoint(selectedWpIndex + 1);
+                                            const current = this._fmc.flightPlanManager.getWaypoint(selectedWpIndex);
+                                            prev.endsInDiscontinuity = true;
+                                            if (next && next.infos.airwayIn === current.infos.airwayOut) {
+                                                next.infos.airwayIn = undefined;
+                                            }
+                                            if (prev && prev.infos.airwayOut === current.infos.airwayIn) {
+                                                prev.infos.airwayOut = undefined;
+                                            }
                                             this._fmc.flightPlanManager.removeWaypoint(selectedWpIndex, false, () => {
                                                 this._fmc.activateRoute(false, () => {
                                                     this.resetAfterOp();
