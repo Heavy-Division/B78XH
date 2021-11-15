@@ -604,6 +604,18 @@ export class B787_10_FMC_LegsPage {
 											this.resetAfterOp();
 										});
 									} else {
+										const prev = this._fmc.flightPlanManager.getWaypoint(selectedWpIndex - 1);
+										const next = this._fmc.flightPlanManager.getWaypoint(selectedWpIndex + 1);
+										const current = this._fmc.flightPlanManager.getWaypoint(selectedWpIndex);
+										prev.endsInDiscontinuity = true;
+										if (next && next.infos.airwayIn === current.infos.airwayOut) {
+											next.infos.airwayIn = undefined;
+										}
+
+										if (prev && prev.infos.airwayOut === current.infos.airwayIn) {
+											prev.infos.airwayOut = undefined;
+										}
+
 										this._fmc.flightPlanManager.removeWaypoint(selectedWpIndex, false, () => {
 											this._fmc.activateRoute(false, () => {
 												this.resetAfterOp();
