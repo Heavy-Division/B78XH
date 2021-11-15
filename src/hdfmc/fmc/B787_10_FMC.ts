@@ -760,6 +760,9 @@ export class B787_10_FMC extends Boeing_FMC {
 		this._updateAlertingMessages();
 	}
 
+	/**
+	 * TODO: Should be in renderer
+	 */
 	_updateTimeAndDate() {
 		if (!this._timeDivs) {
 			this._timeDivs = document.body.querySelectorAll('.fms-time');
@@ -772,16 +775,16 @@ export class B787_10_FMC extends Boeing_FMC {
 			let hours = Math.floor(t / 3600);
 			let minutes = Math.floor((t - hours * 3600) / 60);
 			let seconds = t - hours * 3600 - minutes * 60;
-			let timeText = fastToFixed(hours, 0).padStart(2, '0') + ':' + fastToFixed(minutes, 0).padStart(2, '0') + ':' + fastToFixed(seconds, 0).padStart(2, '0');
+			let timeText = fastToFixed(hours, 0).padStart(2, '0') + ':' + fastToFixed(minutes, 0).padStart(2, '0') + ':' + fastToFixed(seconds, 0).padStart(2, '0') + ' z';
 			let y = SimVar.GetGlobalVarValue('ZULU YEAR', 'number');
 			let m = SimVar.GetGlobalVarValue('ZULU MONTH OF YEAR', 'number');
 			let d = SimVar.GetGlobalVarValue('ZULU DAY OF MONTH', 'number');
 			let dateText = fastToFixed(d, 0) + ' ' + B787_10_FMC._MonthOfYear[m - 1] + ' ' + fastToFixed(y, 0);
 			this._timeDivs.forEach(d => {
-				d.innerText = timeText;
+				d.textContent = timeText;
 			});
 			this._dateDivs.forEach(d => {
-				d.innerText = dateText;
+				d.textContent = dateText;
 			});
 		}
 	}
