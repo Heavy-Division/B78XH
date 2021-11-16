@@ -684,7 +684,7 @@ export class B787_10_FMC_RoutePage {
 					const finalFix = arrivalSeg.waypoints[arrivalSeg.waypoints.length - 1];
 					const isSegmentActive = currentWaypointIndex >= arrivalSeg.offset && currentWaypointIndex < arrivalSeg.offset + arrivalSeg.waypoints.length;
 
-					allRows.push(new FpRow(finalFix.ident, arrivalSeg.offset, arrivalName, undefined, isSegmentActive));
+					allRows.push(new FpRow((finalFix ? finalFix.ident : ''), arrivalSeg.offset, arrivalName, undefined, isSegmentActive));
 				}
 			}
 
