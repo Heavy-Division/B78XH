@@ -1062,9 +1062,7 @@ class B787_10_PFD_DayInfo extends NavSystemElement {
 					text += '0';
 				text += month;
 				text += '/';
-				var year = Math.trunc(Number.parseInt(value3) / 100);
-				if (year < 10)
-					text += '0';
+				var year = String(value3).substring(2, 4);
 				text += year;
 				diffAndSetText(this.date, text);
 			}
