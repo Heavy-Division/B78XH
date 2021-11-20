@@ -163,7 +163,7 @@ export class HDNavlog {
 			this._progress[10][1] = this.fmc.colorizeContent('PRELOADING', 'yellow');
 			this.updateProgress();
 			if (waypoint.infos instanceof WayPointInfo) {
-				await waypoint.infos.UpdateAirway(fix.airway);
+				await waypoint.infos.UpdateAirwayCustomLength(fix.airway, 400);
 				for (const airway of waypoint.infos.airways) {
 					for (const icao of airway.icaos) {
 						icaos.push(String(icao.substring(7, 12)));
