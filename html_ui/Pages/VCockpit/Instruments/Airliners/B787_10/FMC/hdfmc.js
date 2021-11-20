@@ -11902,7 +11902,7 @@
                 this._offset = 0;
             }
             else {
-                this._offset = ((this._currentPage - 1) * 5);
+                this._offset = ((this._currentPage - 1) * 5) + 1;
             }
         }
         gotoNextPage() {
