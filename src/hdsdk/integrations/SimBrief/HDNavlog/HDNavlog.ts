@@ -93,8 +93,30 @@ export class HDNavlog {
 			HDLogger.log(error, Level.fatal);
 		});
 
-		await this.setOrigin(this.origin.icao);
-		await this.setDestination(this.destination.icao);
+		let origin = undefined;
+		for (let i = 0; i <= 5; i++) {
+			origin = await this.setOrigin(this.origin.icao);
+			if (origin) {
+				break;
+			}
+		}
+
+		if (!origin) {
+			return Promise.reject(this.fmc.colorizeContent('FP IMPORT FAILED: ORIGIN NOT FOUND', 'red'));
+		}
+
+
+		let destination = undefined;
+		for (let i = 0; i <= 5; i++) {
+			destination = await this.setDestination(this.destination.icao);
+			if (destination) {
+				break;
+			}
+		}
+
+		if (!destination) {
+			return Promise.reject(this.fmc.colorizeContent('FAILED: DESTINATION NOT FOUND', 'red'));
+		}
 
 		await this.setOriginRunway(this.origin.plannedRunway);
 		await this.setInitialCruiseAltitude(this.info.initialAltitude);
@@ -120,7 +142,19 @@ export class HDNavlog {
 
 		for (const fix of fixesForPreload) {
 			var icaos: string[] = [];
-			const waypoint = await this.asyncGetOrSelectWaypointByIdentFast(fix.ident, fix);
+			let waypoint = undefined;
+
+			for (let i = 0; i <= 5; i++) {
+				waypoint = await this.asyncGetOrSelectWaypointByIdentFast(fix.ident, fix);
+				if (waypoint) {
+					break;
+				}
+			}
+
+			if (!waypoint) {
+				return Promise.reject(this.fmc.colorizeContent('FAILED: REFERENCE NOT FOUND', 'red'));
+			}
+
 			if (waypoint.infos instanceof WayPointInfo) {
 				await waypoint.infos.UpdateAirway(fix.airway);
 				for (const airway of waypoint.infos.airways) {
@@ -421,6 +455,7 @@ export class HDNavlog {
 				iterator++;
 			}
 			this._progress[9][2] = this.fmc.colorizeContent('DONE', 'green');
+			this.updateProgress();
 			resolve();
 		});
 	}
@@ -672,11 +707,15 @@ export class HDNavlog {
 	 * @returns {Promise<number>}
 	 */
 	findSidIndex(sid: string): Promise<number> {
-		return this.fmc.dataManager.GetAirportByIdent(this.origin.icao).then((origin) => {
+		return new Promise<number>((resolve) => {
+			const origin = this.fmc.flightPlanManager.getOrigin();
 			if (origin.infos instanceof AirportInfo) {
-				return origin.infos.departures.findIndex((departure) => {
+				const index = origin.infos.departures.findIndex((departure) => {
 					return departure.name === sid;
 				});
+				resolve(index);
+			} else {
+				resolve(-1);
 			}
 		});
 	}
@@ -687,11 +726,15 @@ export class HDNavlog {
 	 * @returns {Promise<number>}
 	 */
 	findStarIndex(star: string): Promise<number> {
-		return this.fmc.dataManager.GetAirportByIdent(this.destination.icao).then((destination) => {
+		return new Promise<number>((resolve) => {
+			const destination = this.fmc.flightPlanManager.getDestination();
 			if (destination.infos instanceof AirportInfo) {
-				return destination.infos.arrivals.findIndex((arrival) => {
+				const index = destination.infos.arrivals.findIndex((arrival) => {
 					return arrival.name === star;
 				});
+				resolve(index);
+			} else {
+				resolve(-1);
 			}
 		});
 	}
@@ -702,15 +745,17 @@ export class HDNavlog {
 	 * @returns {Promise<number>}
 	 */
 	findTransIndex(departureIndex: number): Promise<number> {
-		return this.fmc.dataManager.GetAirportByIdent(this.origin.icao).then((origin) => {
+		return new Promise<number>((resolve) => {
+			const origin = this.fmc.flightPlanManager.getOrigin();
 			if (origin.infos instanceof AirportInfo) {
 				const index: number = origin.infos.departures[departureIndex].enRouteTransitions.findIndex((trans) => {
 					return trans.name === this.info.enRouteTrans;
 				});
-				return index;
+				resolve(index);
+			} else {
+				resolve(-1);
 			}
 		});
-
 	}
 
 	/**
