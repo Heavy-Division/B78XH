@@ -136,17 +136,21 @@ export class HDNavlog {
 
 
 		this._progress[9][2] = this.fmc.colorizeContent('PREPARING', 'yellow');
-		this.updateProgress();
 		const fixesForPreload: any = this.getReferenceFixesForAirwaysPreload(this.fixes);
 		const airways = {};
 
 		for (const fix of fixesForPreload) {
 			var icaos: string[] = [];
 			let waypoint = undefined;
-
-			for (let i = 0; i <= 5; i++) {
+			this._progress[9][0] = this.fmc.colorizeContent(fix.ident, 'yellow');
+			this._progress[10][0] = this.fmc.colorizeContent('PRELOADING', 'yellow');
+			this.updateProgress();
+			for (let i = 0; i <= 10; i++) {
 				waypoint = await this.asyncGetOrSelectWaypointByIdentFast(fix.ident, fix);
 				if (waypoint) {
+					this._progress[9][0] = this.fmc.colorizeContent(fix.ident, 'green');
+					this._progress[10][0] = this.fmc.colorizeContent('PRELOADED', 'green');
+					this.updateProgress();
 					break;
 				}
 			}
@@ -155,6 +159,9 @@ export class HDNavlog {
 				return Promise.reject(this.fmc.colorizeContent('FAILED: REFERENCE NOT FOUND', 'red'));
 			}
 
+			this._progress[9][1] = this.fmc.colorizeContent(fix.airway, 'yellow');
+			this._progress[10][1] = this.fmc.colorizeContent('PRELOADING', 'yellow');
+			this.updateProgress();
 			if (waypoint.infos instanceof WayPointInfo) {
 				await waypoint.infos.UpdateAirway(fix.airway);
 				for (const airway of waypoint.infos.airways) {
@@ -164,7 +171,14 @@ export class HDNavlog {
 					airways[airway.name] = icaos;
 				}
 			}
+			this._progress[9][1] = this.fmc.colorizeContent(fix.airway, 'green');
+			this._progress[10][1] = this.fmc.colorizeContent('PRELOADED', 'green');
+			this.updateProgress();
 		}
+
+		this._progress[10][0] = '';
+		this._progress[10][1] = '';
+		this.updateProgress();
 
 		this.preloadedAirwaysData = airways;
 
@@ -566,7 +580,7 @@ export class HDNavlog {
 					});
 				} else {
 					let waypoint = undefined;
-					for (let i = 0; i <= 5; i++) {
+					for (let i = 0; i <= 10; i++) {
 						waypoint = await this.asyncGetOrSelectWaypointByIdentFast(fix.ident, fix);
 						if (waypoint) {
 							break;
@@ -583,7 +597,6 @@ export class HDNavlog {
 						const fpWaypoint = this.fmc.flightPlanManager.getWaypoint(index);
 						fpWaypoint.infos.airwayIn = fix.airwayIn;
 						fpWaypoint.infos.airwayOut = fix.airwayOut;
-						HDLogger.log('4: IDENT: ' + waypoint.icao + ' ; INDEX: ' + index, Level.fatal);
 						resolve(true);
 					});
 				}
@@ -591,26 +604,52 @@ export class HDNavlog {
 		});
 	}
 
-	asyncGetOrSelectWaypointByIdentFast(ident, fix) {
-		return new Promise<any>(resolve => this.getOrSelectWaypointByIdentFast(ident, fix, resolve));
-	}
-
-	getOrSelectWaypointByIdentFast(ident, waypoint, callback) {
-		this.fmc.dataManager.GetWaypointsByIdent(ident).then((waypoints) => {
-			if (!waypoints || waypoints.length === 0) {
-				return callback(undefined);
-			}
-
-			const precisions = [4, 3, 2, 1];
-			for (const precision of precisions) {
-				for (let i = 0; i <= waypoints.length - 1; i++) {
-					if (parseFloat(waypoints[i].infos.coordinates.lat).toFixed(precision) === parseFloat(waypoint.lat).toFixed(precision) && parseFloat(waypoints[i].infos.coordinates.long).toFixed(precision) === parseFloat(waypoint.lon).toFixed(precision)) {
-						return callback(waypoints[i]);
+	async GetWaypointsByIdent(ident) {
+		let waypoints = [];
+		let intersections = await this.fmc.dataManager.GetWaypointsByIdentAndType(ident, 'W');
+		waypoints.push(...intersections);
+		let vors = await this.fmc.dataManager.GetWaypointsByIdentAndType(ident, 'V');
+		waypoints.push(...vors);
+		let ndbs = await this.fmc.dataManager.GetWaypointsByIdentAndType(ident, 'N');
+		waypoints.push(...ndbs);
+		let airports = await this.fmc.dataManager.GetWaypointsByIdentAndType(ident, 'A');
+		waypoints.push(...airports);
+		let i = 0;
+		while (i < waypoints.length) {
+			let wp = waypoints[i];
+			let j = i + 1;
+			while (j < waypoints.length) {
+				if (waypoints[j] && wp) {
+					let other = waypoints[j];
+					if (wp.icao === other.icao) {
+						waypoints.splice(j, 1);
+					} else {
+						j++;
 					}
+				} else {
+					j++;
 				}
 			}
-			return callback(undefined);
-		});
+			i++;
+		}
+		return waypoints;
+	}
+
+	async asyncGetOrSelectWaypointByIdentFast(ident, fix) {
+		const waypoints: any = await this.GetWaypointsByIdent(ident);
+		if (!waypoints || waypoints.length === 0) {
+			return undefined;
+		}
+
+		const precisions = [4, 3, 2, 1];
+		for (const precision of precisions) {
+			for (let i = 0; i <= waypoints.length - 1; i++) {
+				if (parseFloat(waypoints[i].infos.coordinates.lat).toFixed(precision) === parseFloat(fix.lat).toFixed(precision) && parseFloat(waypoints[i].infos.coordinates.long).toFixed(precision) === parseFloat(fix.lon).toFixed(precision)) {
+					return waypoints[i];
+				}
+			}
+		}
+		return undefined;
 	}
 
 	async setDeparture(sid: string) {
@@ -637,7 +676,6 @@ export class HDNavlog {
 	}
 
 	private updateProgress() {
-		HDLogger.log('UPDATING DISPLAY', Level.info);
 		this.fmc._renderer.renderTitle('FLIGHT PLAN');
 		this.fmc._renderer.render(this._progress);
 	}
