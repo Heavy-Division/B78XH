@@ -12058,7 +12058,7 @@
                     this._rows.push(emptyRow);
                 }
             }
-            this._pageCount = Math.max(2, (Math.ceil((this._rows.length - 1) / 5) + 1));
+            this._pageCount = Math.max(2, (Math.ceil((this._rows.length) / 5) + 1));
             this._modStr = this._fmc.fpHasChanged ? 'MOD' : 'ACT';
         }
         render() {
@@ -12088,7 +12088,7 @@
             ]);
         }
         renderRoutePage() {
-            const idx = this._offset;
+            const idx = this._offset - 1;
             this._fmc._renderer.renderTitle(this._modStr + ' RTE 1');
             this._fmc._renderer.renderPages(this._currentPage + 1, this._pageCount);
             this._fmc._renderer.render([
@@ -12174,7 +12174,7 @@
             else {
                 // other pages
                 for (let i = 0; i < 5; i++) {
-                    if (this._rows[i + this._offset]) {
+                    if (this._rows[i + this._offset - 1]) {
                         this.bindRowEvents(i);
                     }
                 }
@@ -12263,7 +12263,7 @@
             }
             this._fmc._renderer.rsk(lskIdx + 1).event = () => {
                 const value = this._fmc.inOut;
-                const idx = (this._currentPage > 0) ? lskIdx : 0;
+                const idx = (this._currentPage > 0) ? lskIdx - 1 : 0;
                 const row = this._rows[idx + this._offset];
                 const wpIdx = row.fpIdx;
                 if (value === BaseFMC.clrValue) {
