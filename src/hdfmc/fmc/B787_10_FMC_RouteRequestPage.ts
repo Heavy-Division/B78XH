@@ -161,11 +161,13 @@ export class B787_10_FMC_RouteRequestPage {
 				navlog.setToGameIngame(configuration).then(() => {
 					this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
 					setTimeout(() => {
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}, 2000);
 				}).catch((reason => {
 					this.fmc._renderer.renderTitle(reason);
 					setTimeout(() => {
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}, 2000);
 				}));
@@ -173,11 +175,13 @@ export class B787_10_FMC_RouteRequestPage {
 				navlog.setToGame(configuration).then(() => {
 					this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
 					setTimeout(() => {
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}, 2000);
 				}).catch((reason => {
 					this.fmc._renderer.renderTitle(reason);
 					setTimeout(() => {
+						this.fmc.messageManager.removeLastMessage();
 						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 					}, 2000);
 				}));
