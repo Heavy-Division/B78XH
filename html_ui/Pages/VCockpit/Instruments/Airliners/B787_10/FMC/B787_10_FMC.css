@@ -42,7 +42,7 @@
     display: none;
 }
 
-.fms-mask{
+.fms-mask {
     display: none;
     position: absolute;
     vertical-align: top;
@@ -315,6 +315,10 @@
     color: #1daa05;
 }
 
+.orange {
+    color: orange;
+}
+
 .red {
     color: #ff886d;
 }
@@ -343,14 +347,14 @@
     background-color: #606060;
     padding-left: 6px;
     padding-right: 6px;
-    height: 24px;
-    margin-top: 6px;
+    height: 27px;
+    padding-top: 0px;
 }
 
 .settable > span {
     display: block;
     position: relative;
-    padding: 3px 0;
+    padding: 6px 0;
     line-height: 15px;
 }
 
@@ -370,6 +374,22 @@
     height: 100%;
     border-right: 4px ridge white;
     pointer-events: none;
+}
+
+.remove-pointers {
+    pointer-events: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.attach-pointers {
+    pointer-events: auto;
+    -webkit-user-select: auto;
+    -moz-user-select: auto;
+    -ms-user-select: auto;
+    user-select: auto;
 }
 
 /*# sourceMappingURL=B787_10_FMC.css.map */

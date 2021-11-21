@@ -264,17 +264,17 @@ function cleanBuildCache(callback) {
 }
 
 function cleanBuildCacheSDK(callback) {
-	del('build/hdsdk/**/*');
+	del('build/cache/hdsdk/**/*');
 	callback();
 }
 
 function cleanBuildCacheLogger(callback) {
-	del('build/hdlogger/**/*');
+	del('build/cache/hdlogger/**/*');
 	callback();
 }
 
 function cleanBuildCacheInstruments(callback) {
-	del('build/instruments/**/*');
+	del('build/cache/instruments/**/*');
 	callback();
 }
 

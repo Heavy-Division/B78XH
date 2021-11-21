@@ -1,0 +1,1796 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:dc="http://purl.org/dc/elements/1.1/"
+        xmlns:cc="http://creativecommons.org/ns#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:svg="http://www.w3.org/2000/svg"
+        xmlns="http://www.w3.org/2000/svg"
+        width="640"
+        height="1020"
+        viewBox="0 0 640 1020"
+        version="1.1"
+        id="svg839">
+    <style
+            id="style162"></style>
+    <defs
+            id="defs833"/>
+    <metadata
+            id="metadata836">
+        <rdf:RDF>
+            <cc:Work
+                    rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type
+                        rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+                <dc:title></dc:title>
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
+    <g
+            id="background"
+            style="display:inline">
+        <rect
+                style="display:inline;opacity:1;fill:#40506a;fill-opacity:1;stroke-width:88.1848;stroke-linecap:round;stroke-linejoin:round"
+                id="background-fill"
+                width="640"
+                height="1020"
+                x="-6.3948846e-14"
+                y="-4.5130566e-14"/>
+    </g>
+    <g
+            id="layer3"
+            style="display:inline">
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK1"
+                width="30"
+                height="48"
+                x="16"
+                y="85"
+                class="lsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_LSK_0"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK2"
+                width="30"
+                height="48"
+                x="16"
+                y="145.2"
+                class="lsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_LSK_1"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK3"
+                width="30"
+                height="48"
+                x="16"
+                y="205.39999"
+                class="lsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_LSK_2"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK4"
+                width="30"
+                height="48"
+                x="16"
+                y="265.60001"
+                class="lsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_LSK_3"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK5"
+                width="30"
+                height="48"
+                x="16"
+                y="325.79999"
+                class="lsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_LSK_4"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK6"
+                width="30"
+                height="48"
+                x="16"
+                y="386"
+                class="lsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_LSK_5"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK1"
+                width="30"
+                height="48"
+                x="594"
+                y="85"
+                class="rsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_RSK_0"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK2"
+                width="30"
+                height="48"
+                x="594"
+                y="145.2"
+                class="rsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_RSK_1"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK3"
+                width="30"
+                height="48"
+                x="594"
+                y="205.39999"
+                class="rsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_RSK_2"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK4"
+                width="30"
+                height="48"
+                x="594"
+                y="265.60001"
+                class="rsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_RSK_3"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK5"
+                width="30"
+                height="48"
+                x="594"
+                y="325.79999"
+                class="rsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_RSK_4"/>
+        <rect
+                style="fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.39505;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK6"
+                width="30"
+                height="48"
+                x="594"
+                y="386"
+                class="rsk-btn"
+                data-event="H:AS01B_FMC_1_TRIGGER_RSK_5"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK1"
+                width="74.661186"
+                height="49.990204"
+                x="11.435278"
+                y="484.00488"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_INIT"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK2"
+                width="74.661186"
+                height="49.990204"
+                x="88"
+                y="484.00488"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_RTE"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK3"
+                width="74.661186"
+                height="49.990204"
+                x="164"
+                y="484.00488"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_DEPARR"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK4"
+                width="74.661186"
+                height="49.990204"
+                x="240"
+                y="484.00488"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_ALTN"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK5"
+                width="74.661186"
+                height="49.990204"
+                x="316"
+                y="484.00488"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_VNAV"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK6"
+                width="74.661186"
+                height="49.990204"
+                x="11.435278"
+                y="535"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_FIX"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK7"
+                width="74.661186"
+                height="49.990204"
+                x="88"
+                y="535"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_LEGS"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK8"
+                width="74.661186"
+                height="49.990204"
+                x="164"
+                y="535"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_HOLD"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK9"
+                width="74.661186"
+                height="49.990204"
+                x="240"
+                y="535"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_FMCCOMM"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK10"
+                width="74.661186"
+                height="49.990204"
+                x="316"
+                y="535"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_PROG"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK11"
+                width="74.661186"
+                height="49.990204"
+                x="11.435278"
+                y="586"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_NAVRAD"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK12"
+                width="74.661186"
+                height="49.990204"
+                x="88"
+                y="586"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_OFST"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK13"
+                width="74.661186"
+                height="49.990204"
+                x="164"
+                y="586"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_RTA"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK14"
+                width="74.661186"
+                height="49.990204"
+                x="240"
+                y="586"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_HEAVY"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK15"
+                width="74.661186"
+                height="49.990204"
+                x="476.33881"
+                y="586"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_PREVPAGE"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK16"
+                width="74.661186"
+                height="49.990204"
+                x="552"
+                y="586"
+                class="mk-btn"
+                data-event="H:AS01B_FMC_1_BTN_NEXTPAGE"/>
+        <rect
+                style="display:inline;fill:#585359;fill-opacity:1;stroke:#000000;stroke-width:2.83465;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="MK17"
+                width="74.661186"
+                height="49.990204"
+                x="552"
+                y="485.00977"
+                class="mk-btn"/>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="47.81665"
+                y="508.51953"
+                id="MK1-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    id="tspan1067"
+                    x="47.81665"
+                    y="508.51953"
+                    dy="0">INIT
+            </tspan>
+            <tspan
+                    x="47.81665"
+                    y="526.51953"
+                    id="tspan1071">REF
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="124.92044"
+                y="517.52539"
+                id="MK2-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="124.92044"
+                    y="517.52539"
+                    id="tspan1071-8">RTE
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="201.65286"
+                y="508.51953"
+                id="MK3-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="201.65286"
+                    y="508.51953"
+                    id="tspan1071-3">DEP
+            </tspan>
+            <tspan
+                    x="201.65286"
+                    y="526.51953"
+                    id="tspan1119">ARR
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="278.15091"
+                y="517.51953"
+                id="MK4-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="278.15091"
+                    y="517.51953"
+                    id="tspan1071-8-5">ALTN
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="353.3306"
+                y="517.51953"
+                id="MK5-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="353.3306"
+                    y="517.51953"
+                    id="tspan1071-8-0">VNAV
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="47.828369"
+                y="568.51465"
+                id="MK6-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="47.828369"
+                    y="568.51465"
+                    id="tspan1071-8-8">FIX
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="124.92044"
+                y="568.51465"
+                id="MK7-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="124.92044"
+                    y="568.51465"
+                    id="tspan1071-8-2">LEGS
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="201.15482"
+                y="568.51465"
+                id="MK8-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="201.15482"
+                    y="568.51465"
+                    id="tspan1071-8-21">HOLD
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="277.50638"
+                y="559.51465"
+                id="MK9-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="277.50638"
+                    y="559.51465"
+                    id="tspan1119-5">FMC
+            </tspan>
+            <tspan
+                    x="277.50638"
+                    y="577.51465"
+                    id="tspan1316">COMM
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="353.15482"
+                y="568.51465"
+                id="MK10-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="353.15482"
+                    y="568.51465"
+                    id="tspan1071-8-21-5">PROG
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="48.188721"
+                y="610.51465"
+                id="MK11-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="48.188721"
+                    y="610.51465"
+                    id="tspan1119-5-8">NAV
+            </tspan>
+            <tspan
+                    x="48.188721"
+                    y="628.51465"
+                    id="tspan1320">RAD
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="124.3345"
+                y="619.51465"
+                id="MK12-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="124.3345"
+                    y="619.51465"
+                    id="tspan1071-8-2-9">OFST
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="200.51028"
+                y="619.52051"
+                id="MK13-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="200.51028"
+                    y="619.52051"
+                    id="tspan1071-8-2-8">RTA
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="276.10013"
+                y="619.51465"
+                id="MK14-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="276.10013"
+                    y="619.51465"
+                    id="tspan1071-8-2-5">HEAVY
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none"
+                x="512.79047"
+                y="610.43262"
+                id="MK15-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="512.79047"
+                    y="610.43262"
+                    id="tspan1119-5-1">PREV
+            </tspan>
+            <tspan
+                    x="512.79047"
+                    y="628.43262"
+                    id="tspan1324">PAGE
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="588.37256"
+                y="610.42676"
+                id="MK16-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="588.37256"
+                    y="610.42676"
+                    id="tspan1119-5-2">NEXT
+            </tspan>
+            <tspan
+                    x="588.37256"
+                    y="628.42676"
+                    id="tspan1328">PAGE
+            </tspan>
+        </text>
+        <text
+                style="font-size:24px;line-height:0.75;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle;display:inline;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.00157;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                x="588.92041"
+                y="527.41864"
+                id="MK17-TEXT"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="588.92041"
+                    y="527.41864"
+                    id="tspan1071-8-21-5-5">EXEC
+            </tspan>
+        </text>
+        <rect
+                style="font-variation-settings:'wdth' 100, 'wght' 400;display:inline;fill:#354b4f;fill-opacity:1;stroke:#000000;stroke-width:1.00157;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="exec-emit"
+                width="60"
+                height="15"
+                x="559.33057"
+                y="490"/>
+    </g>
+    <g
+            id="layer5"
+            style="display:inline">
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK1-DASH"
+                width="13"
+                height="4"
+                x="51"
+                y="107"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK2-DASH"
+                width="13"
+                height="4"
+                x="51"
+                y="167.2"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK3-DASH"
+                width="13"
+                height="4"
+                x="51"
+                y="227.39999"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK4-DASH"
+                width="13"
+                height="4"
+                x="51"
+                y="287.60001"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK5-DASH"
+                width="13"
+                height="4"
+                x="51"
+                y="347.79999"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="LSK6-DASH"
+                width="13"
+                height="4"
+                x="51"
+                y="408"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK1-DASH"
+                width="13"
+                height="4"
+                x="576"
+                y="107"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK2-DASH"
+                width="13"
+                height="4"
+                x="576"
+                y="167.2"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK3-DASH"
+                width="13"
+                height="4"
+                x="576"
+                y="227.39999"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK4-DASH"
+                width="13"
+                height="4"
+                x="576"
+                y="287.60001"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK5-DASH"
+                width="13"
+                height="4"
+                x="576"
+                y="347.79999"/>
+        <rect
+                style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="RSK6-DASH"
+                width="13"
+                height="4"
+                x="576"
+                y="408"/>
+    </g>
+    <g
+            id="layer4"
+            style="display:inline">
+        <rect
+                style="display:inline;fill:#000000;fill-opacity:1;stroke:#65697b;stroke-width:1.54718;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="display-window"
+                width="498.99414"
+                height="396.99414"
+                x="70.50293"
+                y="29.005852"/>
+    </g>
+    <g
+            id="settable-group">
+        <foreignObject
+                id="SLL1"
+                x="76"
+                y="96"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCLL1"
+                x="275"
+                y="96"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCRL1"
+                x="334"
+                y="96"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SRL1"
+                x="533"
+                y="96"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SLL2"
+                x="76"
+                y="156"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none;">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCLL2"
+                x="275"
+                y="156"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCRL2"
+                x="334"
+                y="156"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SRL2"
+                x="533"
+                y="156"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SLL3"
+                x="76"
+                y="216"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCLL3"
+                x="275"
+                y="216"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCRL3"
+                x="334"
+                y="216"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SRL3"
+                x="533"
+                y="216"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SLL4"
+                x="76"
+                y="276"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCLL4"
+                x="275"
+                y="276"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCRL4"
+                x="334"
+                y="276"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SRL4"
+                x="533"
+                y="276"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SLL5"
+                x="76"
+                y="336"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCLL5"
+                x="275"
+                y="336"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SCRL5"
+                x="334"
+                y="336"
+                height="36px"
+                width="30px"
+                data-mode="normal"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+        <foreignObject
+                id="SRL5"
+                x="533"
+                y="336"
+                height="36px"
+                width="30px"
+                data-mode="reverse"
+                style="display: none">
+            <div
+                    style="height: 28px; border-style: inset; border-width: 3px; border-color: #aaaaaa;background-color: #606060;"></div>
+        </foreignObject>
+    </g>
+    <g
+            id="layer6">
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="92.388672"
+                y="90.780273"
+                id="LT1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="92.388672"
+                    y="90.780273"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLT1">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="79.890625"
+                y="117.51953"
+                id="LL1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="79.890625"
+                    y="117.51953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLL1">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="92.388672"
+                y="150.98027"
+                id="LT2"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="92.388672"
+                    y="150.98027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLT2">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="79.890625"
+                y="177.71953"
+                id="LL2"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SLL2">
+            <tspan
+                    x="79.890625"
+                    y="177.71953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLL2">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="92.388672"
+                y="211.18027"
+                id="LT3"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="92.388672"
+                    y="211.18027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLT3">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="79.890625"
+                y="237.91953"
+                id="LL3"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SLL3">
+            <tspan
+                    x="79.890625"
+                    y="237.91953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLL3">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="92.388672"
+                y="271.38028"
+                id="LT4"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="92.388672"
+                    y="271.38028"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLT4">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="79.890625"
+                y="298.11954"
+                id="LL4"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SLL4">
+            <tspan
+                    x="79.890625"
+                    y="298.11954"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLL4">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="92.388672"
+                y="331.58026"
+                id="LT5"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="92.388672"
+                    y="331.58026"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLT5">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="79.890625"
+                y="358.31952"
+                id="LL5"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SLL5">
+            <tspan
+                    x="79.890625"
+                    y="358.31952"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLL5">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="92.388672"
+                y="391.78027"
+                id="LT6"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="92.388672"
+                    y="391.78027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLT6">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="79.890625"
+                y="418.51953"
+                id="LL6"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SLL6">
+            <tspan
+                    x="79.890625"
+                    y="418.51953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSLL6">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="555.59509"
+                y="90.91552"
+                id="RT1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="554.86511"
+                    y="90.91552"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRT1">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="559.35687"
+                y="117.51953"
+                id="RL1"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SRL1">
+            <tspan
+                    x="558.62689"
+                    y="117.51953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRL1">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="555.59509"
+                y="150.47519"
+                id="RT2"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="554.86511"
+                    y="150.47519"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRT2">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="559.35687"
+                y="177.71953"
+                id="RL2"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SRL2">
+            <tspan
+                    x="558.62689"
+                    y="177.71953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRL2">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:-0.73px;text-anchor:end"
+                x="555.59509"
+                y="210.67519"
+                id="RT3"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="554.86511"
+                    y="210.67519"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRT3">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:-0.73px;text-anchor:end"
+                x="559.35687"
+                y="237.97226"
+                id="RL3"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SRL3">
+            <tspan
+                    x="558.62689"
+                    y="237.97226"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRL3">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:-0.73px;text-anchor:end"
+                x="555.59509"
+                y="270.87521"
+                id="RT4"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="554.86511"
+                    y="270.87521"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRT4">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:-0.73px;text-anchor:end"
+                x="559.35687"
+                y="298.11954"
+                id="RL4"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SRL4">
+            <tspan
+                    x="558.62689"
+                    y="298.11954"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRL4">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:-0.73px;text-anchor:end"
+                x="555.59509"
+                y="331.0752"
+                id="RT5"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="554.86511"
+                    y="331.0752"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRT5">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:-0.73px;text-anchor:end"
+                x="559.35687"
+                y="358.40741"
+                id="RL5"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SRL5">
+            <tspan
+                    x="558.62689"
+                    y="358.40741"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRL5">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:-0.73px;text-anchor:end"
+                x="555.59509"
+                y="391.78027"
+                id="RT6"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="554.86511"
+                    y="391.78027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRT6">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;letter-spacing:-0.73px;text-anchor:end"
+                x="559.35687"
+                y="418.43164"
+                id="RL6"
+                xml:space="default"
+                class="remove-pointers"
+                data-settable-box="SRL6">
+            <tspan
+                    x="558.62689"
+                    y="418.43164"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSRL6">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="319.58984"
+                y="55.499222"
+                id="title"
+                class="remove-pointers"
+                xml:space="default">
+            <tspan
+                    x="319.22485"
+                    y="55.499222"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="tspan1855-0">ROUTE
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="554.34509"
+                y="54.129807"
+                id="pages"
+                class="remove-pointers"
+                xml:space="default">
+            <tspan
+                    x="553.61511"
+                    y="54.129807"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;font-variation-settings:'wdth' 100, 'wght' 400;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="tspan1851-0">1/5
+            </tspan>
+        </text>
+        <text
+                xml:space="preserve"
+                style="font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, @wght=400,wdth=100.0';font-variation-settings:'wdth' 100, 'wght' 400;text-align:center;text-anchor:middle"
+                x="120"
+                y="120"
+                id="text160"><tspan
+         id="tspan158"
+         x="120"
+         y="120" /></text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="301.93253"
+                y="90.780273"
+                id="CLT1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.20251"
+                    y="90.780273"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCTL1">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="338.3887"
+                y="90.91552"
+                id="CRT1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="338.3887"
+                    y="90.91552"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRT1">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="302.10831"
+                y="117.51953"
+                id="CLL1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.3783"
+                    y="117.51953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLL1">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="337.89066"
+                y="117.51953"
+                id="CRL1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="337.89066"
+                    y="117.51953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRL1">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="301.93253"
+                y="150.98027"
+                id="CLT2"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.20251"
+                    y="150.98027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLT2">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="338.3887"
+                y="150.47519"
+                id="CRT2"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="338.3887"
+                    y="150.47519"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRT2">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="302.10831"
+                y="177.71953"
+                id="CLL2"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.3783"
+                    y="177.71953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLL2">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="337.89066"
+                y="177.71953"
+                id="CRL2"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="337.89066"
+                    y="177.71953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRL2">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="301.93253"
+                y="211.18027"
+                id="CLT3"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.20251"
+                    y="211.18027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLT3">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="338.3887"
+                y="210.67519"
+                id="CRT3"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="338.3887"
+                    y="210.67519"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRT3">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="302.10831"
+                y="237.91953"
+                id="CLL3"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.3783"
+                    y="237.91953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLL3">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="337.89066"
+                y="237.97226"
+                id="CRL3"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="337.89066"
+                    y="237.97226"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRL3">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="301.93253"
+                y="271.38028"
+                id="CLT4"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.20251"
+                    y="271.38028"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLT4">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="338.3887"
+                y="270.87521"
+                id="CRT4"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="338.3887"
+                    y="270.87521"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRT4">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="302.10831"
+                y="298.11954"
+                id="CLL4"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.3783"
+                    y="298.11954"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLL4">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="337.89066"
+                y="298.11954"
+                id="CRL4"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="337.89066"
+                    y="298.11954"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRL4">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="301.93253"
+                y="331.58026"
+                id="CLT5"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.20251"
+                    y="331.58026"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLT5">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="338.3887"
+                y="331.0752"
+                id="CRT5"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="338.3887"
+                    y="331.0752"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRT5">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="302.10831"
+                y="358.31952"
+                id="CLL5"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.3783"
+                    y="358.31952"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLL5">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="337.89066"
+                y="358.40741"
+                id="CRL5"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="337.89066"
+                    y="358.40741"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRL5">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="301.93253"
+                y="391.78027"
+                id="CLT6"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.20251"
+                    y="391.78027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLT6">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="338.3887"
+                y="391.78027"
+                id="CRT6"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="338.3887"
+                    y="391.78027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRT6">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="302.10831"
+                y="418.51953"
+                id="CLL6"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="301.3783"
+                    y="418.51953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:end;text-anchor:end;fill:#ffffff;fill-opacity:1"
+                    id="TSCLL6">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="337.89066"
+                y="418.43164"
+                id="CRL6"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="337.89066"
+                    y="418.43164"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:start;text-anchor:start;fill:#ffffff;fill-opacity:1"
+                    id="TSCRL6">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320.16113"
+                y="90.91552"
+                id="CT1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.79614"
+                    y="90.91552"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCT1">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320"
+                y="117.51953"
+                id="CL1"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.63501"
+                    y="117.51953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCL1">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320.16113"
+                y="150.47519"
+                id="CT2"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.79614"
+                    y="150.47519"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCT2">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320"
+                y="177.71953"
+                id="CL2"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.63501"
+                    y="177.71953"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCL2">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320.16113"
+                y="210.67519"
+                id="CT3"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.79614"
+                    y="210.67519"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCT3">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320"
+                y="237.97226"
+                id="CL3"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.63501"
+                    y="237.97226"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCL3">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320.16113"
+                y="270.87521"
+                id="CT4"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.79614"
+                    y="270.87521"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCT4">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320"
+                y="298.11954"
+                id="CL4"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.63501"
+                    y="298.11954"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCL4">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320.16113"
+                y="331.0752"
+                id="CT5"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.79614"
+                    y="331.0752"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCT5">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320"
+                y="358.40741"
+                id="CL5"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.63501"
+                    y="358.40741"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCL5">RKSI
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320.16113"
+                y="391.78027"
+                id="CT6"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.79614"
+                    y="391.78027"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:22px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCT6">ORIGIN
+            </tspan>
+        </text>
+        <text
+                style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;line-height:1.25;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;letter-spacing:-0.73px;text-anchor:middle"
+                x="320"
+                y="418.43164"
+                id="CL6"
+                xml:space="default"
+                class="remove-pointers">
+            <tspan
+                    x="319.63501"
+                    y="418.43164"
+                    style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:24px;font-family:Consolas;-inkscape-font-specification:'Consolas, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:center;text-anchor:middle;fill:#ffffff;fill-opacity:1"
+                    id="TSCL6">RKSI
+            </tspan>
+        </text>
+    </g>
+    <g
+            id="layer1">
+        <rect
+                style="display:inline;fill:#000000;fill-opacity:1;stroke:#65697b;stroke-width:1.547;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+                id="inOut-line"
+                width="454.95334"
+                height="42.319538"
+                x="92.523331"
+                y="432.68045"/>
+        <foreignobject
+                x="92.523331"
+                y="432.68045"
+                width="454.95334"
+                height="42.319538">
+            <input
+                    id="inOut-line-html"
+                    style="width: 454.95334px; height: 42.319538px; background-color: black; color: white; font-size: 24px; font-weight: bold; text-transform: uppercase"/>
+        </foreignobject>
+    </g>
+</svg>

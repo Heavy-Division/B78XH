@@ -87,10 +87,13 @@
                     <BTN_ID_PULL>Baro_#ID#_STD</BTN_ID_PULL>
                     <BTN_ID_PUSH>Baro_#ID#_QNH</BTN_ID_PUSH>
                     <PULL_SET_STATE_EXTERNAL>#MODE_STD# (&gt;L:XMLVAR_Baro#BARO_ID#_Mode)</PULL_SET_STATE_EXTERNAL>
-                    <PUSH_SET_STATE_EXTERNAL>(L:XMLVAR_Baro#BARO_ID#_Mode) #MODE_STD# == if{ #MODE_BARO# (&gt;L:XMLVAR_Baro#BARO_ID#_Mode) } els{ (L:XMLVAR_Baro#BARO_ID#_Mode) ! (&gt;L:XMLVAR_Baro#BARO_ID#_Mode) }</PUSH_SET_STATE_EXTERNAL>
+                    <PUSH_SET_STATE_EXTERNAL>(L:XMLVAR_Baro#BARO_ID#_Mode) #MODE_STD# == if{ #MODE_BARO# (&gt;L:XMLVAR_Baro#BARO_ID#_Mode)
+                        } els{ (L:XMLVAR_Baro#BARO_ID#_Mode) ! (&gt;L:XMLVAR_Baro#BARO_ID#_Mode) }
+                    </PUSH_SET_STATE_EXTERNAL>
                     <TT_DESCRIPTION_ID_PULL>@TT_Package.AUTOPILOT_KNOB_BARO_ACTION_SET_STD</TT_DESCRIPTION_ID_PULL>
                     <TT_DESCRIPTION_ID_PUSH>@TT_Package.AUTOPILOT_KNOB_BARO_ACTION_SET_QNH</TT_DESCRIPTION_ID_PUSH>
-                    <OVERRIDE_PUSH_ANIM_CODE>0 100 (L:XMLVAR_Baro#BARO_ID#_Mode) #MODE_STD# == ? 50 (O:_PushAnimVar) ?</OVERRIDE_PUSH_ANIM_CODE>
+                    <OVERRIDE_PUSH_ANIM_CODE>0 100 (L:XMLVAR_Baro#BARO_ID#_Mode) #MODE_STD# == ? 50 (O:_PushAnimVar) ?
+                    </OVERRIDE_PUSH_ANIM_CODE>
                     <BARO_SET_CONDITION>(L:XMLVAR_Baro#BARO_ID#_Mode) #MODE_STD# !=</BARO_SET_CONDITION>
                 </Case>
                 <Case Value="AIRLINER">
@@ -125,7 +128,9 @@
                 </Case>
             </Switch>
             <KNOB_ID>Baro_#ID#</KNOB_ID>
-            <SET_STATE_EXTERNAL>p0 0 &gt; if{ #BARO_ID# (&gt;K:KOHLSMAN_INC) (&gt;H:AP_BARO_Up) } els{ #BARO_ID# (&gt;K:KOHLSMAN_DEC) (&gt;H:AP_BARO_Down) }</SET_STATE_EXTERNAL>
+            <SET_STATE_EXTERNAL>p0 0 &gt; if{ #BARO_ID# (&gt;K:KOHLSMAN_INC) (&gt;H:AP_BARO_Up) } els{ #BARO_ID# (&gt;K:KOHLSMAN_DEC)
+                (&gt;H:AP_BARO_Down) }
+            </SET_STATE_EXTERNAL>
         </Parameters>
         <Parameters Type="Override">
             <Condition NotEmpty="BARO_SET_CONDITION">
@@ -203,7 +208,6 @@
         <!--
         ____________________________________________________________________________________
         OVERRIDE SECTION START
-
         This section replace default animation setting
         ____________________________________________________________________________________
         -->

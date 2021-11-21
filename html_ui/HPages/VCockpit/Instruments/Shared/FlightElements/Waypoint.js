@@ -261,6 +261,15 @@ class WayPointInfo {
 		}
 	}
 
+	async UpdateAirwayCustomLength(name, maxLength = 100) {
+		if (this.airways.findIndex(airway => airway.name === name) === -1) {
+			let airways = await this.instrument.facilityLoader.getAllAirways(this, name, maxLength);
+			if (airways.length === 1) {
+				this.airways.push(airways[0]);
+			}
+		}
+	}
+
 	async UpdateAirways() {
 		this.airways = await this.instrument.facilityLoader.getAllAirways(this);
 	}

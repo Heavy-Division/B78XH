@@ -251,8 +251,19 @@ class SvgWaypointElement extends SvgMapElement {
 				iconSize *= (this.minimize ? 0.5 : 1);
 				const x = (this.x - iconSize * 0.5) + 2;
 				const y = (this.y - iconSize * 0.5) + 2;
-				this._image.setAttribute('x', x + '');
-				this._image.setAttribute('y', y + '');
+				let offsetX = 0;
+				let offsetY = 0;
+				if (this.isInFpln || isActiveWaypoint) {
+					offsetX = -1.5;
+					offsetY = -2;
+				}
+				if (this.ident === 'T/D' || this.ident === 'DES') {
+					offsetX = -2;
+					offsetY = -3;
+				}
+
+				this._image.setAttribute('x', x + offsetX + '');
+				this._image.setAttribute('y', y + offsetY + '');
 				if (this.source instanceof AirportInfo) {
 					let a = this.source.longestRunwayDirection;
 					if (isNaN(a) && this.source.runways[0]) {
