@@ -12257,7 +12257,11 @@
                     this._fmc.clearUserInput();
                     this._fmc.ensureCurrentFlightPlanIsTemporary(() => {
                         const idx = lskIdx;
-                        const lastWpIdx = this._rows[idx + this._offset - 1].fpIdx;
+                        //const lastWpIdx = this._rows[idx + this._offset - 1].fpIdx;
+                        /**
+                         * Hotfix
+                         */
+                        const lastWpIdx = this._rows[idx + this._offset - 2].fpIdx;
                         const lastWaypoint = this._fmc.flightPlanManager.getWaypoints()[lastWpIdx];
                         if (lastWaypoint.infos instanceof WayPointInfo) {
                             lastWaypoint.infos.UpdateAirway(value).then(() => {
