@@ -124,7 +124,7 @@ export class B787_10_FMC_RouteRequestPage {
 			B787_10_FMC_RoutePage.ShowPage1(this.fmc);
 		};
 
-		this.fmc._renderer.lsk(1).event = async () => {
+		this.fmc._renderer.lsk(1).event = () => {
 			this.fmc.messageManager.showMessage('STANDBY ONE', 'FMC PROCESSING <br> LAST ENTRY <br>PLEASE WAIT');
 
 			/**
@@ -146,46 +146,46 @@ export class B787_10_FMC_RouteRequestPage {
 			const importer = new HDSDK.SimBriefImporter(parser);
 			const navlog = new HDNavlog(this.fmc);
 			navlog.setImporter(importer);
-			await navlog.import().catch((error) => {
+			navlog.import().then(() => {
+				const configuration = {
+					withSid: HDSDK.HeavyDivision.SimBrief.importSid(),
+					withStar: HDSDK.HeavyDivision.SimBrief.importStar(),
+					routeOnly: HDSDK.HeavyDivision.SimBrief.importRouteOnly()
+				};
+
+
+				if (HDSDK.HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
+					navlog.setToGameIngame(configuration).then(() => {
+						this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
+						setTimeout(() => {
+							this.fmc.messageManager.removeLastMessage();
+							B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+						}, 2000);
+					}).catch((reason => {
+						this.fmc._renderer.renderTitle(reason);
+						setTimeout(() => {
+							this.fmc.messageManager.removeLastMessage();
+							B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+						}, 2000);
+					}));
+				} else {
+					navlog.setToGame(configuration).then(() => {
+						this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
+						setTimeout(() => {
+							this.fmc.messageManager.removeLastMessage();
+							B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+						}, 2000);
+					}).catch((reason => {
+						this.fmc._renderer.renderTitle(reason);
+						setTimeout(() => {
+							this.fmc.messageManager.removeLastMessage();
+							B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+						}, 2000);
+					}));
+				}
+			}).catch((error) => {
 				HDLogger.log(error, Level.error);
 			});
-
-			const configuration = {
-				withSid: HDSDK.HeavyDivision.SimBrief.importSid(),
-				withStar: HDSDK.HeavyDivision.SimBrief.importStar(),
-				routeOnly: HDSDK.HeavyDivision.SimBrief.importRouteOnly()
-			};
-
-
-			if (HDSDK.HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
-				navlog.setToGameIngame(configuration).then(() => {
-					this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
-					setTimeout(() => {
-						this.fmc.messageManager.removeLastMessage();
-						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-					}, 2000);
-				}).catch((reason => {
-					this.fmc._renderer.renderTitle(reason);
-					setTimeout(() => {
-						this.fmc.messageManager.removeLastMessage();
-						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-					}, 2000);
-				}));
-			} else {
-				navlog.setToGame(configuration).then(() => {
-					this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
-					setTimeout(() => {
-						this.fmc.messageManager.removeLastMessage();
-						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-					}, 2000);
-				}).catch((reason => {
-					this.fmc._renderer.renderTitle(reason);
-					setTimeout(() => {
-						this.fmc.messageManager.removeLastMessage();
-						B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-					}, 2000);
-				}));
-			}
 		};
 
 		/**
