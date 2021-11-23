@@ -464,7 +464,9 @@ export class HDNavlog {
 				this._progress[9][2] = this.fmc.colorizeContent('(' + iterator + '/' + total + ')', 'blue');
 				const idx = this.fmc.flightPlanManager.getWaypointsCount() - 1;
 				HDLogger.log(fix.ident + ' ADDING TO FP', Level.debug);
+				this.fmc.flightPlanManager.pauseSync();
 				await this.insertWaypoint(fix, idx);
+				this.fmc.flightPlanManager.resumeSync();
 				HDLogger.log(fix.ident + ' ADDED TO FP', Level.info);
 				iterator++;
 			}
