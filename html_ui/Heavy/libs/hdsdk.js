@@ -2039,17 +2039,17 @@
         }
         _initSpeeds() {
             this._accelerationSpeedRestriction = new HDAccelerationSpeedRestriction(this._speedManager.repository.v2Speed + 10, 1500, 1500);
-            this._overspeedProtection = new HDOverspeedProtection(null);
-            this._climbSpeedRestriction = new HDClimbSpeedRestriction(null, null);
+            this._overspeedProtection = new HDOverspeedProtection(undefined);
+            this._climbSpeedRestriction = new HDClimbSpeedRestriction(undefined, undefined);
             this._climbSpeedTransition = new HDClimbSpeedTransition();
-            this._climbSpeedSelected = new HDClimbSpeed(null);
+            this._climbSpeedSelected = new HDClimbSpeed(undefined);
             this._climbSpeedEcon = new HDClimbSpeed(this._speedManager.getEconClbManagedSpeed(0));
-            this._cruiseSpeedSelected = new HDCruiseSpeed(null, null);
+            this._cruiseSpeedSelected = new HDCruiseSpeed(undefined, undefined);
             this._cruiseSpeedEcon = new HDCruiseSpeed(this._speedManager.getEconCrzManagedSpeed(0), 0.85);
-            this._descentSpeedRestriction = new HDDescentSpeedRestriction(null, null);
+            this._descentSpeedRestriction = new HDDescentSpeedRestriction(undefined, undefined);
             this._descentSpeedTransition = new HDDescentSpeedTransition();
-            this._descentSpeedSelected = new HDDescentSpeed(null, null);
-            this._descentSpeedEcon = new HDDescentSpeed(282, null);
+            this._descentSpeedSelected = new HDDescentSpeed(undefined, undefined);
+            this._descentSpeedEcon = new HDDescentSpeed(282, undefined);
             //		this._waypointSpeedConstraint = new WaypointSpeed(null, null);
         }
         get machModeActive() {
