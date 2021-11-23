@@ -830,7 +830,6 @@
 								yield Coherent.call('SET_APPROACH_INDEX', -1).then(() => {
 									Coherent.call('SET_APPROACH_TRANSITION_INDEX', -1);
 								});
-
 								resolve();
 							}));
 						}, 500);
@@ -920,7 +919,12 @@
 				return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
 					FlightPlanAsoboSync.init();
 					const plan = fpln.getCurrentFlightPlan();
-					if (HeavyDivision.configuration.isNonProcedureSynchronizationActive && (plan.checksum !== this.fpChecksum)) {
+
+					const getStrategy = (_default) => {
+						return GetStoredData('HEAVY_B78XH_FP_SYNCHRONIZATION_STRATEGY') || _default || false;
+					};
+
+					if (parseInt(getStrategy('0')) === 2 && (plan.checksum !== this.fpChecksum)) {
 						// await Coherent.call("CREATE_NEW_FLIGHTPLAN");
 						yield Coherent.call('SET_CURRENT_FLIGHTPLAN_INDEX', 0).catch(console.log);
 						yield Coherent.call('CLEAR_CURRENT_FLIGHT_PLAN').catch(console.log);
@@ -1057,6 +1061,7 @@
 									//  approachtrans index
 									yield fpln.setApproachTransitionIndex(data.approachTransitionIndex);
 									this.fpChecksum = fpln.getCurrentFlightPlan().checksum;
+									console.log(1);
 
 
 									/**
@@ -1070,22 +1075,32 @@
 									 */
 									yield Coherent.call('SET_ORIGIN', data.waypoints[0].icao, false);
 
-
 									/**
 									 * Clear all procedures from game flight plan
 									 */
+									/*
 									yield Coherent.call('SET_DESTINATION', -1, false);
+									console.log(5);
 									yield Coherent.call('SET_ORIGIN_RUNWAY_INDEX', -1).catch(console.log);
+									console.log(6);
 									yield Coherent.call('SET_DEPARTURE_RUNWAY_INDEX', -1);
+									console.log(7);
 									yield Coherent.call('SET_DEPARTURE_PROC_INDEX', -1);
+									console.log(8);
 									yield Coherent.call('SET_DEPARTURE_ENROUTE_TRANSITION_INDEX', -1);
+									console.log(9);
 									yield Coherent.call('SET_ARRIVAL_RUNWAY_INDEX', -1);
+									console.log(10);
 									yield Coherent.call('SET_ARRIVAL_PROC_INDEX', -1);
+									console.log(11);
 									yield Coherent.call('SET_ARRIVAL_ENROUTE_TRANSITION_INDEX', -1);
+									console.log(12);
 									yield Coherent.call('SET_APPROACH_INDEX', -1).then(() => {
+										console.log(13);
 										Coherent.call('SET_APPROACH_TRANSITION_INDEX', -1);
+										console.log(14);
 									});
-
+*/
 									console.log('FLIGHT PLAN UNSET');
 
 									resolve();
@@ -2820,7 +2835,10 @@
 						this._flightPlans = [];
 						this._flightPlans.push(plan);
 						this.pauseSync();
-						switch (HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy()) {
+						const getStrategy = (_default) => {
+							return GetStoredData('HEAVY_B78XH_FP_SYNCHRONIZATION_STRATEGY') || _default || false;
+						};
+						switch (parseInt(getStrategy('0'))) {
 							case 0:
 								yield FlightPlanAsoboDestroyer.DestroyIngameFlightPlan();
 								break;
@@ -4263,7 +4281,11 @@
 				window.localStorage.setItem(FlightPlanManager.FlightPlanKey, fpJson);
 				SimVar.SetSimVarValue(FlightPlanManager.FlightPlanVersionKey, 'number', ++this._currentFlightPlanVersion);
 
-				switch (HeavyDivision.configuration.activeFlightPlanSynchronizationStrategy) {
+				const getStrategy = (_default) => {
+					return GetStoredData('HEAVY_B78XH_FP_SYNCHRONIZATION_STRATEGY') || _default || false;
+				};
+
+				switch (parseInt(getStrategy('0'))) {
 					case 2:
 						FlightPlanAsoboNonProcedureSync.SaveToGame(this);
 						break;
