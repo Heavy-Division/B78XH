@@ -18,13 +18,14 @@ export class RemoveStarParserMiddleware implements INavlogParserMiddleware {
 		const fixes = data.navlog.fix as { ident: string, is_sid_star: number, via_airway: string }[];
 		const destination: string = data.destination.icao_code;
 		const lastWaypointIndex = (fixes[fixes.length - 1].ident === destination ? fixes.length - 2 : fixes.length - 1);
+		const isLastWaypointInStar = parseInt(String(fixes[lastWaypointIndex].is_sid_star));
 
-
-		const star: string = fixes[lastWaypointIndex].via_airway !== 'DCT' ? fixes[lastWaypointIndex].via_airway : 'DCT';
+		const star: string = fixes[lastWaypointIndex].via_airway !== 'DCT' ? (isLastWaypointInStar !== 0 ? fixes[lastWaypointIndex].via_airway : 'DCT') : 'DCT';
 		if (star === 'DCT') {
 			return data;
 		}
-		data.navlog.fix = fixes.filter((fix) => fix.via_airway !== star && fix.is_sid_star !== 1);
+
+		data.navlog.fix = fixes.filter((fix) => fix.via_airway !== star && fix.is_sid_star != 1);
 		return data;
 	}
 }

@@ -9889,11 +9889,12 @@
             const fixes = data.navlog.fix;
             const destination = data.destination.icao_code;
             const lastWaypointIndex = (fixes[fixes.length - 1].ident === destination ? fixes.length - 2 : fixes.length - 1);
-            const star = fixes[lastWaypointIndex].via_airway !== 'DCT' ? fixes[lastWaypointIndex].via_airway : 'DCT';
+            const isLastWaypointInStar = parseInt(String(fixes[lastWaypointIndex].is_sid_star));
+            const star = fixes[lastWaypointIndex].via_airway !== 'DCT' ? (isLastWaypointInStar !== 0 ? fixes[lastWaypointIndex].via_airway : 'DCT') : 'DCT';
             if (star === 'DCT') {
                 return data;
             }
-            data.navlog.fix = fixes.filter((fix) => fix.via_airway !== star && fix.is_sid_star !== 1);
+            data.navlog.fix = fixes.filter((fix) => fix.via_airway !== star && fix.is_sid_star != 1);
             return data;
         }
     }
@@ -10313,7 +10314,9 @@
                     this._progress[9][2] = this.fmc.colorizeContent('(' + iterator + '/' + total + ')', 'blue');
                     const idx = this.fmc.flightPlanManager.getWaypointsCount() - 1;
                     HDLogger.log(fix.ident + ' ADDING TO FP', Level.debug);
+                    this.fmc.flightPlanManager.pauseSync();
                     await this.insertWaypoint(fix, idx);
+                    this.fmc.flightPlanManager.resumeSync();
                     HDLogger.log(fix.ident + ' ADDED TO FP', Level.info);
                     iterator++;
                 }
@@ -10779,7 +10782,7 @@
                 //this.eventProtector.style.display = 'none';
                 B787_10_FMC_RoutePage.ShowPage1(this.fmc);
             };
-            this.fmc._renderer.lsk(1).event = async () => {
+            this.fmc._renderer.lsk(1).event = () => {
                 this.fmc.messageManager.showMessage('STANDBY ONE', 'FMC PROCESSING <br> LAST ENTRY <br>PLEASE WAIT');
                 /**
                  * Callback hell
@@ -10798,44 +10801,45 @@
                 const importer = new SimBriefImporter(parser);
                 const navlog = new HDNavlog(this.fmc);
                 navlog.setImporter(importer);
-                await navlog.import().catch((error) => {
+                navlog.import().then(() => {
+                    const configuration = {
+                        withSid: HeavyDivision.SimBrief.importSid(),
+                        withStar: HeavyDivision.SimBrief.importStar(),
+                        routeOnly: HeavyDivision.SimBrief.importRouteOnly()
+                    };
+                    if (HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
+                        navlog.setToGameIngame(configuration).then(() => {
+                            this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
+                            setTimeout(() => {
+                                this.fmc.messageManager.removeLastMessage();
+                                B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                            }, 2000);
+                        }).catch((reason => {
+                            this.fmc._renderer.renderTitle(reason);
+                            setTimeout(() => {
+                                this.fmc.messageManager.removeLastMessage();
+                                B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                            }, 2000);
+                        }));
+                    }
+                    else {
+                        navlog.setToGame(configuration).then(() => {
+                            this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
+                            setTimeout(() => {
+                                this.fmc.messageManager.removeLastMessage();
+                                B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                            }, 2000);
+                        }).catch((reason => {
+                            this.fmc._renderer.renderTitle(reason);
+                            setTimeout(() => {
+                                this.fmc.messageManager.removeLastMessage();
+                                B787_10_FMC_RoutePage.ShowPage1(this.fmc);
+                            }, 2000);
+                        }));
+                    }
+                }).catch((error) => {
                     HDLogger.log(error, Level.error);
                 });
-                const configuration = {
-                    withSid: HeavyDivision.SimBrief.importSid(),
-                    withStar: HeavyDivision.SimBrief.importStar(),
-                    routeOnly: HeavyDivision.SimBrief.importRouteOnly()
-                };
-                if (HeavyDivision.SimBrief.importStrategy() === 'INGAME') {
-                    navlog.setToGameIngame(configuration).then(() => {
-                        this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
-                        setTimeout(() => {
-                            this.fmc.messageManager.removeLastMessage();
-                            B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-                        }, 2000);
-                    }).catch((reason => {
-                        this.fmc._renderer.renderTitle(reason);
-                        setTimeout(() => {
-                            this.fmc.messageManager.removeLastMessage();
-                            B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-                        }, 2000);
-                    }));
-                }
-                else {
-                    navlog.setToGame(configuration).then(() => {
-                        this.fmc._renderer.renderTitle('FP IMPORTED SUCCESSFULLY');
-                        setTimeout(() => {
-                            this.fmc.messageManager.removeLastMessage();
-                            B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-                        }, 2000);
-                    }).catch((reason => {
-                        this.fmc._renderer.renderTitle(reason);
-                        setTimeout(() => {
-                            this.fmc.messageManager.removeLastMessage();
-                            B787_10_FMC_RoutePage.ShowPage1(this.fmc);
-                        }, 2000);
-                    }));
-                }
             };
             /**
              * TODO: Refactor this... It is same as SimBrief just parsing log is different
