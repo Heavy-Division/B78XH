@@ -2197,8 +2197,17 @@
             let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
                 return speed[value] < speed[accumulator] ? value : accumulator;
             }, exports.HDSpeedType.SPEED_TYPE_ECON);
+            commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey);
             this._updateCommandedSpeed(commandedSpeedKey, exports.HDSpeedPhase.SPEED_PHASE_CLIMB);
             this._updateMachMode();
+        }
+        shouldCommandSelectedSpeed(commandedSpeedKey) {
+            if (Number(commandedSpeedKey) === exports.HDSpeedType.SPEED_TYPE_ECON) {
+                return this._climbSpeedSelected.isValid() ? exports.HDSpeedType.SPEED_TYPE_SELECTED : exports.HDSpeedType.SPEED_TYPE_ECON;
+            }
+            else {
+                return Number(commandedSpeedKey);
+            }
         }
         _updateCruiseSpeed() {
             let speed = {
@@ -2212,6 +2221,7 @@
             let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
                 return speed[value] < speed[accumulator] ? value : accumulator;
             }, exports.HDSpeedType.SPEED_TYPE_ECON);
+            commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey);
             this._updateCommandedSpeed(commandedSpeedKey, exports.HDSpeedPhase.SPEED_PHASE_CRUISE);
             this._updateMachMode();
         }
@@ -2229,6 +2239,7 @@
             let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
                 return speed[value] < speed[accumulator] ? value : accumulator;
             }, exports.HDSpeedType.SPEED_TYPE_ECON);
+            commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey);
             this._updateCommandedSpeed(commandedSpeedKey, exports.HDSpeedPhase.SPEED_PHASE_DESCENT);
             this._updateMachMode();
         }
@@ -2245,6 +2256,7 @@
             let commandedSpeedKey = Object.keys(speed).filter(key => !!speed[key]).reduce((accumulator, value) => {
                 return speed[value] < speed[accumulator] ? value : accumulator;
             }, exports.HDSpeedType.SPEED_TYPE_ECON);
+            commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey);
             this._updateCommandedSpeed(commandedSpeedKey, exports.HDSpeedPhase.SPEED_PHASE_APPROACH);
             this._updateMachMode();
         }
