@@ -332,15 +332,15 @@ export class SpeedDirector {
 			return speed[value] < speed[accumulator] ? value : accumulator;
 		}, HDSpeedType.SPEED_TYPE_ECON);
 
-		commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey);
+		commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey, this._climbSpeedSelected);
 
 		this._updateCommandedSpeed(commandedSpeedKey, HDSpeedPhase.SPEED_PHASE_CLIMB);
 		this._updateMachMode();
 	}
 
-	private shouldCommandSelectedSpeed(commandedSpeedKey: string | HDSpeedType): number {
+	private shouldCommandSelectedSpeed(commandedSpeedKey: string | HDSpeedType, selectedSpeed): number {
 		if (Number(commandedSpeedKey) === HDSpeedType.SPEED_TYPE_ECON) {
-			return this._climbSpeedSelected.isValid() ? HDSpeedType.SPEED_TYPE_SELECTED : HDSpeedType.SPEED_TYPE_ECON;
+			return selectedSpeed.isValid() ? HDSpeedType.SPEED_TYPE_SELECTED : HDSpeedType.SPEED_TYPE_ECON;
 		} else {
 			return Number(commandedSpeedKey);
 		}
@@ -361,7 +361,7 @@ export class SpeedDirector {
 			return speed[value] < speed[accumulator] ? value : accumulator;
 		}, HDSpeedType.SPEED_TYPE_ECON);
 
-		commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey);
+		commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey, this._cruiseSpeedSelected);
 
 		this._updateCommandedSpeed(commandedSpeedKey, HDSpeedPhase.SPEED_PHASE_CRUISE);
 		this._updateMachMode();
@@ -384,7 +384,7 @@ export class SpeedDirector {
 			return speed[value] < speed[accumulator] ? value : accumulator;
 		}, HDSpeedType.SPEED_TYPE_ECON);
 
-		commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey);
+		commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey, this._descentSpeedSelected);
 
 		this._updateCommandedSpeed(commandedSpeedKey, HDSpeedPhase.SPEED_PHASE_DESCENT);
 		this._updateMachMode();
@@ -406,7 +406,7 @@ export class SpeedDirector {
 			return speed[value] < speed[accumulator] ? value : accumulator;
 		}, HDSpeedType.SPEED_TYPE_ECON);
 
-		commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey);
+		commandedSpeedKey = this.shouldCommandSelectedSpeed(commandedSpeedKey, this._descentSpeedSelected);
 
 		this._updateCommandedSpeed(commandedSpeedKey, HDSpeedPhase.SPEED_PHASE_APPROACH);
 		this._updateMachMode();
