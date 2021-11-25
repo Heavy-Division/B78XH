@@ -18379,96 +18379,78 @@
                     SimVar.SetSimVarValue('L:B78XH_CUSTOM_VNAV_DESCENT_ENABLED', 'Number', 0);
                 }
                 if (this.getIsVNAVActive()) {
-                    let nextWaypoint = this.flightPlanManager.getActiveWaypoint();
-                    if (nextWaypoint && (nextWaypoint.legAltitudeDescription === 3 || nextWaypoint.legAltitudeDescription === 4)) {
-                        let selectedAltitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
-                        if (!this.flightPlanManager.getIsDirectTo() &&
-                            isFinite(nextWaypoint.legAltitude1) &&
-                            nextWaypoint.legAltitude1 < 20000 &&
-                            nextWaypoint.legAltitude1 > selectedAltitude &&
-                            Simplane.getAltitude() > nextWaypoint.legAltitude1 - 200) {
-                            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, nextWaypoint.legAltitude1, this._forceNextAltitudeUpdate);
-                            this._forceNextAltitudeUpdate = false;
-                            SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 1);
-                        }
-                        else {
-                            let altitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
-                            if (isFinite(altitude)) {
-                                Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, this.cruiseFlightLevel * 100, this._forceNextAltitudeUpdate);
+                    let altitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
+                    if (isFinite(altitude)) {
+                        /**
+                         * TODO: Temporary level off during climb
+                         */
+                        let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number');
+                        if ((altitude < this.cruiseFlightLevel * 100 || isLevelOffActive) && this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
+                            if (Simplane.getAutoPilotAltitudeLockActive()) {
+                                SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number', 1);
+                            }
+                            if (!isLevelOffActive) {
+                                Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, altitude, this._forceNextAltitudeUpdate);
                                 this._forceNextAltitudeUpdate = false;
                                 SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
                             }
                         }
-                    }
-                    else {
-                        let altitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
-                        if (isFinite(altitude)) {
+                        else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
+                            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, this.cruiseFlightLevel * 100, this._forceNextAltitudeUpdate);
+                            this._forceNextAltitudeUpdate = false;
+                            SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
+                        }
+                        else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT || this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_APPROACH) {
                             /**
-                             * TODO: Temporary level off during climb
+                             * Descent new implementation
                              */
-                            let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number');
-                            if ((altitude < this.cruiseFlightLevel * 100 || isLevelOffActive) && this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
-                                if (Simplane.getAutoPilotAltitudeLockActive()) {
-                                    SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number', 1);
+                            let nextAltitudeObject = this.getNextDescentAltitude();
+                            let nextAltitude = nextAltitudeObject.targetAltitude;
+                            let selectedAltitude = altitude;
+                            this._selectedAltitude = altitude;
+                            let shouldEnableLevelOff = null;
+                            let needUpdateAltitude = false;
+                            let targetAltitude = NaN;
+                            if (nextAltitude >= selectedAltitude) {
+                                shouldEnableLevelOff = false;
+                                targetAltitude = nextAltitude;
+                            }
+                            else if (nextAltitude < selectedAltitude) {
+                                shouldEnableLevelOff = true;
+                                targetAltitude = selectedAltitude;
+                            }
+                            this._descentTargetAltitude = targetAltitude;
+                            if (this._lastDescentTargetAltitude !== this._descentTargetAltitude) {
+                                this._lastDescentTargetAltitude = this._descentTargetAltitude;
+                                needUpdateAltitude = true;
+                            }
+                            if (this._lastSelectedAltitude !== this._selectedAltitude) {
+                                this._lastSelectedAltitude = this._selectedAltitude;
+                                needUpdateAltitude = true;
+                            }
+                            let altitudeInterventionPushed = SimVar.GetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number');
+                            if (altitudeInterventionPushed) {
+                                needUpdateAltitude = true;
+                                SimVar.SetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number', 0);
+                            }
+                            if (Simplane.getAutoPilotAltitudeLockActive()) {
+                                if (shouldEnableLevelOff) {
+                                    SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number', 1);
                                 }
-                                if (!isLevelOffActive) {
-                                    Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, altitude, this._forceNextAltitudeUpdate);
+                            }
+                            let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number');
+                            if (!isLevelOffActive || altitudeInterventionPushed) {
+                                if (isFinite(targetAltitude) && needUpdateAltitude) {
+                                    Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, targetAltitude, this._forceNextAltitudeUpdate);
                                     this._forceNextAltitudeUpdate = false;
                                     SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
                                 }
                             }
-                            else if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_DESCENT || this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_APPROACH) {
-                                /**
-                                 * Descent new implementation
-                                 */
-                                let nextAltitudeObject = this.getNextDescentAltitude();
-                                let nextAltitude = nextAltitudeObject.targetAltitude;
-                                let selectedAltitude = altitude;
-                                this._selectedAltitude = altitude;
-                                let shouldEnableLevelOff = null;
-                                let needUpdateAltitude = false;
-                                let targetAltitude = NaN;
-                                if (nextAltitude >= selectedAltitude) {
-                                    shouldEnableLevelOff = false;
-                                    targetAltitude = nextAltitude;
-                                }
-                                else if (nextAltitude < selectedAltitude) {
-                                    shouldEnableLevelOff = true;
-                                    targetAltitude = selectedAltitude;
-                                }
-                                this._descentTargetAltitude = targetAltitude;
-                                if (this._lastDescentTargetAltitude !== this._descentTargetAltitude) {
-                                    this._lastDescentTargetAltitude = this._descentTargetAltitude;
-                                    needUpdateAltitude = true;
-                                }
-                                if (this._lastSelectedAltitude !== this._selectedAltitude) {
-                                    this._lastSelectedAltitude = this._selectedAltitude;
-                                    needUpdateAltitude = true;
-                                }
-                                let altitudeInterventionPushed = SimVar.GetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number');
-                                if (altitudeInterventionPushed) {
-                                    needUpdateAltitude = true;
-                                    SimVar.SetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number', 0);
-                                }
-                                if (Simplane.getAutoPilotAltitudeLockActive()) {
-                                    if (shouldEnableLevelOff) {
-                                        SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number', 1);
-                                    }
-                                }
-                                let isLevelOffActive = SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number');
-                                if (!isLevelOffActive || altitudeInterventionPushed) {
-                                    if (isFinite(targetAltitude) && needUpdateAltitude) {
-                                        Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, targetAltitude, this._forceNextAltitudeUpdate);
-                                        this._forceNextAltitudeUpdate = false;
-                                        SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
-                                    }
-                                }
-                            }
-                            else {
-                                Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, this.cruiseFlightLevel * 100, this._forceNextAltitudeUpdate);
-                                this._forceNextAltitudeUpdate = false;
-                                SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
-                            }
+                        }
+                        else {
+                            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 2, this.cruiseFlightLevel * 100, this._forceNextAltitudeUpdate);
+                            this._forceNextAltitudeUpdate = false;
+                            SimVar.SetSimVarValue('L:AP_CURRENT_TARGET_ALTITUDE_IS_CONSTRAINT', 'number', 0);
                         }
                     }
                 }
