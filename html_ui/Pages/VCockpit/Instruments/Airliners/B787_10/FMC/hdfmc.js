@@ -9760,6 +9760,13 @@
         }
         getWaypointForTODCalculation() {
             let getWaypoint = (allWaypoints) => {
+                /**
+                 * 0 - NO
+                 * 1 - AT
+                 * 2 - A
+                 * 3 - B
+                 * 4 - AB
+                 */
                 for (let i = 0; i <= allWaypoints.length - 1; i++) {
                     if (allWaypoints[i].legAltitudeDescription === 0) {
                         continue;
@@ -9768,8 +9775,8 @@
                         return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
                     }
                     if (allWaypoints[i].legAltitudeDescription === 2 && isFinite(allWaypoints[i].legAltitude1)) {
-                        continue;
-                        //return {fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1)};
+                        //continue;
+                        return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
                     }
                     if (allWaypoints[i].legAltitudeDescription === 3 && isFinite(allWaypoints[i].legAltitude1)) {
                         return { fix: allWaypoints[i], targetAltitude: Math.round(allWaypoints[i].legAltitude1) };
