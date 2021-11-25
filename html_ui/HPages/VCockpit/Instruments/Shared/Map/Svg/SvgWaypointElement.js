@@ -332,7 +332,7 @@ class SvgWaypointTextElement extends SvgMapElement {
 				this._lastY = this.waypointElement.y;
 				const iconSize = this.waypointElement.getIconSize(map) * (this.waypointElement.minimize ? 0.5 : 1);
 				const x = (this.waypointElement.x - iconSize * 0.5);
-				const y = (this.waypointElement.y - iconSize * 0.5);
+				const y = (this.waypointElement.y + iconSize);
 
 				if (this._label) {
 					const textX = (x + map.config.waypointLabelDistanceX - 10);
