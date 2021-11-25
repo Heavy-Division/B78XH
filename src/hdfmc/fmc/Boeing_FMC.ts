@@ -363,6 +363,12 @@ export class Boeing_FMC extends BaseFMC {
 	}
 
 	activateAltitudeSel() {
+		if (this.getIsVNAVActive()) {
+			let displayedAltitude = Simplane.getAutoPilotDisplayedAltitudeLockValue();
+			this.cruiseFlightLevel = Math.floor(displayedAltitude / 100);
+		} else {
+			Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, Simplane.getAutoPilotDisplayedAltitudeLockValue(), true);
+		}
 	}
 
 	onEvent(_event): void {
