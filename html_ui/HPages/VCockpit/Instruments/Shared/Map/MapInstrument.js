@@ -589,49 +589,6 @@ class MapInstrument extends ISvgMapRootElement {
 			this.flightPlanManager.updateWaypointIndex();
 			//this.updateFlightPlanVisibility();
 			this.flightPlanManager.updateFlightPlan();
-
-			if (!this.showConstraints && this.constraints && this.constraints.length > 0) {
-				let constraints = this.getElementsByClassName("constraint-label");
-				Array.from(constraints).forEach((c) => {
-					c.remove();
-				});
-				this.constraints = [];
-			}
-			if (this.drawCounter === 45 || (this.showConstraints && (!this.constraints || this.constraints.length === 0))) {
-				if (this.showConstraints) {
-					const wpWithConstraints = this.flightPlanManager.getWaypointsWithAltitudeConstraints();
-					const activeWaypointIndex = this.flightPlanManager.getActiveWaypointIndex();
-					let toRender = wpWithConstraints.slice(activeWaypointIndex);
-					this.constraints = [];
-					for (let i = 0; i < toRender.length; i++) {
-						const svgConstraint = new SvgConstraintElement(toRender[i]);
-						this.constraints.push(svgConstraint);
-					}
-
-					/**
-					 * TODO: Hacky...
-					 * This remove all constraint labels when waypoints are updated (Changed SID / STAR / DIRECT TO / DELETED WAYPOINT)
-					 * Extremely hacky
-					 * @type {HTMLCollectionOf<Element>}
-					 */
-					let constraints = this.getElementsByClassName("constraint-label");
-					Array.from(constraints).forEach((c) => {
-						let exist = this.constraints.findIndex((rc) => {
-							if(rc.source){
-								let ret = "constraint-" + rc.source.ident + "-map-" + 0 + "-text-0";
-								ret = ret.replace(/[\(\)\$]/g, "-");
-								return ret == c.getAttribute("id");
-							} else {
-								return -1;
-							}
-						});
-
-						if (exist == -1){
-							c.parentNode.removeChild(c);
-						}
-					});
-				}
-			}
 			const lat = SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude');
 			const long = SimVar.GetSimVarValue('PLANE LONGITUDE', 'degree longitude');
 			let planeLla;
@@ -808,7 +765,7 @@ class MapInstrument extends ISvgMapRootElement {
 							}
 						}
 
-						const showTOD = SimVar.GetSimVarValue("L:AIRLINER_FMS_SHOW_TOP_DSCNT", "number");
+						const showTOD = SimVar.GetSimVarValue('L:AIRLINER_FMS_SHOW_TOP_DSCNT', 'number');
 						if (showTOD === 1) {
 							this.updateTodWaypoint();
 							if (this._todWaypoint && SimVar.GetSimVarValue('L:MAP_SHOW_TEMPORARY_FLIGHT_PLAN', 'number') === 0) {
@@ -918,11 +875,6 @@ class MapInstrument extends ISvgMapRootElement {
 							}
 						}
 					}
-					if (this.showConstraints) {
-						for (let i = 0; i < this.constraints.length; i++) {
-							this.navMap.mapElements.push(this.constraints[i]);
-						}
-					}
 
 					if (this.showTrackVector && this.trackVectorElement) {
 						this.navMap.mapElements.push(this.trackVectorElement);
@@ -999,14 +951,25 @@ class MapInstrument extends ISvgMapRootElement {
 			for (let i = Math.max(0, this.flightPlanManager.getActiveWaypointIndex() - 1); i < waypointsToDraw; i++) {
 				const waypoint = this.flightPlanManager.getWaypoint(i, fplnIdx);
 				if (waypoint && waypoint.ident !== '' && waypoint.ident !== 'USER' && waypoint.ident !== 'POI' && this.navMap.isLatLongInFrame(waypoint.infos.coordinates, 0.1)) {
-					if (waypoint.getSvgElement(this.navMap.index)) {
+					const svgElement = waypoint.getSvgElement(this.navMap.index);
+					if (svgElement) {
 						if (!this.navMap.mapElements.find(w => {
 							return (w instanceof SvgWaypointElement) && w.source.ident === waypoint.ident;
 						})) {
 							waypoint.isInFlightPlan = true;
 							waypoint.isInMissedAppr = this.flightPlanManager.getSegmentFromWaypoint(waypoint).type === SegmentType.Missed && activeIndex < missedSegment.offset;
-							this.navMap.mapElements.push(waypoint.getSvgElement(this.navMap.index));
+							const svgElement = waypoint.getSvgElement(this.navMap.index);
+							svgElement.showConstraints = this.showConstraints;
+							svgElement.legAltitude1 = waypoint.legAltitude1;
+							svgElement.legAltitude2 = waypoint.legAltitude2;
+							svgElement.legAltitudeDescription = waypoint.legAltitudeDescription;
+							this.navMap.mapElements.push(svgElement);
 						}
+					} else {
+						svgElement.showConstraints = this.showConstraints;
+						svgElement.legAltitude1 = waypoint.legAltitude1;
+						svgElement.legAltitude2 = waypoint.legAltitude2;
+						svgElement.legAltitudeDescription = waypoint.legAltitudeDescription;
 					}
 				}
 			}
@@ -1039,7 +1002,7 @@ class MapInstrument extends ISvgMapRootElement {
 	}
 
 	updateTodWaypoint() {
-		const todDistanceRemaining = SimVar.GetSimVarValue("L:WT_CJ4_TOD_REMAINING", "number");
+		const todDistanceRemaining = SimVar.GetSimVarValue('L:WT_CJ4_TOD_REMAINING', 'number');
 		if (todDistanceRemaining > 1) {
 			if (this._todWaypoint === undefined) {
 				// create it
@@ -1050,11 +1013,11 @@ class MapInstrument extends ISvgMapRootElement {
 				waypoint.infos = new WayPointInfo(this._instrument);
 				waypoint.getSvgElement(this.navMap.index);
 				this._todWaypoint = waypoint;
-				this._todWaypoint.ident = "T/D";
-				this._todWaypoint.infos.ident = "T/D";
+				this._todWaypoint.ident = 'T/D';
+				this._todWaypoint.infos.ident = 'T/D';
 			}
 
-			const todDist = SimVar.GetSimVarValue("L:WT_CJ4_TOD_DISTANCE", "number");
+			const todDist = SimVar.GetSimVarValue('L:WT_CJ4_TOD_DISTANCE', 'number');
 			const todLLA = this.flightPlanManager.getCoordinatesAtNMFromDestinationAlongFlightPlan(todDist, true);
 			this._todWaypoint.infos.coordinates = todLLA;
 		} else {

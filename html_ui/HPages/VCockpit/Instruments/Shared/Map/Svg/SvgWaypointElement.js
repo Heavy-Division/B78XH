@@ -292,6 +292,10 @@ class SvgWaypointTextElement extends SvgMapElement {
 		this._lastX = 0;
 		this._lastY = 0;
 		this._lastIsActiveWaypoint = false;
+		this._lastShowConstraints = false;
+		this._lastLegAltitude1 = undefined;
+		this._lastLegAltitude2 = undefined;
+		this._lastLegAltitudeDescription = 0;
 	}
 
 	id(map) {
@@ -318,6 +322,18 @@ class SvgWaypointTextElement extends SvgMapElement {
 	updateDraw(map) {
 		if (!this._label) {
 			this.createDraw(map);
+		}
+
+		const showConstraints = this.waypointElement.showConstraints;
+		const legAltitude1 = this.waypointElement.legAltitude1;
+		const legAltitude2 = this.waypointElement.legAltitude2;
+		const legAltitudeDescription = this.waypointElement.legAltitudeDescription;
+		if (showConstraints !== this._lastShowConstraints || legAltitude1 !== this._lastLegAltitude1 || legAltitude2 !== this._lastLegAltitude2 || legAltitudeDescription !== this._lastLegAltitudeDescription) {
+			this._refreshLabel(map, this.waypointElement.isActiveWaypoint());
+			this._lastShowConstraints = showConstraints;
+			this._lastLegAltitude1 = legAltitude1;
+			this._lastLegAltitude2 = legAltitude2;
+			this._lastLegAltitudeDescription = legAltitudeDescription;
 		}
 
 		const isActiveWaypoint = this.waypointElement.isActiveWaypoint();
@@ -357,7 +373,7 @@ class SvgWaypointTextElement extends SvgMapElement {
 		const c = document.createElement('canvas');
 		const ctx = c.getContext('2d');
 		ctx.font = fontSize + 'px ' + map.config.waypointLabelFontFamily;
-		this._textWidth = ctx.measureText(text).width;
+		this._textWidth = ctx.measureText('WWWWWWW').width;
 		this._textHeight = fontSize * 0.675;
 		let ident;
 		const activeWaypoint = FlightPlanManager.DEBUG_INSTANCE.getActiveWaypoint(false, true);
@@ -397,11 +413,11 @@ class SvgWaypointTextElement extends SvgMapElement {
 			this._label = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
 			this._label.id = labelId;
 			this._label.setAttribute('width', (this._textWidth + map.config.waypointLabelBackgroundPaddingLeft + map.config.waypointLabelBackgroundPaddingRight).toFixed(0) + 'px');
-			this._label.setAttribute('height', (this._textHeight + map.config.waypointLabelBackgroundPaddingTop + map.config.waypointLabelBackgroundPaddingBottom).toFixed(0) + 'px');
+			this._label.setAttribute('height', ((this._textHeight + map.config.waypointLabelBackgroundPaddingTop + map.config.waypointLabelBackgroundPaddingBottom) * 3).toFixed(0) + 'px');
 			canvas = document.createElement('canvas');
 			diffAndSetAttribute(canvas, 'class', 'labelCanvas');
 			diffAndSetAttribute(canvas, 'width', (this._textWidth + map.config.waypointLabelBackgroundPaddingLeft + map.config.waypointLabelBackgroundPaddingRight).toFixed(0) + 'px');
-			diffAndSetAttribute(canvas, 'height', (this._textHeight + map.config.waypointLabelBackgroundPaddingTop + map.config.waypointLabelBackgroundPaddingBottom).toFixed(0) + 'px');
+			diffAndSetAttribute(canvas, 'height', ((this._textHeight * 3) + (map.config.waypointLabelBackgroundPaddingTop * 3) + map.config.waypointLabelBackgroundPaddingBottom).toFixed(0) + 'px');
 			this._label.appendChild(canvas);
 
 		} else {
@@ -442,5 +458,37 @@ class SvgWaypointTextElement extends SvgMapElement {
 		context.font = fontSize + 'px ' + map.config.waypointLabelFontFamily;
 		context.lineWidth = map.config.waypointLabelStrokeWidth * 2;
 		context.fillText(text, map.config.waypointLabelBackgroundPaddingLeft, this._textHeight + map.config.waypointLabelBackgroundPaddingTop);
+		if (this.waypointElement.showConstraints === true) {
+			if (this.waypointElement.legAltitudeDescription > 0) {
+				let a = undefined;
+				let b = undefined;
+				if (this.waypointElement.legAltitudeDescription == 1) {
+					a = this.waypointElement.legAltitude1.toFixed(0) >= 18000 ? 'FL' + this.waypointElement.legAltitude1.toFixed(0) / 100
+						: this.waypointElement.legAltitude1.toFixed(0);
+				} else if (this.waypointElement.legAltitudeDescription == 2) {
+					a = this.waypointElement.legAltitude1.toFixed(0) >= 18000 ? 'FL' + this.waypointElement.legAltitude1.toFixed(0) / 100 + 'A'
+						: this.waypointElement.legAltitude1.toFixed(0) + 'A';
+				} else if (this.waypointElement.legAltitudeDescription == 3) {
+					a = this.waypointElement.legAltitude1.toFixed(0) >= 18000 ? 'FL' + this.waypointElement.legAltitude1.toFixed(0) / 100 + 'B'
+						: this.waypointElement.legAltitude1.toFixed(0) + 'B';
+				} else if (this.waypointElement.legAltitudeDescription == 4) {
+					const altitudeConstraintA = this.waypointElement.legAltitude2.toFixed(0) >= 18000 ? 'FL' + this.waypointElement.legAltitude2.toFixed(0) / 100 + 'A'
+						: this.waypointElement.legAltitude2.toFixed(0) + 'A';
+					const altitudeConstraintB = this.waypointElement.legAltitude1.toFixed(0) >= 18000 ? 'FL' + this.waypointElement.legAltitude1.toFixed(0) / 100 + 'B'
+						: this.waypointElement.legAltitude1.toFixed(0) + 'B';
+					a = altitudeConstraintA;
+					b = altitudeConstraintB;
+				}
+
+				if (b !== undefined && a !== undefined) {
+					context.fillText(b, map.config.waypointLabelBackgroundPaddingLeft, (this._textHeight * 2) + (map.config.waypointLabelBackgroundPaddingTop * 2));
+					context.fillText(a, map.config.waypointLabelBackgroundPaddingLeft, (this._textHeight * 3) + (map.config.waypointLabelBackgroundPaddingTop * 3));
+				} else {
+					if (a !== undefined) {
+						context.fillText(a, map.config.waypointLabelBackgroundPaddingLeft, (this._textHeight * 2) + (map.config.waypointLabelBackgroundPaddingTop * 2));
+					}
+				}
+			}
+		}
 	}
 }

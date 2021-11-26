@@ -1,5 +1,5 @@
 ﻿{
-  "waypointLabelFontSize": 20,
+  "waypointLabelFontSize": 15,
   "waypointLabelFontFamily": "Consolas",
   "waypointLabelColor": "black",
   "waypointLabelStrokeColor": "#black",
@@ -117,4 +117,3 @@
 
 
 
-  
