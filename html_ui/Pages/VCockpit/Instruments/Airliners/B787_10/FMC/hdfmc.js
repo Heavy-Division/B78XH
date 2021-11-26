@@ -12331,25 +12331,34 @@
                             const waypoints = this._fmc.flightPlanManager.getWaypoints();
                             const current = waypoints[wpIdx];
                             const currentIn = current.infos.airwayIn;
-                            const currentOut = current.infos.airwayOut;
-                            let numberOfWaypointsToDelete = 0;
-                            for (let i = wpIdx - 1; i > 0; i--) {
-                                if (waypoints[i].infos.airwayIn === currentIn || waypoints[i].infos.airwayOut === currentOut) {
-                                    numberOfWaypointsToDelete++;
+                            if (currentIn !== undefined) {
+                                const currentOut = current.infos.airwayOut;
+                                let numberOfWaypointsToDelete = 0;
+                                for (let i = wpIdx - 1; i > 0; i--) {
+                                    if (waypoints[i].infos.airwayIn === currentIn || waypoints[i].infos.airwayOut === currentOut) {
+                                        numberOfWaypointsToDelete++;
+                                    }
+                                    else {
+                                        break;
+                                    }
                                 }
-                                else {
-                                    break;
+                                const startIndex = wpIdx - numberOfWaypointsToDelete;
+                                for (let i = 0; i <= numberOfWaypointsToDelete; i++) {
+                                    const last = i === numberOfWaypointsToDelete;
+                                    this._fmc.removeWaypoint(startIndex, () => {
+                                        if (last) {
+                                            this._fmc.activateRoute(false, () => {
+                                                this.update(true);
+                                            });
+                                        }
+                                    });
                                 }
                             }
-                            const startIndex = wpIdx - numberOfWaypointsToDelete;
-                            for (let i = 0; i <= numberOfWaypointsToDelete; i++) {
-                                const last = i === numberOfWaypointsToDelete;
-                                this._fmc.removeWaypoint(startIndex, () => {
-                                    if (last) {
-                                        this._fmc.activateRoute(false, () => {
-                                            this.update(true);
-                                        });
-                                    }
+                            else {
+                                this._fmc.removeWaypoint(wpIdx, () => {
+                                    this._fmc.activateRoute(false, () => {
+                                        this.update(true);
+                                    });
                                 });
                             }
                         });
