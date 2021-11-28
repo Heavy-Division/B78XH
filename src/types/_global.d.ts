@@ -1604,10 +1604,6 @@ declare class FlightPlanSegment {
 declare let SpeedType: any;
 declare let SpeedPhase: any;
 
-declare class B787_10_FMC_SelectWptPage {
-	public static ShowPage(fmc: any, waypoints: any[], callback);
-}
-
 declare class SimBrief {
 	/**
 	 * SimBrief credentials

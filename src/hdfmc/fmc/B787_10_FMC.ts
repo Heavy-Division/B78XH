@@ -15,6 +15,7 @@ import {B787_10_FMC_IdentPage} from './B787_10_FMC_IdentPage';
 import * as HDSDK from './../../hdsdk/index';
 import {ConsoleHandler, HDLogger, SocketIOHandler} from '../../hdlogger';
 import {Level} from '../../hdlogger/levels/level';
+import {B787_10_FMC_SelectWptPage} from './B787_10_FMC_SelectWptPage';
 
 export class B787_10_FMC extends Boeing_FMC {
 	protected _timeDivs: NodeListOf<HTMLElement>;

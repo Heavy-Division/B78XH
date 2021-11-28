@@ -11,6 +11,7 @@ import {BreakNatsParserMiddleware} from '../../hdsdk/integrations/SimBrief/Parse
 import {HDNavlog} from '../../hdsdk/integrations/SimBrief/HDNavlog/HDNavlog';
 import {HDLogger} from '../../hdlogger';
 import {Level} from '../../hdlogger/levels/level';
+import {B787_10_FMC_SelectWptPage} from './B787_10_FMC_SelectWptPage';
 
 export class B787_10_FMC_RouteRequestPage {
 	private readonly fmc: B787_10_FMC;
