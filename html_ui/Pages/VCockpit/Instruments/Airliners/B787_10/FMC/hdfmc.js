@@ -7734,7 +7734,7 @@
     class SeparatorRendererMiddleware {
         constructor() {
             this.separator = '__FMCSEPARATOR';
-            this.replace = '---------------------------------------';
+            this.replace = '---------------------------------------------';
         }
         apply(value) {
             return this.applyReplace(value);
@@ -11624,7 +11624,7 @@
             }
             let separator = '__FMCSEPARATOR';
             if (!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.takeOff.completed) {
-                separator = '--------------------------------PRE-FLT';
+                separator = '--------------------------------------PRE-FLT';
             }
             fmc._renderer.renderTitle('TAKEOFF REF');
             fmc._renderer.renderPages(1, 2);
@@ -11639,7 +11639,7 @@
                 [runwayCell + '/----', '', grWtCell, ''],
                 ['TAKEOFF DATA', ''],
                 ['<REQUEST', '', ''],
-                [separator],
+                ['', separator, ''],
                 ['<INDEX', 'THRUST LIM>']
             ]);
             if (fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished) {
@@ -11862,7 +11862,7 @@
             }
             let separator = '__FMCSEPARATOR';
             if (!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.thrustLim.completed) {
-                separator = '--------------------------------PRE-FLT';
+                separator = '--------------------------------------PRE-FLT';
             }
             fmc._renderer.renderTitle('THRUST LIM');
             fmc._renderer.render([
@@ -11876,7 +11876,7 @@
                 ['<-20%', (thrustTOMode === 2 ? '<SEL>' : ''), thrustClimbModeCell2, 'CLB 2>'],
                 [''],
                 [''],
-                [separator],
+                ['', separator, ''],
                 ['<INDEX', 'TAKEOFF>']
             ]);
             /**
@@ -11982,7 +11982,7 @@
                 let stepSizeCell = 'RVSM';
                 let separator = '__FMCSEPARATOR';
                 if (!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.perfInit.completed) {
-                    separator = '--------------------------------PRE-FLT';
+                    separator = '--------------------------------------PRE-FLT';
                 }
                 fmc._renderer.renderTitle('PERF INIT');
                 fmc._renderer.render([
@@ -11996,7 +11996,7 @@
                     [fmc.makeSettable(reservesCell), fmc.makeSettable(crzCGCell)],
                     ['DATA LINK', 'STEP SIZE'],
                     ['NO COMM', stepSizeCell],
-                    [separator],
+                    ['', separator, ''],
                     ['<INDEX', 'THRUST LIM>']
                 ]);
                 if (fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished) {
@@ -12189,7 +12189,7 @@
                 ['<REQUEST', this._coRouteCell],
                 ['ROUTE'],
                 ['<REPORT', 'RTE COPY>'],
-                ['ROUTE ---------------------------------'],
+                ['', 'ROUTE ---------------------------------------', ''],
                 ['<PRINT', 'ALTN>'],
                 [''],
                 [this._lsk6Field, this._activateCell]
@@ -12921,7 +12921,7 @@
                 [fmc.fmcManVersion, 'VS1001'],
                 ['OPC'],
                 [fmc.fmcBakVersion, ''],
-                ['__FMCSEPARATOR'],
+                ['', '__FMCSEPARATOR', ''],
                 ['<INDEX', 'POS INIT>']
             ]);
             if (fmc.urlConfig.index == 1) {
@@ -13755,7 +13755,7 @@
             this.fmc._renderer.render([
                 ['ETA', 'WAYPOINT', 'FUEL', 'WIND'],
                 ...rows,
-                ['------------------------------WIND DATA'],
+                ['', '-------------------------------------WIND DATA', ''],
                 ['<LEGS', 'REQUEST>']
             ]);
             this.fmc._renderer.lsk(6).event = () => {
@@ -14002,7 +14002,7 @@
             this._fmc._renderer.renderPages(this._currentPage, Math.max(1, this._pageCount));
             this._fmc._renderer.render([
                 ...this._rows,
-                ['', `${this._isAddingHold ? '------------------HOLD AT-----------------' : holdExiting ? '----------------EXIT ARMED----------------' : '__FMCSEPARATOR'}`, ''],
+                ['', `${this._isAddingHold ? '--------------------HOLD AT-------------------' : holdExiting ? '------------------EXIT ARMED------------------' : '__FMCSEPARATOR'}`, ''],
                 [`${this._isAddingHold ? this._fmc.makeSettable('□□□□□') : holdExiting ? '<CANCEL EXIT' : holdActive ? '<EXIT HOLD' : this._lsk6Field}`, this._rsk6Field]
             ]);
         }

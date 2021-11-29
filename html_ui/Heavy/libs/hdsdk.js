@@ -1405,7 +1405,7 @@
     class SeparatorRendererMiddleware {
         constructor() {
             this.separator = '__FMCSEPARATOR';
-            this.replace = '---------------------------------------';
+            this.replace = '---------------------------------------------';
         }
         apply(value) {
             return this.applyReplace(value);
