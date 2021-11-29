@@ -26,6 +26,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: "Heavy";
+    src: url("/Heavy/fonts/Heavy787FMC.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+}
+
 #Mainframe {
     width: 100%;
     height: 100%;
