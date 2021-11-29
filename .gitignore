@@ -12,3 +12,4 @@ todo.yml
 /src/dist/
 /src/build
 /src/node_modules
+/html_ui/Pages/VCockpit/Core
