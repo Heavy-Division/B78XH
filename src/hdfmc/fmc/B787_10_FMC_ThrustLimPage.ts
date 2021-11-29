@@ -129,7 +129,7 @@ export class B787_10_FMC_ThrustLimPage {
 
 		let separator = '__FMCSEPARATOR';
 		if (!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.thrustLim.completed) {
-			separator = '--------------------------------PRE-FLT';
+			separator = '--------------------------------------PRE-FLT';
 		}
 
 
@@ -145,7 +145,7 @@ export class B787_10_FMC_ThrustLimPage {
 			['<-20%', (thrustTOMode === 2 ? '<SEL>' : ''), thrustClimbModeCell2, 'CLB 2>'],
 			[''],
 			[''], //['<TO-B'],
-			[separator],
+			['', separator, ''],
 			['<INDEX', 'TAKEOFF>']
 		]);
 

@@ -33,7 +33,7 @@ export class B787_10_FMC_IdentPage {
 			[fmc.fmcManVersion, 'VS1001'],
 			['OPC'],
 			[fmc.fmcBakVersion, ''],
-			['__FMCSEPARATOR'],
+			['', '__FMCSEPARATOR', ''],
 			['<INDEX', 'POS INIT>']
 		]);
 

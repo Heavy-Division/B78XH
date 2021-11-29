@@ -92,7 +92,7 @@ export class B787_10_FMC_PerfInitPage {
 			let separator = '__FMCSEPARATOR';
 
 			if (!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.perfInit.completed) {
-				separator = '--------------------------------PRE-FLT';
+				separator = '--------------------------------------PRE-FLT';
 			}
 
 			fmc._renderer.renderTitle('PERF INIT');
@@ -108,7 +108,7 @@ export class B787_10_FMC_PerfInitPage {
 				[fmc.makeSettable(reservesCell), fmc.makeSettable(crzCGCell)],
 				['DATA LINK', 'STEP SIZE'],
 				['NO COMM', stepSizeCell],
-				[separator],
+				['', separator, ''],
 				['<INDEX', 'THRUST LIM>']
 			]);
 

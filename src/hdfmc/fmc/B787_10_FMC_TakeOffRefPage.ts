@@ -166,7 +166,7 @@ export class B787_10_FMC_TakeOffRefPage {
 
 		let separator = '__FMCSEPARATOR';
 		if (!fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished && !fmc.dataHolder.preFlightDataHolder.takeOff.completed) {
-			separator = '--------------------------------PRE-FLT';
+			separator = '--------------------------------------PRE-FLT';
 		}
 
 
@@ -183,7 +183,7 @@ export class B787_10_FMC_TakeOffRefPage {
 			[runwayCell + '/----', '', grWtCell, ''],
 			['TAKEOFF DATA', ''],
 			['<REQUEST', '', ''],
-			[separator],
+			['', separator, ''],
 			['<INDEX', 'THRUST LIM>']
 		]);
 

@@ -221,7 +221,7 @@ export class B787_10_FMC_RoutePage {
 			['<REQUEST', this._coRouteCell],
 			['ROUTE'],
 			['<REPORT', 'RTE COPY>'],
-			['ROUTE ---------------------------------'],
+			['', 'ROUTE ---------------------------------------', ''],
 			['<PRINT', 'ALTN>'],
 			[''],
 			[this._lsk6Field, this._activateCell]

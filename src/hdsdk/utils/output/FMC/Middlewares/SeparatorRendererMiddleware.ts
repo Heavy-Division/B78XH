@@ -3,7 +3,7 @@ import {IRendererMiddleware} from '../../IRendererMiddleware';
 export class SeparatorRendererMiddleware implements IRendererMiddleware {
 
 	private readonly separator = '__FMCSEPARATOR';
-	private readonly replace = '---------------------------------------';
+	private readonly replace = '---------------------------------------------';
 
 	public apply(value: any): any {
 		return this.applyReplace(value);

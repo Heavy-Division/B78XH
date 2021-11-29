@@ -125,7 +125,7 @@ export class B787_10_FMC_RouteDataPage {
 		this.fmc._renderer.render([
 			['ETA', 'WAYPOINT', 'FUEL', 'WIND'],
 			...rows,
-			['------------------------------WIND DATA'],
+			['', '-------------------------------------WIND DATA', ''],
 			['<LEGS', 'REQUEST>']
 		]);
 
