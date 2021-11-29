@@ -690,9 +690,10 @@ export class HDNavlog {
 	setInitialCruiseAltitude(cruiseAltitude: number): Promise<boolean> {
 		const cruiseFlightLevel = Math.round(cruiseAltitude / 100);
 		HDLogger.log('Setting CruiseAltitude to: ' + cruiseAltitude, Level.debug);
-		return SimVar.SetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number', cruiseFlightLevel)
+		return SimVar.SetSimVarValue('L:AIRLINER_CRUISE_ALTITUDE', 'number', cruiseAltitude)
 		.then(() => {
 			this.fmc._cruiseFlightLevel = cruiseFlightLevel;
+			HDLogger.log('cruiseFlightLevel set to: ' + cruiseFlightLevel, Level.debug);
 			HDLogger.log('CruiseAltitude set to: ' + cruiseAltitude, Level.debug);
 			return true;
 		}).catch((error) => {
