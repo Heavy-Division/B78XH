@@ -67,9 +67,11 @@ export class SelectKey implements IFMCKey {
 			this.hoverElement.style.opacity = '0';
 		});
 
-		this.hoverElement.addEventListener('mouseup', () => {
-			if (this._event) {
-				this.event();
+		this.hoverElement.addEventListener('mouseup', (event) => {
+			if (event.button === 0) {
+				if (this._event) {
+					this.event();
+				}
 			}
 		});
 	}

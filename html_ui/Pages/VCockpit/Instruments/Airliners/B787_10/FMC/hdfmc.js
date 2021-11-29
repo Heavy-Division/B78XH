@@ -7206,9 +7206,11 @@
             this.hoverElement.addEventListener('mouseleave', () => {
                 this.hoverElement.style.opacity = '0';
             });
-            this.hoverElement.addEventListener('mouseup', () => {
-                if (this._event) {
-                    this.event();
+            this.hoverElement.addEventListener('mouseup', (event) => {
+                if (event.button === 0) {
+                    if (this._event) {
+                        this.event();
+                    }
                 }
             });
         }
@@ -7296,9 +7298,11 @@
             return this._event;
         }
         hookupKeyEvent() {
-            this.borderElement.addEventListener('mouseup', () => {
-                if (this.event) {
-                    this.event();
+            this.borderElement.addEventListener('mouseup', (event) => {
+                if (event.button === 0) {
+                    if (this.event) {
+                        this.event();
+                    }
                 }
             });
         }

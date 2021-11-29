@@ -30,9 +30,11 @@ export class MainKey {
 	}
 
 	private hookupKeyEvent() {
-		this.borderElement.addEventListener('mouseup', () => {
-			if (this.event) {
-				this.event();
+		this.borderElement.addEventListener('mouseup', (event) => {
+			if (event.button === 0) {
+				if (this.event) {
+					this.event();
+				}
 			}
 		});
 	}
