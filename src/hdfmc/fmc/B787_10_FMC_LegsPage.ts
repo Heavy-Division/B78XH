@@ -151,7 +151,7 @@ export class B787_10_FMC_LegsPage {
 				if (isActWpt) {
 					if (waypoint.fix.icao === '$DISCO') {
 						this._rows[2 * i] = [' THEN'];
-						this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□') + ' ----- ROUTE DISCONTINUITY ----'];
+						this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□'), ' ---- ROUTE DISCONTINUITY -----------'];
 					} else if (waypoint.fix.hasHold) {
 						this._rows[2 * i] = [' HOLD AT'];
 						this._rows[2 * i + 1] = [`${waypoint.fix.ident != '' ? this._fmc.makeSettable(waypoint.fix.ident, 100) : this._fmc.makeSettable('USR')}`];
@@ -162,7 +162,7 @@ export class B787_10_FMC_LegsPage {
 				} else {
 					if (waypoint.fix.icao === '$DISCO') {
 						this._rows[2 * i] = [' THEN'];
-						this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□') + ' ----- ROUTE DISCONTINUITY ----'];
+						this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□'), ' ---- ROUTE DISCONTINUITY -----------'];
 						;
 					} else if (waypoint.fix.hasHold) {
 						this._rows[2 * i] = [' HOLD AT'];

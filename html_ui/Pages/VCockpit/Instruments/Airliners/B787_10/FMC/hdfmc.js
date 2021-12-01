@@ -13864,7 +13864,7 @@
                     if (isActWpt) {
                         if (waypoint.fix.icao === '$DISCO') {
                             this._rows[2 * i] = [' THEN'];
-                            this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□') + ' ----- ROUTE DISCONTINUITY ----'];
+                            this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□'), ' ---- ROUTE DISCONTINUITY -----------'];
                         }
                         else if (waypoint.fix.hasHold) {
                             this._rows[2 * i] = [' HOLD AT'];
@@ -13878,7 +13878,7 @@
                     else {
                         if (waypoint.fix.icao === '$DISCO') {
                             this._rows[2 * i] = [' THEN'];
-                            this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□') + ' ----- ROUTE DISCONTINUITY ----'];
+                            this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□'), ' ---- ROUTE DISCONTINUITY -----------'];
                         }
                         else if (waypoint.fix.hasHold) {
                             this._rows[2 * i] = [' HOLD AT'];
