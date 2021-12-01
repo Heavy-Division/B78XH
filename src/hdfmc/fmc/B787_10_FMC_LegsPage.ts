@@ -222,7 +222,7 @@ export class B787_10_FMC_LegsPage {
 
 					// (SegmentType.Enroute === waypointSegment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + '/' + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix))
 
-					this._rows[2 * i + 1][1] = this._fmc.makeSettable(row, 214);
+					this._rows[2 * i + 1][1] = this._fmc.makeSettable(row, 200);
 				}
 			}
 		}
