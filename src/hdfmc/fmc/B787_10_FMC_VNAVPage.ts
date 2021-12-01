@@ -350,7 +350,7 @@ export class B787_10_FMC_VNAVPage {
 			[speedTransitionCell, transitionAltitudeCell],
 			['SPD RESTR'],
 			[speedRestrictionCell],
-			['__FMCSEPARATOR'],
+			['', '__FMCSEPARATOR', ''],
 			[econPromptCell, 'ENG OUT>'],
 			[],
 			[]
@@ -539,7 +539,7 @@ export class B787_10_FMC_VNAVPage {
 			[n1Cell],
 			['STEP', 'OPT', 'MAX', 'RECMD'],
 			[],
-			['__FMCSEPARATOR'],
+			['', '__FMCSEPARATOR', ''],
 			[econPromptCell, ''],
 			[''],
 			['', 'LRC>']

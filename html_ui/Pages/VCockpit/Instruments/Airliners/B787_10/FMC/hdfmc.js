@@ -15244,7 +15244,7 @@
                 [speedTransitionCell, transitionAltitudeCell],
                 ['SPD RESTR'],
                 [speedRestrictionCell],
-                ['__FMCSEPARATOR'],
+                ['', '__FMCSEPARATOR', ''],
                 [econPromptCell, 'ENG OUT>'],
                 [],
                 []
@@ -15405,7 +15405,7 @@
                 [n1Cell],
                 ['STEP', 'OPT', 'MAX', 'RECMD'],
                 [],
-                ['__FMCSEPARATOR'],
+                ['', '__FMCSEPARATOR', ''],
                 [econPromptCell, ''],
                 [''],
                 ['', 'LRC>']
