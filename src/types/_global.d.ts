@@ -1453,18 +1453,6 @@ declare class HoldsDirector {
 	handleInHold(planeState: AircraftState): void;
 
 	/**
-	 * Activates the waypoint alert if close enough to the provided fix.
-	 * @param {AircraftState} planeState The current aircraft state.
-	 * @param {LatLongAlt} fix The fix to alert for.
-	 */
-	alertIfClose(planeState: AircraftState, fix: LatLongAlt): void;
-
-	/**
-	 * Cancels the waypoint alert.
-	 */
-	cancelAlert(): void;
-
-	/**
 	 * Handles the exiting state.
 	 * @param {AircraftState} planeState The current aircraft state.
 	 */
