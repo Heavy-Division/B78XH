@@ -40,9 +40,6 @@ class LNavDirector {
 		/** An instance of the localizer director. */
 		this.locDirector = new LocDirector(navModeSelector);
 
-		/** The current nav sensitivity. */
-		this.currentNavSensitivity = NavSensitivity.NORMAL;
-
 		/** The previous crosstrack deviation. */
 		this.previousDeviation = 0;
 	}
@@ -173,8 +170,6 @@ class LNavDirector {
 			const navSensitivity = this.getNavSensitivity(planeState.position);
 			SimVar.SetSimVarValue('L:WT_NAV_SENSITIVITY', 'number', navSensitivity);
 
-			this.postDisplayedNavSensitivity(navSensitivity);
-
 			const navSensitivityScalar = this.getNavSensitivityScalar(planeState.position, navSensitivity);
 			SimVar.SetSimVarValue('L:WT_NAV_SENSITIVITY_SCALAR', 'number', navSensitivityScalar);
 
@@ -203,8 +198,6 @@ class LNavDirector {
 		const dtk = AutopilotMath.desiredTrack(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState.position);
 		const distanceToActive = planeLatLon.distanceTo(activeLatLon) / 1852;
 
-		this.alertIfClose(planeState, distanceToActive);
-
 		if (AutopilotMath.isAbeam(dtk, planeState.position, activeWaypoint.infos.coordinates)) {
 			this.sequenceToNextWaypoint(planeState, activeWaypoint);
 			return;
@@ -214,8 +207,7 @@ class LNavDirector {
 
 			const anticipationDistance = this.getAnticipationDistance(planeState, Avionics.Utils.diffAngle(planeToActiveBearing, nextStartTrack));
 			if (!nextWaypoint || !nextWaypoint.isFlyover) {
-				this.alertIfClose(planeState, distanceToActive, anticipationDistance);
-
+				
 				if (distanceToActive < anticipationDistance && !nextWaypoint.isFlyover) {
 					this.sequenceToNextWaypoint(planeState, activeWaypoint);
 					return;
@@ -270,22 +262,6 @@ class LNavDirector {
 	 */
 	canSequence(activeWaypoint) {
 		return activeWaypoint && !(activeWaypoint.endsInDiscontinuity || activeWaypoint.isRunway);
-	}
-
-	/**
-	 * Alerts the waypoint will be sequenced if within the 5 second sequencing
-	 * threshold.
-	 * @param {AircraftState} planeState The current aircraft state.
-	 * @param {number} distanceToActive The current distance to the active waypoint.
-	 * @param {number} sequenceDistance The distance where LNAV will sequence to the next waypoint.
-	 */
-	alertIfClose(planeState, distanceToActive, sequenceDistance = 0) {
-		const fiveSecondDistance = (planeState.groundSpeed / 3600) * 5;
-		if (distanceToActive < sequenceDistance + fiveSecondDistance && this.state !== LNavState.IN_DISCONTINUITY && this.sequencingMode !== FlightPlanSequencing.INHIBIT) {
-			SimVar.SetSimVarValue('L:WT_CJ4_WPT_ALERT', 'number', 1);
-		} else {
-			SimVar.SetSimVarValue('L:WT_CJ4_WPT_ALERT', 'number', 0);
-		}
 	}
 
 	/**
@@ -420,31 +396,6 @@ class LNavDirector {
 	 */
 	setInhibitSequencing() {
 		this.sequencingMode = FlightPlanSequencing.INHIBIT;
-	}
-
-	/**
-	 * Posts the correct nav sensitivity to the displays.
-	 * @param {number} navSensitivity The current nav sensitivity.
-	 */
-	postDisplayedNavSensitivity(navSensitivity) {
-		if (navSensitivity !== this.currentNavSensitivity) {
-			this.currentNavSensitivity = navSensitivity;
-
-			switch (this.currentNavSensitivity) {
-				case NavSensitivity.TERMINAL:
-					MessageService.getInstance().post(FMS_MESSAGE_ID.TERM, () => this.currentNavSensitivity !== NavSensitivity.TERMINAL);
-					break;
-				case NavSensitivity.TERMINALLPV:
-					MessageService.getInstance().post(FMS_MESSAGE_ID.TERM_LPV, () => this.currentNavSensitivity !== NavSensitivity.TERMINALLPV);
-					break;
-				case NavSensitivity.APPROACH:
-					MessageService.getInstance().post(FMS_MESSAGE_ID.APPR, () => this.currentNavSensitivity !== NavSensitivity.APPROACH);
-					break;
-				case NavSensitivity.APPROACHLPV:
-					MessageService.getInstance().post(FMS_MESSAGE_ID.APPR_LPV, () => this.currentNavSensitivity !== NavSensitivity.APPROACHLPV);
-					break;
-			}
-		}
 	}
 
 	/**
