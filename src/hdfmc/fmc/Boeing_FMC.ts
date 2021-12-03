@@ -389,7 +389,7 @@ export class Boeing_FMC extends BaseFMC {
 		} else if (_event.indexOf('AP_HEADING_SEL') != -1) {
 			this._navModeSelector.onNavChangedEvent('HDG_SEL_PRESSED');
 		} else if (_event.indexOf('AP_SPD') != -1) {
-			if (this.aircraftType === Aircraft.AS01B) {
+			if (this.aircraftType == Aircraft.AS01B) {
 				if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
 					this.activateSPD();
 				} else {
