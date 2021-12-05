@@ -8,6 +8,7 @@ const test = require('./__gulpfiles/test');
 /**
  * Global
  */
+const x = '';
 const merge = require('deepmerge');
 const path = require('path');
 /**
