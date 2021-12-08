@@ -2,20 +2,54 @@ import {SimVarValueUnit} from '../../hdsdk/enums/SimVarValueUnit';
 import {Queue} from '../../hdsdk';
 
 export class MCPDirector {
+	public get armedLateralMode(): ArmedMode {
+		return this._armedLateralMode;
+	}
+
+	public set armedLateralMode(value: ArmedMode) {
+		this._armedLateralMode = (value ? value : new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined));
+	}
+
+	public get armedVerticalMode(): ArmedMode {
+		return this._armedVerticalMode;
+	}
+
+	public set armedVerticalMode(value: ArmedMode) {
+		this._armedVerticalMode = (value ? value : new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined));
+	}
+
+	public get armedSpeedMode(): ArmedMode {
+		return this._armedSpeedMode;
+	}
+
+	public set armedSpeedMode(value: ArmedMode) {
+		this._armedSpeedMode = (value ? value : new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined));
+	}
+
+	public get armedThrustMode(): ArmedMode {
+		return this._armedThrustMode;
+	}
+
+	public set armedThrustMode(value: ArmedMode) {
+		this._armedThrustMode = (value ? value : new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined));
+	}
 
 	private _pendingQueue = new Queue();
-	private _activatedModes = new Map();
-	private _armedModes = new Map();
 
-	private _armedLateralMode: MCPLateralMode = undefined;
-	private _armedVerticalMode: MCPVerticalMode = undefined;
-	private _armedSpeedMode: MCPSpeedMode = undefined;
-	private _armedThrustMode: MCPThrustMode = undefined;
+	private _armedLateralMode: ArmedMode = new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined);
+	private _armedVerticalMode: ArmedMode = new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined);
+	private _armedSpeedMode: ArmedMode = new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined);
+	private _armedThrustMode: ArmedMode = new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined);
 
-	private _activeLateralMode: MCPLateralMode = undefined;
-	private _activeVerticalMode: MCPVerticalMode = undefined;
-	private _activeSpeedMode: MCPSpeedMode = undefined;
-	private _activeThrustMode: MCPThrustMode = undefined;
+	private _activatedLateralMode: MCPLateralMode = undefined;
+	private _activatedVerticalMode: MCPVerticalMode = undefined;
+	private _activatedSpeedMode: MCPSpeedMode = undefined;
+	/**
+	 * Idea: Use MAP for ThrustMode because theoretically it is possible to have more then one ThrustMode enabled.
+	 * @type {MCPThrustMode}
+	 * @private
+	 */
+	private _activatedThrustMode: MCPThrustMode = undefined;
 
 	private headingHoldInterval: number = undefined;
 
@@ -25,20 +59,33 @@ export class MCPDirector {
 	 */
 	_forceNextAltitudeUpdate = true;
 
-	processPending() {
-		for (const value of this._armedModes.values()) {
-			this._pendingQueue.enqueue(value.getPendingMode());
+	public processPending(): void {
+		for (const mode of [this._armedLateralMode, this._armedVerticalMode, this._armedSpeedMode, this._armedThrustMode]) {
+			if (mode.mode !== MCPDummyMode.DUMMY) {
+				this._pendingQueue.enqueue(mode.getPendingMode());
+			}
 		}
 
 		for (; this._pendingQueue.length > 0;) {
 			const pending = this._pendingQueue.dequeue();
 			if (pending.check()) {
-				this._armedModes.delete(pending.mode);
-				this._activatedModes.set(pending.mode, true);
-
-				console.log('pending');
-				for (const mode of this._activatedModes.keys()) {
-					console.log(mode);
+				switch (pending.modeType) {
+					case MCPModeType.LATERAL:
+						this.armedLateralMode = undefined;
+						this._activatedLateralMode = pending.mode;
+						break;
+					case MCPModeType.VERTICAL:
+						this.armedVerticalMode = undefined;
+						this._activatedVerticalMode = pending.mode;
+						break;
+					case MCPModeType.SPEED:
+						this.armedSpeedMode = undefined;
+						this._activatedSpeedMode = pending.mode;
+						break;
+					case MCPModeType.THRUST:
+						this.armedThrustMode = undefined;
+						this._activatedThrustMode = pending.mode;
+						break;
 				}
 			}
 		}
@@ -53,12 +100,12 @@ export class MCPDirector {
 			return Simplane.getAltitudeAboveGround() > 400;
 		};
 
-		if (this._armedModes.has(MCPMode.SPEED)) {
+		if (this._armedThrustMode.mode === MCPThrustMode.SPEED) {
 			this.deactivateSpeed();
-			this._armedModes.delete(MCPMode.SPEED);
+			this.armedThrustMode = undefined;
 		} else {
 			SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', SimVarValueUnit.Number, 1);
-			this._armedModes.set(MCPMode.SPEED, new ArmedMode(MCPMode.SPEED, condition, this.activateSpeed.bind(this)));
+			this._armedThrustMode = new ArmedMode(MCPThrustMode.SPEED, MCPModeType.THRUST, condition, this.activateSpeed.bind(this));
 		}
 	}
 
@@ -83,13 +130,13 @@ export class MCPDirector {
 			SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_OFF', SimVarValueUnit.Number, 1);
 		}
 
-		if (!this._activatedModes.has(MCPMode.FLCH)) {
+		if (this._activatedVerticalMode !== MCPVerticalMode.FLCH) {
 			this.activateSpeedHoldMode();
 		}
 
 		Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
 
-		let stayManagedSpeed = (this._armedModes.has(MCPMode.VNAV) || this._activatedModes.has(MCPMode.VNAV)) && !this._activatedModes.has(MCPMode.SPEED_INTERVENTION);
+		let stayManagedSpeed = (this._armedVerticalMode.mode !== MCPVerticalMode.VNAV || this._activatedVerticalMode !== MCPVerticalMode.VNAV) && this._activatedSpeedMode !== MCPSpeedMode.INTERVENTION;
 		if (!stayManagedSpeed) {
 			SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
 		}
@@ -108,18 +155,18 @@ export class MCPDirector {
 	}
 
 	public toggleSpeedIntervention() {
-		if (this._activatedModes.has(MCPMode.SPEED_INTERVENTION)) {
+		if (this._activatedSpeedMode === MCPSpeedMode.INTERVENTION) {
 			this.deactivateSpeedIntervention();
 		} else {
 			const condition = () => {
-				return this._activatedModes.has(MCPMode.VNAV);
+				return this._activatedVerticalMode === MCPVerticalMode.VNAV;
 			};
-			this._pendingQueue.enqueue(new PendingMode(MCPMode.SPEED_INTERVENTION, condition, this.activateSpeedIntervention.bind(this)));
+			this._pendingQueue.enqueue(new PendingMode(MCPSpeedMode.INTERVENTION, MCPModeType.SPEED, condition, this.activateSpeedIntervention.bind(this)));
 		}
 	}
 
 	public activateSpeedIntervention(): void {
-		if (!this._activatedModes.has(MCPMode.VNAV)) {
+		if (this._activatedVerticalMode !== MCPVerticalMode.VNAV) {
 			return;
 		}
 
@@ -132,25 +179,25 @@ export class MCPDirector {
 		}
 		SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', SimVarValueUnit.Number, 1);
 		SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
-		if (this._activatedModes.has(MCPMode.SPEED)) {
+		if (this._activatedThrustMode === MCPThrustMode.SPEED) {
 			return;
 		}
-		if (!this._armedModes.has(MCPMode.SPEED)) {
+		if (this._armedThrustMode.mode !== MCPThrustMode.SPEED) {
 			this.armSpeed();
 		}
 	}
 
 	public deactivateSpeedIntervention(): void {
-		this._activatedModes.delete(MCPMode.SPEED_INTERVENTION);
+		this._activatedSpeedMode = undefined;
 		SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', SimVarValueUnit.Number, 0);
-		if (this._activatedModes.has(MCPMode.VNAV)) {
+		if (this._activatedVerticalMode === MCPVerticalMode.VNAV) {
 			SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
 		}
 	}
 
 	public armLNAV(): void {
-		if (this._armedModes.has(MCPMode.LNAV)) {
-			this._armedModes.delete(MCPMode.LNAV);
+		if (this._armedLateralMode.mode === MCPLateralMode.LNAV) {
+			this.armedLateralMode = undefined;
 			this.deactivateLNAV();
 		} else {
 			/**
@@ -166,7 +213,7 @@ export class MCPDirector {
 
 			Simplane.setAPLNAVArmed(1);
 			this.deactivateHeadingHold();
-			this._armedModes.set(MCPMode.LNAV, new ArmedMode(MCPMode.LNAV, condition, this.activateLNAV.bind(this)));
+			this._armedLateralMode = new ArmedMode(MCPLateralMode.LNAV, MCPModeType.LATERAL, condition, this.activateLNAV.bind(this));
 		}
 	}
 
@@ -183,19 +230,19 @@ export class MCPDirector {
 	}
 
 	armHeadingHold() {
-		if (this._activatedModes.has(MCPMode.HEADING_HOLD)) {
+		if (this._activatedLateralMode === MCPLateralMode.HOLD) {
 			let altitude = Simplane.getAltitudeAboveGround();
 			if (altitude < 50) {
 				this.deactivateHeadingHold();
 			} else {
-				this._armedModes.set(MCPMode.LNAV, new ArmedMode(MCPMode.LNAV, () => {
+				this._armedLateralMode = new ArmedMode(MCPLateralMode.LNAV, MCPModeType.LATERAL, () => {
 					return true;
-				}, this.activateHeadingHold.bind(this)));
+				}, this.activateLNAV.bind(this));
 			}
 		} else {
-			this._armedModes.set(MCPMode.LNAV, new ArmedMode(MCPMode.LNAV, () => {
+			this._armedLateralMode = new ArmedMode(MCPLateralMode.LNAV, MCPModeType.LATERAL, () => {
 				return true;
-			}, this.activateHeadingHold.bind(this)));
+			}, this.activateLNAV.bind(this));
 		}
 	}
 
@@ -219,7 +266,7 @@ export class MCPDirector {
 		const condition = () => {
 			return Simplane.getAltitudeAboveGround() > 400;
 		};
-		this._armedModes.set(MCPMode.HEADING_SELECT, new ArmedMode(MCPMode.HEADING_SELECT, condition, this.activateHeadingSelect.bind(this)));
+		this._armedLateralMode = new ArmedMode(MCPLateralMode.SELECT, MCPModeType.LATERAL, condition, this.activateHeadingSelect.bind(this));
 	}
 
 	public activateHeadingSelect(): void {
@@ -233,8 +280,8 @@ export class MCPDirector {
 	}
 
 	public armFLCH(): void {
-		if (this._armedModes.has(MCPMode.FLCH)) {
-			this._armedModes.delete(MCPMode.FLCH);
+		if (this._armedVerticalMode.mode === MCPVerticalMode.FLCH) {
+			this.armedVerticalMode = undefined;
 			this.deactivateFLCH();
 		} else {
 			const condition = () => {
@@ -244,7 +291,7 @@ export class MCPDirector {
 			this.deactivateVNAV();
 			this.deactivateAltitudeHold();
 			this.deactivateVSpeed();
-			this._armedModes.set(MCPMode.FLCH, new ArmedMode(MCPMode.FLCH, condition, this.activateFLCH.bind(this)));
+			this._armedVerticalMode = new ArmedMode(MCPVerticalMode.FLCH, MCPModeType.VERTICAL, condition, this.activateFLCH.bind(this));
 		}
 	}
 
@@ -264,8 +311,8 @@ export class MCPDirector {
 	}
 
 	public armVNAV(): void {
-		if (this._armedModes.has(MCPMode.VNAV)) {
-			this._armedModes.delete(MCPMode.VNAV);
+		if (this._armedVerticalMode.mode === MCPVerticalMode.VNAV) {
+			this.armedVerticalMode = undefined;
 			this.deactivateVNAV();
 			SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
 			SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
@@ -285,7 +332,7 @@ export class MCPDirector {
 			this.deactivateAltitudeHold();
 			this.deactivateFLCH();
 			this.deactivateVSpeed();
-			this._armedModes.set(MCPMode.VNAV, new ArmedMode(MCPMode.VNAV, condition, this.activateVNAV.bind(this)));
+			this._armedVerticalMode = new ArmedMode(MCPVerticalMode.VNAV, MCPModeType.VERTICAL, condition, this.activateVNAV.bind(this));
 		}
 	}
 
@@ -297,19 +344,19 @@ export class MCPDirector {
 		Simplane.setAPVNAVActive(1);
 		SimVar.SetSimVarValue('K:FLIGHT_LEVEL_CHANGE_ON', SimVarValueUnit.Number, 1);
 		/**
-		 * TODO: THRREFMode should be activated here
+		 * TODO: THRREFMode should be activated here (CLIMB used instead right now)
 		 */
 		Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.CLIMB);
 		//this.activateTHRREFMode();
 		SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
 		SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
-		if (!this._activatedModes.has(MCPMode.SPEED)) {
-			if (!this._armedModes.has(MCPMode.SPEED)) {
+		if (this._activatedThrustMode !== MCPThrustMode.SPEED) {
+			if (this._armedThrustMode.mode !== MCPThrustMode.SPEED) {
 				this.armSpeed();
 			}
 		}
 
-		if (this._activatedModes.has(MCPMode.SPEED)) {
+		if (this._activatedThrustMode === MCPThrustMode.SPEED) {
 			Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
 		} else {
 			Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.CLIMB);
@@ -322,43 +369,37 @@ export class MCPDirector {
 
 
 	public deactivateVNAV(): void {
-		this._armedModes.delete(MCPMode.VNAV);
-		this._activatedModes.delete(MCPMode.VNAV);
+		this._activatedVerticalMode = undefined;
 		Simplane.setAPVNAVArmed(0);
 		Simplane.setAPVNAVActive(0);
 		this.deactivateSpeedIntervention();
 	}
 
 	public deactivateVSpeed(): void {
-		this._armedModes.delete(MCPMode.VS);
-		this._activatedModes.delete(MCPMode.VS);
+		this._activatedVerticalMode = undefined;
 		SimVar.SetSimVarValue('L:AP_VS_ACTIVE', 'number', 0);
 	}
 
 	public deactivateFLCH(): void {
-		this._armedModes.delete(MCPMode.FLCH);
-		this._activatedModes.delete(MCPMode.FLCH);
+		this._activatedVerticalMode = undefined;
 		Simplane.setAPFLCHActive(0);
 		this.deactivateSpeedIntervention();
 	}
 
 	public deactivateAltitudeHold(): void {
-		this._armedModes.delete(MCPMode.ALTITUDE_HOLD);
-		this._activatedModes.delete(MCPMode.ALTITUDE_HOLD);
+		this._activatedVerticalMode = undefined;
 		Simplane.setAPAltHoldActive(0);
 		Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, Simplane.getAutoPilotDisplayedAltitudeLockValue(), this._forceNextAltitudeUpdate);
 	}
 
 	public deactivateLNAV(): void {
-		this._armedModes.delete(MCPMode.LNAV);
-		this._activatedModes.delete(MCPMode.LNAV);
+		this._activatedLateralMode = undefined;
 		Simplane.setAPLNAVArmed(0);
 		Simplane.setAPLNAVActive(0);
 	}
 
 	deactivateHeadingHold(): void {
-		this._armedModes.delete(MCPMode.HEADING_HOLD);
-		this._activatedModes.delete(MCPMode.HEADING_HOLD);
+		this._activatedLateralMode = undefined;
 		clearInterval(this.headingHoldInterval);
 		SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 0);
 	}
@@ -367,26 +408,25 @@ export class MCPDirector {
 	 * Deactivates SPEED mode
 	 */
 	public deactivateSpeed(): void {
-		this._armedModes.delete(MCPMode.SPEED);
-		this._activatedModes.delete(MCPMode.SPEED);
+		this._activatedThrustMode = undefined;
 		SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', SimVarValueUnit.Number, 0);
 	}
 
 	public armVerticalSpeed(): void {
-		if (this._activatedModes.has(MCPMode.VS)) {
+		if (this._activatedVerticalMode === MCPVerticalMode.VS) {
 			let altitude = Simplane.getAltitudeAboveGround();
 			if (altitude < 50) {
 				this.deactivateVSpeed();
 				this.deactivateSpeed();
 			} else {
-				this._armedModes.set(MCPMode.VS, new ArmedMode(MCPMode.VS, () => {
+				this._armedVerticalMode = new ArmedMode(MCPVerticalMode.VS, MCPModeType.VERTICAL, () => {
 					return true;
-				}, this.activateVSpeed.bind(this)));
+				}, this.activateVSpeed.bind(this));
 			}
 		} else {
-			this._armedModes.set(MCPMode.VS, new ArmedMode(MCPMode.VS, () => {
+			this._armedVerticalMode = new ArmedMode(MCPVerticalMode.VS, MCPModeType.VERTICAL, () => {
 				return true;
-			}, this.activateVSpeed.bind(this)));
+			}, this.activateVSpeed.bind(this));
 		}
 	}
 
@@ -408,16 +448,12 @@ export class MCPDirector {
 	}
 }
 
-export enum MCPMode {
+export enum MCPModeType {
+	LATERAL,
+	VERTICAL,
 	SPEED,
-	LNAV,
-	VNAV,
-	FLCH,
-	VS,
-	SPEED_INTERVENTION,
-	ALTITUDE_HOLD,
-	HEADING_HOLD,
-	HEADING_SELECT
+	THRUST,
+	DUMMY
 }
 
 export enum MCPLateralMode {
@@ -443,13 +479,21 @@ export enum MCPThrustMode {
 	SPEED
 }
 
+export enum MCPDummyMode {
+	DUMMY
+}
+
 export class PendingMode {
 	public get condition(): Function {
 		return this._condition;
 	}
 
-	public get mode(): MCPMode {
+	public get mode(): MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode | MCPDummyMode {
 		return this._mode;
+	}
+
+	public get modeType(): MCPModeType {
+		return this._modeType;
 	}
 
 	public get handler(): Function {
@@ -457,19 +501,30 @@ export class PendingMode {
 	}
 
 	private readonly _condition: Function;
-	private readonly _mode: MCPMode;
+	private readonly _mode: MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode | MCPDummyMode;
+	private readonly _modeType: MCPModeType;
 	private readonly _handler: Function;
 
-	constructor(mode: MCPMode, condition: Function, handler: Function) {
+	/**
+	 * TODO: Make better type check for MODE param
+	 * @param {MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode} mode
+	 * @param {MCPModeType} modeType
+	 * @param {Function} condition
+	 * @param {Function} handler
+	 */
+	constructor(mode: MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode | MCPDummyMode, modeType: MCPModeType, condition: Function, handler: Function) {
 		this._mode = mode;
+		this._modeType = modeType;
 		this._condition = condition;
 		this._handler = handler;
 	}
 
 	public check() {
-		if (this._condition()) {
-			this.execute();
-			return true;
+		if (this._condition) {
+			if (this._condition()) {
+				this.execute();
+				return true;
+			}
 		}
 		return false;
 	}
@@ -480,18 +535,34 @@ export class PendingMode {
 }
 
 export class ArmedMode {
+	public get mode(): MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode | MCPDummyMode {
+		return this._mode;
+	}
+
+	public get modeType(): MCPModeType {
+		return this._modeType;
+	}
 
 	private readonly _condition: Function;
-	private readonly _mode: MCPMode;
+	private readonly _mode: MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode | MCPDummyMode;
+	private readonly _modeType: MCPModeType;
 	private readonly _handler: Function;
 
-	constructor(mode: MCPMode, condition: Function, handler: Function) {
+	/**
+	 * TODO: Make better type check for MODE param
+	 * @param {MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode} mode
+	 * @param {MCPModeType} modeType
+	 * @param {Function} condition
+	 * @param {Function} handler
+	 */
+	constructor(mode: MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode | MCPDummyMode, modeType: MCPModeType, condition: Function, handler: Function) {
 		this._mode = mode;
+		this._modeType = modeType;
 		this._condition = condition;
 		this._handler = handler;
 	}
 
 	getPendingMode(): PendingMode {
-		return new PendingMode(this._mode, this._condition, this._handler);
+		return new PendingMode(this._mode, this._modeType, this._condition, this._handler);
 	}
 }
