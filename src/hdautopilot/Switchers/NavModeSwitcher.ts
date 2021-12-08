@@ -4,6 +4,21 @@ import {NavModeSwitcherEvent} from '../enums/NavModeSwitcherEvent';
 import {MCPDirector} from '../directors/MCPDirector';
 
 export class NavModeSwitcher {
+	private get eventQueue(): Queue {
+		return this._eventQueue;
+	}
+
+	private get mcpDirector(): MCPDirector {
+		return this._mcpDirector;
+	}
+
+	private get handlers(): any[] {
+		return this._handlers;
+	}
+
+	private get autopilotState(): AutopilotState {
+		return this._autopilotState;
+	}
 
 	private _eventQueue = new Queue();
 	private _mcpDirector = new MCPDirector();
@@ -12,28 +27,28 @@ export class NavModeSwitcher {
 	private _autopilotState = new AutopilotState();
 
 	constructor() {
-		this._handlers[NavModeSwitcherEvent.AP_CHANGED] = this.handleApChanged.bind(this);
-		this._handlers[NavModeSwitcherEvent.NAVIGATION_MODE_CHANGED] = this.handleNavigationModeChanged.bind(this);
-		this._handlers[NavModeSwitcherEvent.TOGA_CHANGED] = this.handleTogaChanged.bind(this);
-		this._handlers[NavModeSwitcherEvent.HEADING_LOCKED_CHANGED] = this.handleHeadingLockedChanged.bind(this);
-		this._handlers[NavModeSwitcherEvent.ALTITUDE_LOCKED_CHANGED] = this.handleAltitudeLockedChanged.bind(this);
-		this._handlers[NavModeSwitcherEvent.SIMULATOR_ALTITUDE_LOCKED_CHANGED] = this.handleSimulatorAltitudeLockedChanged.bind(this);
-		this._handlers[NavModeSwitcherEvent.ALTITUDE_SLOT_CHANGED] = this.handleAltitudeSlotChanged.bind(this);
-		this._handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_1_CHANGED] = this.handleSelectedAltitude1Changed.bind(this);
-		this._handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_2_CHANGED] = this.handleSelectedAltitude2Changed.bind(this);
-		this._handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_3_CHANGED] = this.handleSelectedAltitude3Changed.bind(this);
-		this._handlers[NavModeSwitcherEvent.GROUNDED_CHANGED] = this.handleGroundedChanged.bind(this);
-		this._handlers[NavModeSwitcherEvent.HDG_HOLD_PRESSED] = this.handleHeadingHoldPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.HDG_SEL_PRESSED] = this.handleHeadingSelectPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.SPD_PRESSED] = this.handleSpeedPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED] = this.handleSpeedInterventionPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.FLC_PRESSED] = this.handleFlightLevelChangePressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.APPR_PRESSED] = this.handleApproachPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.VS_PRESSED] = this.handleVerticalSpeedPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.VNAV_PRESSED] = this.handleVNAVPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.LNAV_PRESSED] = this.handleLNAVPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.ALT_HOLD_PRESSED] = this.handleALTHoldPressed.bind(this);
-		this._handlers[NavModeSwitcherEvent.ALT_INTERVENTION_PRESSED] = this.handleALTInterventionPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.AP_CHANGED] = this.handleApChanged.bind(this);
+		this.handlers[NavModeSwitcherEvent.NAVIGATION_MODE_CHANGED] = this.handleNavigationModeChanged.bind(this);
+		this.handlers[NavModeSwitcherEvent.TOGA_CHANGED] = this.handleTogaChanged.bind(this);
+		this.handlers[NavModeSwitcherEvent.HEADING_LOCKED_CHANGED] = this.handleHeadingLockedChanged.bind(this);
+		this.handlers[NavModeSwitcherEvent.ALTITUDE_LOCKED_CHANGED] = this.handleAltitudeLockedChanged.bind(this);
+		this.handlers[NavModeSwitcherEvent.SIMULATOR_ALTITUDE_LOCKED_CHANGED] = this.handleSimulatorAltitudeLockedChanged.bind(this);
+		this.handlers[NavModeSwitcherEvent.ALTITUDE_SLOT_CHANGED] = this.handleAltitudeSlotChanged.bind(this);
+		this.handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_1_CHANGED] = this.handleSelectedAltitude1Changed.bind(this);
+		this.handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_2_CHANGED] = this.handleSelectedAltitude2Changed.bind(this);
+		this.handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_3_CHANGED] = this.handleSelectedAltitude3Changed.bind(this);
+		this.handlers[NavModeSwitcherEvent.GROUNDED_CHANGED] = this.handleGroundedChanged.bind(this);
+		this.handlers[NavModeSwitcherEvent.HDG_HOLD_PRESSED] = this.handleHeadingHoldPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.HDG_SEL_PRESSED] = this.handleHeadingSelectPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.SPD_PRESSED] = this.handleSpeedPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED] = this.handleSpeedInterventionPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.FLC_PRESSED] = this.handleFlightLevelChangePressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.APPR_PRESSED] = this.handleApproachPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.VS_PRESSED] = this.handleVerticalSpeedPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.VNAV_PRESSED] = this.handleVNAVPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.LNAV_PRESSED] = this.handleLNAVPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.ALT_HOLD_PRESSED] = this.handleALTHoldPressed.bind(this);
+		this.handlers[NavModeSwitcherEvent.ALT_INTERVENTION_PRESSED] = this.handleALTInterventionPressed.bind(this);
 	}
 
 	private handleApChanged(): void {
@@ -61,23 +76,23 @@ export class NavModeSwitcher {
 	}
 
 	private handleHeadingHoldPressed(): void {
-		this._mcpDirector.armHeadingHold();
+		this.mcpDirector.armHeadingHold();
 	}
 
 	private handleHeadingSelectPressed(): void {
-		this._mcpDirector.armHeadingSelect();
+		this.mcpDirector.armHeadingSelect();
 	}
 
 	private handleSpeedPressed(): void {
-		this._mcpDirector.armSpeed();
+		this.mcpDirector.armSpeed();
 	}
 
 	private handleSpeedInterventionPressed(): void {
-		this._mcpDirector.toggleSpeedIntervention();
+		this.mcpDirector.toggleSpeedIntervention();
 	}
 
 	private handleFlightLevelChangePressed(): void {
-		this._mcpDirector.armFLCH();
+		this.mcpDirector.armFLCH();
 	}
 
 	private handleApproachPressed(): void {
@@ -85,15 +100,15 @@ export class NavModeSwitcher {
 	}
 
 	private handleVerticalSpeedPressed(): void {
-		this._mcpDirector.armVerticalSpeed();
+		this.mcpDirector.armVerticalSpeed();
 	}
 
 	private handleVNAVPressed(): void {
-		this._mcpDirector.armVNAV();
+		this.mcpDirector.armVNAV();
 	}
 
 	private handleLNAVPressed(): void {
-		this._mcpDirector.armLNAV();
+		this.mcpDirector.armLNAV();
 	}
 
 	private handleALTHoldPressed(): void {
@@ -122,27 +137,27 @@ export class NavModeSwitcher {
 	}
 
 	public update(): void {
-		for (const autopilotStateElement of this._autopilotState) {
+		for (const autopilotStateElement of this.autopilotState) {
 			const eventToTrigger = autopilotStateElement.update();
 			if (eventToTrigger) {
-				this._eventQueue.enqueue(eventToTrigger);
+				this.eventQueue.enqueue(eventToTrigger);
 			}
 		}
 		this.processEvents();
-		this._mcpDirector.processPending();
+		this.mcpDirector.processPending();
 	}
 
 	private processEvents(): void {
-		for (; this._eventQueue.length > 0;) {
-			const event = this._eventQueue.dequeue();
-			if (this._handlers[event] !== undefined) {
-				this._handlers[event]();
+		for (; this.eventQueue.length > 0;) {
+			const event = this.eventQueue.dequeue();
+			if (this.handlers[event] !== undefined) {
+				this.handlers[event]();
 			}
 		}
 	}
 
 	public enqueueEvent(event: NavModeSwitcherEvent) {
-		this._eventQueue.enqueue(event);
+		this.eventQueue.enqueue(event);
 	}
 }
 
