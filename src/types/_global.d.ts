@@ -355,6 +355,8 @@ declare class Simplane {
 
 	static getAutoPilotActive(): boolean;
 
+	static getAutoPilotTOGAActive(): boolean;
+
 	static getWeight(): number;
 
 	static getHeadingMagnetic(): number;
