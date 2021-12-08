@@ -1,0 +1,7 @@
+enum AltitudeType {
+	SELECTED = 'SELECTED',
+	MANAGED  = 'MANAGED',
+	PRESSURE = 'PRESSURE',
+	LOCKED   = 'LOCKED',
+	NONE     = 'NONE'
+}
