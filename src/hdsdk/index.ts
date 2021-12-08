@@ -10,4 +10,5 @@ export * from './utils/output/FMC/FMCRendererModule';
 export * from './Directors/SpeedDirector';
 export * from './models/speeds/HDSpeedType';
 export * from './models/speeds/HDSpeedPhase';
+export * from './Structures/Queue';
 export * from './utils/HeavyDivision';
