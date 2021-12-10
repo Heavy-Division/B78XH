@@ -13,9 +13,11 @@ import {B787_10_FMC_DepArrPage} from './B787_10_FMC_DepArrPage';
 import {CJ4_FMC_PilotWaypoint_Manager} from './CJ4_FMC_PilotWaypoint_Manager';
 import {B787_10_FMC_IdentPage} from './B787_10_FMC_IdentPage';
 import * as HDSDK from './../../hdsdk/index';
-import {ConsoleHandler, HDLogger, SocketIOHandler} from '../../hdlogger';
+import {ConsoleHandler, HDLogger} from '../../hdlogger';
 import {Level} from '../../hdlogger/levels/level';
 import {B787_10_FMC_SelectWptPage} from './B787_10_FMC_SelectWptPage';
+import {NavModeSwitcher} from '../../hdautopilot/Switchers/NavModeSwitcher';
+import {NavModeSwitcherEvent} from '../../hdautopilot/enums/NavModeSwitcherEvent';
 
 export class B787_10_FMC extends Boeing_FMC {
 	protected _timeDivs: NodeListOf<HTMLElement>;
@@ -58,6 +60,7 @@ export class B787_10_FMC extends Boeing_FMC {
 	protected _fmcCommandCruiseSpeedType: any;
 	protected _fmcCommandClimbSpeedType: any;
 	protected _lastFmcCommandCruiseSpeedType: any;
+	protected _navModeSwitcher = undefined;
 
 	onInputAircraftSpecific = (input) => {
 		HDLogger.log('B787_10_FMC.onInputAircraftSpecific input = \'' + input + '\'', Level.info);
@@ -211,6 +214,58 @@ export class B787_10_FMC extends Boeing_FMC {
 	 * @param _event
 	 */
 	onEvent(_event) {
+		super.onEvent(_event);
+		if (_event.indexOf('AP_LNAV') != -1) {
+			if (this._isMainRouteActivated) {
+				this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.LNAV_PRESSED);
+			} else {
+				this.messageManager.showMessage('NO ACTIVE ROUTE', 'ACTIVATE ROUTE TO <br> ENGAGE LNAV');
+			}
+		} else if (_event.indexOf('AP_VNAV') != -1) {
+			this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.VNAV_PRESSED);
+		} else if (_event.indexOf('AP_FLCH') != -1) {
+			this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.FLC_PRESSED);
+		} else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
+			this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.HDG_HOLD_PRESSED);
+		} else if (_event.indexOf('AP_HEADING_SEL') != -1) {
+			this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.HDG_SEL_PRESSED);
+		} else if (_event.indexOf('AP_SPD') != -1) {
+			if (this.aircraftType == Aircraft.AS01B) {
+				if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
+					this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_PRESSED);
+				}
+			} else {
+				if ((this.getIsAltitudeHoldActive() || this.getIsVSpeedActive()) && this.getIsTHRActive()) {
+					this.toggleSPD();
+				}
+			}
+		} else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
+			this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED);
+		} else if (_event.indexOf('AP_VSPEED') != -1) {
+			this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.VS_PRESSED);
+		} else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
+			this.activateAltitudeSel();
+		} else if (_event.indexOf('AP_ALT_HOLD') != -1) {
+			this.toggleAltitudeHold();
+		} else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
+			this.setAPSpeedHoldMode();
+			if (this.aircraftType == Aircraft.AS01B) {
+				this.deactivateSPD();
+			}
+			this.setThrottleMode(ThrottleMode.TOGA);
+			if (Simplane.getIndicatedSpeed() > 80) {
+				this.deactivateLNAV();
+				this.deactivateVNAV();
+			}
+		} else if (_event.indexOf('EXEC') != -1) {
+			this.onExec();
+		}
+		if (_event.indexOf('AP_SPD') != -1) {
+			this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_PRESSED);
+		} else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
+			this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED);
+		}
+		/*
 		if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
 
 			SimVar.SetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number', 1);
@@ -253,6 +308,7 @@ export class B787_10_FMC extends Boeing_FMC {
 			SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
 		}
 		super.onEvent(_event);
+		 */
 	}
 
 	/**
@@ -961,6 +1017,38 @@ export class B787_10_FMC extends Boeing_FMC {
 		}
 
 		if (this.updateAutopilotCooldown < 0) {
+
+			if (this._navModeSwitcher === undefined) {
+				this._navModeSwitcher = new NavModeSwitcher();
+			} else {
+				this._navModeSwitcher.update();
+			}
+
+			this._renderer.renderExec(this.getIsRouteActivated());
+			this.updateAutopilotCooldown = this._apCooldown;
+		}
+	}
+
+	updateAutopilot2() {
+		let now = performance.now();
+		let dt = now - this._lastUpdateAPTime;
+		this._lastUpdateAPTime = now;
+		if (isFinite(dt)) {
+			this.updateAutopilotCooldown -= dt;
+		}
+
+		if (SimVar.GetSimVarValue('L:AIRLINER_FMC_FORCE_NEXT_UPDATE', 'number') === 1) {
+			SimVar.SetSimVarValue('L:AIRLINER_FMC_FORCE_NEXT_UPDATE', 'number', 0);
+			this.updateAutopilotCooldown = -1;
+		}
+
+		if (this.updateAutopilotCooldown < 0) {
+
+			if (this._navModeSwitcher === undefined) {
+				this._navModeSwitcher = new NavModeSwitcher();
+			} else {
+				this._navModeSwitcher.update();
+			}
 
 			let currentApMasterStatus = SimVar.GetSimVarValue('AUTOPILOT MASTER', 'boolean');
 			if (currentApMasterStatus != this._apMasterStatus) {

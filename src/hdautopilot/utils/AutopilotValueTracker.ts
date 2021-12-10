@@ -1,33 +1,35 @@
 import {NavModeSwitcherEvent} from '../enums/NavModeSwitcherEvent';
+import {AutomaticAutopilotDirectorEvent} from '../directors/AutomaticAutopilotDirector';
 
 export class AutopilotValueTracker {
-	private _value: any = undefined;
-	private _getter: Function = undefined;
-
-	private _onChange: NavModeSwitcherEvent = undefined;
+	protected _onChange: NavModeSwitcherEvent | AutomaticAutopilotDirectorEvent = undefined;
 
 	constructor(getter: Function) {
 		this.getter = getter;
 	}
 
-	private set getter(getter: Function) {
-		this._getter = getter;
-		this.value = this._getter();
+	protected _value: any = undefined;
+
+	public get value(): any {
+		return this._value;
 	}
 
 	private set value(value: any) {
 		this._value = value;
 	}
 
-	get value() {
-		return this._value;
+	protected _getter: Function = undefined;
+
+	private set getter(getter: Function) {
+		this._getter = getter;
+		this.value = this._getter();
 	}
 
 	public get() {
 		return this.value;
 	}
 
-	update(): NavModeSwitcherEvent {
+	update(): NavModeSwitcherEvent | AutomaticAutopilotDirectorEvent {
 		const value = this._getter();
 		const isChanged = value != this.value;
 		this.value = value;
@@ -36,7 +38,7 @@ export class AutopilotValueTracker {
 		}
 	}
 
-	onChange(event: NavModeSwitcherEvent) {
+	onChange(event: NavModeSwitcherEvent | AutomaticAutopilotDirectorEvent) {
 		this._onChange = event;
 	}
 }

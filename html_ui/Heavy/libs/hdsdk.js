@@ -2284,6 +2284,31 @@
         }
     }
 
+    class Queue {
+        constructor(...items) {
+            this._items = [];
+            this.enqueue(...items);
+        }
+        enqueue(...items) {
+            for (const item of items.reverse()) {
+                this._items.push(item);
+            }
+        }
+        dequeue() {
+            const item = this._items.splice(0, 1);
+            return item.length > 0 ? item[0] : undefined;
+        }
+        peak() {
+            return this.isEmpty() ? undefined : this._items[0];
+        }
+        isEmpty() {
+            return this.length === 0;
+        }
+        get length() {
+            return this._items.length;
+        }
+    }
+
     exports.HeavyDivision = void 0;
     (function (HeavyDivision) {
         class Configuration {
@@ -2334,6 +2359,7 @@
     exports.HtmlDecodeRendererMiddleware = HtmlDecodeRendererMiddleware;
     exports.HtmlEncodeRendererMiddleware = HtmlEncodeRendererMiddleware;
     exports.NaturalRendererTemplater = NaturalRendererTemplater;
+    exports.Queue = Queue;
     exports.SeparatorRendererMiddleware = SeparatorRendererMiddleware;
     exports.SettableHighlighterRendererMiddleware = SettableHighlighterRendererMiddleware;
     exports.SettableRendererMiddleware = SettableRendererMiddleware;

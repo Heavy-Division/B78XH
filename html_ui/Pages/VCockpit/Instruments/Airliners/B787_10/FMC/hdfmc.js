@@ -8453,6 +8453,31 @@
         }
     }
 
+    class Queue {
+        constructor(...items) {
+            this._items = [];
+            this.enqueue(...items);
+        }
+        enqueue(...items) {
+            for (const item of items.reverse()) {
+                this._items.push(item);
+            }
+        }
+        dequeue() {
+            const item = this._items.splice(0, 1);
+            return item.length > 0 ? item[0] : undefined;
+        }
+        peak() {
+            return this.isEmpty() ? undefined : this._items[0];
+        }
+        isEmpty() {
+            return this.length === 0;
+        }
+        get length() {
+            return this._items.length;
+        }
+    }
+
     var HeavyDivision;
     (function (HeavyDivision) {
         class Configuration {
@@ -8835,55 +8860,43 @@
         }
         onEvent(_event) {
             super.onEvent(_event);
+            /*
             HDLogger.log('B787_10_BaseFMC onEvent ' + _event, Level.debug);
             if (_event.indexOf('AP_LNAV') != -1) {
                 if (this._isMainRouteActivated) {
                     this._navModeSelector.onNavChangedEvent('NAV_PRESSED');
-                }
-                else {
+                } else {
                     this.messageManager.showMessage('NO ACTIVE ROUTE', 'ACTIVATE ROUTE TO <br> ENGAGE LNAV');
                 }
-            }
-            else if (_event.indexOf('AP_VNAV') != -1) {
+            } else if (_event.indexOf('AP_VNAV') != -1) {
                 this.toggleVNAV();
-            }
-            else if (_event.indexOf('AP_FLCH') != -1) {
+            } else if (_event.indexOf('AP_FLCH') != -1) {
                 this.toggleFLCH();
-            }
-            else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
+            } else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
                 this._navModeSelector.onNavChangedEvent('HDG_HOLD_PRESSED');
-            }
-            else if (_event.indexOf('AP_HEADING_SEL') != -1) {
+            } else if (_event.indexOf('AP_HEADING_SEL') != -1) {
                 this._navModeSelector.onNavChangedEvent('HDG_SEL_PRESSED');
-            }
-            else if (_event.indexOf('AP_SPD') != -1) {
+            } else if (_event.indexOf('AP_SPD') != -1) {
                 if (this.aircraftType == Aircraft.AS01B) {
                     if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
                         this.activateSPD();
-                    }
-                    else {
+                    } else {
                         this.deactivateSPD();
                     }
-                }
-                else {
+                } else {
                     if ((this.getIsAltitudeHoldActive() || this.getIsVSpeedActive()) && this.getIsTHRActive()) {
                         this.toggleSPD();
                     }
                 }
-            }
-            else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
+            } else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
                 this.toggleSpeedIntervention();
-            }
-            else if (_event.indexOf('AP_VSPEED') != -1) {
+            } else if (_event.indexOf('AP_VSPEED') != -1) {
                 this.toggleVSpeed();
-            }
-            else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
+            } else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
                 this.activateAltitudeSel();
-            }
-            else if (_event.indexOf('AP_ALT_HOLD') != -1) {
+            } else if (_event.indexOf('AP_ALT_HOLD') != -1) {
                 this.toggleAltitudeHold();
-            }
-            else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
+            } else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
                 this.setAPSpeedHoldMode();
                 if (this.aircraftType == Aircraft.AS01B) {
                     this.deactivateSPD();
@@ -8893,10 +8906,9 @@
                     this.deactivateLNAV();
                     this.deactivateVNAV();
                 }
-            }
-            else if (_event.indexOf('EXEC') != -1) {
+            } else if (_event.indexOf('EXEC') != -1) {
                 this.onExec();
-            }
+            }*/
         }
         getIsLNAVArmed() {
             return this._pendingLNAVActivation;
@@ -17569,12 +17581,842 @@
         }
     }
 
+    class AutopilotValueTracker {
+        constructor(getter) {
+            this._onChange = undefined;
+            this._value = undefined;
+            this._getter = undefined;
+            this.getter = getter;
+        }
+        get value() {
+            return this._value;
+        }
+        set value(value) {
+            this._value = value;
+        }
+        set getter(getter) {
+            this._getter = getter;
+            this.value = this._getter();
+        }
+        get() {
+            return this.value;
+        }
+        update() {
+            const value = this._getter();
+            const isChanged = value != this.value;
+            this.value = value;
+            if (isChanged) {
+                return this._onChange;
+            }
+        }
+        onChange(event) {
+            this._onChange = event;
+        }
+    }
+
+    var AutomaticAutopilotDirectorEvent;
+    (function (AutomaticAutopilotDirectorEvent) {
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["AP_ON_CHANGE"] = 0] = "AP_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["NAVIGATION_ON_CHANGE"] = 1] = "NAVIGATION_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["TOGA_ON_CHANGE"] = 2] = "TOGA_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["HEADING_LOCK_ON_CHANGE"] = 3] = "HEADING_LOCK_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["ALTITUDE_LOCK_ON_CHANGE"] = 4] = "ALTITUDE_LOCK_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SIMULATOR_ALTITUDE_LOCK_ON_CHANGE"] = 5] = "SIMULATOR_ALTITUDE_LOCK_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["ALTITUDE_SLOT_ON_CHANGE"] = 6] = "ALTITUDE_SLOT_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_1_ON_CHANGE"] = 7] = "SELECTED_ALTITUDE_1_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_2_ON_CHANGE"] = 8] = "SELECTED_ALTITUDE_2_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_3_ON_CHANGE"] = 9] = "SELECTED_ALTITUDE_3_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["GROUNDED_ON_CHANGE"] = 10] = "GROUNDED_ON_CHANGE";
+    })(AutomaticAutopilotDirectorEvent || (AutomaticAutopilotDirectorEvent = {}));
+
+    class AutopilotState {
+        constructor() {
+            (this._autopilot = new AutopilotValueTracker(() => Simplane.getAutoPilotActive())).onChange(AutomaticAutopilotDirectorEvent.AP_ON_CHANGE);
+            (this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
+            (this._toga = new AutopilotValueTracker(() => Simplane.getAutoPilotTOGAActive())).onChange(AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE);
+            (this._headingLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE);
+            (this._altitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_ALT_HOLD', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE);
+            (this._simulatorAltitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.SIMULATOR_ALTITUDE_LOCK_ON_CHANGE);
+            (this._altitudeSlot = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE SLOT INDEX', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_SLOT_ON_CHANGE);
+            (this._selectedAltitude1 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_1_ON_CHANGE);
+            (this._selectedAltitude2 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:2', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_2_ON_CHANGE);
+            (this._selectedAltitude3 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:3', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_3_ON_CHANGE);
+            (this._grounded = new AutopilotValueTracker(() => Simplane.getIsGrounded())).onChange(AutomaticAutopilotDirectorEvent.GROUNDED_ON_CHANGE);
+        }
+        get autopilot() {
+            return this._autopilot;
+        }
+        get navigationMode() {
+            return this._navigationMode;
+        }
+        get toga() {
+            return this._toga;
+        }
+        get headingLocked() {
+            return this._headingLocked;
+        }
+        get altitudeLocked() {
+            return this._altitudeLocked;
+        }
+        get simulatorAltitudeLocked() {
+            return this._simulatorAltitudeLocked;
+        }
+        get altitudeSlot() {
+            return this._altitudeSlot;
+        }
+        get selectedAltitude1() {
+            return this._selectedAltitude1;
+        }
+        get selectedAltitude2() {
+            return this._selectedAltitude2;
+        }
+        get selectedAltitude3() {
+            return this._selectedAltitude3;
+        }
+        get grounded() {
+            return this._grounded;
+        }
+        *[Symbol.iterator]() {
+            let properties = Object.keys(this);
+            for (let property of properties) {
+                yield this[property];
+            }
+        }
+    }
+
+    var NavModeSwitcherEvent;
+    (function (NavModeSwitcherEvent) {
+        /**
+         * Changed events
+         */
+        NavModeSwitcherEvent[NavModeSwitcherEvent["AP_CHANGED"] = 0] = "AP_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["NAVIGATION_MODE_CHANGED"] = 1] = "NAVIGATION_MODE_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["TOGA_CHANGED"] = 2] = "TOGA_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["HEADING_LOCKED_CHANGED"] = 3] = "HEADING_LOCKED_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["ALTITUDE_LOCKED_CHANGED"] = 4] = "ALTITUDE_LOCKED_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SIMULATOR_ALTITUDE_LOCKED_CHANGED"] = 5] = "SIMULATOR_ALTITUDE_LOCKED_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["ALTITUDE_SLOT_CHANGED"] = 6] = "ALTITUDE_SLOT_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_1_CHANGED"] = 7] = "SELECTED_ALTITUDE_1_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_2_CHANGED"] = 8] = "SELECTED_ALTITUDE_2_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_3_CHANGED"] = 9] = "SELECTED_ALTITUDE_3_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["GROUNDED_CHANGED"] = 10] = "GROUNDED_CHANGED";
+        /**
+         * Press events
+         */
+        NavModeSwitcherEvent[NavModeSwitcherEvent["HDG_HOLD_PRESSED"] = 11] = "HDG_HOLD_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["HDG_SEL_PRESSED"] = 12] = "HDG_SEL_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SPD_PRESSED"] = 13] = "SPD_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SPD_INTERVENTION_PRESSED"] = 14] = "SPD_INTERVENTION_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["FLC_PRESSED"] = 15] = "FLC_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["APPR_PRESSED"] = 16] = "APPR_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["VS_PRESSED"] = 17] = "VS_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["VNAV_PRESSED"] = 18] = "VNAV_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["LNAV_PRESSED"] = 19] = "LNAV_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["ALT_HOLD_PRESSED"] = 20] = "ALT_HOLD_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["ALT_INTERVENTION_PRESSED"] = 21] = "ALT_INTERVENTION_PRESSED";
+    })(NavModeSwitcherEvent || (NavModeSwitcherEvent = {}));
+
+    var SimVarValueUnit;
+    (function (SimVarValueUnit) {
+        SimVarValueUnit["Number"] = "number";
+        SimVarValueUnit["Boolean"] = "Bool";
+        SimVarValueUnit["String"] = "string";
+        SimVarValueUnit["Enum"] = "Enum";
+        SimVarValueUnit["Degrees"] = "degrees";
+        SimVarValueUnit["Radians"] = "radians";
+        SimVarValueUnit["Feet"] = "feet";
+        SimVarValueUnit["Meters"] = "meters";
+        SimVarValueUnit["NauticalMile"] = "nautical mile";
+        SimVarValueUnit["Knots"] = "knots";
+    })(SimVarValueUnit || (SimVarValueUnit = {}));
+
+    class MCPDirector {
+        constructor() {
+            this._pendingQueue = new Queue();
+            this._armedLateralMode = new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined);
+            this._armedVerticalMode = new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined);
+            this._armedSpeedMode = new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined);
+            this._armedThrustMode = new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined);
+            this._activatedLateralMode = undefined;
+            this._activatedVerticalMode = undefined;
+            this._activatedSpeedMode = undefined;
+            /**
+             * Idea: Use MAP for ThrustMode because theoretically it is possible to have more then one ThrustMode enabled.
+             * @type {MCPThrustMode}
+             * @private
+             */
+            this._activatedThrustMode = undefined;
+            this._headingHoldInterval = undefined;
+            /**
+             * TODO: temporary
+             * @type {boolean}
+             */
+            this._forceNextAltitudeUpdate = true;
+        }
+        get pendingQueue() {
+            return this._pendingQueue;
+        }
+        set pendingQueue(value) {
+            this._pendingQueue = value;
+        }
+        get armedLateralMode() {
+            return this._armedLateralMode;
+        }
+        set armedLateralMode(value) {
+            this._armedLateralMode = (value ? value : new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined));
+        }
+        get armedVerticalMode() {
+            return this._armedVerticalMode;
+        }
+        set armedVerticalMode(value) {
+            this._armedVerticalMode = (value ? value : new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined));
+        }
+        get armedSpeedMode() {
+            return this._armedSpeedMode;
+        }
+        set armedSpeedMode(value) {
+            this._armedSpeedMode = (value ? value : new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined));
+        }
+        get armedThrustMode() {
+            return this._armedThrustMode;
+        }
+        set armedThrustMode(value) {
+            this._armedThrustMode = (value ? value : new ArmedMode(MCPDummyMode.DUMMY, MCPModeType.DUMMY, undefined, undefined));
+        }
+        get activatedLateralMode() {
+            return this._activatedLateralMode;
+        }
+        set activatedLateralMode(value) {
+            this._activatedLateralMode = value;
+        }
+        get activatedVerticalMode() {
+            return this._activatedVerticalMode;
+        }
+        set activatedVerticalMode(value) {
+            this._activatedVerticalMode = value;
+        }
+        get activatedSpeedMode() {
+            return this._activatedSpeedMode;
+        }
+        set activatedSpeedMode(value) {
+            this._activatedSpeedMode = value;
+        }
+        get activatedThrustMode() {
+            return this._activatedThrustMode;
+        }
+        set activatedThrustMode(value) {
+            this._activatedThrustMode = value;
+        }
+        get headingHoldInterval() {
+            return this._headingHoldInterval;
+        }
+        set headingHoldInterval(value) {
+            this._headingHoldInterval = value;
+        }
+        get forceNextAltitudeUpdate() {
+            return this._forceNextAltitudeUpdate;
+        }
+        set forceNextAltitudeUpdate(value) {
+            this._forceNextAltitudeUpdate = value;
+        }
+        processPending() {
+            for (const mode of [this.armedLateralMode, this.armedVerticalMode, this.armedSpeedMode, this.armedThrustMode]) {
+                if (mode.mode !== MCPDummyMode.DUMMY) {
+                    this.pendingQueue.enqueue(mode.getPendingMode());
+                }
+            }
+            for (; this.pendingQueue.length > 0;) {
+                const pending = this.pendingQueue.dequeue();
+                if (pending.check()) {
+                    switch (pending.modeType) {
+                        case MCPModeType.LATERAL:
+                            this.armedLateralMode = undefined;
+                            this.activatedLateralMode = pending.mode;
+                            break;
+                        case MCPModeType.VERTICAL:
+                            this.armedVerticalMode = undefined;
+                            this.activatedVerticalMode = pending.mode;
+                            break;
+                        case MCPModeType.SPEED:
+                            this.armedSpeedMode = undefined;
+                            this.activatedSpeedMode = pending.mode;
+                            break;
+                        case MCPModeType.THRUST:
+                            this.armedThrustMode = undefined;
+                            this.activatedThrustMode = pending.mode;
+                            break;
+                    }
+                }
+            }
+        }
+        /**
+         * Arms/Disarms SPEED mode
+         * engages SPEED mode if the conditions are met
+         */
+        armSpeed() {
+            const condition = () => {
+                return Simplane.getAltitudeAboveGround() > 400;
+            };
+            if (this.armedThrustMode.mode === MCPThrustMode.SPEED) {
+                this.deactivateSpeed();
+                this.armedThrustMode = undefined;
+            }
+            else {
+                SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', SimVarValueUnit.Number, 1);
+                this.armedThrustMode = new ArmedMode(MCPThrustMode.SPEED, MCPModeType.THRUST, condition, this.activateSpeed.bind(this));
+            }
+        }
+        /**
+         * Activates SPEED mode
+         */
+        activateSpeed() {
+            this.engageSpeed();
+        }
+        /**
+         * Engages SPEED mode
+         */
+        engageSpeed() {
+            if (Simplane.getAutoPilotMachModeActive()) {
+                let currentMach = Simplane.getAutoPilotMachHoldValue();
+                Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
+                SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_ON', SimVarValueUnit.Number, 1);
+            }
+            else {
+                let currentSpeed = Simplane.getAutoPilotAirspeedHoldValue();
+                Coherent.call('AP_SPD_VAR_SET', 1, currentSpeed);
+                SimVar.SetSimVarValue('K:AP_MANAGED_SPEED_IN_MACH_OFF', SimVarValueUnit.Number, 1);
+            }
+            if (this.activatedVerticalMode !== MCPVerticalMode.FLCH) {
+                this.activateSpeedHoldMode();
+            }
+            Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+            let stayManagedSpeed = (this.armedVerticalMode.mode !== MCPVerticalMode.VNAV || this.activatedVerticalMode !== MCPVerticalMode.VNAV) && this.activatedSpeedMode !== MCPSpeedMode.INTERVENTION;
+            if (!stayManagedSpeed) {
+                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
+            }
+        }
+        activateSpeedHoldMode() {
+            if (!Simplane.getAutoPilotMachModeActive()) {
+                if (!SimVar.GetSimVarValue('AUTOPILOT AIRSPEED HOLD', SimVarValueUnit.Boolean)) {
+                    SimVar.SetSimVarValue('K:AP_PANEL_SPEED_HOLD', SimVarValueUnit.Number, 1).catch(console.error);
+                }
+            }
+            else {
+                if (!SimVar.GetSimVarValue('AUTOPILOT MACH HOLD', SimVarValueUnit.Boolean)) {
+                    SimVar.SetSimVarValue('K:AP_PANEL_MACH_HOLD', SimVarValueUnit.Number, 1).catch(console.error);
+                }
+            }
+        }
+        toggleSpeedIntervention() {
+            if (this.activatedSpeedMode === MCPSpeedMode.INTERVENTION) {
+                this.deactivateSpeedIntervention();
+            }
+            else {
+                const condition = () => {
+                    return this.activatedVerticalMode === MCPVerticalMode.VNAV;
+                };
+                this.pendingQueue.enqueue(new PendingMode(MCPSpeedMode.INTERVENTION, MCPModeType.SPEED, condition, this.activateSpeedIntervention.bind(this)));
+            }
+        }
+        activateSpeedIntervention() {
+            if (this.activatedVerticalMode !== MCPVerticalMode.VNAV) {
+                return;
+            }
+            if (Simplane.getAutoPilotMachModeActive()) {
+                let currentMach = Simplane.getAutoPilotMachHoldValue();
+                Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
+            }
+            else {
+                let currentSpeed = Simplane.getAutoPilotAirspeedHoldValue();
+                Coherent.call('AP_SPD_VAR_SET', 1, currentSpeed);
+            }
+            SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', SimVarValueUnit.Number, 1);
+            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
+            if (this.activatedThrustMode === MCPThrustMode.SPEED) {
+                return;
+            }
+            if (this.armedThrustMode.mode !== MCPThrustMode.SPEED) {
+                this.armSpeed();
+            }
+        }
+        deactivateSpeedIntervention() {
+            this.activatedSpeedMode = undefined;
+            SimVar.SetSimVarValue('L:AP_SPEED_INTERVENTION_ACTIVE', SimVarValueUnit.Number, 0);
+            if (this.activatedVerticalMode === MCPVerticalMode.VNAV) {
+                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
+            }
+        }
+        armLNAV() {
+            if (this.armedLateralMode.mode === MCPLateralMode.LNAV) {
+                this.armedLateralMode = undefined;
+                this.deactivateLNAV();
+            }
+            else {
+                /**
+                 * TODO: We should inject the FPM or do the check somewhere else,
+                 * because DEBUG_INSTANCE is hidden dependency
+                 */
+                if (FlightPlanManager.DEBUG_INSTANCE.getWaypointsCount() === 0) {
+                    return;
+                }
+                const condition = () => {
+                    return Simplane.getAltitudeAboveGround() > 50;
+                };
+                Simplane.setAPLNAVArmed(1);
+                this.deactivateHeadingHold();
+                this.armedLateralMode = new ArmedMode(MCPLateralMode.LNAV, MCPModeType.LATERAL, condition, this.activateLNAV.bind(this));
+            }
+        }
+        activateLNAV() {
+            this.engageLNAV();
+        }
+        engageLNAV() {
+            if (SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', SimVarValueUnit.Boolean)) {
+                return;
+            }
+            Simplane.setAPLNAVActive(1);
+            SimVar.SetSimVarValue('K:AP_NAV1_HOLD_ON', SimVarValueUnit.Number, 1);
+        }
+        armHeadingHold() {
+            if (this.activatedLateralMode === MCPLateralMode.HOLD) {
+                let altitude = Simplane.getAltitudeAboveGround();
+                if (altitude < 50) {
+                    this.deactivateHeadingHold();
+                }
+                else {
+                    this.armedLateralMode = new ArmedMode(MCPLateralMode.HOLD, MCPModeType.LATERAL, () => {
+                        return true;
+                    }, this.activateHeadingHold.bind(this));
+                }
+            }
+            else {
+                this.armedLateralMode = new ArmedMode(MCPLateralMode.HOLD, MCPModeType.LATERAL, () => {
+                    return true;
+                }, this.activateHeadingHold.bind(this));
+            }
+        }
+        activateHeadingHold() {
+            this.deactivateLNAV();
+            if (!SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', SimVarValueUnit.Boolean)) {
+                SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', SimVarValueUnit.Number, 1);
+            }
+            SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', SimVarValueUnit.Number, 1);
+            const headingHoldValue = Simplane.getHeadingMagnetic();
+            SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
+            this.headingHoldInterval = window.setInterval(() => {
+                Coherent.call('HEADING_BUG_SET', 2, headingHoldValue);
+            }, 15);
+        }
+        armHeadingSelect() {
+            this.deactivateHeadingHold();
+            this.deactivateLNAV();
+            SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 1);
+            const condition = () => {
+                return Simplane.getAltitudeAboveGround() > 400;
+            };
+            this.armedLateralMode = new ArmedMode(MCPLateralMode.SELECT, MCPModeType.LATERAL, condition, this.activateHeadingSelect.bind(this));
+        }
+        activateHeadingSelect() {
+            this.engageHeadingSelect();
+        }
+        engageHeadingSelect() {
+            if (!SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean')) {
+                SimVar.SetSimVarValue('K:AP_PANEL_HEADING_HOLD', 'Number', 1);
+            }
+        }
+        armFLCH() {
+            if (this.armedVerticalMode.mode === MCPVerticalMode.FLCH) {
+                this.armedVerticalMode = undefined;
+                this.deactivateFLCH();
+            }
+            else {
+                const condition = () => {
+                    return Simplane.getAltitudeAboveGround() > 400;
+                };
+                Simplane.setAPFLCHActive(1);
+                this.deactivateVNAV();
+                this.deactivateAltitudeHold();
+                this.deactivateVSpeed();
+                this.armedVerticalMode = new ArmedMode(MCPVerticalMode.FLCH, MCPModeType.VERTICAL, condition, this.activateFLCH.bind(this));
+            }
+        }
+        activateFLCH() {
+            this.engageFLCH();
+        }
+        engageFLCH() {
+            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
+            let displayedAltitude = Simplane.getAutoPilotDisplayedAltitudeLockValue();
+            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, displayedAltitude, this.forceNextAltitudeUpdate);
+            if (!Simplane.getAutoPilotFLCActive()) {
+                SimVar.SetSimVarValue('K:FLIGHT_LEVEL_CHANGE_ON', SimVarValueUnit.Number, 1);
+            }
+            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
+            Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.CLIMB);
+        }
+        armVNAV() {
+            if (this.armedVerticalMode.mode === MCPVerticalMode.VNAV) {
+                this.armedVerticalMode = undefined;
+                this.deactivateVNAV();
+                SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
+                SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
+            }
+            else {
+                /**
+                 * TODO: We should inject the FPM or do the check somewhere else,
+                 * because DEBUG_INSTANCE is hidden dependency
+                 */
+                if (FlightPlanManager.DEBUG_INSTANCE.getWaypointsCount() === 0) {
+                    return;
+                }
+                const condition = () => {
+                    return Simplane.getAltitudeAboveGround() > 400;
+                };
+                Simplane.setAPVNAVArmed(1);
+                this.deactivateAltitudeHold();
+                this.deactivateFLCH();
+                this.deactivateVSpeed();
+                this.armedVerticalMode = new ArmedMode(MCPVerticalMode.VNAV, MCPModeType.VERTICAL, condition, this.activateVNAV.bind(this));
+            }
+        }
+        activateVNAV() {
+            this.engageVNAV();
+        }
+        engageVNAV() {
+            Simplane.setAPVNAVActive(1);
+            SimVar.SetSimVarValue('K:FLIGHT_LEVEL_CHANGE_ON', SimVarValueUnit.Number, 1);
+            /**
+             * TODO: THRREFMode should be activated here (CLIMB used instead right now)
+             */
+            Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.CLIMB);
+            //this.activateTHRREFMode();
+            SimVar.SetSimVarValue('K:SPEED_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
+            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
+            if (this.activatedThrustMode !== MCPThrustMode.SPEED) {
+                if (this.armedThrustMode.mode !== MCPThrustMode.SPEED) {
+                    this.armSpeed();
+                }
+            }
+            if (this.activatedThrustMode === MCPThrustMode.SPEED) {
+                Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.AUTO);
+            }
+            else {
+                Coherent.call('GENERAL_ENG_THROTTLE_MANAGED_MODE_SET', ThrottleMode.CLIMB);
+            }
+            this.deactivateAltitudeHold();
+            this.deactivateFLCH();
+            this.deactivateVSpeed();
+        }
+        deactivateVNAV() {
+            this.activatedVerticalMode = undefined;
+            Simplane.setAPVNAVArmed(0);
+            Simplane.setAPVNAVActive(0);
+            this.deactivateSpeedIntervention();
+        }
+        deactivateVSpeed() {
+            this.activatedVerticalMode = undefined;
+            SimVar.SetSimVarValue('L:AP_VS_ACTIVE', 'number', 0);
+        }
+        deactivateFLCH() {
+            this.activatedVerticalMode = undefined;
+            Simplane.setAPFLCHActive(0);
+            this.deactivateSpeedIntervention();
+        }
+        deactivateAltitudeHold() {
+            this.activatedVerticalMode = undefined;
+            Simplane.setAPAltHoldActive(0);
+            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, Simplane.getAutoPilotDisplayedAltitudeLockValue(), this.forceNextAltitudeUpdate);
+        }
+        deactivateLNAV() {
+            this.activatedLateralMode = undefined;
+            Simplane.setAPLNAVArmed(0);
+            Simplane.setAPLNAVActive(0);
+        }
+        deactivateHeadingHold() {
+            this.activatedLateralMode = undefined;
+            clearInterval(this.headingHoldInterval);
+            SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'number', 0);
+        }
+        /**
+         * Deactivates SPEED mode
+         */
+        deactivateSpeed() {
+            this.activatedThrustMode = undefined;
+            SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', SimVarValueUnit.Number, 0);
+        }
+        armVerticalSpeed() {
+            if (this.activatedVerticalMode === MCPVerticalMode.VS) {
+                let altitude = Simplane.getAltitudeAboveGround();
+                if (altitude < 50) {
+                    this.deactivateVSpeed();
+                    this.deactivateSpeed();
+                }
+                else {
+                    this.armedVerticalMode = new ArmedMode(MCPVerticalMode.VS, MCPModeType.VERTICAL, () => {
+                        return true;
+                    }, this.activateVSpeed.bind(this));
+                }
+            }
+            else {
+                this.armedVerticalMode = new ArmedMode(MCPVerticalMode.VS, MCPModeType.VERTICAL, () => {
+                    return true;
+                }, this.activateVSpeed.bind(this));
+            }
+        }
+        activateVSpeed() {
+            this.deactivateVNAV();
+            this.deactivateAltitudeHold();
+            this.deactivateFLCH();
+            this.armSpeed();
+            SimVar.SetSimVarValue('K:ALTITUDE_SLOT_INDEX_SET', SimVarValueUnit.Number, 1);
+            let displayedAltitude = Simplane.getAutoPilotDisplayedAltitudeLockValue();
+            Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, displayedAltitude, this.forceNextAltitudeUpdate);
+            let currentVSpeed = Simplane.getVerticalSpeed();
+            Coherent.call('AP_VS_VAR_SET_ENGLISH', 0, currentVSpeed);
+            if (!SimVar.GetSimVarValue('AUTOPILOT VERTICAL HOLD', SimVarValueUnit.Boolean)) {
+                SimVar.SetSimVarValue('K:AP_PANEL_VS_HOLD', SimVarValueUnit.Number, 1);
+            }
+            SimVar.SetSimVarValue('L:AP_VS_ACTIVE', SimVarValueUnit.Number, 1);
+        }
+    }
+    var MCPModeType;
+    (function (MCPModeType) {
+        MCPModeType[MCPModeType["LATERAL"] = 0] = "LATERAL";
+        MCPModeType[MCPModeType["VERTICAL"] = 1] = "VERTICAL";
+        MCPModeType[MCPModeType["SPEED"] = 2] = "SPEED";
+        MCPModeType[MCPModeType["THRUST"] = 3] = "THRUST";
+        MCPModeType[MCPModeType["DUMMY"] = 4] = "DUMMY";
+    })(MCPModeType || (MCPModeType = {}));
+    var MCPLateralMode;
+    (function (MCPLateralMode) {
+        MCPLateralMode[MCPLateralMode["LNAV"] = 0] = "LNAV";
+        MCPLateralMode[MCPLateralMode["HOLD"] = 1] = "HOLD";
+        MCPLateralMode[MCPLateralMode["SELECT"] = 2] = "SELECT";
+        MCPLateralMode[MCPLateralMode["APPROACH"] = 3] = "APPROACH";
+        MCPLateralMode[MCPLateralMode["LOCALIZER"] = 4] = "LOCALIZER";
+    })(MCPLateralMode || (MCPLateralMode = {}));
+    var MCPVerticalMode;
+    (function (MCPVerticalMode) {
+        MCPVerticalMode[MCPVerticalMode["VNAV"] = 0] = "VNAV";
+        MCPVerticalMode[MCPVerticalMode["FLCH"] = 1] = "FLCH";
+        MCPVerticalMode[MCPVerticalMode["VS"] = 2] = "VS";
+        MCPVerticalMode[MCPVerticalMode["HOLD"] = 3] = "HOLD";
+    })(MCPVerticalMode || (MCPVerticalMode = {}));
+    var MCPSpeedMode;
+    (function (MCPSpeedMode) {
+        MCPSpeedMode[MCPSpeedMode["INTERVENTION"] = 0] = "INTERVENTION";
+    })(MCPSpeedMode || (MCPSpeedMode = {}));
+    var MCPThrustMode;
+    (function (MCPThrustMode) {
+        MCPThrustMode[MCPThrustMode["SPEED"] = 0] = "SPEED";
+    })(MCPThrustMode || (MCPThrustMode = {}));
+    var MCPDummyMode;
+    (function (MCPDummyMode) {
+        MCPDummyMode[MCPDummyMode["DUMMY"] = 0] = "DUMMY";
+    })(MCPDummyMode || (MCPDummyMode = {}));
+    class PendingMode {
+        /**
+         * TODO: Make better type check for MODE param
+         * @param {MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode} mode
+         * @param {MCPModeType} modeType
+         * @param {Function} condition
+         * @param {Function} handler
+         */
+        constructor(mode, modeType, condition, handler) {
+            this._mode = mode;
+            this._modeType = modeType;
+            this._condition = condition;
+            this._handler = handler;
+        }
+        get condition() {
+            return this._condition;
+        }
+        get mode() {
+            return this._mode;
+        }
+        get modeType() {
+            return this._modeType;
+        }
+        get handler() {
+            return this._handler;
+        }
+        check() {
+            if (this.condition) {
+                if (this.condition()) {
+                    this.execute();
+                    return true;
+                }
+            }
+            return false;
+        }
+        execute() {
+            this.handler();
+        }
+    }
+    class ArmedMode {
+        /**
+         * TODO: Make better type check for MODE param
+         * @param {MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode} mode
+         * @param {MCPModeType} modeType
+         * @param {Function} condition
+         * @param {Function} handler
+         */
+        constructor(mode, modeType, condition, handler) {
+            this._mode = mode;
+            this._modeType = modeType;
+            this._condition = condition;
+            this._handler = handler;
+        }
+        get mode() {
+            return this._mode;
+        }
+        get modeType() {
+            return this._modeType;
+        }
+        get condition() {
+            return this._condition;
+        }
+        get handler() {
+            return this._handler;
+        }
+        getPendingMode() {
+            return new PendingMode(this.mode, this.modeType, this.condition, this.handler);
+        }
+    }
+
+    class NavModeSwitcher {
+        constructor() {
+            this._eventQueue = new Queue();
+            this._mcpDirector = new MCPDirector();
+            this._handlers = [];
+            this._autopilotState = new AutopilotState();
+            this.handlers[NavModeSwitcherEvent.AP_CHANGED] = this.handleApChanged.bind(this);
+            this.handlers[NavModeSwitcherEvent.NAVIGATION_MODE_CHANGED] = this.handleNavigationModeChanged.bind(this);
+            this.handlers[NavModeSwitcherEvent.TOGA_CHANGED] = this.handleTogaChanged.bind(this);
+            this.handlers[NavModeSwitcherEvent.HEADING_LOCKED_CHANGED] = this.handleHeadingLockedChanged.bind(this);
+            this.handlers[NavModeSwitcherEvent.ALTITUDE_LOCKED_CHANGED] = this.handleAltitudeLockedChanged.bind(this);
+            this.handlers[NavModeSwitcherEvent.SIMULATOR_ALTITUDE_LOCKED_CHANGED] = this.handleSimulatorAltitudeLockedChanged.bind(this);
+            this.handlers[NavModeSwitcherEvent.ALTITUDE_SLOT_CHANGED] = this.handleAltitudeSlotChanged.bind(this);
+            this.handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_1_CHANGED] = this.handleSelectedAltitude1Changed.bind(this);
+            this.handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_2_CHANGED] = this.handleSelectedAltitude2Changed.bind(this);
+            this.handlers[NavModeSwitcherEvent.SELECTED_ALTITUDE_3_CHANGED] = this.handleSelectedAltitude3Changed.bind(this);
+            this.handlers[NavModeSwitcherEvent.GROUNDED_CHANGED] = this.handleGroundedChanged.bind(this);
+            this.handlers[NavModeSwitcherEvent.HDG_HOLD_PRESSED] = this.handleHeadingHoldPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.HDG_SEL_PRESSED] = this.handleHeadingSelectPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.SPD_PRESSED] = this.handleSpeedPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED] = this.handleSpeedInterventionPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.FLC_PRESSED] = this.handleFlightLevelChangePressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.APPR_PRESSED] = this.handleApproachPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.VS_PRESSED] = this.handleVerticalSpeedPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.VNAV_PRESSED] = this.handleVNAVPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.LNAV_PRESSED] = this.handleLNAVPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.ALT_HOLD_PRESSED] = this.handleALTHoldPressed.bind(this);
+            this.handlers[NavModeSwitcherEvent.ALT_INTERVENTION_PRESSED] = this.handleALTInterventionPressed.bind(this);
+        }
+        get eventQueue() {
+            return this._eventQueue;
+        }
+        get mcpDirector() {
+            return this._mcpDirector;
+        }
+        get handlers() {
+            return this._handlers;
+        }
+        get autopilotState() {
+            return this._autopilotState;
+        }
+        handleApChanged() {
+        }
+        handleNavigationModeChanged() {
+        }
+        handleTogaChanged() {
+        }
+        handleHeadingLockedChanged() {
+        }
+        handleAltitudeLockedChanged() {
+        }
+        handleSimulatorAltitudeLockedChanged() {
+        }
+        handleHeadingHoldPressed() {
+            this.mcpDirector.armHeadingHold();
+        }
+        handleHeadingSelectPressed() {
+            this.mcpDirector.armHeadingSelect();
+        }
+        handleSpeedPressed() {
+            this.mcpDirector.armSpeed();
+        }
+        handleSpeedInterventionPressed() {
+            this.mcpDirector.toggleSpeedIntervention();
+        }
+        handleFlightLevelChangePressed() {
+            this.mcpDirector.armFLCH();
+        }
+        handleApproachPressed() {
+        }
+        handleVerticalSpeedPressed() {
+            this.mcpDirector.armVerticalSpeed();
+        }
+        handleVNAVPressed() {
+            this.mcpDirector.armVNAV();
+        }
+        handleLNAVPressed() {
+            this.mcpDirector.armLNAV();
+        }
+        handleALTHoldPressed() {
+        }
+        handleALTInterventionPressed() {
+        }
+        handleAltitudeSlotChanged() {
+        }
+        handleSelectedAltitude1Changed() {
+        }
+        handleSelectedAltitude2Changed() {
+        }
+        handleSelectedAltitude3Changed() {
+        }
+        handleGroundedChanged() {
+        }
+        update() {
+            for (const autopilotStateElement of this.autopilotState) {
+                const eventToTrigger = autopilotStateElement.update();
+                if (eventToTrigger) {
+                    this.eventQueue.enqueue(eventToTrigger);
+                }
+            }
+            this.processEvents();
+            this.mcpDirector.processPending();
+        }
+        processEvents() {
+            for (; this.eventQueue.length > 0;) {
+                const event = this.eventQueue.dequeue();
+                if (this.handlers[event] !== undefined) {
+                    this.handlers[event]();
+                }
+            }
+        }
+        enqueueEvent(event) {
+            this.eventQueue.enqueue(event);
+        }
+    }
+    /**
+     * NOTES:
+     * AUTOPILOT ALTITUDE LOCK VAR:1 -> This is altitude intervention / Altitude hold
+     * AUTOPILOT ALTITUDE LOCK VAR:2 -> Used as target for FLCH/VNAV
+     * AUTOPILOT ALTITUDE LOCK VAR:3 -> This is MCP altitude window
+     * AUTOPILOT HEADING SLOT INDEX:1 -> HDG SEL
+     * AUTOPILOT HEADING SLOT INDEX:2 -> HDG HOLD
+     * AUTOPILOT HEADING LOCK -> true for HDG modes / false for LNAV
+     * AUTOPILOT ALTITUDE SLOT INDEX:1 -> FLCH/VS
+     * AUTOPILOT ALTITUDE SLOT INDEX:2 -> VNAV
+     */
+
     class B787_10_FMC extends Boeing_FMC {
         /**
          * TODO: Refactor section end
          */
         constructor() {
             super();
+            this._navModeSwitcher = undefined;
             this.onInputAircraftSpecific = (input) => {
                 HDLogger.log('B787_10_FMC.onInputAircraftSpecific input = \'' + input + '\'', Level.info);
                 if (input === 'LEGS') {
@@ -17702,34 +18544,107 @@
          * @param _event
          */
         onEvent(_event) {
+            super.onEvent(_event);
+            if (_event.indexOf('AP_LNAV') != -1) {
+                if (this._isMainRouteActivated) {
+                    this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.LNAV_PRESSED);
+                }
+                else {
+                    this.messageManager.showMessage('NO ACTIVE ROUTE', 'ACTIVATE ROUTE TO <br> ENGAGE LNAV');
+                }
+            }
+            else if (_event.indexOf('AP_VNAV') != -1) {
+                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.VNAV_PRESSED);
+            }
+            else if (_event.indexOf('AP_FLCH') != -1) {
+                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.FLC_PRESSED);
+            }
+            else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
+                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.HDG_HOLD_PRESSED);
+            }
+            else if (_event.indexOf('AP_HEADING_SEL') != -1) {
+                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.HDG_SEL_PRESSED);
+            }
+            else if (_event.indexOf('AP_SPD') != -1) {
+                if (this.aircraftType == Aircraft.AS01B) {
+                    if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
+                        this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_PRESSED);
+                    }
+                }
+                else {
+                    if ((this.getIsAltitudeHoldActive() || this.getIsVSpeedActive()) && this.getIsTHRActive()) {
+                        this.toggleSPD();
+                    }
+                }
+            }
+            else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
+                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED);
+            }
+            else if (_event.indexOf('AP_VSPEED') != -1) {
+                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.VS_PRESSED);
+            }
+            else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
+                this.activateAltitudeSel();
+            }
+            else if (_event.indexOf('AP_ALT_HOLD') != -1) {
+                this.toggleAltitudeHold();
+            }
+            else if (_event.indexOf('THROTTLE_TO_GA') != -1) {
+                this.setAPSpeedHoldMode();
+                if (this.aircraftType == Aircraft.AS01B) {
+                    this.deactivateSPD();
+                }
+                this.setThrottleMode(ThrottleMode.TOGA);
+                if (Simplane.getIndicatedSpeed() > 80) {
+                    this.deactivateLNAV();
+                    this.deactivateVNAV();
+                }
+            }
+            else if (_event.indexOf('EXEC') != -1) {
+                this.onExec();
+            }
+            if (_event.indexOf('AP_SPD') != -1) {
+                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_PRESSED);
+            }
+            else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
+                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED);
+            }
+            /*
             if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
+
                 SimVar.SetSimVarValue('L:B78XH_DESCENT_ALTITUDE_INTERVENTION_PUSHED', 'Number', 1);
+
                 let shouldOverrideCruiseAltitude = false;
                 let altitude = Simplane.getAutoPilotSelectedAltitudeLockValue('feet');
                 if (altitude >= this.cruiseFlightLevel * 100 && this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
                     shouldOverrideCruiseAltitude = true;
                     SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number', 0);
                 }
+
                 if (altitude < this.cruiseFlightLevel * 100 && this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CRUISE) {
                     shouldOverrideCruiseAltitude = true;
                     SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number', 0);
                 }
+
                 if (altitude <= this.cruiseFlightLevel * 100 && SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_AVAILABLE', 'Number') && !SimVar.GetSimVarValue('L:B78XH_DESCENT_NOW_ACTIVATED', 'Number')) {
                     this.currentFlightPhase = FlightPhase.FLIGHT_PHASE_DESCENT;
                     SimVar.SetSimVarValue('L:B78XH_DESCENT_NOW_ACTIVATED', 'Number', 1);
                     SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
                     return;
                 }
+
                 if (SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number') && !shouldOverrideCruiseAltitude) {
                     SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number', 0);
                     SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
                     return;
                 }
+
                 if (SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number') && !shouldOverrideCruiseAltitude) {
                     SimVar.SetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number', 0);
                     SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
                     return;
                 }
+
                 if (SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.CLIMB_LEVEL_OFF_ACTIVE, 'Number') || SimVar.GetSimVarValue(B78XH_LocalVariables.VNAV.DESCENT_LEVEL_OFF_ACTIVE, 'Number')) {
                     SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
                     return;
@@ -17737,6 +18652,7 @@
                 SimVar.SetSimVarValue('L:FMC_UPDATE_CURRENT_PAGE', 'number', 1);
             }
             super.onEvent(_event);
+             */
         }
         /**
          * TODO: Refactor section
@@ -18296,6 +19212,34 @@
                 this.updateAutopilotCooldown = -1;
             }
             if (this.updateAutopilotCooldown < 0) {
+                if (this._navModeSwitcher === undefined) {
+                    this._navModeSwitcher = new NavModeSwitcher();
+                }
+                else {
+                    this._navModeSwitcher.update();
+                }
+                this._renderer.renderExec(this.getIsRouteActivated());
+                this.updateAutopilotCooldown = this._apCooldown;
+            }
+        }
+        updateAutopilot2() {
+            let now = performance.now();
+            let dt = now - this._lastUpdateAPTime;
+            this._lastUpdateAPTime = now;
+            if (isFinite(dt)) {
+                this.updateAutopilotCooldown -= dt;
+            }
+            if (SimVar.GetSimVarValue('L:AIRLINER_FMC_FORCE_NEXT_UPDATE', 'number') === 1) {
+                SimVar.SetSimVarValue('L:AIRLINER_FMC_FORCE_NEXT_UPDATE', 'number', 0);
+                this.updateAutopilotCooldown = -1;
+            }
+            if (this.updateAutopilotCooldown < 0) {
+                if (this._navModeSwitcher === undefined) {
+                    this._navModeSwitcher = new NavModeSwitcher();
+                }
+                else {
+                    this._navModeSwitcher.update();
+                }
                 let currentApMasterStatus = SimVar.GetSimVarValue('AUTOPILOT MASTER', 'boolean');
                 if (currentApMasterStatus != this._apMasterStatus) {
                     this._apMasterStatus = currentApMasterStatus;

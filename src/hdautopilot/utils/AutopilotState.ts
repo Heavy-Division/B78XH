@@ -1,5 +1,5 @@
 import {AutopilotValueTracker} from './AutopilotValueTracker';
-import {NavModeSwitcherEvent} from '../enums/NavModeSwitcherEvent';
+import {AutomaticAutopilotDirectorEvent} from '../directors/AutomaticAutopilotDirector';
 
 export class AutopilotState {
 	public get autopilot(): AutopilotValueTracker {
@@ -61,17 +61,17 @@ export class AutopilotState {
 	private readonly _grounded: AutopilotValueTracker;
 
 	constructor() {
-		(this._autopilot = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_ALT_HOLD', 'number'))).onChange(NavModeSwitcherEvent.AP_CHANGED);
-		(this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(NavModeSwitcherEvent.NAVIGATION_MODE_CHANGED);
-		(this._toga = new AutopilotValueTracker(() => Simplane.getAutoPilotTOGAActive())).onChange(NavModeSwitcherEvent.TOGA_CHANGED);
-		(this._headingLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'))).onChange(NavModeSwitcherEvent.HEADING_LOCKED_CHANGED);
-		(this._altitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_ALT_HOLD', 'number'))).onChange(NavModeSwitcherEvent.ALTITUDE_LOCKED_CHANGED);
-		(this._simulatorAltitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK', 'Boolean'))).onChange(NavModeSwitcherEvent.SIMULATOR_ALTITUDE_LOCKED_CHANGED);
-		(this._altitudeSlot = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE SLOT INDEX', 'number'))).onChange(NavModeSwitcherEvent.ALTITUDE_SLOT_CHANGED);
-		(this._selectedAltitude1 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet'))).onChange(NavModeSwitcherEvent.SELECTED_ALTITUDE_1_CHANGED);
-		(this._selectedAltitude2 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:2', 'feet'))).onChange(NavModeSwitcherEvent.SELECTED_ALTITUDE_2_CHANGED);
-		(this._selectedAltitude3 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:3', 'feet'))).onChange(NavModeSwitcherEvent.SELECTED_ALTITUDE_3_CHANGED);
-		(this._grounded = new AutopilotValueTracker(() => Simplane.getIsGrounded())).onChange(NavModeSwitcherEvent.GROUNDED_CHANGED);
+		(this._autopilot = new AutopilotValueTracker(() => Simplane.getAutoPilotActive())).onChange(AutomaticAutopilotDirectorEvent.AP_ON_CHANGE);
+		(this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
+		(this._toga = new AutopilotValueTracker(() => Simplane.getAutoPilotTOGAActive())).onChange(AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE);
+		(this._headingLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE);
+		(this._altitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_ALT_HOLD', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE);
+		(this._simulatorAltitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.SIMULATOR_ALTITUDE_LOCK_ON_CHANGE);
+		(this._altitudeSlot = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE SLOT INDEX', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_SLOT_ON_CHANGE);
+		(this._selectedAltitude1 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_1_ON_CHANGE);
+		(this._selectedAltitude2 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:2', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_2_ON_CHANGE);
+		(this._selectedAltitude3 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:3', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_3_ON_CHANGE);
+		(this._grounded = new AutopilotValueTracker(() => Simplane.getIsGrounded())).onChange(AutomaticAutopilotDirectorEvent.GROUNDED_ON_CHANGE);
 	}
 
 	* [Symbol.iterator]() {

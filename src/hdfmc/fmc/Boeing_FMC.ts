@@ -373,6 +373,7 @@ export class Boeing_FMC extends BaseFMC {
 
 	onEvent(_event): void {
 		super.onEvent(_event);
+		/*
 		HDLogger.log('B787_10_BaseFMC onEvent ' + _event, Level.debug);
 		if (_event.indexOf('AP_LNAV') != -1) {
 			if (this._isMainRouteActivated) {
@@ -420,7 +421,7 @@ export class Boeing_FMC extends BaseFMC {
 			}
 		} else if (_event.indexOf('EXEC') != -1) {
 			this.onExec();
-		}
+		}*/
 	}
 
 	getIsLNAVArmed(): boolean {
