@@ -656,8 +656,10 @@ export class HDNavlog {
 
 	async setDeparture(sid: string) {
 		const index = await this.findSidIndex(sid);
-		const [transIndex] = await Promise.all([this.findTransIndex(index), this.asyncSetDepartureIndex(index)]);
-		await this.asyncSetDepartureEnrouteTransitionIndex(transIndex);
+		if (index !== -1) {
+			const [transIndex] = await Promise.all([this.findTransIndex(index), this.asyncSetDepartureIndex(index)]);
+			await this.asyncSetDepartureEnrouteTransitionIndex(transIndex);
+		}
 	}
 
 

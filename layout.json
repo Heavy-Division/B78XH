@@ -3,7 +3,7 @@
         {
             "path": "html_ui/B78XH/b78xh.json",
             "size": 119,
-            "date": 132829492063758030
+            "date": 132836300276025920
         },
         {
             "path": "html_ui/plans/plan.pln",
@@ -11,14 +11,14 @@
             "date": 132733099629660000
         },
         {
-            "path": "ModelBehaviorDefs/Heavy/Index.xml",
-            "size": 137,
-            "date": 132748293433366720
-        },
-        {
             "path": "ModelBehaviorDefs/Temporary/Index.xml",
             "size": 83,
             "date": 132812699018666260
+        },
+        {
+            "path": "ModelBehaviorDefs/Heavy/Index.xml",
+            "size": 137,
+            "date": 132748293433366720
         },
         {
             "path": "html_ui/B78XH/Autopilot/B78XHNavModeSelector.js",
@@ -56,11 +56,6 @@
             "date": 132804556189274700
         },
         {
-            "path": "html_ui/B78XH/Systems/B78XH_IRS.js",
-            "size": 7641,
-            "date": 132804531619356140
-        },
-        {
             "path": "html_ui/B78XH/Systems/B78XH_Systems.js",
             "size": 2195,
             "date": 132804556242134960
@@ -69,6 +64,11 @@
             "path": "html_ui/B78XH/Systems/B78XH_SystemsInfo.js",
             "size": 487,
             "date": 132748293433886700
+        },
+        {
+            "path": "html_ui/B78XH/Systems/B78XH_IRS.js",
+            "size": 7641,
+            "date": 132804531619356140
         },
         {
             "path": "html_ui/Heavy/Enums/B78XH_EICAS_Messages.js",
@@ -88,12 +88,12 @@
         {
             "path": "html_ui/Heavy/libs/hdlogger.js",
             "size": 105571,
-            "date": 132830006531084180
+            "date": 132836288326280590
         },
         {
             "path": "html_ui/Heavy/libs/hdsdk.js",
             "size": 90445,
-            "date": 132830006531084180
+            "date": 132836288326280590
         },
         {
             "path": "html_ui/Heavy/Utils/HeavyDataStorage.js",
@@ -176,6 +176,31 @@
             "date": 132748293434516740
         },
         {
+            "path": "ModelBehaviorDefs/Asobo/Common/Index.xml",
+            "size": 742,
+            "date": 132812728084245820
+        },
+        {
+            "path": "ModelBehaviorDefs/Asobo/Generic/Index.xml",
+            "size": 470,
+            "date": 132748293433346700
+        },
+        {
+            "path": "ModelBehaviorDefs/Temporary/Common/Autopilot.xml",
+            "size": 12054,
+            "date": 132819408571305920
+        },
+        {
+            "path": "ModelBehaviorDefs/Temporary/Common/Electrical.xml",
+            "size": 4858,
+            "date": 132821914260389150
+        },
+        {
+            "path": "ModelBehaviorDefs/Temporary/Common/Index.xml",
+            "size": 126,
+            "date": 132819408571315920
+        },
+        {
             "path": "ModelBehaviorDefs/Heavy/Airliner/Common.xml",
             "size": 5144,
             "date": 132748293433346700
@@ -216,34 +241,9 @@
             "date": 132812657201519170
         },
         {
-            "path": "ModelBehaviorDefs/Temporary/Common/Autopilot.xml",
-            "size": 12054,
-            "date": 132819408571305920
-        },
-        {
-            "path": "ModelBehaviorDefs/Temporary/Common/Electrical.xml",
-            "size": 4858,
-            "date": 132821914260389150
-        },
-        {
-            "path": "ModelBehaviorDefs/Temporary/Common/Index.xml",
-            "size": 126,
-            "date": 132819408571315920
-        },
-        {
             "path": "SimObjects/Airplanes/Asobo_B787_10/engines.cfg",
             "size": 7196,
             "date": 132750794343018270
-        },
-        {
-            "path": "ModelBehaviorDefs/Asobo/Common/Index.xml",
-            "size": 742,
-            "date": 132812728084245820
-        },
-        {
-            "path": "ModelBehaviorDefs/Asobo/Generic/Index.xml",
-            "size": 470,
-            "date": 132748293433346700
         },
         {
             "path": "html_ui/B78XH/DataHolders/FMC/FMCDataHolder.js",
@@ -487,8 +487,8 @@
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC/hdfmc.js",
-            "size": 812413,
-            "date": 132830006531084180
+            "size": 812467,
+            "date": 132836288326280590
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.css",
@@ -496,14 +496,14 @@
             "date": 132748293434146720
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.js",
-            "size": 11011,
-            "date": 132814614539912860
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.html",
             "size": 4445,
             "date": 132758739886309310
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/B787_10_MFD.js",
+            "size": 11011,
+            "date": 132814614539912860
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/mapConfig.json",
@@ -621,11 +621,6 @@
             "date": 132748293434206720
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_TOWERED_SERVICED_BLUE.png",
-            "size": 3683,
-            "date": 132748293434206720
-        },
-        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_UNKNOWN_PINK.png",
             "size": 3683,
             "date": 132748293434206720
@@ -634,6 +629,11 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AUX.png",
             "size": 3718,
             "date": 132748293434216740
+        },
+        {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_AIRPORT_TOWERED_SERVICED_BLUE.png",
+            "size": 3683,
+            "date": 132748293434206720
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_INTERSECTION.png",
@@ -766,6 +766,11 @@
             "date": 132748293434296720
         },
         {
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR.png",
+            "size": 2937,
+            "date": 132748293434296720
+        },
+        {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR.svg",
             "size": 2745,
             "date": 132748293434296720
@@ -779,11 +784,6 @@
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_DISPLAYED.svg",
             "size": 3162,
             "date": 132748293434306720
-        },
-        {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR.png",
-            "size": 2937,
-            "date": 132748293434296720
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Images/ICON_MAP_VOR_DME.png",
@@ -933,12 +933,12 @@
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_CHKL.html",
             "size": 10559,
-            "date": 132753520402065780
+            "date": 132830022653426740
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_CHKL.js",
             "size": 406,
-            "date": 132753520402075780
+            "date": 132830022653436740
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_EICAS.css",
@@ -978,7 +978,7 @@
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_ND.html",
             "size": 10039,
-            "date": 132758846546134940
+            "date": 132834610852568030
         },
         {
             "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_ND.js",
