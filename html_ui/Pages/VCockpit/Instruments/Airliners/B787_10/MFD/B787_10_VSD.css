@@ -5,8 +5,8 @@ body {
 }
 .altitudes {
         margin-top: 50px;
-        width: 80px;
-        height: 800px;
+        width: 70px;
+        height: auto;
         background: gray;
         position: absolute;
         z-index: 5000;
@@ -79,7 +79,7 @@ body {
     position: fixed;
     bottom: 0;
     text-align: center;
-    margin-left: auto;
+    margin-left: 1.5cm;
     margin-right: auto;
 }
 
@@ -127,7 +127,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 13%;
     
 
@@ -138,7 +138,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 29%;
 
 }
@@ -148,7 +148,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 49%;
 }
 
@@ -157,7 +157,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 69%;
 }
 
@@ -166,7 +166,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 89%;
 }
 
@@ -176,7 +176,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 13%;
     margin-top:15px;
 
@@ -187,28 +187,28 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 29.5%;
     margin-top:15px;
 
 }
 
 #const3 {
-    color: black;
+    color: black; 
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 49%;
     margin-top:15px;
 }
 
 #const4 {
-    color: white;
+    color: fixed;
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 69%;
     margin-top:15px;
 }
@@ -218,7 +218,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
-    position: absolute;
+    position: fixed;
     left: 89%;
     margin-top:15px;
 }
@@ -226,7 +226,7 @@ body {
 #line1 {
     border-left: 3px dashed white;
     height: 700px;
-    position: absolute;
+    position: fixed;
     left: 23%;
     margin-top: 45px;
     margin-left: -3px;
@@ -236,7 +236,7 @@ body {
   #line2 {
     border-left: 3px dashed magenta;
     height: 700px;
-    position: absolute;
+    position: fixed;
     left: 33%;
     margin-top: 45px;
     margin-left: -3px;
@@ -246,7 +246,7 @@ body {
   #line3 {
     border-left: 3px dashed white;
     height: 700px;
-    position: absolute;
+    position: fixed;
     left: 53%;
     margin-top: 45px;
     margin-left: -3px;
@@ -256,7 +256,7 @@ body {
   #line4 {
     border-left: 3px dashed white;
     height: 700px;
-    position: absolute;
+    position: fixed;
     left: 73%;
     margin-top: 45px;
     margin-left: -3px;
@@ -266,7 +266,7 @@ body {
   #line5 {
     border-left: 3px dashed white;
     height: 700px;
-    position: absolute;
+    position: fixed;
     left: 93%;
     margin-top: 45px;
     margin-left: -3px;
