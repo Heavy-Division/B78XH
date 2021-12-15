@@ -1,27 +1,111 @@
-
-
 body {
     background-color: black;
-
+    border-left: 5px white;
+    margin: 50px;
+    margin-bottom: 50px;
 }
+  
 
-.waypoint1 {
+
+
+#waypoint1 {
+    text-align: center;
     color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
+
 }
 
-.waypoint2 {
-    color: white;
+#waypoint2 {
+    color: magenta;
+    width: 20%;
+    float: left;
+    z-index: 100;
+
 }
 
-.waypoint3 {
+#waypoint3 {
     color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
 }
 
-.waypoint4 {
+#waypoint4 {
     color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
 }
 
-.waypoint5 {
+#waypoint5 {
     color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
 }
+
+.line1 {
+    border-left: 3px dashed white;
+    height: 700px;
+    position: absolute;
+    left: 13%;
+    margin-top: 100px;
+    margin-left: -3px;
+    top: 0;
+  }
+
+  .line2 {
+    border-left: 3px dashed magenta;
+    height: 700px;
+    position: absolute;
+    left: 24%;
+    margin-top: 100px;
+    margin-left: -3px;
+    top: 0;
+  }
+
+  .line3 {
+    border-left: 3px dashed white;
+    height: 700px;
+    position: absolute;
+    left: 43%;
+    margin-top: 100px;
+    margin-left: -3px;
+    top: 0;
+  }
+
+  .line4 {
+    border-left: 3px dashed white;
+    height: 700px;
+    position: absolute;
+    left: 61.5%;
+    margin-top: 100px;
+    margin-left: -3px;
+    top: 0;
+  }
+
+  .line5 {
+    border-left: 3px dashed white;
+    height: 700px;
+    position: absolute;
+    left: 80.2%;
+    margin-top: 100px;
+    margin-left: -3px;
+    top: 0;
+  }
+
+
+#a{
+    position: absolute;
+    align: left;
+    width:1100px;
+    height:700px;
+    background: clear;
+    border: 80px gray;
+    border-style: none none solid solid;
+    z-index: 50;
+}
+
 
