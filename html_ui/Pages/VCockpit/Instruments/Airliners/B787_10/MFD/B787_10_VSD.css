@@ -101,6 +101,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    margin-top: 15px;
 
 }
 
@@ -109,6 +110,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    margin-top: 15px;
 
 }
 
@@ -117,6 +119,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    margin-top: 15px;
 }
 
 #distance4 {
@@ -124,6 +127,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    margin-top: 15px;
 }
 
 #distance5 {
@@ -131,6 +135,7 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    margin-top: 15px;
 }
 
 #waypoint1 {
@@ -293,3 +298,43 @@ body {
 }
 
 
+
+#distMrk1 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 10%;
+
+  }
+
+  #distMrk2 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 30%;
+
+  }
+
+  #distMrk3 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 50%;
+
+  }
+
+  #distMrk4 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 70%;
+  }
+
+  #distMrk5 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 89.75%;
+
+
+  }
