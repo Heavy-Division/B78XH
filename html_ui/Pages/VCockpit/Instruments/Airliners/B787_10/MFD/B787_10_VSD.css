@@ -3,12 +3,76 @@ body {
     border-left: 5px white;
     
 }
+.altitudes {
+        margin-top: 50px;
+        width: 80px;
+        height: 800px;
+        background: gray;
+        position: absolute;
+        z-index: 5000;
+        color: white;
+
+}
+#altitude1 {
+    margin-bottom: 5cm;
+    
+}
+#altitude2 {
+    margin-bottom: 5cm;
+    
+}
+#altitude3 {
+    margin-bottom: 5cm;
+    
+}
+#altitude4 {
+    margin-bottom: 5cm;
+    
+}
+
+#altMrk1 {
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    height: 2px;
+    width: 20px;
+    background-color: white;
+
+}
+
+#altMrk2 {
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    height: 2px;
+    width: 20px;
+    background-color: white;
+
+}
+#altMrk3 {
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    height: 2px;
+    width: 20px;
+    background-color: white;
+
+}
+#altMrk4 {
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    height: 2px;
+    width: 20px;
+    background-color: white;
+
+}
 
 .distances {
     color: white;
     text-align: bottom;
     width: 100%;
-    height: 80px;
+    height: 31px;
     padding: 1px;
     background-color: gray;
     color: #ffffff;
@@ -63,6 +127,9 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 13%;
+    
 
 }
 
@@ -71,6 +138,8 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 29%;
 
 }
 
@@ -79,6 +148,8 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 49%;
 }
 
 #waypoint4 {
@@ -86,6 +157,8 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 69%;
 }
 
 #waypoint5 {
@@ -93,6 +166,8 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 89%;
 }
 
 #const1 {
@@ -101,6 +176,9 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 13%;
+    margin-top:15px;
 
 }
 
@@ -109,6 +187,9 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 29.5%;
+    margin-top:15px;
 
 }
 
@@ -117,6 +198,9 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 49%;
+    margin-top:15px;
 }
 
 #const4 {
@@ -124,6 +208,9 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 69%;
+    margin-top:15px;
 }
 
 #const5 {
@@ -131,55 +218,63 @@ body {
     width: 20%;
     float: left;
     z-index: 100;
+    position: absolute;
+    left: 89%;
+    margin-top:15px;
 }
-.line1 {
+
+#line1 {
     border-left: 3px dashed white;
-    height: 660px;
+    height: 700px;
     position: absolute;
-    left: 11%;
+    left: 23%;
     margin-top: 45px;
     margin-left: -3px;
     top: 0;
   }
 
-  .line2 {
+  #line2 {
     border-left: 3px dashed magenta;
-    height: 660px;
+    height: 700px;
     position: absolute;
-    left: 23.2%;
+    left: 33%;
     margin-top: 45px;
     margin-left: -3px;
     top: 0;
   }
 
-  .line3 {
+  #line3 {
     border-left: 3px dashed white;
-    height: 660px;
+    height: 700px;
     position: absolute;
-    left: 43%;
+    left: 53%;
     margin-top: 45px;
     margin-left: -3px;
     top: 0;
   }
 
-  .line4 {
+  #line4 {
     border-left: 3px dashed white;
-    height: 660px;
+    height: 700px;
     position: absolute;
-    left: 63%;
+    left: 73%;
     margin-top: 45px;
     margin-left: -3px;
     top: 0;
   }
 
-  .line5 {
+  #line5 {
     border-left: 3px dashed white;
-    height: 660px;
+    height: 700px;
     position: absolute;
-    left: 83%;
+    left: 93%;
     margin-top: 45px;
     margin-left: -3px;
     top: 0;
+  }
+
+  .lines {
+     
   }
 
 
