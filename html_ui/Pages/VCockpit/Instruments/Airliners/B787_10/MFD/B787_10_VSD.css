@@ -183,15 +183,4 @@ body {
   }
 
 
-#a{
-    position: absolute;
-    align: left;
-    width:1100px;
-    height:700px;
-    background: clear;
-    border: 80px gray;
-    border-style: none none solid none;
-    z-index: 50;
-}
-
 
