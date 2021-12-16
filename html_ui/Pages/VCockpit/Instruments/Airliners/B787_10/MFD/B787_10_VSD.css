@@ -3,14 +3,18 @@ body {
     border-left: 5px white;
     
 }
+
+
+
 .altitudes {
         margin-top: 50px;
         width: 70px;
-        height: auto;
+        height: 100%;
         background: gray;
         position: absolute;
         z-index: 50;
         color: white;
+
 
 }
 
@@ -22,6 +26,7 @@ body {
     color: magenta;
     background-color: black;
     font-size: large;
+
 
     z-index: 110;
 
@@ -247,7 +252,7 @@ body {
 
 #line1 {
     border-left: 3px dashed white;
-    height: 700px;
+    height: 100%;
     position: fixed;
     left: 23%;
     margin-top: 45px;
@@ -257,7 +262,7 @@ body {
 
   #line2 {
     border-left: 3px dashed magenta;
-    height: 700px;
+    height: 100%;
     position: fixed;
     left: 31.5%;
     margin-top: 45px;
@@ -266,7 +271,7 @@ body {
 
   #line3 {
     border-left: 3px dashed white;
-    height: 700px;
+    height: 100%;
     position: fixed;
     left: 52%;
     margin-top: 45px;
@@ -275,7 +280,7 @@ body {
 
   #line4 {
     border-left: 3px dashed white;
-    height: 700px;
+    height: 100%;
     position: fixed;
     left: 72%;
     margin-top: 45px;
@@ -284,7 +289,7 @@ body {
 
   #line5 {
     border-left: 3px dashed white;
-    height: 700px;
+    height: 7100%;
     position: fixed;
     left: 92%;
     margin-top: 45px;
@@ -293,8 +298,11 @@ body {
 
   #aglLine {
     border-bottom: 3px dashed #00ff00;
-    height: 743px;
+    height: 90.85%;
     z-index: 1;
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
 
 }
 
@@ -339,3 +347,24 @@ body {
 
 
   }
+  
+  #planemarker1 {
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-top: 25px solid transparent;
+    border-left: 50px solid white;
+    bottom: 53%;
+    left: 25%;
+  }
+
+  #planemarker2 {
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-top: 20px solid transparent;
+    border-left: 40px solid black;
+    bottom: 53.15%;
+    left: 25.1%;
+  }
+
