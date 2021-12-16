@@ -259,9 +259,8 @@ body {
     border-left: 3px dashed magenta;
     height: 700px;
     position: fixed;
-    left: 33%;
+    left: 31.5%;
     margin-top: 45px;
-    margin-left: -3px;
     top: 0;
   }
 
@@ -269,9 +268,8 @@ body {
     border-left: 3px dashed white;
     height: 700px;
     position: fixed;
-    left: 53%;
+    left: 52%;
     margin-top: 45px;
-    margin-left: -3px;
     top: 0;
   }
 
@@ -279,9 +277,8 @@ body {
     border-left: 3px dashed white;
     height: 700px;
     position: fixed;
-    left: 73%;
+    left: 72%;
     margin-top: 45px;
-    margin-left: -3px;
     top: 0;
   }
 
@@ -289,9 +286,8 @@ body {
     border-left: 3px dashed white;
     height: 700px;
     position: fixed;
-    left: 93%;
+    left: 92%;
     margin-top: 45px;
-    margin-left: -3px;
     top: 0;
   }
 
