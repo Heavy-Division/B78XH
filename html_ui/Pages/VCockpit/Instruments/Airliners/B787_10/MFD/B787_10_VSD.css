@@ -368,3 +368,14 @@ body {
     left: 25.1%;
   }
 
+  #planevd {
+    transform: rotate(-10deg);
+    border-left: 275px solid white;
+    height: 2px;
+    position: absolute;
+    left: 29%;
+    bottom: 54.9%;
+    z-index: 30
+    
+    
+  }
