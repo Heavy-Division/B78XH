@@ -4,12 +4,31 @@ body {
     
 }
 
+@font-face {
+    font-family: "Roboto";
+    src: url("/Fonts/RobotoMono-Medium.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
 
+@font-face {
+    font-family: "Roboto-Light";
+    src: url("/Fonts/RobotoMono-Light.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url("/Fonts/RobotoMono-Bold.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
 
 .altitudes {
         margin-top: 50px;
         width: 70px;
-        height: 100%;
+        height: auto;
         background: gray;
         position: absolute;
         z-index: 50;
@@ -19,6 +38,7 @@ body {
 }
 
 #currentAlt {
+    font-family: Roboto-Light;
     position: fixed;
     top: 0px;
     width: 3cm;
@@ -221,26 +241,28 @@ body {
 }
 
 #const3 {
-    color: black; 
+    color: white; 
     width: 20%;
     float: left;
     z-index: 100;
     position: fixed;
-    left: 49%;
+    left: 51.5%;
     margin-top:15px;
 }
 
 #const4 {
-    color: fixed;
+    color: white;
+    text-align: center;
     width: 20%;
     float: left;
     z-index: 100;
     position: fixed;
-    left: 69%;
+    left: 62%;
     margin-top:15px;
 }
 
 #const5 {
+    text-align: center;
     color: white;
     width: 20%;
     float: left;
@@ -297,13 +319,14 @@ body {
   }
 
   #aglLine {
-    border-bottom: 3px dashed #00ff00;
-    height: 90.85%;
-    z-index: 1;
-    position: absolute;
-    top: 50%;
-    bottom: 50%;
-
+   transform: rotate(-45deg);
+    border-left: 250px solid magenta;
+    height: 3px;
+    position: fixed;
+    left: 39.9%;
+    bottom: 41%;
+    z-index: 29;
+    
 }
 
 
@@ -351,31 +374,54 @@ body {
   #planemarker1 {
     width: 0;
     height: 0;
-    position: absolute;
+    position: fixed;
     border-top: 25px solid transparent;
     border-left: 50px solid white;
-    bottom: 53%;
-    left: 25%;
+    bottom: 25%;
+    left: 20%;
   }
 
   #planemarker2 {
     width: 0;
     height: 0;
-    position: absolute;
+    position: fixed;
     border-top: 20px solid transparent;
     border-left: 40px solid black;
-    bottom: 53.15%;
-    left: 25.1%;
+    bottom: 25.2%;
+    left: 20.2%;
   }
 
   #planevd {
-    transform: rotate(-10deg);
-    border-left: 275px solid white;
+    transform: rotate(-15deg);
+    border-left: 155px solid white;
     height: 2px;
-    position: absolute;
-    left: 29%;
-    bottom: 54.9%;
+    position: fixed;
+    left: 26%;
+    bottom: 27.5%;
     z-index: 30
     
+    
+  }
+
+  #vPath1 {
+    transform: rotate(-45deg);
+    border-left: 250px solid magenta;
+    height: 3px;
+    position: fixed;
+    left: 39.9%;
+    bottom: 41%;
+    z-index: 29;
+    
+  }
+
+
+  #vPath2 {
+    transform: rotate(-20deg);
+    border-left: 30cm solid magenta;
+    height: 3px;
+    position: fixed;
+    left: 61.8%;
+    bottom: 76.8%;
+    z-index: 29;
     
   }
