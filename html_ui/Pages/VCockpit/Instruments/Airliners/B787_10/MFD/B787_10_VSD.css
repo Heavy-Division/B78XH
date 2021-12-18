@@ -28,7 +28,7 @@ body {
 .altitudes {
         margin-top: 50px;
         width: 70px;
-        height: auto;
+        height: 100%;
         background: gray;
         position: absolute;
         z-index: 50;
@@ -377,8 +377,8 @@ body {
     position: fixed;
     border-top: 25px solid transparent;
     border-left: 50px solid white;
-    bottom: 25%;
-    left: 20%;
+    bottom: 53%;
+    left: 21.7%;
   }
 
   #planemarker2 {
@@ -387,8 +387,8 @@ body {
     position: fixed;
     border-top: 20px solid transparent;
     border-left: 40px solid black;
-    bottom: 25.2%;
-    left: 20.2%;
+    bottom: 53.15%;
+    left: 21.83%;
   }
 
   #planevd {
@@ -397,31 +397,32 @@ body {
     height: 2px;
     position: fixed;
     left: 26%;
-    bottom: 27.5%;
+    bottom: 54.6%;
     z-index: 30
     
     
   }
 
   #vPath1 {
-    transform: rotate(-45deg);
+    transform: rotate(-40deg);
     border-left: 250px solid magenta;
     height: 3px;
     position: fixed;
-    left: 39.9%;
-    bottom: 41%;
+    left: 28.7%;
+    bottom: 80.5%;
     z-index: 29;
     
   }
-
 
   #vPath2 {
-    transform: rotate(-20deg);
-    border-left: 30cm solid magenta;
+    border-left: 250px magenta;
     height: 3px;
     position: fixed;
-    left: 61.8%;
-    bottom: 76.8%;
+    left: 28.7%;
+    bottom: 80.5%;
     z-index: 29;
     
   }
+
+
+ 
