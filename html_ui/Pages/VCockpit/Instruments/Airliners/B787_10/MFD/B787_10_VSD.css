@@ -602,22 +602,22 @@ body {
   }
 
   #vPath3 {
-    transform: rotate(30deg);
-    border-left: 150px solid magenta;
+    transform: rotate(20deg);
+    border-left: 208px solid magenta;
     height: 3px;
     position: fixed;
     left: 69.3%;
-    bottom: 69.6%;
+    bottom: 69.8%;
     z-index: 29;
     
   }
 
   #vPath4 {
-    border-left: 150px solid magenta;
+    border-left: 66px solid magenta;
     height: 3px;
     position: fixed;
-    left: 80%;
-    bottom: 67%;
+    left: 85%;
+    bottom: 67.2%;
     z-index: 29;
     
   }
