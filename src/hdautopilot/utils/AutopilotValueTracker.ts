@@ -14,7 +14,7 @@ export class AutopilotValueTracker {
 		return this._value;
 	}
 
-	private set value(value: any) {
+	public set value(value: any) {
 		this._value = value;
 	}
 
