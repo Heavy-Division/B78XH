@@ -1,6 +1,7 @@
 body {
     background-color: black;
-    
+    border-top: solid 2px white;
+    width: 1000px;
 }
 
 @font-face {
@@ -27,7 +28,7 @@ body {
 .altitudes {
         margin-top: 50px;
         width: 70px;
-        height: 100%;
+        height: auto;
         background: gray;
         position: absolute;
         z-index: 50;
@@ -39,15 +40,14 @@ body {
 #currentAlt {
     font-family: Roboto-Light;
     position: fixed;
-    top: 0px;
+    top: 40px;
+    left: 15px;
     width: 3cm;
     height: 60px;
     color: magenta;
-    background-color: black;
+    background-color: transparent;
     font-size: large;
-
-
-    z-index: 110;
+    z-index: 9999;
 
 }
 #altitude1 {
@@ -80,6 +80,36 @@ body {
 
 }
 
+#altTick1 {
+    position: absolute;
+    right: 0px;
+    top: 120px;
+    height: 1px;
+    width: 10px;
+    background-color: white;
+
+}
+
+#altTick2 {
+    position: absolute;
+    right: 0px;
+    top: 320px;
+    height: 1px;
+    width: 10px;
+    background-color: white;
+
+
+}
+
+#altTick3 {
+    position: absolute;
+    right: 0px;
+    top: 550px;
+    height: 1px;
+    width: 10px;
+    background-color: white;
+
+}
 #altMrk2 {
     position: absolute;
     right: 0px;
@@ -112,16 +142,14 @@ body {
     color: white;
     text-align: bottom;
     width: 100%;
-    height: 31px;
-    padding: 1px;
+    height: 30px;
     background-color: gray;
     color: #ffffff;
     position: fixed;
     bottom: 0;
     text-align: center;
-    margin-left: 1.5cm;
     margin-right: auto;
-    z-index: 50;
+    z-index: 5000;
 }
 
 #distance1 {
@@ -297,7 +325,7 @@ body {
     z-index: 100;
     position: fixed;
     left: 3%;
-    top: 2%;
+    top: 5%;
     
 
 }
@@ -308,8 +336,8 @@ body {
     float: left;
     z-index: 100;
     position: fixed;
-    left: 23.5%;
-    top: 2%;
+    left: 23%;
+    top: 3%;
 
 }
 
@@ -319,8 +347,8 @@ body {
     float: left;
     z-index: 100;
     position: fixed;
-    left: 35.5%;
-    top: 2%;
+    left: 35%;
+    top: 3%;
 }
 
 #const4 {
@@ -331,7 +359,7 @@ body {
     z-index: 100;
     position: fixed;
     left: 62%;
-    top: 2%;
+    top: 3%;
 }
 
 #const5 {
@@ -342,7 +370,7 @@ body {
     z-index: 100;
     position: fixed;
     left: 40%;
-    top: 2%;
+    top: 3%;
 }
 
 #const9 {
@@ -353,7 +381,7 @@ body {
     z-index: 100;
     position: fixed;
     left: 60%;
-    top: 2%;
+    top: 3%;
 }
 
 #const12 {
@@ -364,7 +392,7 @@ body {
     z-index: 100;
     position: fixed;
     left: 75%;
-    top: 2%;
+    top: 3%;
 }
 
 #line1 {
@@ -514,6 +542,13 @@ body {
 
   }
 
+  #distTick1 {
+    border-left: 1px solid white;
+    height: 7px;
+    position: absolute;
+    left: 20.5%;
+  }
+
   #distMrk2 {
     border-left: 1.5px solid white;
     height: 15px;
@@ -521,7 +556,12 @@ body {
     left: 30%;
 
   }
-
+#distTick2 {
+    border-left: 1px solid white;
+    height: 7px;
+    position: absolute;
+    left: 40.5%;
+}
   #distMrk3 {
     border-left: 1.5px solid white;
     height: 15px;
@@ -553,7 +593,7 @@ body {
     border-top: 25px solid transparent;
     border-left: 50px solid white;
     bottom: 81.8%;
-    left: 10%;
+    left: 15%;
   }
 
   #planemarker2 {
@@ -563,7 +603,7 @@ body {
     border-top: 20px solid transparent;
     border-left: 40px solid black;
     bottom: 81.93%;
-    left: 10.2%;
+    left: 15.2%;
     z-index: 25;
   }
 
@@ -572,8 +612,8 @@ body {
     border-left: 200px solid white;
     height: 3px;
     position: fixed;
-    left: 14.2%;
-    top: 20.2%;
+    left: 19.8%;
+    top: 21.3%;
     z-index: 30;
     
     
@@ -585,17 +625,17 @@ body {
     height: 3px;
     position: fixed;
     left: 24%;
-    bottom: 75.76%;
+    bottom: 74.5%;
     z-index: 29;
     
   }
 
   #vPath2 {
-    border-left: 255px solid magenta;
+    border-left: 145px solid magenta;
     height: 3px;
     position: fixed;
-    left: 50%;
-    bottom: 72.45%;
+    left: 55.9%;
+    top: 30.5%;
     z-index: 29;
     
   }
@@ -606,7 +646,7 @@ body {
     height: 3px;
     position: fixed;
     left: 69.3%;
-    bottom: 69.8%;
+    bottom: 64.7%;
     z-index: 29;
     
   }
@@ -615,8 +655,8 @@ body {
     border-left: 66px solid magenta;
     height: 3px;
     position: fixed;
-    left: 85%;
-    bottom: 67.1%;
+    left: 88.8%;
+    bottom: 60.1%;
     z-index: 29;
     
   }
@@ -626,8 +666,8 @@ body {
     border-style: dashed none none none;
     border-width: 3px;
     width: 100%;
-    position: fixed;
-    bottom: 80.4%;
+    position: absolute;
+    bottom: 69%;
 }
 
 #aglLine {
@@ -636,5 +676,81 @@ body {
     border-width: 3px;
     width: 100%;
     position: fixed;
-    bottom: 2.5%
+    bottom: 3.8%
 }
+
+#tdMarker {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #00ff00;
+    text-align: center;
+    position: fixed;
+    top: 29.5%;
+    left: 72%;
+}
+
+
+#aglMarker {
+    transform: rotate(225deg);
+    width: 0;
+    height: 0;
+    position: fixed;
+    border-left: 30px solid #00ff00;
+    border-top: 30px solid transparent;
+    border-left: 50px solid transparent #00ff00;
+    bottom: 2.1%;
+    left: 4%;
+    z-index: 4400;
+  }
+
+  #aglMarker2 {
+    transform: rotate(225deg);
+    width: 0;
+    height: 0;
+    position: fixed;
+    border-left: 20px solid gray;
+    border-top: 20px solid transparent;
+    border-left: 50px solid transparent #00ff00;
+    bottom: 2.8%;
+    left: 4.7%;
+    z-index: 4400;
+  }
+
+
+  #constraintMark1 {
+    transform: rotate(90deg);
+    width: 40px;
+    height: 3px;
+    margin-top: 225px;
+    margin-left: 41px;
+    box-sizing: content-box;
+    padding-top: 15px;
+    position: relative;
+    background: magenta;
+    color: gray;
+    font-size: 1px;
+    letter-spacing: 0.2em;
+    text-align: center;
+    text-transform: uppercase;
+    z-index: 5000;
+  }
+
+  #constraintMark1:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 13px solid gray;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+  }
+
+  #pageSep {
+    border-top: solid 2px white;
+    width: 1000px;
+    z-index: 50;
+    left: 0%;
+    top: 0;
+  }
+  
