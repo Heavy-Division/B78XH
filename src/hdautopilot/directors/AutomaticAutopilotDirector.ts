@@ -1,5 +1,10 @@
 import {AutopilotState} from '../utils/AutopilotState';
 import {Queue} from '../../hdsdk';
+import {HDLogger} from '../../hdlogger';
+
+/**
+ * TODO: Rename to AFDSDirector
+ */
 
 export class AutomaticAutopilotDirector {
 	public get autopilotState(): AutopilotState {
@@ -54,41 +59,48 @@ export class AutomaticAutopilotDirector {
 
 	}
 
+	/**
+	 * TODO: Rename to LNAV onChange
+	 * @private
+	 */
 	private handleNavigationModeOnChange(): void {
-
+		HDLogger.log('LNAV onChange');
 	}
 
 	private handleTogaOnChange(): void {
-
+		HDLogger.log('TOGA onChange');
 	}
 
 	private handleHeadingLockedOnChange(): void {
-
+		HDLogger.log('HEADING LOCK onChange');
 	}
 
 	private handleAltitudeLockedOnChange(): void {
-
+		HDLogger.log('ALTITUDE LOCK onChange');
 	}
 
 	private handleSimulatorAltitudeLockedOnChange(): void {
-
+		HDLogger.log('SIM ALTITUDE LOCK onChange');
 	}
 
 	private handleAltitudeSlotOnChange(): void {
-
+		HDLogger.log('ALTITUDE SLOT onChange');
 	}
 
 	private handleSelectedAltitude1OnChange(): void {
+		HDLogger.log('SEL ALTITUDE 1 onChange');
 	}
 
 	private handleSelectedAltitude2OnChange(): void {
+		HDLogger.log('SEL ALTITUDE 2 onChange');
 	}
 
 	private handleSelectedAltitude3OnChange(): void {
+		HDLogger.log('SEL ALTITUDE 3 onChange');
 	}
 
 	private handleGroundedChanged(): void {
-
+		HDLogger.log('GROUNDED onChange');
 	}
 }
 

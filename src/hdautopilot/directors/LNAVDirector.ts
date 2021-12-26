@@ -1,20 +1,38 @@
 /**
  * A class that manages flight plan lateral guidance.
  */
-class LNavDirector {
+import {AutopilotModeResolver} from '../resolvers/AutopilotModeResolver';
+import {MCPLateralMode} from './MCPDirector';
+
+export class LNavDirector {
+	private fpm: any;
+	private navModeSelector: any;
+	private autopilotModeResolver: AutopilotModeResolver;
+	private currentFlightPlanVersion: number;
+	private activeFlightPlan: any;
+	private options: LNavDirectorOptions;
+	private sequencingMode: FlightPlanSequencing;
+	private state: LNavState;
+	public holdsDirector: any;
+	//private holdsDirector: HoldsDirector;
+	public locDirector: any;
+	//private locDirector: LocDirector;
+	private previousDeviation: number;
+	private static previousDeviation: number;
+
 	/**
 	 * Creates an instance of the LNavDirector.
 	 * @param {FlightPlanManager} fpm The FlightPlanManager to use with this instance.
 	 * @param {CJ4NavModeSelector} navModeSelector The nav mode selector to use with this instance.
 	 * @param {LNavDirectorOptions} options The LNAV options to use with this instance.
 	 */
-	constructor(fpm, navModeSelector, options) {
+	constructor(fpm, autopilotModeResolver, options = undefined) {
 
 		/** The FlightPlanManager instance. */
 		this.fpm = fpm;
 
 		/** The nav mode selector instance. */
-		this.navModeSelector = navModeSelector;
+		this.autopilotModeResolver = autopilotModeResolver;
 
 		/** The current flight plan version. */
 		this.currentFlightPlanVersion = 0;
@@ -35,10 +53,10 @@ class LNavDirector {
 		this.state = LNavState.TRACKING;
 
 		/** An instance of the LNAV holds director. */
-		this.holdsDirector = new HoldsDirector(fpm, navModeSelector);
+		//this.holdsDirector = new HoldsDirector(fpm, navModeSelector);
 
 		/** An instance of the localizer director. */
-		this.locDirector = new LocDirector(navModeSelector);
+		//this.locDirector = new LocDirector(navModeSelector);
 
 		/** The previous crosstrack deviation. */
 		this.previousDeviation = 0;
@@ -89,6 +107,8 @@ class LNavDirector {
 	resolveBankKnobPosition() {
 		const maxBank = SimVar.GetSimVarValue('AUTOPILOT MAX BANK', 'Radians');
 		this.options.maxBankAngle = this.getfixedMaxBank(maxBank);
+
+		this.options.degreesRollout = this.options.maxBankAngle / 2;
 
 
 		const rateOfTurn = this.calculateRateOfTurn(this.options.maxBankAngle * Avionics.Utils.DEG2RAD);
@@ -204,11 +224,10 @@ class LNavDirector {
 		} else {
 			const planeToActiveBearing = planeLatLon.initialBearingTo(activeLatLon);
 			const nextStartTrack = nextWaypoint ? activeLatLon.initialBearingTo(nextLatLon) : planeToActiveBearing;
-
-			const anticipationDistance = this.getAnticipationDistance(planeState, Avionics.Utils.diffAngle(planeToActiveBearing, nextStartTrack));
+			const anticipationDistance = this.getAnticipationDistance(planeState, Avionics.Utils.diffAngle(planeToActiveBearing, nextStartTrack)) * 0.9;
 			if (!nextWaypoint || !nextWaypoint.isFlyover) {
-
 				if (distanceToActive < anticipationDistance && !nextWaypoint.isFlyover) {
+					console.log('SHOULD SEQUENCE');
 					this.sequenceToNextWaypoint(planeState, activeWaypoint);
 					return;
 				}
@@ -219,9 +238,11 @@ class LNavDirector {
 			this.tryActivateIfArmed(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState, navSensitivity);
 			switch (this.state) {
 				case LNavState.TRACKING:
-					const activeMode = this.navModeSelector.currentLateralActiveState;
+					const activeMode = this.autopilotModeResolver.activatedLateralMode;
 					const shouldExecute = distanceToActive > this.options.minimumTrackingDistance
-						&& (activeMode === LateralNavModeState.LNAV || (activeMode === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV));
+						&& (activeMode === MCPLateralMode.LNAV /** TODO: Temporary removed
+						 || (activeMode === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV) **/);
+
 					LNavDirector.trackLeg(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState, navSensitivity, navSensitivityScalar, shouldExecute);
 					break;
 				case LNavState.TURN_COMPLETING:
@@ -243,7 +264,10 @@ class LNavDirector {
 	 */
 	handleTurnCompleting(planeState, dtk, previousWaypoint, activeWaypoint, navSensitivity, navSensitivityScalar) {
 		const angleDiffToTarget = Avionics.Utils.diffAngle(planeState.trueHeading, dtk);
-		if (Math.abs(angleDiffToTarget) < this.options.degreesRollout || this.navModeSelector.currentLateralActiveState !== LateralNavModeState.LNAV) {
+		console.log('ANGLE DIFF: ' + Math.abs(angleDiffToTarget));
+		console.log('ROLLOUT DEGREES: ' + this.options.degreesRollout);
+		if (Math.abs(angleDiffToTarget) < this.options.degreesRollout || this.autopilotModeResolver.activatedLateralMode !== MCPLateralMode.LNAV) {
+			console.log('ROLLOUT');
 			this.state = LNavState.TRACKING;
 		} else {
 			const turnDirection = Math.sign(angleDiffToTarget);
@@ -269,12 +293,13 @@ class LNavDirector {
 	 * @returns True if the holds director is now active, false otherwise.
 	 */
 	delegateToHoldsDirector(activeWaypoint) {
+		/*
 		if (activeWaypoint && activeWaypoint.hasHold && !this.holdsDirector.isHoldExited(this.activeFlightPlan.activeWaypointIndex - 1)) {
 			this.holdsDirector.update(this.activeFlightPlan.activeWaypointIndex);
 
 			return this.holdsDirector.state !== HoldsDirectorState.NONE && this.holdsDirector.state !== HoldsDirectorState.EXITED;
 		}
-
+*/
 		return false;
 	}
 
@@ -283,6 +308,7 @@ class LNavDirector {
 	 * @returns True if the localizer director is now active, false otherwise.
 	 */
 	delegateToLocDirector() {
+		/*
 		const armedState = this.navModeSelector.currentLateralArmedState;
 		const activeState = this.navModeSelector.currentLateralActiveState;
 
@@ -291,7 +317,7 @@ class LNavDirector {
 			this.locDirector.update();
 			return this.locDirector.state === LocDirectorState.ACTIVE;
 		}
-
+		*/
 		return false;
 	}
 
@@ -303,6 +329,7 @@ class LNavDirector {
 	 */
 	getAnticipationDistance(planeState, turnAngle) {
 		const headwind = AutopilotMath.windComponents(planeState.trueHeading, planeState.windDirection, planeState.windSpeed).headwind;
+
 		const turnRadius = AutopilotMath.turnRadius(planeState.trueAirspeed - headwind, this.options.maxBankAngle);
 		//const turnRadius = LNavDirector.turnRadiusTest(planeState.trueAirspeed - headwind, this.options.maxBankAngle);
 
@@ -324,11 +351,16 @@ class LNavDirector {
 	 * @param {number} currentFlightPlanVersion The new current flight plan version.
 	 */
 	handleFlightPlanChanged(currentFlightPlanVersion) {
+		console.log('handle flight plan changed');
 		this.activeFlightPlan = this.fpm.getFlightPlan(0);
 		const activeWaypoint = this.activeFlightPlan.getWaypoint(this.activeFlightPlan.activeWaypointIndex);
 
 		if (this.state === LNavState.TURN_COMPLETING) {
-			this.state === LNavState.TRACKING;
+			/**
+			 * TODO: State should change to TRACKING when FP is changed but because FP is changed also when active waypoint is changed it is not possible to switch state to tracking
+			 * Need to find a workaround
+			 */
+			//this.state === LNavState.TRACKING;
 		}
 
 		if (this.sequencingMode === FlightPlanSequencing.INHIBIT && !activeWaypoint.isRunway) {
@@ -352,12 +384,9 @@ class LNavDirector {
 	sequenceToNextWaypoint(planeState, currentWaypoint) {
 		if (this.sequencingMode !== FlightPlanSequencing.INHIBIT && planeState.groundSpeed > 25 && !planeState.onGround) {
 			const nextWaypoint = this.fpm.getWaypoint(this.activeFlightPlan.activeWaypointIndex + 1);
-
 			if (currentWaypoint && currentWaypoint.endsInDiscontinuity) {
 				this.state = LNavState.IN_DISCONTINUITY;
 				SimVar.SetSimVarValue('L:WT_CJ4_IN_DISCONTINUITY', 'number', 1);
-				MessageService.getInstance().post(FMS_MESSAGE_ID.FPLN_DISCO, () => this.state !== LNavState.IN_DISCONTINUITY);
-
 				this.sequencingMode = FlightPlanSequencing.INHIBIT;
 				LNavDirector.setCourse(SimVar.GetSimVarValue('PLANE HEADING DEGREES TRUE', 'Radians') * Avionics.Utils.RAD2DEG, planeState);
 				SimVar.SetSimVarValue('L:WT_CJ4_WPT_ALERT', 'number', 0);
@@ -405,9 +434,9 @@ class LNavDirector {
 	 * @param {number} navSensitivity The sensitivity to use for tracking.
 	 */
 	tryActivateIfArmed(legStart, legEnd, planeState, navSensitivity) {
-		const armedState = this.navModeSelector.currentLateralArmedState;
+		const armedState = this.autopilotModeResolver.armedLateralMode;
 		const agl = Simplane.getAltitudeAboveGround();
-		if ((armedState === LateralNavModeState.LNAV || (armedState === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV))
+		if ((armedState === MCPLateralMode.LNAV || (armedState === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV))
 			&& !planeState.onGround && agl > 50) {
 			const xtk = AutopilotMath.crossTrack(legStart, legEnd, planeState.position);
 			let activationXtk = 1.9;
@@ -424,7 +453,7 @@ class LNavDirector {
 			}
 
 			if (Math.abs(xtk) < activationXtk) {
-				this.navModeSelector.queueEvent(NavModeEvent.LNAV_ACTIVE);
+				this.autopilotModeResolver.mcpDirector.armLNAV();
 			}
 		}
 	}
@@ -447,7 +476,13 @@ class LNavDirector {
 		SimVar.SetSimVarValue('L:WT_CJ4_XTK', 'number', xtk);
 		SimVar.SetSimVarValue('L:WT_CJ4_DTK', 'number', correctedDtk);
 
-		const interceptAngle = AutopilotMath.interceptAngle(xtk, navSensitivity);
+		/**
+		 * TODO: Add logic:
+		 * Aircraft is close to leg -> smaller intercept angle
+		 * aircraft is far from leg -> larger intercept angle
+		 * @type {any}
+		 */
+		const interceptAngle = AutopilotMath.interceptAngle(xtk, navSensitivity, 20);
 		const bearingToWaypoint = Avionics.Utils.computeGreatCircleHeading(planeState.position, legEnd);
 		const deltaAngle = Math.abs(Avionics.Utils.diffAngle(dtk, bearingToWaypoint));
 		const interceptRate = Math.sign(this.previousDeviation) === 1
@@ -566,19 +601,25 @@ class LNavDirector {
 		const segment = this.fpm.getSegmentFromWaypoint(currentWaypoint);
 
 		if (((fafDistance <= 3 || (currentWaypoint && currentWaypoint.isRunway))) && segment.type === SegmentType.Approach) {
-			if (this.navModeSelector.currentLateralActiveState === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV) {
+			/*
+			if (this.autopilotModeResolver.activatedLateralMode === MCPLateralMode.APPROACH && this.navModeSelector.approachMode === WT_ApproachType.RNAV) {
 				return NavSensitivity.APPROACHLPV;
 			} else {
 				return NavSensitivity.APPROACH;
 			}
+			 */
+			return NavSensitivity.APPROACH;
 		}
 
 		if (destinationDistance <= 31) {
+			/*
 			if (this.navModeSelector.approachMode === WT_ApproachType.RNAV) {
 				return NavSensitivity.TERMINALLPV;
 			} else {
 				return NavSensitivity.TERMINAL;
 			}
+			 */
+			return NavSensitivity.TERMINAL;
 		}
 
 		return NavSensitivity.NORMAL;
@@ -640,6 +681,12 @@ class LNavDirector {
  * Options for lateral navigation.
  */
 class LNavDirectorOptions {
+	public minimumTrackingDistance: number;
+	public maxBankAngle: number;
+	public bankRate: number;
+	public maxTurnAnticipationAngle: number;
+	public maxTurnAnticipationDistance: (planeState) => (number);
+	public degreesRollout: number;
 
 	/**
 	 * Creates an instance of LNavDirectorOptions.
@@ -665,7 +712,7 @@ class LNavDirectorOptions {
 		this.maxTurnAnticipationDistance = (planeState) => planeState.trueAirspeed < 350 ? 7 : 10;
 
 		/** The number of degrees left in the turn that turn completion will stop and rollout/tracking will begin. */
-		this.degreesRollout = 20;
+		this.degreesRollout = 25;
 	}
 }
 
@@ -673,6 +720,18 @@ class LNavDirectorOptions {
  * The current state of the aircraft for LNAV.
  */
 class AircraftState {
+	public trueAirspeed: number;
+	public groundSpeed: number;
+	public magVar: number;
+	public position: LatLongAlt;
+	public windSpeed: number;
+	public windDirection: number;
+	public trueHeading: number;
+	public magneticHeading: number;
+	public trueTrack: number;
+	public bankAngle: number;
+	public onGround: boolean;
+
 	constructor() {
 		/**
 		 * The true airspeed of the plane.
@@ -742,30 +801,34 @@ class AircraftState {
 	}
 }
 
-class FlightPlanSequencing {
+export enum FlightPlanSequencing {
+	AUTO    = 'AUTO',
+	INHIBIT = 'INHIBIT'
+
 }
 
-FlightPlanSequencing.AUTO = 'AUTO';
-FlightPlanSequencing.INHIBIT = 'INHIBIT';
-
-class LNavState {
+export enum LNavState {
+	TRACKING         = 'TRACKING',
+	TURN_COMPLETING  = 'TURN_COMPLETING',
+	IN_DISCONTINUITY = 'IN_DISCONTINUITY'
 }
 
-LNavState.TRACKING = 'TRACKING';
-LNavState.TURN_COMPLETING = 'TURN_COMPLETING';
-LNavState.IN_DISCONTINUITY = 'IN_DISCONTINUITY';
-
-/** The sensitivity of the navigation solution. */
-class NavSensitivity {
+export enum NavSensitivity {
+	/** Vertical and lateral sensitivity is at normal +/- 2.0NM enroute levels. */
+	NORMAL,
+	/** Vertical and lateral sensitivity is at +/- 1.0NM terminal levels. */
+	TERMINAL,
+	/** Vertical and lateral sensitivity is at +/- 1.0NM terminal levels. */
+	TERMINALLPV,
+	/** Vertical and lateral sensitivity is at +/- 0.3NM approach levels. */
+	APPROACH,
+	/** Vertical and lateral sensitivity increases as distance remaining on final decreases. */
+	APPROACHLPV
 }
 
-/** Vertical and lateral sensitivity is at normal +/- 2.0NM enroute levels. */
-NavSensitivity.NORMAL = 0;
-/** Vertical and lateral sensitivity is at +/- 1.0NM terminal levels. */
-NavSensitivity.TERMINAL = 1;
-/** Vertical and lateral sensitivity is at +/- 1.0NM terminal levels. */
-NavSensitivity.TERMINALLPV = 2;
-/** Vertical and lateral sensitivity is at +/- 0.3NM approach levels. */
-NavSensitivity.APPROACH = 3;
-/** Vertical and lateral sensitivity increases as distance remaining on final decreases. */
-NavSensitivity.APPROACHLPV = 4;
+export enum WT_ApproachType {
+	NONE   = 'none',
+	ILS    = 'ils',
+	RNAV   = 'rnav',
+	VISUAL = 'visual'
+}

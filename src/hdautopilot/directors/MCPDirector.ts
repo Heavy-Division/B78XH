@@ -123,7 +123,11 @@ export class MCPDirector {
 
 	public processPending(): void {
 		for (const mode of [this.armedLateralMode, this.armedVerticalMode, this.armedSpeedMode, this.armedThrustMode]) {
-			if (mode.mode !== MCPDummyMode.DUMMY) {
+			/**
+			 * TODO: Be aware of MCPDummyMode.DUMMY check. MCPDummyMode.DUMMY has to checked together with modeType MCPModeType.DUMMY
+			 * (better to check only mode.mode !== undefined)
+			 */
+			if (mode.mode !== undefined) {
 				this.pendingQueue.enqueue(mode.getPendingMode());
 			}
 		}
@@ -133,6 +137,7 @@ export class MCPDirector {
 			if (pending.check()) {
 				switch (pending.modeType) {
 					case MCPModeType.LATERAL:
+
 						this.armedLateralMode = undefined;
 						this.activatedLateralMode = pending.mode;
 						break;
@@ -275,6 +280,7 @@ export class MCPDirector {
 
 			Simplane.setAPLNAVArmed(1);
 			this.deactivateHeadingHold();
+			console.log('ARMING LNAV');
 			this.armedLateralMode = new ArmedMode(MCPLateralMode.LNAV, MCPModeType.LATERAL, condition, this.activateLNAV.bind(this));
 		}
 	}
@@ -284,6 +290,8 @@ export class MCPDirector {
 	}
 
 	public engageLNAV(): void {
+
+		console.log('ENGAGE LNAV');
 		if (SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', SimVarValueUnit.Boolean)) {
 			return;
 		}
@@ -291,6 +299,10 @@ export class MCPDirector {
 		SimVar.SetSimVarValue('K:AP_NAV1_HOLD_ON', SimVarValueUnit.Number, 1);
 	}
 
+
+	/**
+	 * TODO: Probably wrong condition ( return true )
+	 */
 	public armHeadingHold() {
 		if (this.activatedLateralMode === MCPLateralMode.HOLD) {
 			let altitude = Simplane.getAltitudeAboveGround();
@@ -317,6 +329,7 @@ export class MCPDirector {
 		const headingHoldValue = Simplane.getHeadingMagnetic();
 		SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
 		this.headingHoldInterval = window.setInterval(() => {
+			console.log('update heading hold');
 			Coherent.call('HEADING_BUG_SET', 2, headingHoldValue);
 		}, 15);
 	}
@@ -541,6 +554,10 @@ export enum MCPThrustMode {
 	SPEED
 }
 
+/**
+ * Be aware:
+ * This is not good way to make dummy armed mode because ModeType has to be also checked (Temporary fix implemented in ArmedMode class)
+ */
 export enum MCPDummyMode {
 	DUMMY
 }
@@ -610,7 +627,7 @@ export class ArmedMode {
 	 * @param {Function} handler
 	 */
 	constructor(mode: MCPLateralMode | MCPVerticalMode | MCPSpeedMode | MCPThrustMode | MCPDummyMode, modeType: MCPModeType, condition: Function, handler: Function) {
-		this._mode = mode;
+		this._mode = (mode === MCPDummyMode.DUMMY && modeType === MCPModeType.DUMMY ? undefined : mode);
 		this._modeType = modeType;
 		this._condition = condition;
 		this._handler = handler;

@@ -62,7 +62,8 @@ export class AutopilotState {
 
 	constructor() {
 		(this._autopilot = new AutopilotValueTracker(() => Simplane.getAutoPilotActive())).onChange(AutomaticAutopilotDirectorEvent.AP_ON_CHANGE);
-		(this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
+		//(this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
+		(this._navigationMode = new AutopilotValueTracker(() => Simplane.getAPLNAVActive())).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
 		(this._toga = new AutopilotValueTracker(() => Simplane.getAutoPilotTOGAActive())).onChange(AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE);
 		(this._headingLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE);
 		(this._altitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_ALT_HOLD', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE);

@@ -393,6 +393,10 @@ declare class Simplane {
 
 	static getAltitudeAboveGround(): number;
 
+	static getAPLNAVActive(): number;
+
+	static getAPLNAVArmed(): number;
+
 	static getCurrentPage(): number;
 
 	static setCurrentPage(val: number);
@@ -1282,6 +1286,7 @@ declare namespace NavModeEvent {
 	const ALT_PRESSED: string;
 }
 
+/*
 declare class LNavDirector {
 	holdsDirector: HoldsDirector;
 
@@ -1289,6 +1294,7 @@ declare class LNavDirector {
 
 	update();
 }
+*/
 
 declare function diffAndSetAttribute(_element: HTMLElement, _attribute: string, _newValue: string | number | boolean): void;
 
@@ -1918,4 +1924,36 @@ declare class RoutePagePreFlightCheck {
 	get activated(): boolean;
 
 	_activated: boolean;
+}
+
+declare class AutopilotMath {
+	static crossTrack(fromFix, toFix, planeCoords);
+
+	static desiredTrack(fromFix, toFix, planeCoords);
+
+	static normalizeHeading(heading);
+
+	static interceptAngle(xtk, navSensitivity, maxAngle = 45);
+
+	static windCorrectionAngle(course, airspeedTrue, windDirection, windSpeed);
+
+	static isAbeam(dtk, planePosition, fixCoords);
+
+	static turnRadius(airspeedTrue, bankAngle);
+
+	static windComponents(heading, windDirection, windSpeed);
+}
+
+declare class GeoMath {
+	static correctMagvar(trueCourse, magneticVariation);
+
+	static removeMagvar(headingMagnetic, magneticVariation);
+}
+
+declare class LatLon {
+	constructor(lat, lon);
+
+	distanceTo(point, radius = 6371e3);
+
+	initialBearingTo(point);
 }

@@ -17614,6 +17614,87 @@
         }
     }
 
+    /**
+     * TODO: Rename to AFDSDirector
+     */
+    class AutomaticAutopilotDirector {
+        constructor() {
+            this._handlers = [];
+            this._eventQueue = new Queue();
+            this.handlers[AutomaticAutopilotDirectorEvent.AP_ON_CHANGE] = this.handleApOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE] = this.handleNavigationModeOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE] = this.handleTogaOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE] = this.handleHeadingLockedOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE] = this.handleAltitudeLockedOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.SIMULATOR_ALTITUDE_LOCK_ON_CHANGE] = this.handleSimulatorAltitudeLockedOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.ALTITUDE_SLOT_ON_CHANGE] = this.handleAltitudeSlotOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_1_ON_CHANGE] = this.handleSelectedAltitude1OnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_2_ON_CHANGE] = this.handleSelectedAltitude2OnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_3_ON_CHANGE] = this.handleSelectedAltitude3OnChange.bind(this);
+        }
+        get autopilotState() {
+            return this._autopilotState;
+        }
+        get handlers() {
+            return this._handlers;
+        }
+        get eventQueue() {
+            return this._eventQueue;
+        }
+        update() {
+            for (const autopilotStateElement of this.autopilotState) {
+                const eventToTrigger = autopilotStateElement.update();
+                if (eventToTrigger) {
+                    this.eventQueue.enqueue(eventToTrigger);
+                }
+            }
+            this.processEvents();
+        }
+        processEvents() {
+            for (; this.eventQueue.length > 0;) {
+                const event = this.eventQueue.dequeue();
+                if (this.handlers[event] !== undefined) {
+                    this.handlers[event]();
+                }
+            }
+        }
+        handleApOnChange() {
+        }
+        /**
+         * TODO: Rename to LNAV onChange
+         * @private
+         */
+        handleNavigationModeOnChange() {
+            HDLogger.log('LNAV onChange');
+        }
+        handleTogaOnChange() {
+            HDLogger.log('TOGA onChange');
+        }
+        handleHeadingLockedOnChange() {
+            HDLogger.log('HEADING LOCK onChange');
+        }
+        handleAltitudeLockedOnChange() {
+            HDLogger.log('ALTITUDE LOCK onChange');
+        }
+        handleSimulatorAltitudeLockedOnChange() {
+            HDLogger.log('SIM ALTITUDE LOCK onChange');
+        }
+        handleAltitudeSlotOnChange() {
+            HDLogger.log('ALTITUDE SLOT onChange');
+        }
+        handleSelectedAltitude1OnChange() {
+            HDLogger.log('SEL ALTITUDE 1 onChange');
+        }
+        handleSelectedAltitude2OnChange() {
+            HDLogger.log('SEL ALTITUDE 2 onChange');
+        }
+        handleSelectedAltitude3OnChange() {
+            HDLogger.log('SEL ALTITUDE 3 onChange');
+        }
+        handleGroundedChanged() {
+            HDLogger.log('GROUNDED onChange');
+        }
+    }
     var AutomaticAutopilotDirectorEvent;
     (function (AutomaticAutopilotDirectorEvent) {
         AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["AP_ON_CHANGE"] = 0] = "AP_ON_CHANGE";
@@ -17632,7 +17713,8 @@
     class AutopilotState {
         constructor() {
             (this._autopilot = new AutopilotValueTracker(() => Simplane.getAutoPilotActive())).onChange(AutomaticAutopilotDirectorEvent.AP_ON_CHANGE);
-            (this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
+            //(this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
+            (this._navigationMode = new AutopilotValueTracker(() => Simplane.getAPLNAVActive())).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
             (this._toga = new AutopilotValueTracker(() => Simplane.getAutoPilotTOGAActive())).onChange(AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE);
             (this._headingLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE);
             (this._altitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_ALT_HOLD', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE);
@@ -17821,7 +17903,11 @@
         }
         processPending() {
             for (const mode of [this.armedLateralMode, this.armedVerticalMode, this.armedSpeedMode, this.armedThrustMode]) {
-                if (mode.mode !== MCPDummyMode.DUMMY) {
+                /**
+                 * TODO: Be aware of MCPDummyMode.DUMMY check. MCPDummyMode.DUMMY has to checked together with modeType MCPModeType.DUMMY
+                 * (better to check only mode.mode !== undefined)
+                 */
+                if (mode.mode !== undefined) {
                     this.pendingQueue.enqueue(mode.getPendingMode());
                 }
             }
@@ -17964,6 +18050,7 @@
                 };
                 Simplane.setAPLNAVArmed(1);
                 this.deactivateHeadingHold();
+                console.log('ARMING LNAV');
                 this.armedLateralMode = new ArmedMode(MCPLateralMode.LNAV, MCPModeType.LATERAL, condition, this.activateLNAV.bind(this));
             }
         }
@@ -17971,12 +18058,16 @@
             this.engageLNAV();
         }
         engageLNAV() {
+            console.log('ENGAGE LNAV');
             if (SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', SimVarValueUnit.Boolean)) {
                 return;
             }
             Simplane.setAPLNAVActive(1);
             SimVar.SetSimVarValue('K:AP_NAV1_HOLD_ON', SimVarValueUnit.Number, 1);
         }
+        /**
+         * TODO: Probably wrong condition ( return true )
+         */
         armHeadingHold() {
             if (this.activatedLateralMode === MCPLateralMode.HOLD) {
                 let altitude = Simplane.getAltitudeAboveGround();
@@ -18004,6 +18095,7 @@
             const headingHoldValue = Simplane.getHeadingMagnetic();
             SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
             this.headingHoldInterval = window.setInterval(() => {
+                console.log('update heading hold');
                 Coherent.call('HEADING_BUG_SET', 2, headingHoldValue);
             }, 15);
         }
@@ -18209,6 +18301,10 @@
     (function (MCPThrustMode) {
         MCPThrustMode[MCPThrustMode["SPEED"] = 0] = "SPEED";
     })(MCPThrustMode || (MCPThrustMode = {}));
+    /**
+     * Be aware:
+     * This is not good way to make dummy armed mode because ModeType has to be also checked (Temporary fix implemented in ArmedMode class)
+     */
     var MCPDummyMode;
     (function (MCPDummyMode) {
         MCPDummyMode[MCPDummyMode["DUMMY"] = 0] = "DUMMY";
@@ -18261,7 +18357,7 @@
          * @param {Function} handler
          */
         constructor(mode, modeType, condition, handler) {
-            this._mode = mode;
+            this._mode = (mode === MCPDummyMode.DUMMY && modeType === MCPModeType.DUMMY ? undefined : mode);
             this._modeType = modeType;
             this._condition = condition;
             this._handler = handler;
@@ -18410,6 +18506,802 @@
      * AUTOPILOT ALTITUDE SLOT INDEX:2 -> VNAV
      */
 
+    class AutopilotModeResolver {
+        constructor(mcpDirector, automaticDirector, fmaResolver) {
+            this.mcpDirector = mcpDirector;
+            this.automaticDirector = automaticDirector;
+            this.fmaResolver = fmaResolver;
+        }
+        get armedVerticalMode() {
+            return this._armedVerticalMode;
+        }
+        get armedLateralMode() {
+            return this._armedLateralMode;
+        }
+        get armedThrustMode() {
+            return this._armedThrustMode;
+        }
+        get armedSpeedMode() {
+            return this._armedSpeedMode;
+        }
+        get activatedVerticalMode() {
+            return this._activatedVerticalMode;
+        }
+        get activatedLateralMode() {
+            return this._activatedLateralMode;
+        }
+        get activatedThrustMode() {
+            return this._activatedThrustMode;
+        }
+        get activatedSpeedMode() {
+            return this._activatedSpeedMode;
+        }
+        resolveMode() {
+            this.updateFMA();
+        }
+        update() {
+            this.mcpDirector.processPending();
+            this.propagateMCPModes();
+            this.resolveMode();
+        }
+        propagateMCPModes() {
+            this._activatedLateralMode = this.mcpDirector.activatedLateralMode;
+            this._activatedVerticalMode = this.mcpDirector.activatedVerticalMode;
+            this._activatedSpeedMode = this.mcpDirector.activatedSpeedMode;
+            this._activatedThrustMode = this.mcpDirector.activatedThrustMode;
+            this._armedLateralMode = this.mcpDirector.armedLateralMode;
+            this._armedVerticalMode = this.mcpDirector.armedVerticalMode;
+            this._armedSpeedMode = this.mcpDirector.armedSpeedMode;
+            this._armedThrustMode = this.mcpDirector.armedThrustMode;
+        }
+        updateFMA() {
+            this.fmaResolver.update();
+        }
+    }
+    var AutopilotModeType;
+    (function (AutopilotModeType) {
+        AutopilotModeType[AutopilotModeType["LATERAL"] = 0] = "LATERAL";
+        AutopilotModeType[AutopilotModeType["VERTICAL"] = 1] = "VERTICAL";
+        AutopilotModeType[AutopilotModeType["THRUST"] = 2] = "THRUST";
+        AutopilotModeType[AutopilotModeType["SPEED"] = 3] = "SPEED";
+    })(AutopilotModeType || (AutopilotModeType = {}));
+
+    class FMAResolver {
+        update() {
+        }
+    }
+    var AFDSMode;
+    (function (AFDSMode) {
+        AFDSMode["FLT_DIR"] = "FLT DIR";
+        AFDSMode["AP"] = "A/P";
+        AFDSMode["LAND3"] = "LAND 3";
+    })(AFDSMode || (AFDSMode = {}));
+    var AFDSRollMode;
+    (function (AFDSRollMode) {
+        AFDSRollMode["HDG_HOLD"] = "HDG HOLD";
+        AFDSRollMode["HDG_SEL"] = "HDG SEL";
+        AFDSRollMode["LNAV"] = "LNAV";
+        AFDSRollMode["LOC"] = "LOC";
+        AFDSRollMode["ROLLOUT"] = "ROLLOUT";
+        AFDSRollMode["TOGA"] = "TO/GA";
+        AFDSRollMode["TRK_SEL"] = "TRK SEL";
+        AFDSRollMode["TRK_HOLD"] = "TRK HOLD";
+        AFDSRollMode["ATT"] = "ATT";
+        AFDSRollMode["B_CRS"] = "B/CRS";
+        AFDSRollMode["HUD_TOGA"] = "HUD TO/GA";
+    })(AFDSRollMode || (AFDSRollMode = {}));
+    var AFDSPitchMode;
+    (function (AFDSPitchMode) {
+        AFDSPitchMode["TOGA"] = "TO/GA";
+        AFDSPitchMode["ALT"] = "ALT";
+        AFDSPitchMode["VS"] = "V/S";
+        AFDSPitchMode["VNAV_PTH"] = "VNAV PTH";
+        AFDSPitchMode["VNAV_SPD"] = "VNAV SPD";
+        AFDSPitchMode["VNAV_ALT"] = "VNAV ALT";
+        AFDSPitchMode["VNAV"] = "VNAV";
+        AFDSPitchMode["GS"] = "G/S";
+        AFDSPitchMode["FLARE"] = "FLARE";
+        AFDSPitchMode["FLCH_SPD"] = "FLCH SPD";
+        AFDSPitchMode["FPA"] = "FPA";
+        AFDSPitchMode["GP"] = "GP";
+    })(AFDSPitchMode || (AFDSPitchMode = {}));
+    var AFDSAutothrottleMode;
+    (function (AFDSAutothrottleMode) {
+        AFDSAutothrottleMode["THR"] = "THR";
+        AFDSAutothrottleMode["THR_REF"] = "THR REF";
+        AFDSAutothrottleMode["HOLD"] = "HOLD";
+        AFDSAutothrottleMode["IDLE"] = "IDLE";
+        AFDSAutothrottleMode["SPD"] = "SPD";
+    })(AFDSAutothrottleMode || (AFDSAutothrottleMode = {}));
+
+    class LNavDirector {
+        /**
+         * Creates an instance of the LNavDirector.
+         * @param {FlightPlanManager} fpm The FlightPlanManager to use with this instance.
+         * @param {CJ4NavModeSelector} navModeSelector The nav mode selector to use with this instance.
+         * @param {LNavDirectorOptions} options The LNAV options to use with this instance.
+         */
+        constructor(fpm, autopilotModeResolver, options = undefined) {
+            /** The FlightPlanManager instance. */
+            this.fpm = fpm;
+            /** The nav mode selector instance. */
+            this.autopilotModeResolver = autopilotModeResolver;
+            /** The current flight plan version. */
+            this.currentFlightPlanVersion = 0;
+            /**
+             * The currently active flight plan.
+             * @type {ManagedFlightPlan}
+             */
+            this.activeFlightPlan = undefined;
+            /** The current director options. */
+            this.options = options || new LNavDirectorOptions();
+            /** The current flight plan sequencing mode. */
+            this.sequencingMode = FlightPlanSequencing.AUTO;
+            /** The current LNAV state. */
+            this.state = LNavState.TRACKING;
+            /** An instance of the LNAV holds director. */
+            //this.holdsDirector = new HoldsDirector(fpm, navModeSelector);
+            /** An instance of the localizer director. */
+            //this.locDirector = new LocDirector(navModeSelector);
+            /** The previous crosstrack deviation. */
+            this.previousDeviation = 0;
+        }
+        /*
+            calculateRateOfTurn(maxBank) {
+                const trueSpeed = Simplane.getTrueSpeed();
+                const magic = 1091;
+                const correction = 0.4;
+                const rateOfTurn = (magic * Math.tan(maxBank)) / trueSpeed;
+
+                return [rateOfTurn, rateOfTurn + correction];
+                //return (magic * Math.tan(maxBank)) / trueSpeed;
+            }
+        */
+        calculateRateOfTurn(maxBank) {
+            const trueSpeed = Simplane.getTrueSpeed();
+            const magic = 1091;
+            const rateOfTurn = (magic * Math.tan(maxBank)) / trueSpeed;
+            return [rateOfTurn];
+        }
+        getfixedMaxBank(maxBank) {
+            const bank = Math.round(maxBank * Avionics.Utils.RAD2DEG);
+            switch (bank) {
+                case 30:
+                    //return 32;
+                    return 33;
+                case 25:
+                    //return 26.6;
+                    return 28;
+                case 20:
+                    return 23;
+                //return 21.6;
+                case 15:
+                    //return 16.1;
+                    return 18;
+                case 10:
+                    //return 11;
+                    return 13;
+            }
+        }
+        resolveBankKnobPosition() {
+            const maxBank = SimVar.GetSimVarValue('AUTOPILOT MAX BANK', 'Radians');
+            this.options.maxBankAngle = this.getfixedMaxBank(maxBank);
+            this.options.degreesRollout = this.options.maxBankAngle / 2;
+            const rateOfTurn = this.calculateRateOfTurn(this.options.maxBankAngle * Avionics.Utils.DEG2RAD);
+            this.options.bankRate = rateOfTurn[0];
+            //console.log("RATE delta: " + Math.abs(Simplane.getTurnRate() * Avionics.Utils.RAD2DEG - rateOfTurn[0]));
+            //console.log('Max aircraft bank: ' + this.options.maxBankAngle);
+            //console.log('Calculated bank rate (REAL): ' + rateOfTurn[0]);
+            //console.log('Calculated bank rate (CORRECTION): ' + rateOfTurn[1]);
+            //console.log('MSFS turn rate: ' + Simplane.getTurnRate() * Avionics.Utils.RAD2DEG);
+            /**
+             * BANK LIMIT fix
+             */
+            /*
+            switch (SimVar.GetSimVarValue('A:AUTOPILOT MAX BANK ID', 'Number')) {
+                case 0:
+
+                    this.options.maxBankAngle = 30;
+                    this.options.bankRate = 3;
+                    break;
+                case 1:
+                    this.options.maxBankAngle = 25;
+                    this.options.bankRate = 2.4;
+                    break;
+                case 2:
+                    this.options.maxBankAngle = 20;
+                    this.options.bankRate = 1.7;
+                    break;
+                case 3:
+                    this.options.maxBankAngle = 15;
+                    this.options.bankRate = 1.25;
+                    break;
+                case 4:
+                    this.options.maxBankAngle = 10;
+                    this.options.bankRate = 0.8;
+                    break;
+                case 5:
+                    if (Simplane.getIndicatedSpeed() > 250) {
+                        this.options.maxBankAngle = 25;
+                        this.options.bankRate = 2.2;
+                    } else {
+                        this.options.maxBankAngle = 15;
+                        this.options.bankRate = 1.25;
+                    }
+                    break;
+                default:
+                    this.options.maxBankAngle = 30;
+                    this.options.bankRate = 3;
+            }
+            */
+        }
+        /**
+         * Updates the LNavDirector.
+         */
+        update() {
+            const currentFlightPlanVersion = SimVar.GetSimVarValue('L:WT.FlightPlan.Version', 'number');
+            if (this.currentFlightPlanVersion != currentFlightPlanVersion) {
+                this.handleFlightPlanChanged(currentFlightPlanVersion);
+            }
+            if (this.activeFlightPlan) {
+                this.resolveBankKnobPosition();
+                /**
+                 * Only for DEBUG purpose
+                 */
+                if (this.sequencingMode === FlightPlanSequencing.AUTO) {
+                    SimVar.SetSimVarValue('L:WT_CJ4_SEQUENCING', 'number', 1);
+                }
+                else {
+                    SimVar.SetSimVarValue('L:WT_CJ4_SEQUENCING', 'number', 0);
+                }
+                const previousWaypoint = this.activeFlightPlan.getWaypoint(this.activeFlightPlan.activeWaypointIndex - 1);
+                const activeWaypoint = this.activeFlightPlan.getWaypoint(this.activeFlightPlan.activeWaypointIndex);
+                const planeState = LNavDirector.getAircraftState();
+                const navSensitivity = this.getNavSensitivity(planeState.position);
+                SimVar.SetSimVarValue('L:WT_NAV_SENSITIVITY', 'number', navSensitivity);
+                const navSensitivityScalar = this.getNavSensitivityScalar(planeState.position, navSensitivity);
+                SimVar.SetSimVarValue('L:WT_NAV_SENSITIVITY_SCALAR', 'number', navSensitivityScalar);
+                if (!this.delegateToHoldsDirector(activeWaypoint) && activeWaypoint && previousWaypoint) {
+                    this.generateGuidance(activeWaypoint, planeState, previousWaypoint, navSensitivity, navSensitivityScalar);
+                }
+            }
+        }
+        /**
+         * Generates lateral guidance for LNAV.
+         * @param {WayPoint} activeWaypoint The current active waypoint.
+         * @param {AircraftState} planeState The current aircraft state.
+         * @param {WayPoint} previousWaypoint The previous waypoint.
+         * @param {number} navSensitivity The current nav sensitivity.
+         * @param {number} navSensitivityScalar The current nav sensitivity scalar.
+         */
+        generateGuidance(activeWaypoint, planeState, previousWaypoint, navSensitivity, navSensitivityScalar) {
+            const activeLatLon = new LatLon(activeWaypoint.infos.coordinates.lat, activeWaypoint.infos.coordinates.long);
+            const nextWaypoint = this.activeFlightPlan.getWaypoint(this.activeFlightPlan.activeWaypointIndex + 1);
+            const nextLatLon = nextWaypoint ? new LatLon(nextWaypoint.infos.coordinates.lat, nextWaypoint.infos.coordinates.long) : undefined;
+            const planeLatLon = new LatLon(planeState.position.lat, planeState.position.long);
+            const dtk = AutopilotMath.desiredTrack(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState.position);
+            const distanceToActive = planeLatLon.distanceTo(activeLatLon) / 1852;
+            if (AutopilotMath.isAbeam(dtk, planeState.position, activeWaypoint.infos.coordinates)) {
+                this.sequenceToNextWaypoint(planeState, activeWaypoint);
+                return;
+            }
+            else {
+                const planeToActiveBearing = planeLatLon.initialBearingTo(activeLatLon);
+                const nextStartTrack = nextWaypoint ? activeLatLon.initialBearingTo(nextLatLon) : planeToActiveBearing;
+                const anticipationDistance = this.getAnticipationDistance(planeState, Avionics.Utils.diffAngle(planeToActiveBearing, nextStartTrack)) * 0.9;
+                if (!nextWaypoint || !nextWaypoint.isFlyover) {
+                    if (distanceToActive < anticipationDistance && !nextWaypoint.isFlyover) {
+                        console.log('SHOULD SEQUENCE');
+                        this.sequenceToNextWaypoint(planeState, activeWaypoint);
+                        return;
+                    }
+                }
+            }
+            if (!this.delegateToLocDirector()) {
+                this.tryActivateIfArmed(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState, navSensitivity);
+                switch (this.state) {
+                    case LNavState.TRACKING:
+                        const activeMode = this.autopilotModeResolver.activatedLateralMode;
+                        const shouldExecute = distanceToActive > this.options.minimumTrackingDistance
+                            && (activeMode === MCPLateralMode.LNAV /** TODO: Temporary removed
+                             || (activeMode === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV) **/);
+                        LNavDirector.trackLeg(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState, navSensitivity, navSensitivityScalar, shouldExecute);
+                        break;
+                    case LNavState.TURN_COMPLETING:
+                        console.log('turn completing');
+                        this.handleTurnCompleting(planeState, dtk, previousWaypoint, activeWaypoint, navSensitivity, navSensitivityScalar);
+                        break;
+                }
+            }
+        }
+        /**
+         * Handles the turn completion phase of lateral guidance.
+         * @param {AircraftState} planeState The current aircraft state.
+         * @param {number} dtk The current desired track.
+         * @param {WayPoint} previousWaypoint The previous (from) waypoint.
+         * @param {WayPoint} activeWaypoint The active (to) waypoint.
+         * @param {number} navSensitivity The current nav sensitivity.
+         * @param {number} navSensitivityScalar The current nav sensitivity scalar.
+         */
+        handleTurnCompleting(planeState, dtk, previousWaypoint, activeWaypoint, navSensitivity, navSensitivityScalar) {
+            const angleDiffToTarget = Avionics.Utils.diffAngle(planeState.trueHeading, dtk);
+            console.log('ANGLE DIFF: ' + Math.abs(angleDiffToTarget));
+            console.log('ROLLOUT DEGREES: ' + this.options.degreesRollout);
+            if (Math.abs(angleDiffToTarget) < this.options.degreesRollout || this.autopilotModeResolver.activatedLateralMode !== MCPLateralMode.LNAV) {
+                console.log('ROLLOUT');
+                this.state = LNavState.TRACKING;
+            }
+            else {
+                const turnDirection = Math.sign(angleDiffToTarget);
+                const targetHeading = AutopilotMath.normalizeHeading(planeState.trueHeading + (turnDirection * 90));
+                LNavDirector.trackLeg(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState, navSensitivity, navSensitivityScalar, false);
+                LNavDirector.setCourse(targetHeading, planeState);
+            }
+        }
+        /**
+         * Checks to see if the waypoint can be sequenced past.
+         * @param {WayPoint} activeWaypoint The waypoint to check against.
+         * @returns {boolean} True if it can be sequenced past, false otherwise.
+         */
+        canSequence(activeWaypoint) {
+            return activeWaypoint && !(activeWaypoint.endsInDiscontinuity || activeWaypoint.isRunway);
+        }
+        /**
+         * Delegates navigation to the holds director, if necessary.
+         * @param {WayPoint} activeWaypoint
+         * @returns True if the holds director is now active, false otherwise.
+         */
+        delegateToHoldsDirector(activeWaypoint) {
+            /*
+            if (activeWaypoint && activeWaypoint.hasHold && !this.holdsDirector.isHoldExited(this.activeFlightPlan.activeWaypointIndex - 1)) {
+                this.holdsDirector.update(this.activeFlightPlan.activeWaypointIndex);
+
+                return this.holdsDirector.state !== HoldsDirectorState.NONE && this.holdsDirector.state !== HoldsDirectorState.EXITED;
+            }
+    */
+            return false;
+        }
+        /**
+         * Delegates navigation to the localizer director, if necessary.
+         * @returns True if the localizer director is now active, false otherwise.
+         */
+        delegateToLocDirector() {
+            /*
+            const armedState = this.navModeSelector.currentLateralArmedState;
+            const activeState = this.navModeSelector.currentLateralActiveState;
+
+            if ((armedState === LateralNavModeState.APPR || activeState === LateralNavModeState.APPR)
+                && (this.navModeSelector.approachMode === WT_ApproachType.ILS || this.navModeSelector.lNavModeState === LNavModeState.NAV1 || this.navModeSelector.lNavModeState === LNavModeState.NAV2)) {
+                this.locDirector.update();
+                return this.locDirector.state === LocDirectorState.ACTIVE;
+            }
+            */
+            return false;
+        }
+        /**
+         * Gets the current turn anticipation distance based on the plane state
+         * and next turn angle.
+         * @param {AircraftState} planeState The current aircraft state.
+         * @param {number} turnAngle The next turn angle, in degrees.
+         */
+        getAnticipationDistance(planeState, turnAngle) {
+            const headwind = AutopilotMath.windComponents(planeState.trueHeading, planeState.windDirection, planeState.windSpeed).headwind;
+            const turnRadius = AutopilotMath.turnRadius(planeState.trueAirspeed - headwind, this.options.maxBankAngle);
+            //const turnRadius = LNavDirector.turnRadiusTest(planeState.trueAirspeed - headwind, this.options.maxBankAngle);
+            const bankDiff = (Math.sign(turnAngle) * this.options.maxBankAngle) - planeState.bankAngle;
+            const enterBankDistance = (Math.abs(bankDiff) / this.options.bankRate) * ((planeState.trueAirspeed - headwind) / 3600);
+            const turnAnticipationAngle = Math.min(this.options.maxTurnAnticipationAngle, Math.abs(turnAngle)) * Avionics.Utils.DEG2RAD;
+            return Math.min((turnRadius * Math.abs(Math.tan(turnAnticipationAngle / 2))) + enterBankDistance, this.options.maxTurnAnticipationDistance(planeState));
+        }
+        static turnRadiusTest(airspeedTrue, bankAngle) {
+            // Normal turn radius formula
+            // R =v^2/(11.23*tan(0.01745*b))
+            return (Math.pow(airspeedTrue, 2) / (11.26 * Math.tan(bankAngle * Avionics.Utils.DEG2RAD)))
+                / 6076.1093456638;
+        }
+        /**
+         * Handles when the flight plan version changes.
+         * @param {number} currentFlightPlanVersion The new current flight plan version.
+         */
+        handleFlightPlanChanged(currentFlightPlanVersion) {
+            console.log('handle flight plan changed');
+            this.activeFlightPlan = this.fpm.getFlightPlan(0);
+            const activeWaypoint = this.activeFlightPlan.getWaypoint(this.activeFlightPlan.activeWaypointIndex);
+            if (this.state === LNavState.TURN_COMPLETING) ;
+            if (this.sequencingMode === FlightPlanSequencing.INHIBIT && !activeWaypoint.isRunway) {
+                this.sequencingMode = FlightPlanSequencing.AUTO;
+            }
+            if (this.state === LNavState.IN_DISCONTINUITY && !(activeWaypoint && activeWaypoint.endsInDiscontinuity)) {
+                SimVar.SetSimVarValue('L:WT_CJ4_IN_DISCONTINUITY', 'number', 0);
+                this.state = LNavState.TRACKING;
+            }
+            SimVar.SetSimVarValue('L:WT_CJ4_WPT_ALERT', 'number', 0);
+            this.currentFlightPlanVersion = currentFlightPlanVersion;
+        }
+        /**
+         * Sequences to the next waypoint in the flight plan.
+         * @param {AircraftState} planeState The current aircraft state.
+         * @param {WayPoint} currentWaypoint The current active waypoint.
+         */
+        sequenceToNextWaypoint(planeState, currentWaypoint) {
+            if (this.sequencingMode !== FlightPlanSequencing.INHIBIT && planeState.groundSpeed > 25 && !planeState.onGround) {
+                const nextWaypoint = this.fpm.getWaypoint(this.activeFlightPlan.activeWaypointIndex + 1);
+                if (currentWaypoint && currentWaypoint.endsInDiscontinuity) {
+                    this.state = LNavState.IN_DISCONTINUITY;
+                    SimVar.SetSimVarValue('L:WT_CJ4_IN_DISCONTINUITY', 'number', 1);
+                    this.sequencingMode = FlightPlanSequencing.INHIBIT;
+                    LNavDirector.setCourse(SimVar.GetSimVarValue('PLANE HEADING DEGREES TRUE', 'Radians') * Avionics.Utils.RAD2DEG, planeState);
+                    SimVar.SetSimVarValue('L:WT_CJ4_WPT_ALERT', 'number', 0);
+                }
+                else if (nextWaypoint && nextWaypoint.isRunway) {
+                    this.sequencingMode = FlightPlanSequencing.INHIBIT;
+                    this.state = LNavState.TURN_COMPLETING;
+                    this.fpm.setActiveWaypointIndex(this.activeFlightPlan.activeWaypointIndex + 1);
+                }
+                else {
+                    this.state = LNavState.TURN_COMPLETING;
+                    this.fpm.setActiveWaypointIndex(this.activeFlightPlan.activeWaypointIndex + 1);
+                }
+            }
+        }
+        /**
+         * Sets LNAV sequencing to AUTO.
+         */
+        setAutoSequencing() {
+            const activeWaypoint = this.activeFlightPlan.getWaypoint(this.activeFlightPlan.activeWaypointIndex);
+            if (this.state === LNavState.IN_DISCONTINUITY || (activeWaypoint && activeWaypoint.isRunway)) {
+                this.state = LNavState.TRACKING;
+                SimVar.SetSimVarValue('L:WT_CJ4_IN_DISCONTINUITY', 'number', 0);
+                const nextWaypointIndex = this.activeFlightPlan.activeWaypointIndex + 1;
+                this.fpm.setActiveWaypointIndex(nextWaypointIndex);
+                this.fpm.clearDiscontinuity(nextWaypointIndex - 1);
+            }
+            this.sequencingMode = FlightPlanSequencing.AUTO;
+        }
+        /**
+         * Sets LNAV sequencing to INHIBIT.
+         */
+        setInhibitSequencing() {
+            this.sequencingMode = FlightPlanSequencing.INHIBIT;
+        }
+        /**
+         * Attempts to activate LNAV automatically if LNAV or APPR LNV1 is armed.
+         * @param {LatLongAlt} legStart The coordinates of the start of the leg.
+         * @param {LatLongAlt} legEnd The coordinates of the end of the leg.
+         * @param {AircraftState} planeState The current aircraft state.
+         * @param {number} navSensitivity The sensitivity to use for tracking.
+         */
+        tryActivateIfArmed(legStart, legEnd, planeState, navSensitivity) {
+            const armedState = this.autopilotModeResolver.armedLateralMode;
+            const agl = Simplane.getAltitudeAboveGround();
+            if ((armedState === MCPLateralMode.LNAV || (armedState === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV))
+                && !planeState.onGround && agl > 50) {
+                const xtk = AutopilotMath.crossTrack(legStart, legEnd, planeState.position);
+                let activationXtk = 1.9;
+                switch (navSensitivity) {
+                    case NavSensitivity.TERMINAL:
+                    case NavSensitivity.TERMINALLPV:
+                        activationXtk = 0.9;
+                        break;
+                    case NavSensitivity.APPROACH:
+                    case NavSensitivity.APPROACHLPV:
+                        activationXtk = 0.28;
+                        break;
+                }
+                if (Math.abs(xtk) < activationXtk) {
+                    this.autopilotModeResolver.mcpDirector.armLNAV();
+                }
+            }
+        }
+        /**
+         * Tracks the specified leg.
+         * @param {LatLongAlt} legStart The coordinates of the start of the leg.
+         * @param {LatLongAlt} legEnd The coordinates of the end of the leg.
+         * @param {AircraftState} planeState The current aircraft state.
+         * @param {number} navSensitivity The sensitivity to use for tracking.
+         * @param {number} navSensitivityScalar The nav sensitivity scalar.
+         * @param {boolean} execute Whether or not to execute the calculated course.
+         */
+        static trackLeg(legStart, legEnd, planeState, navSensitivity, navSensitivityScalar = 1, execute = true) {
+            const dtk = AutopilotMath.desiredTrack(legStart, legEnd, planeState.position);
+            const xtk = AutopilotMath.crossTrack(legStart, legEnd, planeState.position);
+            const correctedDtk = AutopilotMath.normalizeHeading(GeoMath.correctMagvar(dtk, SimVar.GetSimVarValue('MAGVAR', 'degrees')));
+            SimVar.SetSimVarValue('L:WT_CJ4_XTK', 'number', xtk);
+            SimVar.SetSimVarValue('L:WT_CJ4_DTK', 'number', correctedDtk);
+            /**
+             * TODO: Add logic:
+             * Aircraft is close to leg -> smaller intercept angle
+             * aircraft is far from leg -> larger intercept angle
+             * @type {any}
+             */
+            const interceptAngle = AutopilotMath.interceptAngle(xtk, navSensitivity, 20);
+            const bearingToWaypoint = Avionics.Utils.computeGreatCircleHeading(planeState.position, legEnd);
+            const deltaAngle = Math.abs(Avionics.Utils.diffAngle(dtk, bearingToWaypoint));
+            const interceptRate = Math.sign(this.previousDeviation) === 1
+                ? Math.max(this.previousDeviation - xtk, 0)
+                : -1 * Math.min(this.previousDeviation - xtk, 0);
+            const fullDeflection = LNavDirector.getFullDeflectionValue(navSensitivity, navSensitivityScalar);
+            const interceptRateScalar = Math.abs(xtk) < (fullDeflection / 2)
+                ? 1 - Math.min(interceptRate / (fullDeflection / 10), 1)
+                : 1;
+            const headingToSet = deltaAngle < Math.abs(interceptAngle) ? AutopilotMath.normalizeHeading(dtk + (interceptAngle * interceptRateScalar)) : bearingToWaypoint;
+            /*
+            console.log('Intercept angle: ' + interceptAngle);
+            console.log('delta angle: ' + deltaAngle);
+            console.log('Intercept rate: ' + interceptRate);
+            console.log('Intercept rate scalar: ' + interceptRateScalar);
+            console.log('DTK: ' + dtk);
+            console.log('XTK: ' + xtk);
+            console.log('Heading to set: ' + headingToSet);
+             */
+            this.previousDeviation = xtk;
+            if (execute) {
+                LNavDirector.setCourse(headingToSet, planeState);
+            }
+        }
+        /**
+         * Sets the autopilot course to fly.
+         * @param {number} degreesTrue The track in degrees true for the autopilot to fly.
+         * @param {AircraftState} planeState The current state of the aircraft.
+         */
+        static setCourse(degreesTrue, planeState) {
+            const currWindDirection = GeoMath.removeMagvar(planeState.windDirection, planeState.magVar);
+            const windCorrection = AutopilotMath.windCorrectionAngle(degreesTrue, planeState.trueAirspeed, currWindDirection, planeState.windSpeed);
+            let targetHeading = AutopilotMath.normalizeHeading(degreesTrue - windCorrection);
+            targetHeading = GeoMath.correctMagvar(targetHeading, planeState.magVar);
+            Coherent.call('HEADING_BUG_SET', 2, targetHeading);
+        }
+        /**
+         * Gets the current state of the aircraft.
+         */
+        static getAircraftState() {
+            const state = new AircraftState();
+            state.position = new LatLongAlt(SimVar.GetSimVarValue('GPS POSITION LAT', 'degree latitude'), SimVar.GetSimVarValue('GPS POSITION LON', 'degree longitude'));
+            state.magVar = SimVar.GetSimVarValue('MAGVAR', 'degrees');
+            state.groundSpeed = SimVar.GetSimVarValue('GPS GROUND SPEED', 'knots');
+            state.trueAirspeed = SimVar.GetSimVarValue('AIRSPEED TRUE', 'knots');
+            state.onGround = SimVar.GetSimVarValue('SIM ON GROUND', 'bool') !== 0;
+            state.windDirection = SimVar.GetSimVarValue('AMBIENT WIND DIRECTION', 'degrees');
+            state.windSpeed = SimVar.GetSimVarValue('AMBIENT WIND VELOCITY', 'knots');
+            state.trueHeading = SimVar.GetSimVarValue('PLANE HEADING DEGREES TRUE', 'Radians') * Avionics.Utils.RAD2DEG;
+            state.magneticHeading = SimVar.GetSimVarValue('PLANE HEADING DEGREES MAGNETIC', 'Radians') * Avionics.Utils.RAD2DEG;
+            state.trueTrack = SimVar.GetSimVarValue('GPS GROUND TRUE TRACK', 'Radians') * Avionics.Utils.RAD2DEG;
+            state.bankAngle = SimVar.GetSimVarValue('PLANE BANK DEGREES', 'Radians') * Avionics.Utils.RAD2DEG;
+            return state;
+        }
+        /**
+         * Gets the distance from the destination airfield.
+         * @param {LatLongAlt} planeCoords The current coordinates of the aircraft.
+         * @returns {number} The distance from the airfield in NM.
+         */
+        getDestinationDistance(planeCoords) {
+            const destination = this.fpm.getDestination();
+            if (destination) {
+                const destinationDistance = Avionics.Utils.computeGreatCircleDistance(planeCoords, destination.infos.coordinates);
+                return destinationDistance;
+            }
+            return NaN;
+        }
+        /**
+         * Gets the distance from the final approach fix.
+         * @param {LatLongAlt} planeCoords The current coordinates of the aircraft.
+         * @returns {number} The distance from the final approach fix in NM.
+         */
+        getFinalApproachFixDistance(planeCoords) {
+            const approach = this.fpm.getApproachWaypoints(0);
+            if (approach.length > 1) {
+                let finalApproachFix = approach[approach.length - 2];
+                const runwayFix = approach[approach.length - 1];
+                let finalApproachFixDistance = runwayFix.cumulativeDistanceInFp - finalApproachFix.cumulativeDistanceInFp;
+                if (finalApproachFixDistance < 3 && approach.length >= 3) {
+                    finalApproachFix = approach[approach.length - 3];
+                }
+                finalApproachFixDistance = 100;
+                if (finalApproachFix && finalApproachFix.infos && finalApproachFix.infos.coordinates) {
+                    finalApproachFixDistance = Avionics.Utils.computeGreatCircleDistance(planeCoords, finalApproachFix.infos.coordinates);
+                }
+                return finalApproachFixDistance;
+            }
+            return NaN;
+        }
+        /**
+         * Gets the current system nav sensitivity.
+         * @param {LatLongAlt} planeCoords
+         */
+        getNavSensitivity(planeCoords) {
+            const destinationDistance = this.getDestinationDistance(planeCoords);
+            const fafDistance = this.getFinalApproachFixDistance(planeCoords);
+            const currentWaypoint = this.fpm.getActiveWaypoint();
+            const segment = this.fpm.getSegmentFromWaypoint(currentWaypoint);
+            if (((fafDistance <= 3 || (currentWaypoint && currentWaypoint.isRunway))) && segment.type === SegmentType.Approach) {
+                /*
+                if (this.autopilotModeResolver.activatedLateralMode === MCPLateralMode.APPROACH && this.navModeSelector.approachMode === WT_ApproachType.RNAV) {
+                    return NavSensitivity.APPROACHLPV;
+                } else {
+                    return NavSensitivity.APPROACH;
+                }
+                 */
+                return NavSensitivity.APPROACH;
+            }
+            if (destinationDistance <= 31) {
+                /*
+                if (this.navModeSelector.approachMode === WT_ApproachType.RNAV) {
+                    return NavSensitivity.TERMINALLPV;
+                } else {
+                    return NavSensitivity.TERMINAL;
+                }
+                 */
+                return NavSensitivity.TERMINAL;
+            }
+            return NavSensitivity.NORMAL;
+        }
+        /**
+         * Gets the navigational sensitivity scalar for the approach modes.
+         * @param {LatLong} planeCoords The current plane location coordinates.
+         * @param {number} sensitivity The current navigational sensitivity mode.
+         */
+        getNavSensitivityScalar(planeCoords, sensitivity) {
+            if (sensitivity === NavSensitivity.APPROACHLPV) {
+                const runway = this.getRunway();
+                if (runway) {
+                    const distance = Avionics.Utils.computeGreatCircleDistance(runway.infos.coordinates, planeCoords);
+                    return Math.min(0.1 + ((distance / 7) * 0.9), 1);
+                }
+            }
+            return 1;
+        }
+        /**
+         * Gets the full scale deviation value for a specified nav sensitivity.
+         * @param {number} sensitivity The current nav sensitivity.
+         * @param {number} scalar The nav sensitivity scalar for LPV approaches.
+         */
+        static getFullDeflectionValue(sensitivity, scalar) {
+            switch (sensitivity) {
+                case NavSensitivity.NORMAL:
+                    return 2;
+                case NavSensitivity.TERMINALLPV:
+                case NavSensitivity.TERMINAL:
+                    return 1;
+                case NavSensitivity.APPROACH:
+                    return 0.3;
+                case NavSensitivity.APPROACHLPV:
+                    return 0.3 * scalar;
+            }
+        }
+        /**
+         * Gets the approach runway from the flight plan.
+         * @returns {WayPoint} The approach runway waypoint.
+         */
+        getRunway() {
+            const approach = this.fpm.getApproachWaypoints();
+            if (approach.length > 0) {
+                const lastApproachWaypoint = approach[approach.length - 1];
+                if (lastApproachWaypoint.isRunway) {
+                    return lastApproachWaypoint;
+                }
+            }
+        }
+    }
+    /**
+     * Options for lateral navigation.
+     */
+    class LNavDirectorOptions {
+        /**
+         * Creates an instance of LNavDirectorOptions.
+         */
+        constructor() {
+            /**
+             * The minimum distance in NM that LNAV will track towards the active waypoint. This
+             * value is used to avoid swinging towards the active waypoint when the waypoint is close,
+             * if the plane is off track.
+             */
+            this.minimumTrackingDistance = 1;
+            /** The maximum bank angle of the aircraft. */
+            this.maxBankAngle = 30;
+            /** The rate of bank in degrees per second. */
+            this.bankRate = 3;
+            /** The maximum turn angle in degrees to calculate turn anticipation to. */
+            this.maxTurnAnticipationAngle = 110;
+            /** A function that returns the maximum turn anticipation distance. */
+            this.maxTurnAnticipationDistance = (planeState) => planeState.trueAirspeed < 350 ? 7 : 10;
+            /** The number of degrees left in the turn that turn completion will stop and rollout/tracking will begin. */
+            this.degreesRollout = 25;
+        }
+    }
+    /**
+     * The current state of the aircraft for LNAV.
+     */
+    class AircraftState {
+        constructor() {
+            /**
+             * The true airspeed of the plane.
+             * @type {number}
+             */
+            this.trueAirspeed = undefined;
+            /**
+             * The ground speed of the plane.
+             * @type {number}
+             */
+            this.groundSpeed = undefined;
+            /**
+             * The current plane location magvar.
+             * @type {number}
+             */
+            this.magVar = undefined;
+            /**
+             * The current plane position.
+             * @type {LatLonAlt}
+             */
+            this.position = undefined;
+            /**
+             * The wind speed.
+             * @type {number}
+             */
+            this.windSpeed = undefined;
+            /**
+             * The wind direction.
+             * @type {number}
+             */
+            this.windDirection = undefined;
+            /**
+             * The current heading in degrees true of the plane.
+             * @type {number}
+             */
+            this.trueHeading = undefined;
+            /**
+             * The current heading in degrees magnetic of the plane.
+             * @type {number}
+             */
+            this.magneticHeading = undefined;
+            /**
+             * The current track in degrees true of the plane.
+             * @type {number}
+             */
+            this.trueTrack = undefined;
+            /**
+             * The current plane bank angle.
+             * @type {number}
+             */
+            this.bankAngle = undefined;
+            /**
+             * Whether or not the plane is on the ground.
+             * @type {boolean}
+             */
+            this.onGround = undefined;
+        }
+    }
+    var FlightPlanSequencing;
+    (function (FlightPlanSequencing) {
+        FlightPlanSequencing["AUTO"] = "AUTO";
+        FlightPlanSequencing["INHIBIT"] = "INHIBIT";
+    })(FlightPlanSequencing || (FlightPlanSequencing = {}));
+    var LNavState;
+    (function (LNavState) {
+        LNavState["TRACKING"] = "TRACKING";
+        LNavState["TURN_COMPLETING"] = "TURN_COMPLETING";
+        LNavState["IN_DISCONTINUITY"] = "IN_DISCONTINUITY";
+    })(LNavState || (LNavState = {}));
+    var NavSensitivity;
+    (function (NavSensitivity) {
+        /** Vertical and lateral sensitivity is at normal +/- 2.0NM enroute levels. */
+        NavSensitivity[NavSensitivity["NORMAL"] = 0] = "NORMAL";
+        /** Vertical and lateral sensitivity is at +/- 1.0NM terminal levels. */
+        NavSensitivity[NavSensitivity["TERMINAL"] = 1] = "TERMINAL";
+        /** Vertical and lateral sensitivity is at +/- 1.0NM terminal levels. */
+        NavSensitivity[NavSensitivity["TERMINALLPV"] = 2] = "TERMINALLPV";
+        /** Vertical and lateral sensitivity is at +/- 0.3NM approach levels. */
+        NavSensitivity[NavSensitivity["APPROACH"] = 3] = "APPROACH";
+        /** Vertical and lateral sensitivity increases as distance remaining on final decreases. */
+        NavSensitivity[NavSensitivity["APPROACHLPV"] = 4] = "APPROACHLPV";
+    })(NavSensitivity || (NavSensitivity = {}));
+    var WT_ApproachType;
+    (function (WT_ApproachType) {
+        WT_ApproachType["NONE"] = "none";
+        WT_ApproachType["ILS"] = "ils";
+        WT_ApproachType["RNAV"] = "rnav";
+        WT_ApproachType["VISUAL"] = "visual";
+    })(WT_ApproachType || (WT_ApproachType = {}));
+
     class B787_10_FMC extends Boeing_FMC {
         /**
          * TODO: Refactor section end
@@ -18417,6 +19309,10 @@
         constructor() {
             super();
             this._navModeSwitcher = undefined;
+            this._autopilotModeResolver = undefined;
+            this._mcpDirector = new MCPDirector();
+            this._automaticAutopilotDirector = new AutomaticAutopilotDirector();
+            this._fmaResolver = new FMAResolver();
             this.onInputAircraftSpecific = (input) => {
                 HDLogger.log('B787_10_FMC.onInputAircraftSpecific input = \'' + input + '\'', Level.info);
                 if (input === 'LEGS') {
@@ -18547,28 +19443,28 @@
             super.onEvent(_event);
             if (_event.indexOf('AP_LNAV') != -1) {
                 if (this._isMainRouteActivated) {
-                    this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.LNAV_PRESSED);
+                    this._mcpDirector.armLNAV();
                 }
                 else {
                     this.messageManager.showMessage('NO ACTIVE ROUTE', 'ACTIVATE ROUTE TO <br> ENGAGE LNAV');
                 }
             }
             else if (_event.indexOf('AP_VNAV') != -1) {
-                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.VNAV_PRESSED);
+                this._mcpDirector.armVNAV();
             }
             else if (_event.indexOf('AP_FLCH') != -1) {
-                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.FLC_PRESSED);
+                this._mcpDirector.armFLCH();
             }
             else if (_event.indexOf('AP_HEADING_HOLD') != -1) {
-                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.HDG_HOLD_PRESSED);
+                this._mcpDirector.armHeadingHold();
             }
             else if (_event.indexOf('AP_HEADING_SEL') != -1) {
-                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.HDG_SEL_PRESSED);
+                this._mcpDirector.armHeadingSelect();
             }
             else if (_event.indexOf('AP_SPD') != -1) {
                 if (this.aircraftType == Aircraft.AS01B) {
                     if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
-                        this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_PRESSED);
+                        this._mcpDirector.armSpeed();
                     }
                 }
                 else {
@@ -18578,10 +19474,10 @@
                 }
             }
             else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
-                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED);
+                this._mcpDirector.toggleSpeedIntervention();
             }
             else if (_event.indexOf('AP_VSPEED') != -1) {
-                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.VS_PRESSED);
+                this._mcpDirector.armVerticalSpeed();
             }
             else if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
                 this.activateAltitudeSel();
@@ -18604,10 +19500,11 @@
                 this.onExec();
             }
             if (_event.indexOf('AP_SPD') != -1) {
+                this._mcpDirector.armSpeed();
                 this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_PRESSED);
             }
             else if (_event.indexOf('AP_SPEED_INTERVENTION') != -1) {
-                this._navModeSwitcher.enqueueEvent(NavModeSwitcherEvent.SPD_INTERVENTION_PRESSED);
+                this._mcpDirector.toggleSpeedIntervention();
             }
             /*
             if (_event.indexOf('AP_ALT_INTERVENTION') != -1) {
@@ -19212,11 +20109,22 @@
                 this.updateAutopilotCooldown = -1;
             }
             if (this.updateAutopilotCooldown < 0) {
-                if (this._navModeSwitcher === undefined) {
-                    this._navModeSwitcher = new NavModeSwitcher();
+                if (this._autopilotModeResolver === undefined) {
+                    this._autopilotModeResolver = new AutopilotModeResolver(this._mcpDirector, this._automaticAutopilotDirector, this._fmaResolver);
                 }
                 else {
-                    this._navModeSwitcher.update();
+                    this._autopilotModeResolver.update();
+                }
+                if (this._lnav === undefined) {
+                    this._lnav = new LNavDirector(this.flightPlanManager, this._autopilotModeResolver);
+                }
+                else {
+                    try {
+                        this._lnav.update();
+                    }
+                    catch (error) {
+                        console.error(error);
+                    }
                 }
                 this._renderer.renderExec(this.getIsRouteActivated());
                 this.updateAutopilotCooldown = this._apCooldown;
