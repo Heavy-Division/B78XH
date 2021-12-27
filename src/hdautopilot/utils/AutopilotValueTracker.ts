@@ -35,6 +35,8 @@ export class AutopilotValueTracker {
 		this.value = value;
 		if (isChanged) {
 			return this._onChange;
+		} else {
+			return undefined;
 		}
 	}
 

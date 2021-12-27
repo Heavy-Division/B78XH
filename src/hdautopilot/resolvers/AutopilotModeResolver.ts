@@ -66,6 +66,7 @@ export class AutopilotModeResolver {
 
 	public update() {
 		this.mcpDirector.processPending();
+		this.automaticDirector.update();
 		this.propagateMCPModes();
 		this.resolveMode();
 	}

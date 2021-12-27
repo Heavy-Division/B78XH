@@ -329,7 +329,6 @@ export class MCPDirector {
 		const headingHoldValue = Simplane.getHeadingMagnetic();
 		SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
 		this.headingHoldInterval = window.setInterval(() => {
-			console.log('update heading hold');
 			Coherent.call('HEADING_BUG_SET', 2, headingHoldValue);
 		}, 15);
 	}

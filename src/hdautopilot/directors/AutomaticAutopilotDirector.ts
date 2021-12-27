@@ -1,5 +1,6 @@
 import {AutopilotState} from '../utils/AutopilotState';
 import {Queue} from '../../hdsdk';
+import {MCPDirector, MCPLateralMode, MCPVerticalMode} from './MCPDirector';
 import {HDLogger} from '../../hdlogger';
 
 /**
@@ -19,11 +20,13 @@ export class AutomaticAutopilotDirector {
 		return this._eventQueue;
 	}
 
-	private _autopilotState: AutopilotState;
+	private _autopilotState: AutopilotState = new AutopilotState();
 	private _handlers = [];
 	private _eventQueue = new Queue();
+	private _mcpDirector: MCPDirector;
 
-	constructor() {
+	constructor(mcpDirector: MCPDirector) {
+		this._mcpDirector = mcpDirector;
 		this.handlers[AutomaticAutopilotDirectorEvent.AP_ON_CHANGE] = this.handleApOnChange.bind(this);
 		this.handlers[AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE] = this.handleNavigationModeOnChange.bind(this);
 		this.handlers[AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE] = this.handleTogaOnChange.bind(this);
@@ -39,7 +42,7 @@ export class AutomaticAutopilotDirector {
 	public update(): void {
 		for (const autopilotStateElement of this.autopilotState) {
 			const eventToTrigger = autopilotStateElement.update();
-			if (eventToTrigger) {
+			if (eventToTrigger !== undefined) {
 				this.eventQueue.enqueue(eventToTrigger);
 			}
 		}
@@ -56,7 +59,14 @@ export class AutomaticAutopilotDirector {
 	}
 
 	private handleApOnChange(): void {
+		if (this._mcpDirector.armedVerticalMode.mode !== MCPVerticalMode.VNAV && this._mcpDirector.activatedVerticalMode !== MCPVerticalMode.VNAV) {
+			this._mcpDirector.armSpeed();
+			this._mcpDirector.armVerticalSpeed();
+		}
 
+		if (this._mcpDirector.armedLateralMode.mode !== MCPLateralMode.LNAV && this._mcpDirector.activatedLateralMode !== MCPLateralMode.LNAV) {
+			this._mcpDirector.armHeadingHold();
+		}
 	}
 
 	/**

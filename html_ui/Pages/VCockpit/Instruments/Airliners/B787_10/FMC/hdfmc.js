@@ -17608,195 +17608,14 @@
             if (isChanged) {
                 return this._onChange;
             }
+            else {
+                return undefined;
+            }
         }
         onChange(event) {
             this._onChange = event;
         }
     }
-
-    /**
-     * TODO: Rename to AFDSDirector
-     */
-    class AutomaticAutopilotDirector {
-        constructor() {
-            this._handlers = [];
-            this._eventQueue = new Queue();
-            this.handlers[AutomaticAutopilotDirectorEvent.AP_ON_CHANGE] = this.handleApOnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE] = this.handleNavigationModeOnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE] = this.handleTogaOnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE] = this.handleHeadingLockedOnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE] = this.handleAltitudeLockedOnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.SIMULATOR_ALTITUDE_LOCK_ON_CHANGE] = this.handleSimulatorAltitudeLockedOnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.ALTITUDE_SLOT_ON_CHANGE] = this.handleAltitudeSlotOnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_1_ON_CHANGE] = this.handleSelectedAltitude1OnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_2_ON_CHANGE] = this.handleSelectedAltitude2OnChange.bind(this);
-            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_3_ON_CHANGE] = this.handleSelectedAltitude3OnChange.bind(this);
-        }
-        get autopilotState() {
-            return this._autopilotState;
-        }
-        get handlers() {
-            return this._handlers;
-        }
-        get eventQueue() {
-            return this._eventQueue;
-        }
-        update() {
-            for (const autopilotStateElement of this.autopilotState) {
-                const eventToTrigger = autopilotStateElement.update();
-                if (eventToTrigger) {
-                    this.eventQueue.enqueue(eventToTrigger);
-                }
-            }
-            this.processEvents();
-        }
-        processEvents() {
-            for (; this.eventQueue.length > 0;) {
-                const event = this.eventQueue.dequeue();
-                if (this.handlers[event] !== undefined) {
-                    this.handlers[event]();
-                }
-            }
-        }
-        handleApOnChange() {
-        }
-        /**
-         * TODO: Rename to LNAV onChange
-         * @private
-         */
-        handleNavigationModeOnChange() {
-            HDLogger.log('LNAV onChange');
-        }
-        handleTogaOnChange() {
-            HDLogger.log('TOGA onChange');
-        }
-        handleHeadingLockedOnChange() {
-            HDLogger.log('HEADING LOCK onChange');
-        }
-        handleAltitudeLockedOnChange() {
-            HDLogger.log('ALTITUDE LOCK onChange');
-        }
-        handleSimulatorAltitudeLockedOnChange() {
-            HDLogger.log('SIM ALTITUDE LOCK onChange');
-        }
-        handleAltitudeSlotOnChange() {
-            HDLogger.log('ALTITUDE SLOT onChange');
-        }
-        handleSelectedAltitude1OnChange() {
-            HDLogger.log('SEL ALTITUDE 1 onChange');
-        }
-        handleSelectedAltitude2OnChange() {
-            HDLogger.log('SEL ALTITUDE 2 onChange');
-        }
-        handleSelectedAltitude3OnChange() {
-            HDLogger.log('SEL ALTITUDE 3 onChange');
-        }
-        handleGroundedChanged() {
-            HDLogger.log('GROUNDED onChange');
-        }
-    }
-    var AutomaticAutopilotDirectorEvent;
-    (function (AutomaticAutopilotDirectorEvent) {
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["AP_ON_CHANGE"] = 0] = "AP_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["NAVIGATION_ON_CHANGE"] = 1] = "NAVIGATION_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["TOGA_ON_CHANGE"] = 2] = "TOGA_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["HEADING_LOCK_ON_CHANGE"] = 3] = "HEADING_LOCK_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["ALTITUDE_LOCK_ON_CHANGE"] = 4] = "ALTITUDE_LOCK_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SIMULATOR_ALTITUDE_LOCK_ON_CHANGE"] = 5] = "SIMULATOR_ALTITUDE_LOCK_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["ALTITUDE_SLOT_ON_CHANGE"] = 6] = "ALTITUDE_SLOT_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_1_ON_CHANGE"] = 7] = "SELECTED_ALTITUDE_1_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_2_ON_CHANGE"] = 8] = "SELECTED_ALTITUDE_2_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_3_ON_CHANGE"] = 9] = "SELECTED_ALTITUDE_3_ON_CHANGE";
-        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["GROUNDED_ON_CHANGE"] = 10] = "GROUNDED_ON_CHANGE";
-    })(AutomaticAutopilotDirectorEvent || (AutomaticAutopilotDirectorEvent = {}));
-
-    class AutopilotState {
-        constructor() {
-            (this._autopilot = new AutopilotValueTracker(() => Simplane.getAutoPilotActive())).onChange(AutomaticAutopilotDirectorEvent.AP_ON_CHANGE);
-            //(this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
-            (this._navigationMode = new AutopilotValueTracker(() => Simplane.getAPLNAVActive())).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
-            (this._toga = new AutopilotValueTracker(() => Simplane.getAutoPilotTOGAActive())).onChange(AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE);
-            (this._headingLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE);
-            (this._altitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_ALT_HOLD', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE);
-            (this._simulatorAltitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.SIMULATOR_ALTITUDE_LOCK_ON_CHANGE);
-            (this._altitudeSlot = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE SLOT INDEX', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_SLOT_ON_CHANGE);
-            (this._selectedAltitude1 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_1_ON_CHANGE);
-            (this._selectedAltitude2 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:2', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_2_ON_CHANGE);
-            (this._selectedAltitude3 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:3', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_3_ON_CHANGE);
-            (this._grounded = new AutopilotValueTracker(() => Simplane.getIsGrounded())).onChange(AutomaticAutopilotDirectorEvent.GROUNDED_ON_CHANGE);
-        }
-        get autopilot() {
-            return this._autopilot;
-        }
-        get navigationMode() {
-            return this._navigationMode;
-        }
-        get toga() {
-            return this._toga;
-        }
-        get headingLocked() {
-            return this._headingLocked;
-        }
-        get altitudeLocked() {
-            return this._altitudeLocked;
-        }
-        get simulatorAltitudeLocked() {
-            return this._simulatorAltitudeLocked;
-        }
-        get altitudeSlot() {
-            return this._altitudeSlot;
-        }
-        get selectedAltitude1() {
-            return this._selectedAltitude1;
-        }
-        get selectedAltitude2() {
-            return this._selectedAltitude2;
-        }
-        get selectedAltitude3() {
-            return this._selectedAltitude3;
-        }
-        get grounded() {
-            return this._grounded;
-        }
-        *[Symbol.iterator]() {
-            let properties = Object.keys(this);
-            for (let property of properties) {
-                yield this[property];
-            }
-        }
-    }
-
-    var NavModeSwitcherEvent;
-    (function (NavModeSwitcherEvent) {
-        /**
-         * Changed events
-         */
-        NavModeSwitcherEvent[NavModeSwitcherEvent["AP_CHANGED"] = 0] = "AP_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["NAVIGATION_MODE_CHANGED"] = 1] = "NAVIGATION_MODE_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["TOGA_CHANGED"] = 2] = "TOGA_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["HEADING_LOCKED_CHANGED"] = 3] = "HEADING_LOCKED_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["ALTITUDE_LOCKED_CHANGED"] = 4] = "ALTITUDE_LOCKED_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["SIMULATOR_ALTITUDE_LOCKED_CHANGED"] = 5] = "SIMULATOR_ALTITUDE_LOCKED_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["ALTITUDE_SLOT_CHANGED"] = 6] = "ALTITUDE_SLOT_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_1_CHANGED"] = 7] = "SELECTED_ALTITUDE_1_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_2_CHANGED"] = 8] = "SELECTED_ALTITUDE_2_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_3_CHANGED"] = 9] = "SELECTED_ALTITUDE_3_CHANGED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["GROUNDED_CHANGED"] = 10] = "GROUNDED_CHANGED";
-        /**
-         * Press events
-         */
-        NavModeSwitcherEvent[NavModeSwitcherEvent["HDG_HOLD_PRESSED"] = 11] = "HDG_HOLD_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["HDG_SEL_PRESSED"] = 12] = "HDG_SEL_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["SPD_PRESSED"] = 13] = "SPD_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["SPD_INTERVENTION_PRESSED"] = 14] = "SPD_INTERVENTION_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["FLC_PRESSED"] = 15] = "FLC_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["APPR_PRESSED"] = 16] = "APPR_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["VS_PRESSED"] = 17] = "VS_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["VNAV_PRESSED"] = 18] = "VNAV_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["LNAV_PRESSED"] = 19] = "LNAV_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["ALT_HOLD_PRESSED"] = 20] = "ALT_HOLD_PRESSED";
-        NavModeSwitcherEvent[NavModeSwitcherEvent["ALT_INTERVENTION_PRESSED"] = 21] = "ALT_INTERVENTION_PRESSED";
-    })(NavModeSwitcherEvent || (NavModeSwitcherEvent = {}));
 
     var SimVarValueUnit;
     (function (SimVarValueUnit) {
@@ -18095,7 +17914,6 @@
             const headingHoldValue = Simplane.getHeadingMagnetic();
             SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
             this.headingHoldInterval = window.setInterval(() => {
-                console.log('update heading hold');
                 Coherent.call('HEADING_BUG_SET', 2, headingHoldValue);
             }, 15);
         }
@@ -18379,6 +18197,199 @@
         }
     }
 
+    /**
+     * TODO: Rename to AFDSDirector
+     */
+    class AutomaticAutopilotDirector {
+        constructor(mcpDirector) {
+            this._autopilotState = new AutopilotState();
+            this._handlers = [];
+            this._eventQueue = new Queue();
+            this._mcpDirector = mcpDirector;
+            this.handlers[AutomaticAutopilotDirectorEvent.AP_ON_CHANGE] = this.handleApOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE] = this.handleNavigationModeOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE] = this.handleTogaOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE] = this.handleHeadingLockedOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE] = this.handleAltitudeLockedOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.SIMULATOR_ALTITUDE_LOCK_ON_CHANGE] = this.handleSimulatorAltitudeLockedOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.ALTITUDE_SLOT_ON_CHANGE] = this.handleAltitudeSlotOnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_1_ON_CHANGE] = this.handleSelectedAltitude1OnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_2_ON_CHANGE] = this.handleSelectedAltitude2OnChange.bind(this);
+            this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_3_ON_CHANGE] = this.handleSelectedAltitude3OnChange.bind(this);
+        }
+        get autopilotState() {
+            return this._autopilotState;
+        }
+        get handlers() {
+            return this._handlers;
+        }
+        get eventQueue() {
+            return this._eventQueue;
+        }
+        update() {
+            for (const autopilotStateElement of this.autopilotState) {
+                const eventToTrigger = autopilotStateElement.update();
+                if (eventToTrigger !== undefined) {
+                    this.eventQueue.enqueue(eventToTrigger);
+                }
+            }
+            this.processEvents();
+        }
+        processEvents() {
+            for (; this.eventQueue.length > 0;) {
+                const event = this.eventQueue.dequeue();
+                if (this.handlers[event] !== undefined) {
+                    this.handlers[event]();
+                }
+            }
+        }
+        handleApOnChange() {
+            if (this._mcpDirector.armedVerticalMode.mode !== MCPVerticalMode.VNAV && this._mcpDirector.activatedVerticalMode !== MCPVerticalMode.VNAV) {
+                this._mcpDirector.armSpeed();
+                this._mcpDirector.armVerticalSpeed();
+            }
+            if (this._mcpDirector.armedLateralMode.mode !== MCPLateralMode.LNAV && this._mcpDirector.activatedLateralMode !== MCPLateralMode.LNAV) {
+                this._mcpDirector.armHeadingHold();
+            }
+        }
+        /**
+         * TODO: Rename to LNAV onChange
+         * @private
+         */
+        handleNavigationModeOnChange() {
+            HDLogger.log('LNAV onChange');
+        }
+        handleTogaOnChange() {
+            HDLogger.log('TOGA onChange');
+        }
+        handleHeadingLockedOnChange() {
+            HDLogger.log('HEADING LOCK onChange');
+        }
+        handleAltitudeLockedOnChange() {
+            HDLogger.log('ALTITUDE LOCK onChange');
+        }
+        handleSimulatorAltitudeLockedOnChange() {
+            HDLogger.log('SIM ALTITUDE LOCK onChange');
+        }
+        handleAltitudeSlotOnChange() {
+            HDLogger.log('ALTITUDE SLOT onChange');
+        }
+        handleSelectedAltitude1OnChange() {
+            HDLogger.log('SEL ALTITUDE 1 onChange');
+        }
+        handleSelectedAltitude2OnChange() {
+            HDLogger.log('SEL ALTITUDE 2 onChange');
+        }
+        handleSelectedAltitude3OnChange() {
+            HDLogger.log('SEL ALTITUDE 3 onChange');
+        }
+        handleGroundedChanged() {
+            HDLogger.log('GROUNDED onChange');
+        }
+    }
+    var AutomaticAutopilotDirectorEvent;
+    (function (AutomaticAutopilotDirectorEvent) {
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["AP_ON_CHANGE"] = 0] = "AP_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["NAVIGATION_ON_CHANGE"] = 1] = "NAVIGATION_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["TOGA_ON_CHANGE"] = 2] = "TOGA_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["HEADING_LOCK_ON_CHANGE"] = 3] = "HEADING_LOCK_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["ALTITUDE_LOCK_ON_CHANGE"] = 4] = "ALTITUDE_LOCK_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SIMULATOR_ALTITUDE_LOCK_ON_CHANGE"] = 5] = "SIMULATOR_ALTITUDE_LOCK_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["ALTITUDE_SLOT_ON_CHANGE"] = 6] = "ALTITUDE_SLOT_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_1_ON_CHANGE"] = 7] = "SELECTED_ALTITUDE_1_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_2_ON_CHANGE"] = 8] = "SELECTED_ALTITUDE_2_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["SELECTED_ALTITUDE_3_ON_CHANGE"] = 9] = "SELECTED_ALTITUDE_3_ON_CHANGE";
+        AutomaticAutopilotDirectorEvent[AutomaticAutopilotDirectorEvent["GROUNDED_ON_CHANGE"] = 10] = "GROUNDED_ON_CHANGE";
+    })(AutomaticAutopilotDirectorEvent || (AutomaticAutopilotDirectorEvent = {}));
+
+    class AutopilotState {
+        constructor() {
+            (this._autopilot = new AutopilotValueTracker(() => Simplane.getAutoPilotActive())).onChange(AutomaticAutopilotDirectorEvent.AP_ON_CHANGE);
+            //(this._navigationMode = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_LNAV_MODE', 'number'))).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
+            (this._navigationMode = new AutopilotValueTracker(() => Simplane.getAPLNAVActive())).onChange(AutomaticAutopilotDirectorEvent.NAVIGATION_ON_CHANGE);
+            (this._toga = new AutopilotValueTracker(() => Simplane.getAutoPilotTOGAActive())).onChange(AutomaticAutopilotDirectorEvent.TOGA_ON_CHANGE);
+            (this._headingLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT HEADING LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.HEADING_LOCK_ON_CHANGE);
+            (this._altitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('L:WT_CJ4_ALT_HOLD', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_LOCK_ON_CHANGE);
+            (this._simulatorAltitudeLocked = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK', 'Boolean'))).onChange(AutomaticAutopilotDirectorEvent.SIMULATOR_ALTITUDE_LOCK_ON_CHANGE);
+            (this._altitudeSlot = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE SLOT INDEX', 'number'))).onChange(AutomaticAutopilotDirectorEvent.ALTITUDE_SLOT_ON_CHANGE);
+            (this._selectedAltitude1 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_1_ON_CHANGE);
+            (this._selectedAltitude2 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:2', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_2_ON_CHANGE);
+            (this._selectedAltitude3 = new AutopilotValueTracker(() => SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:3', 'feet'))).onChange(AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_3_ON_CHANGE);
+            (this._grounded = new AutopilotValueTracker(() => Simplane.getIsGrounded())).onChange(AutomaticAutopilotDirectorEvent.GROUNDED_ON_CHANGE);
+        }
+        get autopilot() {
+            return this._autopilot;
+        }
+        get navigationMode() {
+            return this._navigationMode;
+        }
+        get toga() {
+            return this._toga;
+        }
+        get headingLocked() {
+            return this._headingLocked;
+        }
+        get altitudeLocked() {
+            return this._altitudeLocked;
+        }
+        get simulatorAltitudeLocked() {
+            return this._simulatorAltitudeLocked;
+        }
+        get altitudeSlot() {
+            return this._altitudeSlot;
+        }
+        get selectedAltitude1() {
+            return this._selectedAltitude1;
+        }
+        get selectedAltitude2() {
+            return this._selectedAltitude2;
+        }
+        get selectedAltitude3() {
+            return this._selectedAltitude3;
+        }
+        get grounded() {
+            return this._grounded;
+        }
+        *[Symbol.iterator]() {
+            let properties = Object.keys(this);
+            for (let property of properties) {
+                yield this[property];
+            }
+        }
+    }
+
+    var NavModeSwitcherEvent;
+    (function (NavModeSwitcherEvent) {
+        /**
+         * Changed events
+         */
+        NavModeSwitcherEvent[NavModeSwitcherEvent["AP_CHANGED"] = 0] = "AP_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["NAVIGATION_MODE_CHANGED"] = 1] = "NAVIGATION_MODE_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["TOGA_CHANGED"] = 2] = "TOGA_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["HEADING_LOCKED_CHANGED"] = 3] = "HEADING_LOCKED_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["ALTITUDE_LOCKED_CHANGED"] = 4] = "ALTITUDE_LOCKED_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SIMULATOR_ALTITUDE_LOCKED_CHANGED"] = 5] = "SIMULATOR_ALTITUDE_LOCKED_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["ALTITUDE_SLOT_CHANGED"] = 6] = "ALTITUDE_SLOT_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_1_CHANGED"] = 7] = "SELECTED_ALTITUDE_1_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_2_CHANGED"] = 8] = "SELECTED_ALTITUDE_2_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SELECTED_ALTITUDE_3_CHANGED"] = 9] = "SELECTED_ALTITUDE_3_CHANGED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["GROUNDED_CHANGED"] = 10] = "GROUNDED_CHANGED";
+        /**
+         * Press events
+         */
+        NavModeSwitcherEvent[NavModeSwitcherEvent["HDG_HOLD_PRESSED"] = 11] = "HDG_HOLD_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["HDG_SEL_PRESSED"] = 12] = "HDG_SEL_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SPD_PRESSED"] = 13] = "SPD_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["SPD_INTERVENTION_PRESSED"] = 14] = "SPD_INTERVENTION_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["FLC_PRESSED"] = 15] = "FLC_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["APPR_PRESSED"] = 16] = "APPR_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["VS_PRESSED"] = 17] = "VS_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["VNAV_PRESSED"] = 18] = "VNAV_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["LNAV_PRESSED"] = 19] = "LNAV_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["ALT_HOLD_PRESSED"] = 20] = "ALT_HOLD_PRESSED";
+        NavModeSwitcherEvent[NavModeSwitcherEvent["ALT_INTERVENTION_PRESSED"] = 21] = "ALT_INTERVENTION_PRESSED";
+    })(NavModeSwitcherEvent || (NavModeSwitcherEvent = {}));
+
     class NavModeSwitcher {
         constructor() {
             this._eventQueue = new Queue();
@@ -18541,6 +18552,7 @@
         }
         update() {
             this.mcpDirector.processPending();
+            this.automaticDirector.update();
             this.propagateMCPModes();
             this.resolveMode();
         }
@@ -19310,9 +19322,6 @@
             super();
             this._navModeSwitcher = undefined;
             this._autopilotModeResolver = undefined;
-            this._mcpDirector = new MCPDirector();
-            this._automaticAutopilotDirector = new AutomaticAutopilotDirector();
-            this._fmaResolver = new FMAResolver();
             this.onInputAircraftSpecific = (input) => {
                 HDLogger.log('B787_10_FMC.onInputAircraftSpecific input = \'' + input + '\'', Level.info);
                 if (input === 'LEGS') {
@@ -19398,6 +19407,9 @@
             this._aThrHasActivated = false;
             this._hasReachedTopOfDescent = false;
             this._apCooldown = 500;
+            this._mcpDirector = new MCPDirector();
+            this._automaticAutopilotDirector = new AutomaticAutopilotDirector(this._mcpDirector);
+            this._fmaResolver = new FMAResolver();
             this._prepareDefaultValues();
             this._overrideDefaultAsoboValues();
         }

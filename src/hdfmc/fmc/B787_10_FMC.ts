@@ -67,9 +67,9 @@ export class B787_10_FMC extends Boeing_FMC {
 	protected _lastFmcCommandCruiseSpeedType: any;
 	protected _navModeSwitcher = undefined;
 	protected _autopilotModeResolver = undefined;
-	protected _mcpDirector = new MCPDirector();
-	protected _automaticAutopilotDirector = new AutomaticAutopilotDirector();
-	protected _fmaResolver = new FMAResolver();
+	protected _mcpDirector: MCPDirector;
+	protected _automaticAutopilotDirector: AutomaticAutopilotDirector;
+	protected _fmaResolver: FMAResolver;
 
 	onInputAircraftSpecific = (input) => {
 		HDLogger.log('B787_10_FMC.onInputAircraftSpecific input = \'' + input + '\'', Level.info);
@@ -492,6 +492,10 @@ export class B787_10_FMC extends Boeing_FMC {
 		this._aThrHasActivated = false;
 		this._hasReachedTopOfDescent = false;
 		this._apCooldown = 500;
+
+		this._mcpDirector = new MCPDirector();
+		this._automaticAutopilotDirector = new AutomaticAutopilotDirector(this._mcpDirector);
+		this._fmaResolver = new FMAResolver();
 
 		this._prepareDefaultValues();
 
