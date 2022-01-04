@@ -1,7 +1,5 @@
 body {
     background-color: black;
-    border-top: solid 2px white;
-    width: 1000px;
 }
 
 @font-face {
@@ -28,7 +26,7 @@ body {
 .altitudes {
         margin-top: 50px;
         width: 70px;
-        height: auto;
+        height: 100%;
         background: gray;
         position: absolute;
         z-index: 50;
@@ -592,7 +590,7 @@ body {
     position: fixed;
     border-top: 25px solid transparent;
     border-left: 50px solid white;
-    bottom: 81.8%;
+    top: 21.75%;
     left: 15%;
   }
 
@@ -602,7 +600,7 @@ body {
     position: fixed;
     border-top: 20px solid transparent;
     border-left: 40px solid black;
-    bottom: 81.93%;
+    top: 22%;
     left: 15.2%;
     z-index: 25;
   }
@@ -612,8 +610,8 @@ body {
     border-left: 200px solid white;
     height: 3px;
     position: fixed;
-    left: 19.8%;
-    top: 21.3%;
+    left: 19.2%;
+    top: 25.5%;
     z-index: 30;
     
     
@@ -621,21 +619,21 @@ body {
 
   #vPath1 {
     transform: rotate(15deg);
-    border-left: 335px solid magenta;
+    border-left: 300px solid magenta;
     height: 3px;
     position: fixed;
     left: 24%;
-    bottom: 74.5%;
+    top: 27.8%;
     z-index: 29;
     
   }
 
   #vPath2 {
-    border-left: 145px solid magenta;
+    border-left: 300px solid magenta;
     height: 3px;
     position: fixed;
-    left: 55.9%;
-    top: 30.5%;
+    left: 47%;
+    top: 30.8%;
     z-index: 29;
     
   }
@@ -646,7 +644,7 @@ body {
     height: 3px;
     position: fixed;
     left: 69.3%;
-    bottom: 64.7%;
+    top: 33.5%;
     z-index: 29;
     
   }
@@ -655,8 +653,8 @@ body {
     border-left: 66px solid magenta;
     height: 3px;
     position: fixed;
-    left: 88.8%;
-    bottom: 60.1%;
+    left: 84.8%;
+    top: 36.2%;
     z-index: 29;
     
   }
@@ -676,7 +674,7 @@ body {
     border-width: 3px;
     width: 100%;
     position: fixed;
-    bottom: 3.8%
+    bottom: 2.5%
 }
 
 #tdMarker {
@@ -697,8 +695,8 @@ body {
     border-left: 30px solid #00ff00;
     border-top: 30px solid transparent;
     border-left: 50px solid transparent #00ff00;
-    bottom: 2.1%;
-    left: 4%;
+    bottom: 1.5%;
+    left: 3.5%;
     z-index: 4400;
   }
 
@@ -710,8 +708,8 @@ body {
     border-left: 20px solid gray;
     border-top: 20px solid transparent;
     border-left: 50px solid transparent #00ff00;
-    bottom: 2.8%;
-    left: 4.7%;
+    bottom: 2%;
+    left: 4%;
     z-index: 4400;
   }
 
@@ -720,7 +718,7 @@ body {
     transform: rotate(90deg);
     width: 40px;
     height: 3px;
-    margin-top: 225px;
+    margin-top: 383px;
     margin-left: 41px;
     box-sizing: content-box;
     padding-top: 15px;
@@ -747,8 +745,8 @@ body {
   }
 
   #pageSep {
-    border-top: solid 2px white;
-    width: 1000px;
+    border-top: solid 1px white;
+    width: 1440px;
     z-index: 50;
     left: 0%;
     top: 0;
