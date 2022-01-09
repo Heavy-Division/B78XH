@@ -90,6 +90,7 @@ class LNavDirector {
 		const maxBank = SimVar.GetSimVarValue('AUTOPILOT MAX BANK', 'Radians');
 		this.options.maxBankAngle = this.getfixedMaxBank(maxBank);
 
+		this.options.degreesRollout = this.options.maxBankAngle / 2;
 
 		const rateOfTurn = this.calculateRateOfTurn(this.options.maxBankAngle * Avionics.Utils.DEG2RAD);
 		this.options.bankRate = rateOfTurn[0];
@@ -205,9 +206,9 @@ class LNavDirector {
 			const planeToActiveBearing = planeLatLon.initialBearingTo(activeLatLon);
 			const nextStartTrack = nextWaypoint ? activeLatLon.initialBearingTo(nextLatLon) : planeToActiveBearing;
 
-			const anticipationDistance = this.getAnticipationDistance(planeState, Avionics.Utils.diffAngle(planeToActiveBearing, nextStartTrack));
+			const anticipationDistance = this.getAnticipationDistance(planeState, Avionics.Utils.diffAngle(planeToActiveBearing, nextStartTrack)) * 0.9;
 			if (!nextWaypoint || !nextWaypoint.isFlyover) {
-				
+
 				if (distanceToActive < anticipationDistance && !nextWaypoint.isFlyover) {
 					this.sequenceToNextWaypoint(planeState, activeWaypoint);
 					return;
@@ -448,7 +449,7 @@ class LNavDirector {
 		SimVar.SetSimVarValue('L:WT_CJ4_XTK', 'number', xtk);
 		SimVar.SetSimVarValue('L:WT_CJ4_DTK', 'number', correctedDtk);
 
-		const interceptAngle = AutopilotMath.interceptAngle(xtk, navSensitivity);
+		const interceptAngle = AutopilotMath.interceptAngle(xtk, navSensitivity, 20);
 		const bearingToWaypoint = Avionics.Utils.computeGreatCircleHeading(planeState.position, legEnd);
 		const deltaAngle = Math.abs(Avionics.Utils.diffAngle(dtk, bearingToWaypoint));
 		const interceptRate = Math.sign(this.previousDeviation) === 1
