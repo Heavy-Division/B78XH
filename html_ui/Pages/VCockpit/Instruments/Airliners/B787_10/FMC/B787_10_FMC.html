@@ -5,6 +5,26 @@
     <div id="Mainframe">
         <div id="Electricity" state="off">
 
+            <svg id="fms-preflight-overlay" width="640" height="1020" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1020"
+                 style="position: absolute; top: 0; left: 0; z-index: 10;" class="remove-pointers">
+
+                <g id="fms-preflight" visibility="hidden">
+                    <rect
+                            style="fill:#1daa05;"
+                            id="rect833"
+                            width="300"
+                            height="22"
+                            x="170"
+                            y="375"
+                            ry="11" />
+                    <text
+                            style="font-size:18px;font-family:Heavy;fill:white;letter-spacing: 2px; text-anchor: middle"
+                            x="320"
+                            y="393"
+                            id="text837">FMC&nbsp;&nbsp;PREFLIGHT&nbsp;&nbsp;COMPLETE</text>
+                </g>
+            </svg>
+
             <svg id="hover-svg" width="640" height="1020" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1020"
                  style="position: absolute; top: 0; left: 0; z-index: 10;" class="remove-pointers">
                 <path id="RSK6-HOVER"
@@ -891,7 +911,6 @@
 
 <!-- Heavy files -->
 <script import-script="/B78XH/Autopilot/B78XHNavModeSelector.js" type="text/html"></script>
-<script import-script="/B78XH/DataHolders/FMC/FMCDataHolder.js" type="text/html"></script>
 <script import-script="/B78XH/DataHolders/FMC/FMCMessagesHolder.js" type="text/html"></script>
 <script import-script="/B78XH/Managers/FMCMessagesManager.js" type="text/html"></script>
 

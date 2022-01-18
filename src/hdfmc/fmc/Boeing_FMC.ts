@@ -2,6 +2,7 @@ import {BaseFMC} from './BaseFMC';
 import * as HDSDK from './../../hdsdk/index';
 import {HDLogger} from '../../hdlogger';
 import {Level} from '../../hdlogger/levels/level';
+import {FMCDataHolder} from "../../hdsdk/DataHolders/FMC/FMCDataHolder";
 
 export class Boeing_FMC extends BaseFMC {
 
@@ -1264,7 +1265,11 @@ export class Boeing_FMC extends BaseFMC {
 		if (this.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_TAKEOFF && airspeed < 80) {
 			this.checkFmcPreFlight();
 		} else {
-			this.dataHolder.preFlightDataHolder.finished = true;
+			if(this.dataHolder.preFlightDataHolder.finished === false) {
+				let fmsPreFlightElementGroup = document.querySelector('#fms-preflight');
+				fmsPreFlightElementGroup.setAttribute('visibility', 'hidden');
+				this.dataHolder.preFlightDataHolder.finished = true;
+			}
 		}
 	}
 

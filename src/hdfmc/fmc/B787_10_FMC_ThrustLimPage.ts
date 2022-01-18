@@ -153,11 +153,8 @@ export class B787_10_FMC_ThrustLimPage {
 		 * TODO: Really want to have these low level things here??
 		 */
 		if (fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished) {
-			let fmsPreFlightElement = document.createElement('div');
-			fmsPreFlightElement.classList.add('fms-preflight');
-			fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;');
-			fmsPreFlightElement.innerText = 'FMC PREFLIGHT COMPLETE';
-			document.body.querySelector('.separator-label').appendChild(fmsPreFlightElement);
+			let fmsPreFlightElementGroup = document.querySelector('#fms-preflight');
+			fmsPreFlightElementGroup.setAttribute('visibility', 'visible');
 		}
 
 		fmc._renderer.lsk(6).event = () => {
