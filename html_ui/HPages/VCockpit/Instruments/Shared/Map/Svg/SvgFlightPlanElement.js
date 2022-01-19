@@ -28,7 +28,6 @@ class SvgFlightPlanElement extends SvgMapElement {
 		container.setAttribute('height', '1024px');
 		container.setAttribute('x', '0');
 		container.setAttribute('y', '0');
-
 		this._flightPathCanvas = document.createElement('canvas');
 		this._flightPathCanvas.setAttribute('width', '1024px');
 		this._flightPathCanvas.setAttribute('height', '1024px');
@@ -75,7 +74,7 @@ class SvgFlightPlanElement extends SvgMapElement {
 
 					//Active leg
 					if (waypoints[activeWaypointIndex] && waypoints[activeWaypointIndex - 1]) {
-						this.buildPathFromWaypoints(waypoints, activeWaypointIndex - 1, activeWaypointIndex + 1, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), false);
+						this.buildPathFromWaypoints(waypoints, activeWaypointIndex - 1, activeWaypointIndex + 1, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), (index !== 0));
 					}
 
 					//Missed approach preview
@@ -88,8 +87,8 @@ class SvgFlightPlanElement extends SvgMapElement {
 					}
 
 					//Remainder of plan
-					//this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), (index !== 0));
-					this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), false);
+					this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), (index !== 0));
+					//this.buildPathFromWaypoints(waypoints, activeWaypointIndex, mainPathEnd, map, (index !== 0 ? temporaryPlanStyle : activePlanStyle), false);
 				}
 			}
 		}
@@ -117,29 +116,35 @@ class SvgFlightPlanElement extends SvgMapElement {
 		for (let i = startIndex; i < endIndex; i++) {
 			const waypoint = waypoints[i];
 			const pos = map.coordinatesToXY(waypoint.infos.coordinates);
-
 			if (i === startIndex || (prevWaypoint && prevWaypoint.endsInDiscontinuity)) {
 				context.moveTo(pos.x, pos.y);
 			} else {
-				//Draw great circle segments if more than 2 degrees longitude difference
-				const longDiff = Math.abs(waypoint.infos.coordinates.long - prevWaypoint.infos.coordinates.long);
-				if (longDiff > 2) {
-					const numSegments = Math.floor(longDiff / 2);
-					const startingLatLon = new LatLon(prevWaypoint.infos.coordinates.lat, prevWaypoint.infos.coordinates.long);
-					const endingLatLon = new LatLon(waypoint.infos.coordinates.lat, waypoint.infos.coordinates.long);
+					//Draw great circle segments if more than 2 degrees longitude difference
+					const longDiff = Math.abs(waypoint.infos.coordinates.long - prevWaypoint.infos.coordinates.long);
+					if (longDiff > 2) {
+						const numSegments = Math.floor(longDiff / 2);
+						const startingLatLon = new LatLon(prevWaypoint.infos.coordinates.lat, prevWaypoint.infos.coordinates.long);
+						const endingLatLon = new LatLon(waypoint.infos.coordinates.lat, waypoint.infos.coordinates.long);
 
-					const segmentPercent = 1 / numSegments;
-					for (let j = 0; j <= numSegments; j++) {
-						const segmentEnd = startingLatLon.intermediatePointTo(endingLatLon, j * segmentPercent);
-						const segmentEndVec = map.coordinatesToXY(new LatLongAlt(segmentEnd.lat, segmentEnd.lon));
-
-						context.lineTo(segmentEndVec.x, segmentEndVec.y);
+						const segmentPercent = 1 / numSegments;
+						var lastSegmentInFrame = false;
+						for (let j = 0; j <= numSegments; j++) {
+							const segmentEnd = startingLatLon.intermediatePointTo(endingLatLon, j * segmentPercent);
+							const segmentEndVec = map.coordinatesToXY(new LatLongAlt(segmentEnd.lat, segmentEnd.lon));
+							const segmentInFrame = map.isInFrame(segmentEndVec, 2);
+							if(segmentInFrame){
+								lastSegmentInFrame = true;
+								context.lineTo(segmentEndVec.x, segmentEndVec.y);
+							}
+							if(!segmentInFrame && lastSegmentInFrame){
+								context.lineTo(segmentEndVec.x, segmentEndVec.y);
+								break;
+							}
+						}
+					} else {
+						context.lineTo(pos.x, pos.y);
 					}
-				} else {
-					context.lineTo(pos.x, pos.y);
-				}
 			}
-
 			prevWaypoint = waypoint;
 		}
 

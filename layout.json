@@ -3,7 +3,7 @@
         {
             "path": "html_ui/B78XH/b78xh.json",
             "size": 119,
-            "date": 132870177462087020
+            "date": 132870350883038340
         },
         {
             "path": "html_ui/plans/plan.pln",
@@ -337,8 +337,8 @@
         },
         {
             "path": "html_ui/HPages/VCockpit/Instruments/Airliners/Shared/Boeing/Heavy_Boeing_FMC.js",
-            "size": 33526,
-            "date": 132870172859165710
+            "size": 33452,
+            "date": 132870179802369650
         },
         {
             "path": "html_ui/HPages/VCockpit/Instruments/Airliners/Shared/MFD/NDCompass.js",
@@ -382,8 +382,8 @@
         },
         {
             "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgFlightPlanElement.js",
-            "size": 10375,
-            "date": 132820129973617800
+            "size": 10706,
+            "date": 132870349951518300
         },
         {
             "path": "html_ui/HPages/VCockpit/Instruments/Shared/Map/Svg/SvgFuelRingElement.js",
