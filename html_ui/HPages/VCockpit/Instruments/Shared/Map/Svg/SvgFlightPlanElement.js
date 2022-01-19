@@ -113,12 +113,17 @@ class SvgFlightPlanElement extends SvgMapElement {
 		}
 
 		let prevWaypoint;
+		let prevInFrame = false;
 		for (let i = startIndex; i < endIndex; i++) {
 			const waypoint = waypoints[i];
 			const pos = map.coordinatesToXY(waypoint.infos.coordinates);
+			const inFrame = map.isInFrame(map.coordinatesToXY(waypoint.infos.coordinates), 2)
+			const nextWaypoint = (waypoints[i + 1] !== undefined ? waypoints[i + 1] : undefined);
+			const nextInFrame = (nextWaypoint !== undefined ? map.isInFrame(map.coordinatesToXY(nextWaypoint.infos.coordinates), 2) : false)
 			if (i === startIndex || (prevWaypoint && prevWaypoint.endsInDiscontinuity)) {
 				context.moveTo(pos.x, pos.y);
 			} else {
+				if(prevInFrame || inFrame || nextInFrame){
 					//Draw great circle segments if more than 2 degrees longitude difference
 					const longDiff = Math.abs(waypoint.infos.coordinates.long - prevWaypoint.infos.coordinates.long);
 					if (longDiff > 2) {
@@ -144,8 +149,10 @@ class SvgFlightPlanElement extends SvgMapElement {
 					} else {
 						context.lineTo(pos.x, pos.y);
 					}
+				}
 			}
 			prevWaypoint = waypoint;
+			prevInFrame = inFrame;
 		}
 
 		for (let i = startIndex + 1; i < endIndex; i++) {
