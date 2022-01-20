@@ -220,14 +220,12 @@ class LNavDirector {
 			this.tryActivateIfArmed(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState, navSensitivity);
 			switch (this.state) {
 				case LNavState.TRACKING:
-					console.log('tracking');
 					const activeMode = this.navModeSelector.currentLateralActiveState;
 					const shouldExecute = distanceToActive > this.options.minimumTrackingDistance
 						&& (activeMode === LateralNavModeState.LNAV || (activeMode === LateralNavModeState.APPR && this.navModeSelector.approachMode === WT_ApproachType.RNAV));
 					LNavDirector.trackLeg(previousWaypoint.infos.coordinates, activeWaypoint.infos.coordinates, planeState, navSensitivity, navSensitivityScalar, shouldExecute);
 					break;
 				case LNavState.TURN_COMPLETING:
-					console.log('turn completing');
 					this.handleTurnCompleting(planeState, dtk, previousWaypoint, activeWaypoint, navSensitivity, navSensitivityScalar);
 					break;
 			}
