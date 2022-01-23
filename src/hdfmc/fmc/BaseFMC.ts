@@ -2727,6 +2727,8 @@ export class BaseFMC extends BaseAirliners {
 	}
 
 	setAPSpeedHoldMode(): void {
+		console.log('SET AP SPEED HOLD MODE');
+		/*
 		if (!Simplane.getAutoPilotMachModeActive()) {
 			if (!SimVar.GetSimVarValue('AUTOPILOT AIRSPEED HOLD', 'Boolean')) {
 				SimVar.SetSimVarValue('K:AP_PANEL_SPEED_HOLD', 'Number', 1).catch(console.error);
@@ -2738,5 +2740,6 @@ export class BaseFMC extends BaseAirliners {
 				HDLogger.log('Activating SPEED HOLD (Mach)', Level.debug);
 			}
 		}
+		 */
 	}
 }

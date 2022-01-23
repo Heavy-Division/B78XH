@@ -137,7 +137,6 @@ export class MCPDirector {
 			if (pending.check()) {
 				switch (pending.modeType) {
 					case MCPModeType.LATERAL:
-
 						this.armedLateralMode = undefined;
 						this.activatedLateralMode = pending.mode;
 						break;
@@ -168,8 +167,10 @@ export class MCPDirector {
 		};
 
 		if (this.armedThrustMode.mode === MCPThrustMode.SPEED) {
-			this.deactivateSpeed();
-			this.armedThrustMode = undefined;
+			if (!condition()) {
+				this.deactivateSpeed();
+				this.armedThrustMode = undefined;
+			}
 		} else {
 			SimVar.SetSimVarValue('L:AP_SPD_ACTIVE', SimVarValueUnit.Number, 1);
 			this.armedThrustMode = new ArmedMode(MCPThrustMode.SPEED, MCPModeType.THRUST, condition, this.activateSpeed.bind(this));
@@ -187,6 +188,7 @@ export class MCPDirector {
 	 * Engages SPEED mode
 	 */
 	public engageSpeed(): void {
+		console.log('engage speed');
 		if (Simplane.getAutoPilotMachModeActive()) {
 			let currentMach = Simplane.getAutoPilotMachHoldValue();
 			Coherent.call('AP_MACH_VAR_SET', 1, currentMach);
@@ -198,6 +200,7 @@ export class MCPDirector {
 		}
 
 		if (this.activatedVerticalMode !== MCPVerticalMode.FLCH) {
+			console.log('engage speed hold');
 			this.activateSpeedHoldMode();
 		}
 
@@ -264,8 +267,13 @@ export class MCPDirector {
 
 	public armLNAV(): void {
 		if (this.armedLateralMode.mode === MCPLateralMode.LNAV) {
-			this.armedLateralMode = undefined;
-			this.deactivateLNAV();
+			const condition = () => {
+				return Simplane.getAltitudeAboveGround() > 50;
+			};
+			if (!condition()) {
+				this.armedLateralMode = undefined;
+				this.deactivateLNAV();
+			}
 		} else {
 			/**
 			 * TODO: We should inject the FPM or do the check somewhere else,
@@ -280,7 +288,6 @@ export class MCPDirector {
 
 			Simplane.setAPLNAVArmed(1);
 			this.deactivateHeadingHold();
-			console.log('ARMING LNAV');
 			this.armedLateralMode = new ArmedMode(MCPLateralMode.LNAV, MCPModeType.LATERAL, condition, this.activateLNAV.bind(this));
 		}
 	}
@@ -290,13 +297,13 @@ export class MCPDirector {
 	}
 
 	public engageLNAV(): void {
-
-		console.log('ENGAGE LNAV');
 		if (SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', SimVarValueUnit.Boolean)) {
 			return;
 		}
+
 		Simplane.setAPLNAVActive(1);
 		SimVar.SetSimVarValue('K:AP_NAV1_HOLD_ON', SimVarValueUnit.Number, 1);
+		SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', SimVarValueUnit.Number, 2);
 	}
 
 
@@ -355,8 +362,13 @@ export class MCPDirector {
 
 	public armFLCH(): void {
 		if (this.armedVerticalMode.mode === MCPVerticalMode.FLCH) {
-			this.armedVerticalMode = undefined;
-			this.deactivateFLCH();
+			const condition = () => {
+				return Simplane.getAltitudeAboveGround() > 400;
+			};
+			if (!condition()) {
+				this.armedVerticalMode = undefined;
+				this.deactivateFLCH();
+			}
 		} else {
 			const condition = () => {
 				return Simplane.getAltitudeAboveGround() > 400;

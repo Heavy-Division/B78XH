@@ -25,6 +25,8 @@ export class AutomaticAutopilotDirector {
 	private _eventQueue = new Queue();
 	private _mcpDirector: MCPDirector;
 
+	private _takeoffHeadingUpdateInterval = undefined;
+
 	constructor(mcpDirector: MCPDirector) {
 		this._mcpDirector = mcpDirector;
 		this.handlers[AutomaticAutopilotDirectorEvent.AP_ON_CHANGE] = this.handleApOnChange.bind(this);
@@ -37,6 +39,7 @@ export class AutomaticAutopilotDirector {
 		this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_1_ON_CHANGE] = this.handleSelectedAltitude1OnChange.bind(this);
 		this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_2_ON_CHANGE] = this.handleSelectedAltitude2OnChange.bind(this);
 		this.handlers[AutomaticAutopilotDirectorEvent.SELECTED_ALTITUDE_3_ON_CHANGE] = this.handleSelectedAltitude3OnChange.bind(this);
+		this.handlers[AutomaticAutopilotDirectorEvent.GROUNDED_ON_CHANGE] = this.handleGroundedChanged.bind(this);
 	}
 
 	public update(): void {
@@ -47,6 +50,7 @@ export class AutomaticAutopilotDirector {
 			}
 		}
 		this.processEvents();
+		this.processPeriodicEvents();
 	}
 
 	private processEvents(): void {
@@ -54,6 +58,19 @@ export class AutomaticAutopilotDirector {
 			const event = this.eventQueue.dequeue();
 			if (this.handlers[event] !== undefined) {
 				this.handlers[event]();
+			}
+		}
+	}
+
+	private processPeriodicEvents() {
+		/**
+		 * Create interval for updating heading during takeoff
+		 */
+		if (this._takeoffHeadingUpdateInterval === undefined) {
+			if (this._mcpDirector.activatedLateralMode === undefined && this._autopilotState.grounded.value == 1) {
+				this._takeoffHeadingUpdateInterval = window.setInterval(() => {
+					Coherent.call('HEADING_BUG_SET', 2, SimVar.GetSimVarValue('PLANE HEADING DEGREES MAGNETIC', 'Degrees'));
+				}, 150);
 			}
 		}
 	}
@@ -98,6 +115,12 @@ export class AutomaticAutopilotDirector {
 	}
 
 	private handleSelectedAltitude1OnChange(): void {
+		/**
+		 * Force aircraft max ceiling to FL450
+		 */
+		if (SimVar.GetSimVarValue('AUTOPILOT ALTITUDE LOCK VAR:1', 'feet') > 45000) {
+			Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, 45000, true);
+		}
 		HDLogger.log('SEL ALTITUDE 1 onChange');
 	}
 
@@ -110,6 +133,13 @@ export class AutomaticAutopilotDirector {
 	}
 
 	private handleGroundedChanged(): void {
+		/**
+		 * Disable heading update after takeoff
+		 */
+		if (this._autopilotState.grounded.value == 0 && this._takeoffHeadingUpdateInterval !== undefined) {
+			clearInterval(this._takeoffHeadingUpdateInterval);
+			this._takeoffHeadingUpdateInterval = undefined;
+		}
 		HDLogger.log('GROUNDED onChange');
 	}
 }

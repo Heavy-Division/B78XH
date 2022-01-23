@@ -67,8 +67,14 @@ export class AutopilotModeResolver {
 	public update() {
 		this.mcpDirector.processPending();
 		this.automaticDirector.update();
+		this.processPeriodicUpdates();
 		this.propagateMCPModes();
 		this.resolveMode();
+	}
+
+	private processPeriodicUpdates() {
+		SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MIN_CALCULATED', 'knots', Simplane.getStallProtectionMinSpeed());
+		SimVar.SetSimVarValue('SIMVAR_AUTOPILOT_AIRSPEED_MAX_CALCULATED', 'knots', Simplane.getMaxSpeed(Aircraft.AS01B));
 	}
 
 	private propagateMCPModes() {

@@ -450,6 +450,10 @@ declare class Simplane {
 	static getAutoPilotAltitudeLockActive(): number
 
 	static getAutoPilotThrottleArmed(): boolean
+
+	static getCurrentFlightPhase(forceSimVarCall: boolean = false): number
+
+	static setCurrentFlightPhase(val)
 }
 
 declare class DesignSpeeds {
@@ -779,6 +783,8 @@ declare class FlightPlanManager {
 	getETEToWaypoint(waypoint: any): number;
 
 	getDestination(_addedAsDestinationOnly?: boolean): any;
+
+	getOrigin(): any;
 
 	getDeparture(): any;
 
