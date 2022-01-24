@@ -30,6 +30,7 @@ var packageSize = 0;
 /** Directories configuration **/
 /** Directories for layout and manifest **/
 const directoriesToProcess = ['./**', '!*.*', '!*', '!./html_ui/Pages/VCockpit/Core/**', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**'];
+const directoriesToProcessDEV = ['./**', '!*.*', '!*', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**'];
 /** Directories for release**/
 const directoriesToRelease = ['./**', '!*', 'LICENSE', 'thirdparty_licenses.txt', './manifest.json', './layout.json', '!./html_ui/Pages/VCockpit/Core/**', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**'];
 
@@ -106,6 +107,34 @@ function buildTask() {
 
 	console.log(layoutOutput.content.length);
 	return gulp.src(directoriesToProcess, {nodir: true, cwd: './'})
+	.pipe(
+		through.obj(function (file, _, callback) {
+			const data = {
+				relativePath: file.relative,
+				fileSize: file.stat.size,
+				fileDate: math.chain(file.stat.mtimeMs).multiply(10000.0).add(datePlusConstant).done()
+			};
+			this.push(data);
+			callback();
+		})
+	).on('data', function (data) {
+		_prepareLayoutFile(data);
+	}).on('end', function () {
+		log('Creating layout.json', TerminalColors.yellow);
+		fs.writeFile('layout.json', JSON.stringify(layoutOutput, null, 4), _updateManifest);
+		log('layout.json created.', TerminalColors.green);
+	});
+}
+
+function buildDEVTask() {
+	/**
+	 * This is important for resetting the array with watch (monitorSDKSource and so on)
+	 * @type {number}
+	 */
+	layoutOutput.content.length = 0;
+
+	console.log(layoutOutput.content.length);
+	return gulp.src(directoriesToProcessDEV, {nodir: true, cwd: './'})
 	.pipe(
 		through.obj(function (file, _, callback) {
 			const data = {
@@ -295,6 +324,7 @@ function monitorHDLoggerSourceDirectory() {
 exports.release = gulp.series(deleteReleaseCache, buildTask, copyFilesForReleaseToCache, releaseTask, deleteReleaseCache);
 exports.default = buildTask;
 exports.build = buildTask;
+exports.buildDEV = buildDEVTask;
 exports.bump = bumpTask;
 exports.prebump = preBumpTask;
 exports.buildSDK = gulp.series(cleanBuildCache, buildHDSDKTask, rollupHDSDKTask, copyHDSDKTask, cleanBuildCacheSDK, buildTask);

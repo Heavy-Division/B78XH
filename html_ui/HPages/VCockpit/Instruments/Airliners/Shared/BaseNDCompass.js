@@ -338,11 +338,17 @@ class Jet_NDCompass extends HTMLElement {
 					this.headingGroup.classList.toggle('hide', true);
 			} else if (this.aircraft == Aircraft.B747_8 || this.aircraft == Aircraft.AS01B) {
 				selectedHeading = simSelectedHeading;
-				showSelectedHeading = Simplane.getAutoPilotHeadingLockActive();
+
+				/**
+				 * HOTFIX hiding selected heading
+				 * @type {boolean}
+				 */
+				//showSelectedHeading = Simplane.getAutoPilotHeadingLockActive();
+				showSelectedHeading = Simplane.getAutoPilotHeadingSelected() && Simplane.getAutoPilotHeadingLockActive();
 				if (!showSelectedHeading) {
 					if (headingChanged) {
 						showSelectedHeading = true;
-						this.showSelectedHeadingTimer = 5;
+						this.showSelectedHeadingTimer = 10;
 					} else if (this.showSelectedHeadingTimer > 0) {
 						this.showSelectedHeadingTimer -= _deltaTime / 1000;
 						if (this.showSelectedHeadingTimer <= 0)

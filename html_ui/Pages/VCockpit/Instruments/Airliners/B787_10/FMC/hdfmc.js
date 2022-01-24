@@ -8496,6 +8496,307 @@
         HeavyDivision.SimBrief = SimBrief;
     })(HeavyDivision || (HeavyDivision = {}));
 
+    class PreFlightDataHolder {
+        constructor() {
+            this._completed = false;
+            this._finished = false;
+            this._thrustLim = new ThrustLimPagePreFlightCheck();
+            this._takeOff = new TakeOffPagePreFlightCheck();
+            this._perfInit = new PerfInitPagePreFlightCheck();
+            this._route = new RoutePagePreFlightCheck();
+        }
+        /**
+         * ThrustLim page pre flight check/holder
+         * @returns {ThrustLimPagePreFlightCheck}
+         */
+        get thrustLim() {
+            return this._thrustLim;
+        }
+        /**
+         * TakeOff page pre flight check/holder
+         * @returns {TakeOffPagePreFlightCheck}
+         */
+        get takeOff() {
+            return this._takeOff;
+        }
+        /**
+         * PerfInit page pre flight check/holder
+         * @returns {PerfInitPagePreFlightCheck}
+         */
+        get perfInit() {
+            return this._perfInit;
+        }
+        /**
+         * Route page pre flight check/holder
+         * @returns {RoutePagePreFlightCheck}
+         */
+        get route() {
+            return this._route;
+        }
+        /**
+         * Is preflight completed?
+         * @returns {boolean}
+         */
+        get completed() {
+            return this._completed;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set completed(value) {
+            this._completed = value;
+        }
+        /**
+         * Is preflight finished?
+         * @returns {boolean}
+         */
+        get finished() {
+            return this._finished;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set finished(value) {
+            this._finished = value;
+        }
+    }
+    class ThrustLimPagePreFlightCheck {
+        constructor() {
+            this._completed = false;
+            this._assumedTemperature = false;
+        }
+        /**
+         * Is thrust page preflight completed?
+         * @returns {boolean}
+         */
+        get completed() {
+            return this._completed;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set completed(value) {
+            this._completed = value;
+        }
+        /**
+         * Is assumed temperature filled?
+         * TODO: Assumed temperature is not required for preflight (should be removed)
+         * @returns {boolean}
+         */
+        get assumedTemperature() {
+            return this._assumedTemperature;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set assumedTemperature(value) {
+            this._assumedTemperature = value;
+        }
+    }
+    class TakeOffPagePreFlightCheck {
+        constructor() {
+            this._completed = false;
+            this._flaps = false;
+            this._v1 = false;
+            this._vR = false;
+            this._v2 = false;
+        }
+        /**
+         * Is takeoff page preflight completed?
+         * @returns {boolean}
+         */
+        get completed() {
+            return this._completed;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set completed(value) {
+            this._completed = value;
+        }
+        /**
+         * Are flaps filled?
+         * @returns {boolean}
+         */
+        get flaps() {
+            return this._flaps;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set flaps(value) {
+            this._flaps = value;
+        }
+        /**
+         * Is v filled?
+         * @returns {boolean}
+         */
+        get v1() {
+            return this._v1;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set v1(value) {
+            this._v1 = value;
+        }
+        /**
+         * Is vR filled?
+         * @returns {boolean}
+         */
+        get vR() {
+            return this._vR;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set vR(value) {
+            this._vR = value;
+        }
+        /**
+         * Is v2 filled?
+         * @returns {boolean}
+         */
+        get v2() {
+            return this._v2;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set v2(value) {
+            this._v2 = value;
+        }
+    }
+    class PerfInitPagePreFlightCheck {
+        constructor() {
+            this._completed = false;
+            this._cruiseAltitude = false;
+            this._costIndex = false;
+            this._reserves = false;
+        }
+        /**
+         * Is PerfInit page preflight completed?
+         * @returns {boolean}
+         */
+        get completed() {
+            return this._completed;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set completed(value) {
+            this._completed = value;
+        }
+        /**
+         * Is cruise altitude filled?
+         * @returns {boolean}
+         */
+        get cruiseAltitude() {
+            return this._cruiseAltitude;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set cruiseAltitude(value) {
+            this._cruiseAltitude = value;
+        }
+        /**
+         * Is cost index filled?
+         * @returns {boolean}
+         */
+        get costIndex() {
+            return this._costIndex;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set costIndex(value) {
+            this._costIndex = value;
+        }
+        /**
+         * Are reserves filled?
+         * @returns {boolean}
+         */
+        get reserves() {
+            return this._reserves;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set reserves(value) {
+            this._reserves = value;
+        }
+    }
+    class RoutePagePreFlightCheck {
+        constructor() {
+            this._completed = false;
+            this._origin = false;
+            this._destination = false;
+            this._activated = false;
+        }
+        /**
+         * Is PerfInit page preflight completed?
+         * @returns {boolean}
+         */
+        get completed() {
+            return this._completed;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set completed(value) {
+            this._completed = value;
+        }
+        /**
+         * Is origin filled?
+         * @returns {boolean}
+         */
+        get origin() {
+            return this._origin;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set origin(value) {
+            this._origin = value;
+        }
+        /**
+         * Is destination filled?
+         * @returns {boolean}
+         */
+        get destination() {
+            return this._destination;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set destination(value) {
+            this._destination = value;
+        }
+        /**
+         * Is route activated?
+         * @returns {boolean}
+         */
+        get activated() {
+            return this._activated;
+        }
+        /**
+         * @param {boolean} value
+         */
+        set activated(value) {
+            this._activated = value;
+        }
+    }
+
+    class FMCDataHolder {
+        constructor() {
+            this._preFlightDataHolder = new PreFlightDataHolder();
+        }
+        get preFlightDataHolder() {
+            return this._preFlightDataHolder;
+        }
+    }
+
     class Boeing_FMC extends BaseFMC {
         constructor() {
             super();
@@ -8857,7 +9158,7 @@
                 this._navModeSelector.onNavChangedEvent('HDG_SEL_PRESSED');
             }
             else if (_event.indexOf('AP_SPD') != -1) {
-                if (this.aircraftType === Aircraft.AS01B) {
+                if (this.aircraftType == Aircraft.AS01B) {
                     if (SimVar.GetSimVarValue('AUTOPILOT THROTTLE ARM', 'Bool')) {
                         this.activateSPD();
                     }
@@ -9641,7 +9942,11 @@
                 this.checkFmcPreFlight();
             }
             else {
-                this.dataHolder.preFlightDataHolder.finished = true;
+                if (this.dataHolder.preFlightDataHolder.finished === false) {
+                    let fmsPreFlightElementGroup = document.querySelector('#fms-preflight');
+                    fmsPreFlightElementGroup.setAttribute('visibility', 'hidden');
+                    this.dataHolder.preFlightDataHolder.finished = true;
+                }
             }
         }
         /**
@@ -10518,8 +10823,10 @@
         }
         async setDeparture(sid) {
             const index = await this.findSidIndex(sid);
-            const [transIndex] = await Promise.all([this.findTransIndex(index), this.asyncSetDepartureIndex(index)]);
-            await this.asyncSetDepartureEnrouteTransitionIndex(transIndex);
+            if (index !== -1) {
+                const [transIndex] = await Promise.all([this.findTransIndex(index), this.asyncSetDepartureIndex(index)]);
+                await this.asyncSetDepartureEnrouteTransitionIndex(transIndex);
+            }
         }
         async setDepartureProcIndex(index) {
             await this.fmc.ensureCurrentFlightPlanIsTemporary(async () => {
@@ -11643,11 +11950,8 @@
                 ['<INDEX', 'THRUST LIM>']
             ]);
             if (fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished) {
-                let fmsPreFlightElement = document.createElement('div');
-                fmsPreFlightElement.classList.add('fms-preflight');
-                fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;');
-                fmsPreFlightElement.innerText = 'FMC PREFLIGHT COMPLETE';
-                document.body.querySelector('.separator-label').appendChild(fmsPreFlightElement);
+                let fmsPreFlightElementGroup = document.querySelector('#fms-preflight');
+                fmsPreFlightElementGroup.setAttribute('visibility', 'visible');
             }
             fmc._renderer.lsk(6).event = () => {
                 B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
@@ -11883,11 +12187,8 @@
              * TODO: Really want to have these low level things here??
              */
             if (fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished) {
-                let fmsPreFlightElement = document.createElement('div');
-                fmsPreFlightElement.classList.add('fms-preflight');
-                fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;');
-                fmsPreFlightElement.innerText = 'FMC PREFLIGHT COMPLETE';
-                document.body.querySelector('.separator-label').appendChild(fmsPreFlightElement);
+                let fmsPreFlightElementGroup = document.querySelector('#fms-preflight');
+                fmsPreFlightElementGroup.setAttribute('visibility', 'visible');
             }
             fmc._renderer.lsk(6).event = () => {
                 B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
@@ -12000,11 +12301,8 @@
                     ['<INDEX', 'THRUST LIM>']
                 ]);
                 if (fmc.dataHolder.preFlightDataHolder.completed && !fmc.dataHolder.preFlightDataHolder.finished) {
-                    let fmsPreFlightElement = document.createElement('div');
-                    fmsPreFlightElement.classList.add('fms-preflight');
-                    fmsPreFlightElement.setAttribute('style', 'display: block; position: absolute; background-color: #1daa05; height: 22px; width: 255px; font-size: 15px; text-align: center; border-radius: 11px; top: -5px; left: 107px; padding-top: 4px;');
-                    fmsPreFlightElement.innerText = 'FMC PREFLIGHT COMPLETE';
-                    document.body.querySelector('.separator-label').appendChild(fmsPreFlightElement);
+                    let fmsPreFlightElementGroup = document.querySelector('#fms-preflight');
+                    fmsPreFlightElementGroup.setAttribute('visibility', 'visible');
                 }
                 fmc._renderer.lsk(6).event = () => {
                     B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
@@ -13864,7 +14162,7 @@
                     if (isActWpt) {
                         if (waypoint.fix.icao === '$DISCO') {
                             this._rows[2 * i] = [' THEN'];
-                            this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□') + ' ----- ROUTE DISCONTINUITY ----'];
+                            this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□'), ' ---- ROUTE DISCONTINUITY -----------'];
                         }
                         else if (waypoint.fix.hasHold) {
                             this._rows[2 * i] = [' HOLD AT'];
@@ -13878,7 +14176,7 @@
                     else {
                         if (waypoint.fix.icao === '$DISCO') {
                             this._rows[2 * i] = [' THEN'];
-                            this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□') + ' ----- ROUTE DISCONTINUITY ----'];
+                            this._rows[2 * i + 1] = [this._fmc.makeSettable('□□□□□'), ' ---- ROUTE DISCONTINUITY -----------'];
                         }
                         else if (waypoint.fix.hasHold) {
                             this._rows[2 * i] = [' HOLD AT'];
@@ -13934,7 +14232,7 @@
                          }
                          */
                         // (SegmentType.Enroute === waypointSegment.type ? Math.round(this._fmc.getCrzManagedSpeed(true)) + '/' + (this._fmc.cruiseFlightLevel ? 'FL' + this._fmc.cruiseFlightLevel : '-----') : this.getAltSpeedRestriction(waypoint.fix))
-                        this._rows[2 * i + 1][1] = this._fmc.makeSettable(row, 214);
+                        this._rows[2 * i + 1][1] = this._fmc.makeSettable(row, 200);
                     }
                 }
             }
@@ -15244,7 +15542,7 @@
                 [speedTransitionCell, transitionAltitudeCell],
                 ['SPD RESTR'],
                 [speedRestrictionCell],
-                ['__FMCSEPARATOR'],
+                ['', '__FMCSEPARATOR', ''],
                 [econPromptCell, 'ENG OUT>'],
                 [],
                 []
@@ -15405,7 +15703,7 @@
                 [n1Cell],
                 ['STEP', 'OPT', 'MAX', 'RECMD'],
                 [],
-                ['__FMCSEPARATOR'],
+                ['', '__FMCSEPARATOR', ''],
                 [econPromptCell, ''],
                 [''],
                 ['', 'LRC>']
@@ -18022,23 +18320,24 @@
                 /**
                  * Check NAV DATA
                  */
-                let y = SimVar.GetGlobalVarValue('ZULU YEAR', 'number');
-                let m = SimVar.GetGlobalVarValue('ZULU MONTH OF YEAR', 'number');
-                let d = SimVar.GetGlobalVarValue('ZULU DAY OF MONTH', 'number');
-                let date = new Date();
-                date.setUTCFullYear(y, m - 1, d);
-                date.setUTCHours(23, 59, 59);
+                let currentYear = SimVar.GetGlobalVarValue('ZULU YEAR', 'number');
+                let currentMonth = SimVar.GetGlobalVarValue('ZULU MONTH OF YEAR', 'number');
+                let currentDay = SimVar.GetGlobalVarValue('ZULU DAY OF MONTH', 'number');
+                let currentDate = new Date();
+                currentDate.setUTCFullYear(currentYear, currentMonth - 1, currentDay);
                 let navDataDateRange = this.getNavDataDateRange();
-                let navDataDateArray = navDataDateRange.substring(navDataDateRange.length - 8).split('/');
-                let m1 = B787_10_FMC._MonthOfYear.findIndex(function (element) {
-                    return element === navDataDateArray[0].substring(0, 3);
+                let startYear = 20 + navDataDateRange.substring(navDataDateRange.length - 2);
+                let startMonth = B787_10_FMC._MonthOfYear.findIndex(function (element) {
+                    return element === navDataDateRange.substring(0, 3);
                 });
-                let d1 = navDataDateArray[0].substring(navDataDateArray[0].length - 2);
-                let y1 = '20' + navDataDateArray[1];
-                let date1 = new Date();
-                date1.setUTCFullYear(parseInt(y1), m1 + 1, parseInt(d1));
-                date1.setUTCHours(23, 59, 59);
-                if (date1.getTime() < date.getTime()) {
+                let startDay = navDataDateRange.substring(3, 5);
+                let startDate = new Date();
+                startDate.setUTCFullYear(parseInt(startYear), startMonth, parseInt(startDay));
+                startDate.setUTCHours(0, 0, 0);
+                let endDate = new Date(startDate);
+                endDate.setUTCDate(startDate.getUTCDate() + 27);
+                endDate.setUTCHours(23, 59, 59);
+                if (!(startDate.getTime() < currentDate.getTime() && currentDate.getTime() < endDate.getTime())) {
                     this.messageManager.showMessage('NAV DATA OUT OF DATE', 'END DATE OF THE ACTIVE <br> DATA BASE HAS PASSED <br> SELECT NEW CYCLE <br> ON IDENT PAGE');
                 }
             }

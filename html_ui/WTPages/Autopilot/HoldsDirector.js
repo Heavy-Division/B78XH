@@ -171,12 +171,10 @@ class HoldsDirector {
 
 		if (this.isAbeam(dtk, planeState.position, this.fixCoords)) {
 			this.recalculateHold(planeState);
-			this.cancelAlert();
 
 			SimVar.SetSimVarValue('L:WT_NAV_HOLD_INDEX', 'number', this.holdWaypointIndex);
 			this.state = HoldsDirectorState.TURNING_OUTBOUND;
 		} else {
-			this.alertIfClose(planeState, this.fixCoords);
 			this.trackLeg(this.prevFixCoords, this.fixCoords, planeState);
 		}
 	}
@@ -191,12 +189,10 @@ class HoldsDirector {
 
 			if (this.isAbeam(dtk, planeState.position, this.fixCoords)) {
 				this.recalculateHold(planeState);
-				this.cancelAlert();
 
 				SimVar.SetSimVarValue('L:WT_NAV_HOLD_INDEX', 'number', this.holdWaypointIndex);
 				this.state = HoldsDirectorState.OUTBOUND;
 			} else {
-				this.alertIfClose(planeState, this.fixCoords);
 				this.trackLeg(this.prevFixCoords, this.fixCoords, planeState);
 			}
 		}
@@ -213,12 +209,10 @@ class HoldsDirector {
 
 			if (this.isAbeam(dtk, planeState.position, this.fixCoords)) {
 				this.recalculateHold(planeState);
-				this.cancelAlert();
 
 				SimVar.SetSimVarValue('L:WT_NAV_HOLD_INDEX', 'number', this.holdWaypointIndex);
 				this.state = HoldsDirectorState.ENTRY_PARALLEL_OUTBOUND;
 			} else {
-				this.alertIfClose(planeState, this.fixCoords);
 				this.trackLeg(this.prevFixCoords, this.fixCoords, planeState);
 			}
 		}
@@ -276,35 +270,12 @@ class HoldsDirector {
 
 			if (this.isAbeam(dtk, planeState.position, this.inboundLeg[1])) {
 				this.recalculateHold(planeState);
-				this.cancelAlert();
 
 				this.state = HoldsDirectorState.TURNING_OUTBOUND;
 			} else {
 				this.trackLeg(this.inboundLeg[0], this.inboundLeg[1], planeState);
-				this.alertIfClose(planeState, this.inboundLeg[1]);
 			}
 		}
-	}
-
-	/**
-	 * Activates the waypoint alert if close enough to the provided fix.
-	 * @param {AircraftState} planeState The current aircraft state.
-	 * @param {LatLongAlt} fix The fix to alert for.
-	 */
-	alertIfClose(planeState, fix) {
-		const alertDistance = 3 * (planeState.groundSpeed / 3600);
-		const fixDistance = Avionics.Utils.computeGreatCircleDistance(planeState.position, fix);
-
-		if (fixDistance <= alertDistance) {
-			SimVar.SetSimVarValue('L:WT_CJ4_WPT_ALERT', 'number', 1);
-		}
-	}
-
-	/**
-	 * Cancels the waypoint alert.
-	 */
-	cancelAlert() {
-		SimVar.SetSimVarValue('L:WT_CJ4_WPT_ALERT', 'number', 0);
 	}
 
 	/**
@@ -315,12 +286,10 @@ class HoldsDirector {
 		const dtk = AutopilotMath.desiredTrack(this.inboundLeg[0], this.inboundLeg[1], planeState.position);
 
 		if (this.isAbeam(dtk, planeState.position, this.inboundLeg[1])) {
-			this.cancelAlert();
 			SimVar.SetSimVarValue('L:WT_NAV_HOLD_INDEX', 'number', -1);
 
 			this.state = HoldsDirectorState.EXITED;
 		} else {
-			this.alertIfClose(planeState, this.inboundLeg[1]);
 			this.trackLeg(this.inboundLeg[0], this.inboundLeg[1], planeState);
 		}
 	}
