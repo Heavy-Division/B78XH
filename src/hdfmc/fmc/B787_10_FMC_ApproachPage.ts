@@ -77,7 +77,7 @@ export class B787_10_FMC_ApproachPage {
 		fmc._renderer.rsk(4).event = () => {
 			let value = fmc.inOut;
 			fmc.clearUserInput();
-			if (fmc.setSelectedApproachFlapSpeed(value)) {
+			if (fmc.setSelectedApproachFlapAndVREFSpeed(value)) {
 				B787_10_FMC_ApproachPage.ShowPage1(fmc);
 			}
 		};
