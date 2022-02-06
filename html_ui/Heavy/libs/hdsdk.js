@@ -1946,7 +1946,7 @@
     }
 
     class HDDescentSpeedTransition extends HDSpeedTransition {
-        constructor(speed = 240, altitude = 10000, isDeleted = false) {
+        constructor(speed = 240, altitude = 10500, isDeleted = false) {
             super(speed, altitude, isDeleted);
         }
     }
