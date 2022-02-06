@@ -9977,7 +9977,7 @@
                     }
                 }
                 if (this.currentFlightPhase === FlightPhase.FLIGHT_PHASE_CLIMB) {
-                    let altitude = SimVar.GetSimVarValue('PLANE ALTITUDE', 'feet');
+                    let altitude = Simplane.getAltitude();
                     let cruiseFlightLevel = this.cruiseFlightLevel * 100;
                     if (isFinite(cruiseFlightLevel)) {
                         if (altitude >= 0.96 * cruiseFlightLevel) {
@@ -13316,7 +13316,7 @@
             fmc._renderer.rsk(4).event = () => {
                 let value = fmc.inOut;
                 fmc.clearUserInput();
-                if (fmc.setSelectedApproachFlapSpeed(value)) {
+                if (fmc.setSelectedApproachFlapAndVREFSpeed(value)) {
                     B787_10_FMC_ApproachPage.ShowPage1(fmc);
                 }
             };
@@ -18438,7 +18438,32 @@
                 });
             }
         }
-        setSelectedApproachFlapSpeed(s) {
+        setSelectedApproachFlapAndVREFSpeed(s) {
+            let flap = NaN;
+            let speed = NaN;
+            if (s) {
+                let sSplit = s.split('/');
+                flap = parseInt(sSplit[0]);
+                speed = parseInt(sSplit[1]);
+            }
+            if (isFinite(flap) || isFinite(speed)) {
+                if (isFinite(flap) && flap >= 0 && flap < 60) {
+                    this.selectedApproachFlap = flap;
+                    /**
+                     * Uses better name for the LVar
+                     */
+                    SimVar.SetSimVarValue('L:AIRLINER_APPROACH_FLAPS', 'number', flap);
+                }
+                if (isFinite(speed) && speed >= 10 && speed < 300) {
+                    SimVar.SetSimVarValue('L:AIRLINER_VREF_SPEED', 'knots', speed);
+                    this.selectedApproachSpeed = speed;
+                }
+                return true;
+            }
+            this.showErrorMessage(this.defaultInputErrorMessage);
+            return false;
+        }
+        setSelectedApproachFlapSpeedDefault(s) {
             let flap = NaN;
             let speed = NaN;
             if (s) {
@@ -18699,11 +18724,13 @@
                 if (!this.getIsAltitudeHoldActive()) {
                     Coherent.call('AP_ALT_VAR_SET_ENGLISH', 1, Simplane.getAutoPilotDisplayedAltitudeLockValue(), this._forceNextAltitudeUpdate);
                 }
-                let vRef = 0;
-                if (this.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_DESCENT) {
-                    vRef = 1.3 * Simplane.getStallSpeed();
+                if (this.selectedApproachSpeed === 0) {
+                    let vRef = 0;
+                    if (this.currentFlightPhase >= FlightPhase.FLIGHT_PHASE_DESCENT) {
+                        vRef = 1.3 * Simplane.getStallSpeed();
+                    }
+                    SimVar.SetSimVarValue('L:AIRLINER_VREF_SPEED', 'knots', vRef);
                 }
-                SimVar.SetSimVarValue('L:AIRLINER_VREF_SPEED', 'knots', vRef);
                 if (this._pendingVNAVActivation) {
                     let altitude = Simplane.getAltitudeAboveGround();
                     if (altitude > 400) {
