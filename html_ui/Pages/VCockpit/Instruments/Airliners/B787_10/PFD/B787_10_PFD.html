@@ -1,1 +1,37 @@
-../../../../../../../../B787_10_PFD_Instrument/build/B787_10_PFD.html
+<script type="text/html" id="B787_10_PFD">
+    <glasscockpit-highlight id="highlight"></glasscockpit-highlight>
+    <div id="MainFrame">
+        <!-- state should be off (dev hotfix) -->
+        <div id="Electricity" state="on">
+            <div id="AuxDisplay"></div>
+            <div id="PFDDisplay">
+                <div class="top">
+                    <div id="HorizonContainer">
+                        <div id="AttitudeIndicator"></div>
+                    </div>
+                    <div id="InstrumentsContainer">
+                        <div id="Altimeter"></div>
+                        <div id="VSpeed"></div>
+                        <div id="Airspeed"></div>
+                        <div id="ILS"></div>
+                        <div id="ApproachFlaps"></div>
+                        <div id="Baro"></div>
+                        <div id="Minimum"></div>
+                    </div>
+                    <div id="FMAContainer">
+                        <div id="FMA"></div>
+                    </div>
+                </div>
+                <div class="bottom">
+                    <div style="width: 70%; height: 60px">
+                        EXPERIMENTAL VERSION
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+
+<link rel="stylesheet" href="B787_10_PFD.css"/>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Shared/Utils/RadioNav.js"></script>
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/B787_10/PFD/B787_10_PFD.js"></script>

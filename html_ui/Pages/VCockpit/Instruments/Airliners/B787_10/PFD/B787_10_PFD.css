@@ -1,1 +1,324 @@
-../../../../../../../../B787_10_PFD_Instrument/build/B787_10_PFD.css
+:root {
+    --bodyHeightScale: 1;
+    --colorAmber: #ffbf00;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+html body {
+    -webkit-user-select: none;
+    font-family: var(--font);
+    font-size: calc(var(--viewportHeightRatio) * (36px / 21.6) * var(--currentPageHeight) / 100);
+    color: white;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+#highlight {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+}
+
+#Electricity {
+    width: 100%;
+    height: 100%;
+}
+
+#Electricity[state=off] {
+    display: none;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("/Fonts/RobotoMono-Medium.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto-Light";
+    src: url("/Fonts/RobotoMono-Light.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url("/Fonts/RobotoMono-Bold.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+#highlight {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+}
+
+b787-10-pfd-element {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background-color: black;
+    font-family: Roboto-Bold;
+    overflow: hidden;
+    z-index: 0;
+}
+
+#Electricity[state=on]{
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+#MainFrame{
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#AuxDisplay {
+    flex: 0 0 34%;
+    border-right: 5px ridge #4e4e50;
+}
+
+#AuxDisplay .content {
+    background-color: #4e4e50;
+    width: 100%;
+    max-height: 100%;
+    font-size: 20px;
+    overflow: auto;
+}
+
+.AUXDisplaySeparator {
+    color: #838384;
+    width: 100%;
+    height: 2px;
+    border: 0;
+}
+
+#aircraft-info-titles {
+    display: flex;
+    flex-direction: column;
+    color: deepskyblue;
+    width: 25%;
+}
+
+#aircraft-info-values {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+}
+
+#aircraft-info-titles > div, #aircraft-info-values > div {
+    margin-top: 15px;
+}
+
+#aircraft-info {
+    display: flex;
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+
+/**
+    TODO: Better position of UTC time and ELAPSED TIME
+ */
+
+#date-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: deepskyblue;
+    width: 100%;
+    margin-top: 3px;
+}
+
+#date-info > div {
+    width: 100%;
+    text-align: center;
+}
+
+#date-info-values {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+#date-info-values > div {
+    width: 100%;
+    text-align: center;
+}
+
+#Watch {
+    display: flex;
+    flex-direction: column;
+    width: 45%;
+    margin-top: 5px;
+    margin-right: 20px;
+}
+
+#Analog_Seconds{
+    visibility: hidden;
+}
+
+#Digital {
+    text-align: center;
+}
+
+
+/**
+Attitude
+ */
+
+#PFDDisplay {
+    transform: rotateX(0);
+    flex: 0 0 66%;
+    display: flex;
+    flex-direction: column;
+}
+
+
+#PFDDisplay > .top {
+    transform: rotateX(0);
+    position: relative;
+    flex: 0 0 65%;
+    background: black;
+    overflow: hidden;
+}
+
+#PFDDisplay > .top #HorizonContainer {
+    transform: rotateX(0);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: none;
+    overflow: hidden;
+}
+
+#PFDDisplay > .top #AttitudeIndicator {
+    position: absolute;
+    top: 26.5%;
+    width: 100%;
+    height: 40%;
+    border: none;
+}
+
+#PFDDisplay > .top #InstrumentsContainer {
+    transform: rotateX(0);
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+#PFDDisplay > .top #InstrumentsContainer #Altimeter {
+    transform: rotateX(0);
+    position: absolute;
+    top: 1.75%;
+    left: 68%;
+    width: 22%;
+    height: 100%;
+}
+
+#PFDDisplay > .top #InstrumentsContainer #Airspeed {
+    transform: rotateX(0);
+    position: absolute;
+    /** top: 4.20%; */
+    top: 3.75%;
+    left: 10%;
+    width: 22%;
+    height: 100%;
+}
+
+#PFDDisplay > .top #InstrumentsContainer #VSpeed {
+    transform: rotateX(0);
+    position: absolute;
+    border: none;
+    top: 11.75%;
+    left: 84%;
+    width: 25%;
+    height: 100%;
+    z-index: 0;
+}
+
+#PFDDisplay > .top #InstrumentsContainer #ApproachFlaps {
+    transform: rotateX(0);
+    position: absolute;
+    /** top: 4.20%; */
+    top: 88%;
+    left: 25.5%;
+    width: 22%;
+    height: 100%;
+}
+
+#PFDDisplay > .top #InstrumentsContainer #Baro {
+    transform: rotateX(0);
+    position: absolute;
+    /** top: 4.20%; */
+    top: 93%;
+    left: 74%;
+    width: 22%;
+    height: 100%;
+}
+
+#PFDDisplay > .top #InstrumentsContainer #Minimum {
+    transform: rotateX(0);
+    position: absolute;
+    /** top: 4.20%; */
+    top: 85%;
+    left: 67%;
+    width: 22%;
+    height: 100%;
+}
+
+#PFDDisplay > .top #InstrumentsContainer #ILS {
+    transform: rotateX(0);
+    position: absolute;
+    border: none;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+#PFDDisplay > .top #FMAContainer #FMA {
+    transform: rotateX(0);
+    position: absolute;
+    border: none;
+    top: 1%;
+    left: 25%;
+    width: 48%;
+    height: 100%;
+    z-index: 0;
+}
+
+
+#PFDDisplay > .bottom {
+    transform: rotateX(0);
+    position: relative;
+    flex: 0 0 35%;
+    display: flex;
+    background: black;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+}
+
+
+
