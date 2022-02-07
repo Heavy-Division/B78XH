@@ -4781,6 +4781,9 @@ var VNavAltCaptureType;
 class AUXDisplayComponent extends DisplayComponent {
     constructor(props) {
         super(props);
+        this.chronoRef = FSComponent.createRef();
+        this.chronoHoursRef = FSComponent.createRef();
+        this.chronoMinutesRef = FSComponent.createRef();
         /**
          * Subjects definitions
          */
@@ -4792,15 +4795,7 @@ class AUXDisplayComponent extends DisplayComponent {
         this.flightDuration = Subject.create('');
         this.chronoVisible = true;
         this.chronoStarted = true;
-        this.chronoMinutesDegrees = ComputedSubject.create(0, (value) => {
-            return 'rotate(' + value + ' 250 250)';
-        });
-        this.chronoSecondsDegrees = ComputedSubject.create(0, (value) => {
-            return 'rotate(' + value + ' 250 250)';
-        });
         this.chronoDigitalTime = Subject.create('');
-        this.chronoRef = FSComponent.createRef();
-        this.test = Subject.create('');
         /**
          * Subscribers definitions
          */
@@ -4829,12 +4824,12 @@ class AUXDisplayComponent extends DisplayComponent {
         });
         this.props.bus.getSubscriber().on('chronoMinutesDegrees').whenChanged().handle((value) => {
             if (this.chronoStarted) {
-                this.chronoMinutesDegrees.set(value);
+                this.chronoHoursRef.instance.setAttribute('transform', `rotate(${value} 250 250)`);
             }
         });
         this.props.bus.getSubscriber().on('chronoSecondsDegrees').whenChanged().handle((value) => {
             if (this.chronoStarted) {
-                this.chronoSecondsDegrees.set(value);
+                this.chronoMinutesRef.instance.setAttribute('transform', `rotate(${value} 250 250)`);
             }
         });
         this.props.bus.getSubscriber().on('hEvent').handle((eventName) => {
@@ -4881,8 +4876,8 @@ class AUXDisplayComponent extends DisplayComponent {
                     FSComponent.buildComponent("div", { id: "Watch", ref: this.chronoRef },
                         FSComponent.buildComponent("svg", { id: "Analog", viewBox: "0 0 500 500", xmlns: "http://www.w3.org/2000/svg" },
                             FSComponent.buildComponent("circle", { cx: "250", cy: "250", r: "240", fill: "#1E1B1C", stroke: "white", "stroke-width": "9" }),
-                            FSComponent.buildComponent("rect", { id: "Analog_Hour", x: "242.5", y: "152", width: "15", height: "101.35", rx: "3.5", ry: "3.5", fill: "white", transform: this.chronoMinutesDegrees }),
-                            FSComponent.buildComponent("rect", { id: "Analog_Minutes", x: "242.5", y: "50.6", width: "15", height: "202.71", rx: "3.5", ry: "3.5", fill: "white", transform: this.chronoSecondsDegrees }),
+                            FSComponent.buildComponent("rect", { ref: this.chronoHoursRef, id: "Analog_Hour", x: "242.5", y: "152", width: "15", height: "101.35", rx: "3.5", ry: "3.5", fill: "white" }),
+                            FSComponent.buildComponent("rect", { ref: this.chronoMinutesRef, id: "Analog_Minutes", x: "242.5", y: "50.6", width: "15", height: "202.71", rx: "3.5", ry: "3.5", fill: "white" }),
                             FSComponent.buildComponent("rect", { id: "Analog_Seconds", x: "248", y: "50.6", width: "4", height: "202.71", rx: "1.2", ry: "1.2", fill: "red" }),
                             FSComponent.buildComponent("circle", { cx: "250", cy: "250", r: "16", fill: "white" }),
                             FSComponent.buildComponent("rect", { x: "245", y: "10", width: "10", height: "45", fill: "white" }),
