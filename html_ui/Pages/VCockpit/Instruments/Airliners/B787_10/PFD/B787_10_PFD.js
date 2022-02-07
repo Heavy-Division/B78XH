@@ -6404,7 +6404,7 @@ class B787SpeedMarkerV1 extends B787SpeedMarker {
     onAfterRender(node) {
         super.onAfterRender(node);
         this.props.bus.getSubscriber().on('altitudeAboveGround').whenChangedBy(5).handle((value) => {
-            if (value > 50) {
+            if (value > 30) {
                 this.isMarkerPassed.set(true);
             }
         });
@@ -6469,7 +6469,7 @@ class B787SpeedMarkerVR extends B787SpeedMarker {
     onAfterRender(node) {
         super.onAfterRender(node);
         this.props.bus.getSubscriber().on('altitudeAboveGround').whenChangedBy(5).handle((value) => {
-            if (value > 50) {
+            if (value > 30) {
                 this.isMarkerPassed.set(true);
             }
         });
@@ -7402,6 +7402,7 @@ class MinimumsComponent extends DisplayComponent {
 class B787_10_PFD extends BaseInstrument {
     constructor() {
         super();
+        this.isFlightStarted = false;
         /**
          * Subscribable values
          */
@@ -7478,6 +7479,9 @@ class B787_10_PFD extends BaseInstrument {
         this.showMeters.notify();
     }
     Update() {
+        if (!this.isFlightStarted) {
+            return;
+        }
         /**
          * Misc SimVars look up
          */
@@ -7673,6 +7677,10 @@ class B787_10_PFD extends BaseInstrument {
             this.showMeters.set(!this.showMeters.get());
         }
         this.hEventPublisher.dispatchHEvent(event);
+    }
+    onFlightStart() {
+        super.onFlightStart();
+        this.isFlightStarted = true;
     }
     updateMinimum(up, reset = false) {
         if (reset) {
