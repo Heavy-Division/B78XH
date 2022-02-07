@@ -6469,7 +6469,7 @@ class B787SpeedMarkerVR extends B787SpeedMarker {
     onAfterRender(node) {
         super.onAfterRender(node);
         this.props.bus.getSubscriber().on('altitudeAboveGround').whenChangedBy(5).handle((value) => {
-            if (value > 20) {
+            if (value > 30) {
                 this.isMarkerPassed.set(true);
             }
         });
