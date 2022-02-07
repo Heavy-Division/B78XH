@@ -4781,12 +4781,6 @@ var VNavAltCaptureType;
 class AUXDisplayComponent extends DisplayComponent {
     constructor(props) {
         super(props);
-        this.chronoRef = FSComponent.createRef();
-        this.chronoHoursRef = FSComponent.createRef();
-        this.chronoMinutesRef = FSComponent.createRef();
-        /**
-         * Subjects definitions
-         */
         this.flightNumber = Subject.create('0');
         this.vhfFrequency = Subject.create(0);
         this.transponderCode = Subject.create(0);
@@ -4796,6 +4790,9 @@ class AUXDisplayComponent extends DisplayComponent {
         this.chronoVisible = true;
         this.chronoStarted = true;
         this.chronoDigitalTime = Subject.create('');
+        this.chronoRef = FSComponent.createRef();
+        this.chronoHoursRef = FSComponent.createRef();
+        this.chronoMinutesRef = FSComponent.createRef();
         /**
          * Subscribers definitions
          */
