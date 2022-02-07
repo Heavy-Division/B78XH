@@ -4932,9 +4932,11 @@ class AttitudeIndicatorComponent extends DisplayComponent {
         this.radioAltitudeTextRef = FSComponent.createRef();
         this.flightDirectorHeadingLineRef = FSComponent.createRef();
         this.flightDirectorPitchLineRef = FSComponent.createRef();
+        this.flightDirectorRef = FSComponent.createRef();
         this._pitchIsNotReadyYet = true;
         this._flightDirectorPitch = 0;
         this._flightDirectorBank = 0;
+        this._shouldUpdateFlightDirector = true;
         /**
          * Subjects definitions
          */
@@ -4984,14 +4986,21 @@ class AttitudeIndicatorComponent extends DisplayComponent {
                 this.radioAltitudeRef.instance.setAttribute('visibility', 'hidden');
             }
         });
-        /**
-         *         getLineLength() { return 140; }
-         *         getStrokeWidth() { return "4"; }
-         *         getFDBankLimit() { return 30; }
-         *         getFDBankDisplayLimit() { return 75; }
-         */
+        this.props.flightDirector1Active.sub((value) => {
+            if (value) {
+                this._shouldUpdateFlightDirector = true;
+                this.flightDirectorRef.instance.style.display = 'block';
+            }
+            else {
+                this._shouldUpdateFlightDirector = false;
+                this.flightDirectorRef.instance.style.display = 'none';
+            }
+        });
     }
     updateFlightDirectorBank() {
+        if (!this._shouldUpdateFlightDirector) {
+            return;
+        }
         const planeBank = this.bankAngle.get();
         const altitudeAboveGround = this.altitudeAboveGround.get();
         let flightDirectorBank = this.props.flightDirectorBankAngle.get();
@@ -5000,10 +5009,12 @@ class AttitudeIndicatorComponent extends DisplayComponent {
         }
         this._flightDirectorBank += (flightDirectorBank - this._flightDirectorBank) * Math.min(1, this.props.deltaTime.get() * 0.001);
         const lineX = Math.max(-1, Math.min(1, (planeBank - this._flightDirectorBank) / 30)) * 75;
-        //console.log("Calculated FD bank" + this._flightDirectorBank)
         this.flightDirectorHeadingLineRef.instance.setAttribute('transform', `translate(${lineX}, 0)`);
     }
     updateFlightDirectorPitch() {
+        if (!this._shouldUpdateFlightDirector) {
+            return;
+        }
         const planePitch = this.pitchAngle.get();
         const altitudeAboveGround = this.altitudeAboveGround.get();
         let flightDirectorPitch = this.props.flightDirectorPitchAngle.get();
@@ -5018,7 +5029,6 @@ class AttitudeIndicatorComponent extends DisplayComponent {
         }
         this._flightDirectorPitch += (flightDirectorPitch - this._flightDirectorPitch) * Math.min(1, this.props.deltaTime.get() * 0.001);
         const pitchDiff = this._flightDirectorPitch - planePitch;
-        //console.log("Calculated FD pitch" + this._flightDirectorPitch)
         const lineY = Utils.Clamp(pitchDiff * 6.66666666667, -100, 100);
         this.flightDirectorPitchLineRef.instance.setAttribute('transform', `translate(0, ${lineY})`);
     }
@@ -5122,7 +5132,7 @@ class AttitudeIndicatorComponent extends DisplayComponent {
                     FSComponent.buildComponent("g", { id: "RadioAltitude", ref: this.radioAltitudeRef },
                         FSComponent.buildComponent("rect", { x: "-45", y: "206", width: "90", height: "38", fill: "black" }),
                         FSComponent.buildComponent("text", { ref: this.radioAltitudeTextRef, x: "0", y: "225", "text-anchor": "middle", "font-size": "32", "font-family": "Roboto-Bold", fill: "white", "alignment-baseline": "central" })),
-                    FSComponent.buildComponent("g", { id: "CommandBars", style: "display: block" },
+                    FSComponent.buildComponent("g", { ref: this.flightDirectorRef, id: "CommandBars", style: "display: block" },
                         FSComponent.buildComponent("line", { ref: this.flightDirectorHeadingLineRef, x1: 0, y1: -70, x2: 0, y2: 70, stroke: "magenta", "stroke-width": 4, fill: "none" }),
                         FSComponent.buildComponent("line", { ref: this.flightDirectorPitchLineRef, x1: -70, y1: 0, x2: 70, y2: 0, stroke: "magenta", "stroke-width": 4, fill: "none" }))))));
     }
@@ -7459,6 +7469,8 @@ class B787_10_PFD extends BaseInstrument {
         this.flightDirectorBankAngle = Subject.create(0);
         this.slipSkid = Subject.create(0);
         this.showMeters = Subject.create(false);
+        this.flightDirector1Active = Subject.create(true);
+        this.flightDirector2Active = Subject.create(false);
         this.deltaTimeSubject = Subject.create(0);
         this.eventBus = new EventBus();
         this.hEventPublisher = new HEventPublisher(this.eventBus);
@@ -7484,7 +7496,7 @@ class B787_10_PFD extends BaseInstrument {
         this.hEventPublisher.startPublish();
         FSComponent.render(FSComponent.buildComponent(AUXDisplayComponent, { bus: this.eventBus }), document.getElementById('AuxDisplay'));
         FSComponent.render(FSComponent.buildComponent(PFDDisplayComponent, { bus: this.eventBus }), document.getElementById('PFDDisplay'));
-        FSComponent.render(FSComponent.buildComponent(AttitudeIndicatorComponent, { altitudeAboveGround: this.altitudeAboveGround, pitchAngle: this.pitchAngle, bankAngle: this.bankAngle, slipSkid: this.slipSkid, flightDirectorPitchAngle: this.flightDirectorPitchAngle, flightDirectorBankAngle: this.flightDirectorBankAngle, deltaTime: this.deltaTimeSubject }), document.getElementById('AttitudeIndicator'));
+        FSComponent.render(FSComponent.buildComponent(AttitudeIndicatorComponent, { altitudeAboveGround: this.altitudeAboveGround, pitchAngle: this.pitchAngle, bankAngle: this.bankAngle, slipSkid: this.slipSkid, flightDirectorPitchAngle: this.flightDirectorPitchAngle, flightDirectorBankAngle: this.flightDirectorBankAngle, flightDirector1Active: this.flightDirector1Active, flightDirector2Active: this.flightDirector2Active, deltaTime: this.deltaTimeSubject }), document.getElementById('AttitudeIndicator'));
         FSComponent.render(FSComponent.buildComponent(AltimeterIndicatorComponent, { deltaTime: this.deltaTimeSubject, altitude: this.altitude, altitudeAboveGround: this.altitudeAboveGround, altitudeSelected: this.altitudeSelected, minimumValue: this.minimumValue, minimimReferenceMode: this.minimumReferenceMode, showMeters: this.showMeters }), document.getElementById('Altimeter'));
         FSComponent.render(FSComponent.buildComponent(VerticalSpeedIndicatorComponent, { bus: this.eventBus }), document.getElementById('VSpeed'));
         FSComponent.render(FSComponent.buildComponent(AirspeedIndicatorComponent, { bus: this.eventBus, grounded: this.grounded, deltaTime: this.deltaTimeSubject, altitudeAboveGround: this.altitudeAboveGround, indicatedAirspeed: this.indicatedSpeed, vSpeeds: this.vSpeeds, aircraftBaseSpeeds: this.aircraftBaseSpeeds, autopilotSpeedMode: this.autopilotSpeedMode, aircraftSpeeds: this.aircraftSpeeds }), document.getElementById('Airspeed'));
@@ -7532,6 +7544,8 @@ class B787_10_PFD extends BaseInstrument {
         const flapsHandleIndex = Simplane.getFlapsHandleIndex();
         const grounded = Simplane.getIsGrounded();
         const trueMach = Simplane.getMachSpeed();
+        const flightDirector1Active = Simplane.getAutoPilotFlightDirectorActive(1);
+        const flightDirector2Active = Simplane.getAutoPilotFlightDirectorActive(2);
         /**
          * BARO
          * TODO: set and sub are async. (Pressure subscriber can update pressure value before STD subscriber)
@@ -7644,6 +7658,8 @@ class B787_10_PFD extends BaseInstrument {
         /**
          * DONE
          */
+        this.flightDirector1Active.set(flightDirector1Active);
+        this.flightDirector2Active.set(flightDirector2Active);
         this.altitude.set(altitude);
         this.altitudeAboveGround.set(altitudeAboveGround);
         this.altitudeSelected.set(altitudeSelected);
