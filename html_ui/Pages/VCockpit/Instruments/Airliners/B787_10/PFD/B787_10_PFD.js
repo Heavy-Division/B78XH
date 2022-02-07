@@ -6803,6 +6803,10 @@ class TargetSpeedComponent extends DisplayComponent {
 }
 
 class AirspeedIndicatorComponent extends DisplayComponent {
+    constructor() {
+        super(...arguments);
+        this.machSpeedRef = FSComponent.createRef();
+    }
     render() {
         return (FSComponent.buildComponent("svg", { id: "ViewBox", viewBox: "0 0 250 800", xmlns: "http://www.w3.org/2000/svg" },
             FSComponent.buildComponent("g", { id: "Airspeed" },
@@ -6815,9 +6819,34 @@ class AirspeedIndicatorComponent extends DisplayComponent {
                     FSComponent.buildComponent(TargetSpeedPointerComponent, { indicatedSpeed: this.props.indicatedAirspeed, autopilotSpeedMode: this.props.autopilotSpeedMode }),
                     FSComponent.buildComponent(SpeedTrendComponent, { indicatedSpeed: this.props.indicatedAirspeed }),
                     FSComponent.buildComponent(StripsComponent, { aircraftBaseSpeeds: this.props.aircraftBaseSpeeds, altitudeAboveGround: this.props.altitudeAboveGround, indicatedSpeed: this.props.indicatedAirspeed }),
-                    FSComponent.buildComponent(SpeedMarkersComponent, { bus: this.props.bus, vSpeeds: this.props.vSpeeds, indicatedSpeed: this.props.indicatedAirspeed })))));
+                    FSComponent.buildComponent(SpeedMarkersComponent, { bus: this.props.bus, vSpeeds: this.props.vSpeeds, indicatedSpeed: this.props.indicatedAirspeed })),
+                FSComponent.buildComponent("text", { ref: this.machSpeedRef, x: 70, y: 770, fill: "white", "font-size": 35, "font-family": "Roboto-Bold", "text-anchor": "start", "alignment-baseline": "top" }))));
+    }
+    onAfterRender(node) {
+        super.onAfterRender(node);
+        this.props.aircraftSpeeds.smoothMach.sub((value) => {
+            if (value > 0.998) {
+                value = 0.998;
+            }
+            if (value >= 0.4) {
+                const valueString = fastToFixed(value, 3).slice(1);
+                this.machSpeedRef.instance.textContent = valueString;
+                this.machSpeedRef.instance.style.display = 'block';
+            }
+            else {
+                this.machSpeedRef.instance.style.display = 'none';
+            }
+        });
     }
 }
+/**
+ *         var posX = 100;
+ *         var posY = 0;
+ *         var width = 105;
+ *         var height = 640;
+ *         var arcWidth = 35;
+ *         var sideTextHeight = 80;
+ */
 
 class AutopilotSpeedMode {
     constructor() {
@@ -6853,6 +6882,8 @@ class AircraftBaseSpeeds {
 class AircraftSpeeds {
     constructor() {
         this.indicatedAirspeed = Subject.create(0);
+        this.trueMach = Subject.create(0);
+        this.smoothMach = Subject.create(0);
     }
 }
 
@@ -7434,6 +7465,7 @@ class B787_10_PFD extends BaseInstrument {
         this.flightStartTime = -1;
         this.resetChrono = true;
         this.groundReference = 0;
+        this.smoothMach = 0;
         this.ilsBacon = Subject.create(0);
         this.fmaModes = new FMAModes();
         this.radioNav = new RadioNav();
@@ -7455,7 +7487,7 @@ class B787_10_PFD extends BaseInstrument {
         FSComponent.render(FSComponent.buildComponent(AttitudeIndicatorComponent, { altitudeAboveGround: this.altitudeAboveGround, pitchAngle: this.pitchAngle, bankAngle: this.bankAngle, slipSkid: this.slipSkid, flightDirectorPitchAngle: this.flightDirectorPitchAngle, flightDirectorBankAngle: this.flightDirectorBankAngle, deltaTime: this.deltaTimeSubject }), document.getElementById('AttitudeIndicator'));
         FSComponent.render(FSComponent.buildComponent(AltimeterIndicatorComponent, { deltaTime: this.deltaTimeSubject, altitude: this.altitude, altitudeAboveGround: this.altitudeAboveGround, altitudeSelected: this.altitudeSelected, minimumValue: this.minimumValue, minimimReferenceMode: this.minimumReferenceMode, showMeters: this.showMeters }), document.getElementById('Altimeter'));
         FSComponent.render(FSComponent.buildComponent(VerticalSpeedIndicatorComponent, { bus: this.eventBus }), document.getElementById('VSpeed'));
-        FSComponent.render(FSComponent.buildComponent(AirspeedIndicatorComponent, { bus: this.eventBus, grounded: this.grounded, deltaTime: this.deltaTimeSubject, altitudeAboveGround: this.altitudeAboveGround, indicatedAirspeed: this.indicatedSpeed, vSpeeds: this.vSpeeds, aircraftBaseSpeeds: this.aircraftBaseSpeeds, autopilotSpeedMode: this.autopilotSpeedMode }), document.getElementById('Airspeed'));
+        FSComponent.render(FSComponent.buildComponent(AirspeedIndicatorComponent, { bus: this.eventBus, grounded: this.grounded, deltaTime: this.deltaTimeSubject, altitudeAboveGround: this.altitudeAboveGround, indicatedAirspeed: this.indicatedSpeed, vSpeeds: this.vSpeeds, aircraftBaseSpeeds: this.aircraftBaseSpeeds, autopilotSpeedMode: this.autopilotSpeedMode, aircraftSpeeds: this.aircraftSpeeds }), document.getElementById('Airspeed'));
         FSComponent.render(FSComponent.buildComponent(ILSIndicatorComponent, { radioNav: this.radioNav, ilsBacon: this.ilsBacon }), document.getElementById('ILS'));
         FSComponent.render(FSComponent.buildComponent(FMAComponent, { fmaModes: this.fmaModes }), document.getElementById('FMA'));
         FSComponent.render(FSComponent.buildComponent(ApproachFlapsAndVREFComponent, { vSpeeds: this.vSpeeds }), document.getElementById('ApproachFlaps'));
@@ -7499,6 +7531,7 @@ class B787_10_PFD extends BaseInstrument {
         const verticalSpeedHoldActive = Simplane.getAutoPilotVerticalSpeedHoldActive();
         const flapsHandleIndex = Simplane.getFlapsHandleIndex();
         const grounded = Simplane.getIsGrounded();
+        const trueMach = Simplane.getMachSpeed();
         /**
          * BARO
          * TODO: set and sub are async. (Pressure subscriber can update pressure value before STD subscriber)
@@ -7632,6 +7665,9 @@ class B787_10_PFD extends BaseInstrument {
         this.aircraftBaseSpeeds.maxSpeed.set(maxSpeed);
         this.indicatedSpeed.set(indicatedSpeed);
         this.aircraftSpeeds.indicatedAirspeed.set(indicatedSpeed);
+        this.aircraftSpeeds.trueMach.set(trueMach);
+        this.smoothMach = Utils.SmoothSin(this.smoothMach, trueMach, 0.25, this.deltaTime / 1000);
+        this.aircraftSpeeds.smoothMach.set(this.smoothMach);
         this.pitchAngle.set(pitchAngle);
         this.flightDirectorPitchAngle.set(flightDirectorPitchAngle);
         this.bankAngle.set(bankAngle);
