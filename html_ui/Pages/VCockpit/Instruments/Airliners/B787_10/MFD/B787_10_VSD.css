@@ -1,0 +1,738 @@
+html body {
+    background-color: black;
+    height: 100vh;
+    width: 100vw;
+    margin-top: -15px;
+}
+
+@font-face {
+    font-family: "Roboto";
+    src: url("/Fonts/RobotoMono-Medium.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto-Light";
+    src: url("/Fonts/RobotoMono-Light.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Roboto-Bold";
+    src: url("/Fonts/RobotoMono-Bold.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+}
+
+.altitudes {
+        
+        margin-top: 50px;
+        width: 70px;
+        height: 100%;
+        background: gray;
+        position: absolute;
+        z-index: 50;
+        color: white;
+}
+
+#currentAlt { /*find a way to make the 0s smaller than the other numbers in Alt readings */
+
+    font-family: Roboto-Light;
+    position: absolute;
+    top: -30px;
+    left: 0px;
+    width: 70px;
+    height: 30px;
+    color: magenta; 
+    background-color: black;
+    font-size: 23px;
+    font-family: RobotoMono-Bold;
+    z-index: 100;
+
+}
+#altitude1 {
+    margin-top: 21px;
+    margin-bottom: 167px;
+    
+}
+#altitude2 {
+    margin-top: 21px;
+    margin-bottom: 190px;
+    
+}
+#altitude3 {
+    margin-top: 21px;
+    margin-bottom: 300px;
+   
+}
+#altitude4 {
+    margin-top: 21px;
+    margin-bottom: 189px;
+    
+}
+
+#altMrk1 {
+    position: absolute;
+    right: 0px;
+    top: 30px;
+    height: 1.5px;
+    width: 20px;
+    background-color: white;
+
+}
+
+#altTick1 {
+    position: absolute;
+    right: 0px;
+    top: 120px;
+    height: 1px;
+    width: 10px;
+    background-color: white;
+
+}
+
+#altTick2 {
+    position: absolute;
+    right: 0px;
+    top: 320px;
+    height: 1px;
+    width: 10px;
+    background-color: white;
+
+
+}
+
+#altTick3 {
+    position: absolute;
+    right: 0px;
+    top: 550px;
+    height: 1px;
+    width: 10px;
+    background-color: white;
+
+}
+#altMrk2 {
+    position: absolute;
+    right: 0px;
+    top: 215px;
+    height: 1.5px;
+    width: 20px;
+    background-color: white;
+
+}
+#altMrk3 {
+    position: absolute;
+    right: 0px;
+    top: 423px;
+    height: 1.5px;
+    width: 20px;
+    background-color: white;
+
+}
+#altMrk4 {
+    position: absolute;
+    right: 0px;
+    top: 745px;
+    height: 1.5px;
+    width: 20px;
+    background-color: white;
+
+}
+
+.distances {
+    color: white;
+    text-align: bottom;
+    width: 100%;
+    height: 30px;
+    background-color: gray;
+    color: #ffffff;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+    margin-right: auto;
+    z-index: 5000;
+}
+
+#distance1 {
+    text-align: center;
+    color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
+    margin-top: 15px;
+
+}
+
+#distance2 {
+    color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
+    margin-top: 15px;
+
+}
+
+#distance3 {
+    color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
+    margin-top: 15px;
+}
+
+#distance4 {
+    color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
+    margin-top: 15px;
+}
+
+#distance5 {
+    color: white;
+    width: 20%;
+    float: left;
+    z-index: 100;
+    margin-top: 15px;
+}
+
+#waypoint1 {
+    text-align: center;
+    color: white;
+    z-index: 5;
+    position: absolute;
+    left: 60px;
+    font-size: 15px;
+
+}
+
+#waypoint2 {
+    color: magenta;
+    z-index: 100;
+    position: absolute;
+    left: 185px;
+    font-size: 15px;
+}
+
+#waypoint3 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 300px;
+    font-size: 15px;
+}
+
+#waypoint4 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 440px;
+    font-size: 15px;
+}
+
+#waypoint5 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 535px;
+    font-size: 15px;
+}
+
+#waypoint6 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 620px;
+    font-size: 15px;
+}
+
+#waypoint7 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 680px;
+    font-size: 15px;
+}
+
+#waypoint8 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 740px;
+    font-size: 15px;
+}
+
+#waypoint9 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 800px;
+    font-size: 15px;
+}
+
+#waypoint10 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 870px;
+    font-size: 15px;
+}
+
+#waypoint11 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 935px;
+    font-size: 15px;
+}
+
+#waypoint12 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 990px;
+    font-size: 15px;
+}
+
+#waypoint13 {
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 1130px;
+    font-size: 15px;
+}
+
+.constraints {
+  margin-top: -25px;
+  margin-left: -20px;
+}
+#const1 {
+    text-align: center;
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 40px;
+    top: 30px;
+    font-size: 15px;
+    
+
+}
+
+#const2 {
+    color: magenta;
+    z-index: 100;
+    position: absolute;
+    left: 187px;
+    top: 40px;
+
+}
+
+#const3 {
+    color: white; 
+    z-index: 100;
+    position: absolute;
+    left: 305px;
+    top: 40px;
+}
+
+#const4 {
+    color: white;
+    text-align: center;
+    z-index: 100;
+    position: absolute;
+    left: 450px;
+    top: 40px;
+}
+
+#const5 {
+    text-align: center;
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 545px;
+    top: 40px;
+}
+
+#const9 {
+    text-align: center;
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 805px;
+    top: 40px;
+}
+/* don't forget to add constraints 6- 8, 10-11 back here*/
+
+#const12 {
+    text-align: center;
+    color: white;
+    z-index: 100;
+    position: absolute;
+    left: 1000px;
+    top: 40px;
+}
+
+#line1 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 90px;
+    margin-top: 40px;
+    margin-left: -3px;
+    top: 0;
+    z-index: 30;
+  }
+
+  #line2 {
+    border-left: 3px dashed magenta;
+    height: 100%;
+    position: absolute; 
+    left: 208px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+  #line3 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 325px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+  #line4 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 468px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+  #line5 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 562px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+  #line6 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 642px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+
+
+  #line7 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 706px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+
+
+  #line8 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 756px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+
+
+  #line9 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position:absolute;
+    left: 820px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+
+
+  #line10 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 887px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+
+
+  #line11 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 956px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+
+
+  #line12 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 1016px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+
+
+  #line13 {
+    border-left: 3px dashed white;
+    height: 100%;
+    position: absolute;
+    left: 1153px;
+    margin-top: 40px;
+    top: 0;
+  }
+
+
+/* Distance values: 1px = mile */ 
+  
+
+
+
+#distMrk1 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 10%;
+
+  }
+
+  #distTick1 {
+    border-left: 1px solid white;
+    height: 7px;
+    position: absolute;
+    left: 20.5%;
+  }
+
+  #distMrk2 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 30%;
+
+  }
+#distTick2 {
+    border-left: 1px solid white;
+    height: 7px;
+    position: absolute;
+    left: 40.5%;
+}
+  #distMrk3 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 50%;
+
+  }
+
+  #distMrk4 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 70%;
+  }
+
+  #distMrk5 {
+    border-left: 1.5px solid white;
+    height: 15px;
+    position: absolute;
+    left: 89.75%;
+
+
+  }
+  
+  #planemarker1 {
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-top: 25px solid transparent;
+    border-left: 50px solid white;
+    top: 148px;
+    left: 90px;
+  }
+
+  #planemarker2 {
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-top: 20px solid transparent;
+    border-left: 40px solid black;
+    top: 152px;
+    left: 93px;
+    z-index: 25;
+  }
+
+  #planevd {
+    transform: rotate(35deg);
+    border-left: 275px solid white;
+    height: 3px;
+    position: absolute;
+    left: 119px;
+    top: 253px;
+    z-index: 30;
+    
+    
+  }
+
+  #vPath1 {
+    transform: rotate(35deg);
+    border-left: 226px solid magenta;
+    height: 3px;
+    position: absolute;
+    left: 124px;
+    top: 239px;
+    z-index: 29;
+    
+  }
+
+  #vPath2 {
+    transform: rotate(20deg);
+    border-left: 240px solid magenta;
+    height: 4px;
+    position: absolute;
+    left: 330px;
+    top: 350px;
+    z-index: 29;
+    
+  }
+
+  #vPath3 {
+    border-left: 262px solid magenta;
+    height: 4px;
+    position: absolute;
+    left: 560px;
+    top: 390px;
+    z-index: 29;
+    
+  }
+
+  #vPath4 {
+    transform: rotate(35deg);
+    border-left: 600px solid magenta;
+    height: 4px;
+    position: absolute;
+    left: 765px;
+    top: 562px;  
+    z-index: 29;
+    
+  }
+
+#vConst1 {
+  border: 2px dashed magenta;
+  width: 100%;
+  position: absolute;
+  top: 304px;
+  z-index: 29;
+  
+}
+
+#aglLine {
+    color: #00ff00;
+    border-style: dashed none none none;
+    border-width: 3px;
+    width: 100%;
+    position: absolute;
+    bottom: 30px;
+}
+
+#tdMarker {
+    font-family: Arial, Helvetica, sans-serif;
+    color: #00ff00;
+    text-align: center;
+    position: absolute;
+    top: 400px;
+    left: 830px;
+    z-index: 40;
+}
+
+
+#aglMarker {
+    transform: rotate(225deg);
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 30px solid #00ff00;
+    border-top: 30px solid transparent;
+    border-left: 50px solid transparent #00ff00;
+    bottom: 15px;
+    left: 43px;
+    z-index: 4400;
+  }
+
+  #aglMarker2 {
+    transform: rotate(225deg);
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 20px solid gray;
+    border-top: 20px solid transparent;
+    border-left: 50px solid transparent #00ff00;
+    bottom: 20px;
+    left: 50px;
+    z-index: 4400;
+  }
+
+
+  #constraintMark1 {
+    transform: rotate(90deg);
+    width: 40px;
+    height: 3px;
+    margin-left: 41px;
+    box-sizing: content-box;
+    padding-top: 15px;
+    position: absolute;
+    top: 295px;
+    background: magenta;
+    color: gray;
+    font-size: 1px;
+    letter-spacing: 0.2em;
+    text-align: center;
+    text-transform: uppercase;
+    z-index: 5000;
+    
+  }
+
+  #constraintMark1:after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+    border-bottom: 13px solid gray;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+  }
+
+  #pageSep {
+    border-top: solid 2px white;
+    width: 100%;
+    z-index: 50;
+    position: absolute;
+    top: 0%;
+  }
+  
