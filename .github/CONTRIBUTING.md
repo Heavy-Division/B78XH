@@ -1,6 +1,7 @@
 # Contributing to B78X Heavy
-<img src="http://???"
+<img src="https://media.discordapp.net/attachments/927293618295824415/966187066058764338/hdgithub_banner.png">
 
+# Setup
 ***
 Thank you for your interest in contributing to the B78X Heavy project. To get started, you'll need to download
 and install the following: 
@@ -14,6 +15,18 @@ and install the following:
 3. Open the Command Prompt (Terminal for Mac users) and run the following two separately: 
 ```npm install -g npm``` , ```npm install --global gulp-cli```
 
+>Q: "What is Gulp and why do I need it?"<br>
+>A: The B78XH isn't one Javascript application but rather a collection of applications working in sync.<br>
+>Normally you would need to run the following to build the aircraft in the simulator: 
+
+* `npm run rollup HDSDK`
+* `npm run rollup HDLogger`
+* `npm run rollup HDFMC`
+* `npm run build`
+
+>Gulp allows us to bundle these tasks into one command to make this task less tedious:
+
+* `gulp buildB78XH`
 
 4. Open the B78X Heavy [repository](https://github.com/Heavy-Division/B78XH.git) and create a fork (upper right corner)
 
@@ -23,7 +36,7 @@ and install the following:
 
 
 6. In the terminal, create a new branch based off the ***main*** with a clear name of what you are changing. (e.g. adding sound files for engines):<br>
-```git branch main engine-sounds```
+```git branch main engine-custom-sounds```
 
 
 7. Run the following in the terminal:<br>
@@ -31,5 +44,26 @@ and install the following:
 
 >Installs all of the required packages to run the mod. 
 
+# Pull Requests 
+We welcome pull requests with fixes and improvements to the project.
+
+If you wish to add a new feature or you spot a bug that you wish to fix, please open an issue for it first on the A32NX issue tracker.
+
+The work-flow for submitting a new pull request is designed to be simple, but also to ensure consistency from all contributors:
+
+* Fork the project into your personal space on GitHub.com.
+* Create a new branch (with a clear name of what is being changed).
+* Add changes to CHANGELOG.md with credits to yourself.
+* Commit your changes. 
+* When writing commit messages make sure they are clear about what has been changed.
+* Push the commit(s) to your fork.
+* Submit a pull request (PR) to the master branch.
+* The PR title should describe the change that has been made.
+* Follow the PR template and write as much detail as necessary for your changes and include documents/screenshots if needed.
+* Be prepared to answer any questions about your PR when it is reviewed for acceptance.
+
+Please keep your changes in a single PR as small as possible (relating to one issue) as this makes it easier to review and accept. Large PRs with a small error will prevent the entire PR from being accepted.
+
+Ensure that you include a CHANGELOG with your PR.
 
 
