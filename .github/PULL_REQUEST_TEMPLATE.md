@@ -1,8 +1,8 @@
 
 # Title
 
->Please use the appropriate prefix in your PR title:
---------------------------------------------------
+## Please use the appropriate prefix in your PR Title:
+
 * feat: A new feature<br><br>
 * fix: A bug fix<br><br>
 * docs: Documentation only changes<br><br>
