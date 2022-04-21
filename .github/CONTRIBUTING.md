@@ -1,6 +1,28 @@
 # Contributing to B78X Heavy
 <img src="https://media.discordapp.net/attachments/927293618295824415/966187066058764338/hdgithub_banner.png">
 
+# What can be worked on/altered? 
+
+Before you begin, it may be helpful to understand what you want to work on, and whether it is possible due to the encryption of various 787 source code files. 
+
+> Keep in mind this list is not set in stone, and Asobo may unlock more of the files to allow 3rd party changes. 
+
+### Unable to alter due to encryption
+* Forking into a separate aircraft from the default
+* Alterations to the 3D model 
+* Lighting
+* EFB Support 
+* Flight Model and Behavior 
+* System Connections (e.g. Hydraulic systems affect on 3d model animations and flight behavior)
+* Unable to animate currently non-animated switches/knobs/buttons 
+
+### Possible projects:
+* All display frontends (Except EFB)
+* Autopilot logic (With some exceptions such as using the bank angle variable)
+* Custom panel textures (not including text) 
+* Custom Sounds (Engines, Cockpit, Switches, etc.)
+
+
 # Setup
 ***
 Thank you for your interest in contributing to the B78X Heavy project. To get started, you'll need to download
@@ -11,9 +33,8 @@ and install the following:
 
 2. After installing an IDE you will need to install [node.js](https://nodejs.org/en/) and [git](https://git-scm.com/downloads)
 
-
 3. Open the Command Prompt (Terminal for Mac users) and run the following two separately: 
-```npm install -g npm``` , ```npm install --global gulp-cli```
+```npm install -g npm``` , ```npm install -g gulp-cli```
 
 >Q: "What is Gulp and why do I need it?"<br>
 >A: The B78XH isn't one Javascript application but rather a collection of applications working in sync.<br>
@@ -47,7 +68,7 @@ and install the following:
 # Pull Requests 
 We welcome pull requests with fixes and improvements to the project.
 
-If you wish to add a new feature or you spot a bug that you wish to fix, please open an issue for it first on the A32NX issue tracker.
+If you wish to add a new feature, or you spot a bug that you wish to fix, please open an issue for it first on the B78XH issue tracker.
 
 The work-flow for submitting a new pull request is designed to be simple, but also to ensure consistency from all contributors:
 
