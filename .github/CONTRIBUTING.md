@@ -86,5 +86,3 @@ The work-flow for submitting a new pull request is designed to be simple, but al
 Please keep your changes in a single PR as small as possible (relating to one issue) as this makes it easier to review and accept. Large PRs with a small error will prevent the entire PR from being accepted.
 
 Ensure that you include a CHANGELOG with your PR.
-
-
