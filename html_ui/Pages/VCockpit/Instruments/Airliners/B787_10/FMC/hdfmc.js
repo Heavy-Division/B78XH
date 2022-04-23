@@ -3859,6 +3859,7 @@
             this._labelElements = [];
             this._lineElements = [];
             this._inOutFocused = false;
+            this._inOutKeyDownEvent = this.inOutKeyDownEvent.bind(this);
             this.refreshPageCallback = undefined;
             this.pageUpdate = undefined;
         }
@@ -5915,18 +5916,122 @@
             this.recalculateTHRRedAccTransAlt();
             this._inOutElement = this.querySelector('#inOut-line-html');
             this._inOutRectElement = this.querySelector('#inOut-line');
-            /*
-                    this._inOutRectElement.addEventListener('click', () => {
-                        this._inOutFocused = !this._inOutFocused;
-                        if(this._inOutFocused){
-                            this._inOutRectElement.setAttribute('style', 'fill: red; fill-opacity: 0.2;')
-                        } else {
-                            this._inOutRectElement.setAttribute('style', 'fill: black;')
+            this.unfocusInOut();
+            if (this.urlConfig.index === 1) {
+                this._inOutRectElement.addEventListener('click', () => {
+                    this._inOutFocused = !this._inOutFocused;
+                    if (this._inOutFocused) {
+                        this.prepareInOutKeyEvents();
+                        Coherent.call('FOCUS_INPUT_FIELD');
+                        this._inOutRectElement.setAttribute('style', 'fill: red; fill-opacity: 0.2;');
+                    }
+                    else {
+                        this._inOutRectElement.setAttribute('style', 'fill: black;');
+                        this.unfocusInOut();
+                    }
+                });
+            }
+        }
+        prepareInOutKeyEvents() {
+            window.document.addEventListener('keydown', this._inOutKeyDownEvent);
+        }
+        unfocusInOut(force = false) {
+            if (force) {
+                this._inOutRectElement.setAttribute('style', 'fill: black;');
+                this._inOutFocused = false;
+            }
+            window.document.removeEventListener('keydown', this._inOutKeyDownEvent);
+            Coherent.call('UNFOCUS_INPUT_FIELD');
+        }
+        inOutKeyDownEvent(event) {
+            if (event.keyCode === 17) {
+                this.unfocusInOut(true);
+            }
+            /**
+             * Use event.keyCode (event.code is not supported by MSFS)
+             */
+            let keyHandler;
+            const getKeyEvent = (event) => {
+                const getKeyToExecute = () => {
+                    let key = { handleAsControlKey: false, code: undefined };
+                    /**
+                     * Control Keys
+                     * 46 - DELETE (DELETE)
+                     * 8 - CLEAR (BACKSPACE)
+                     * 32 - SPACE (SPACE)
+                     * 111 - SLASH (NUMERIC DIVIDE)
+                     * 191 - SLASH (GENERAL KEYS SLASH)
+                     */
+                    key.handleAsControlKey = [8, 32, 46, 111, 191].findIndex((value) => {
+                        return value === event.keyCode;
+                    }) !== -1;
+                    if (key.handleAsControlKey) {
+                        key.code = event.keyCode;
+                        return key;
+                    }
+                    /**
+                     * Numeric keyboard handling
+                     */
+                    if (event.location === 3) {
+                        /**
+                         * Convert DECIMAL POINT to PERIOD
+                         */
+                        if (event.keyCode === 110) {
+                            key.code = 46;
                         }
-                        console.log('click')
+                        /**
+                         * Convert NUMERIC numbers to GENERAL numbers
+                         */
+                        if (event.keyCode >= 96 && event.keyCode <= 105) {
+                            key.code = event.keyCode - 48;
+                        }
+                        return key;
+                    }
+                    /**
+                     * Is the key allowed in scratchpad
+                     */
+                    const isCapitalAlphabet = event.keyCode >= 65 && event.keyCode <= 90;
+                    const isSmallAlphabet = event.keyCode >= 97 && event.keyCode <= 122;
+                    const isNumber = event.keyCode >= 48 && event.keyCode <= 57;
+                    const isPeriod = event.keyCode === 190;
+                    if (isCapitalAlphabet || isSmallAlphabet || isNumber) {
+                        key.code = event.keyCode;
+                    }
+                    else if (isPeriod) {
+                        key.code = 46;
+                    }
+                    return key;
+                };
+                const key = getKeyToExecute();
+                if (key.code === undefined) {
+                    /**
+                     * KeyCode is not allowed in scratchpad
+                     */
+                    return undefined;
+                }
+                if (key.handleAsControlKey) {
+                    const controlKeys = [
+                        { keyCode: 8, handler: this.onClr },
+                        { keyCode: 32, handler: this.onSp },
+                        { keyCode: 46, handler: this.onDel },
+                        { keyCode: 111, handler: this.onDiv },
+                        { keyCode: 191, handler: this.onDiv }
+                    ];
+                    const controlKeyIndex = controlKeys.findIndex((controlKey) => {
+                        return controlKey.keyCode === key.code;
                     });
-            */
-            //Coherent.call('UNFOCUS_INPUT_FIELD');
+                    if (controlKeyIndex !== -1) {
+                        return controlKeys[controlKeyIndex].handler;
+                    }
+                }
+                return () => {
+                    this.onLetterInput(String.fromCharCode(key.code));
+                };
+            };
+            keyHandler = getKeyEvent(event);
+            if (keyHandler !== undefined) {
+                keyHandler();
+            }
         }
         onApproachUpdated() {
             if (this._approachInitialized) {
