@@ -3,6 +3,7 @@ import {SpeedManager} from '../../hdsdk/Managers/SpeedManager';
 import {SpeedCalculator} from '../../hdsdk/Managers/SpeedCalculator';
 import {HDLogger} from '../../hdlogger';
 import {Level} from '../../hdlogger/levels/level';
+import * as HDSDK from '../../hdsdk';
 
 export class BaseFMC extends BaseAirliners {
 	public defaultInputErrorMessage: string = 'INVALID ENTRY';
@@ -118,6 +119,7 @@ export class BaseFMC extends BaseAirliners {
 	protected _inOutRectElement: SVGRectElement | undefined;
 	protected _inOutFocused: boolean = false;
 	protected _inOutKeyDownEvent = this.inOutKeyDownEvent.bind(this);
+	protected _inOutClickEvent = this.inOutClickEvent.bind(this);
 	public _cruiseFlightLevel: number;
 	public dataManager: FMCDataManager;
 	public refAirport: WayPoint;
@@ -2338,18 +2340,20 @@ export class BaseFMC extends BaseAirliners {
 		this.unfocusInOut();
 
 		if (this.urlConfig.index === 1) {
-			this._inOutRectElement.addEventListener('click', () => {
-				this._inOutFocused = !this._inOutFocused;
-				if (this._inOutFocused) {
-					this.prepareInOutKeyEvents();
-					Coherent.call('FOCUS_INPUT_FIELD');
-					this._inOutRectElement.setAttribute('style', 'fill: red; fill-opacity: 0.2;');
-				} else {
-					this._inOutRectElement.setAttribute('style', 'fill: black;');
-					this.unfocusInOut();
-				}
-			});
+			if(HDSDK.HeavyDivision.Configuration.isFocusableScratchpadEnabled()){
+				this.enableFocusableScratchpad();
+			}
 		}
+	}
+
+	public enableFocusableScratchpad() {
+		this.unfocusInOut(true);
+		this._inOutRectElement.addEventListener('click', this._inOutClickEvent);
+	}
+
+	public disableFocusableScratchpad() {
+		this.unfocusInOut(true);
+		this._inOutRectElement.removeEventListener('click', this._inOutClickEvent);
 	}
 
 	protected prepareInOutKeyEvents() {
@@ -2357,7 +2361,7 @@ export class BaseFMC extends BaseAirliners {
 	}
 
 	protected unfocusInOut(force: boolean = false) {
-		if(force){
+		if (force) {
 			this._inOutRectElement.setAttribute('style', 'fill: black;');
 			this._inOutFocused = false;
 		}
@@ -2365,8 +2369,20 @@ export class BaseFMC extends BaseAirliners {
 		Coherent.call('UNFOCUS_INPUT_FIELD');
 	}
 
+	protected inOutClickEvent() {
+		this._inOutFocused = !this._inOutFocused;
+		if (this._inOutFocused) {
+			this.prepareInOutKeyEvents();
+			Coherent.call('FOCUS_INPUT_FIELD');
+			this._inOutRectElement.setAttribute('style', 'fill: red; fill-opacity: 0.2;');
+		} else {
+			this._inOutRectElement.setAttribute('style', 'fill: black;');
+			this.unfocusInOut();
+		}
+	}
+
 	protected inOutKeyDownEvent(event) {
-		if(event.keyCode === 17){
+		if (event.keyCode === 17) {
 			this.unfocusInOut(true);
 		}
 
@@ -2376,7 +2392,7 @@ export class BaseFMC extends BaseAirliners {
 		let keyHandler: Function | undefined;
 		const getKeyEvent = (event): Function => {
 			const getKeyToExecute = () => {
-				let key: { handleAsControlKey: boolean, code: number } = { handleAsControlKey: false, code: undefined }
+				let key: { handleAsControlKey: boolean, code: number } = {handleAsControlKey: false, code: undefined};
 				/**
 				 * Control Keys
 				 * 46 - DELETE (DELETE)
@@ -2387,9 +2403,9 @@ export class BaseFMC extends BaseAirliners {
 				 */
 				key.handleAsControlKey = [8, 32, 46, 111, 191].findIndex((value) => {
 					return value === event.keyCode;
-				}) !== -1
+				}) !== -1;
 
-				if(key.handleAsControlKey){
+				if (key.handleAsControlKey) {
 					key.code = event.keyCode;
 					return key;
 				}
@@ -2403,7 +2419,7 @@ export class BaseFMC extends BaseAirliners {
 					/**
 					 * Convert DECIMAL POINT to PERIOD
 					 */
-					if(event.keyCode === 110){
+					if (event.keyCode === 110) {
 						key.code = 46;
 					}
 
@@ -2425,9 +2441,9 @@ export class BaseFMC extends BaseAirliners {
 				const isNumber = event.keyCode >= 48 && event.keyCode <= 57;
 				const isPeriod = event.keyCode === 190;
 
-				if(isCapitalAlphabet || isSmallAlphabet || isNumber){
+				if (isCapitalAlphabet || isSmallAlphabet || isNumber) {
 					key.code = event.keyCode;
-				} else if (isPeriod){
+				} else if (isPeriod) {
 					key.code = 46;
 				}
 
@@ -2442,7 +2458,7 @@ export class BaseFMC extends BaseAirliners {
 				return undefined;
 			}
 
-			if(key.handleAsControlKey){
+			if (key.handleAsControlKey) {
 				const controlKeys: {
 					keyCode: number
 					handler: Function
