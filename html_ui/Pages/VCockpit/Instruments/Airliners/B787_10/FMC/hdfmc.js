@@ -969,7 +969,7 @@
 
     /*
      * base64-arraybuffer 1.0.1 <https://github.com/niklasvh/base64-arraybuffer>
-     * Copyright (c) 2022 Niklas von Hertzen <https://hertzen.com>
+     * Copyright (c) 2021 Niklas von Hertzen <https://hertzen.com>
      * Released under MIT License
      */
     var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
@@ -2531,7 +2531,7 @@
         else if (typeof data === "object" && !(data instanceof Date)) {
             const newData = {};
             for (const key in data) {
-                if (Object.prototype.hasOwnProperty.call(data, key)) {
+                if (data.hasOwnProperty(key)) {
                     newData[key] = _deconstructPacket(data[key], buffers);
                 }
             }
@@ -2565,7 +2565,7 @@
         }
         else if (typeof data === "object") {
             for (const key in data) {
-                if (Object.prototype.hasOwnProperty.call(data, key)) {
+                if (data.hasOwnProperty(key)) {
                     data[key] = _reconstructPacket(data[key], buffers);
                 }
             }
@@ -2967,10 +2967,8 @@
             packet.options.compress = this.flags.compress !== false;
             // event ack callback
             if ("function" === typeof args[args.length - 1]) {
-                const id = this.ids++;
-                const ack = args.pop();
-                this._registerAckCallback(id, ack);
-                packet.id = id;
+                this.acks[this.ids] = args.pop();
+                packet.id = this.ids++;
             }
             const isTransportWritable = this.io.engine &&
                 this.io.engine.transport &&
@@ -2985,31 +2983,6 @@
             }
             this.flags = {};
             return this;
-        }
-        /**
-         * @private
-         */
-        _registerAckCallback(id, ack) {
-            const timeout = this.flags.timeout;
-            if (timeout === undefined) {
-                this.acks[id] = ack;
-                return;
-            }
-            // @ts-ignore
-            const timer = this.io.setTimeoutFn(() => {
-                delete this.acks[id];
-                for (let i = 0; i < this.sendBuffer.length; i++) {
-                    if (this.sendBuffer[i].id === id) {
-                        this.sendBuffer.splice(i, 1);
-                    }
-                }
-                ack.call(this, new Error("operation has timed out"));
-            }, timeout);
-            this.acks[id] = (...args) => {
-                // @ts-ignore
-                this.io.clearTimeoutFn(timer);
-                ack.apply(this, [null, ...args]);
-            };
         }
         /**
          * Sends a packet.
@@ -3095,7 +3068,6 @@
                     this.ondisconnect();
                     break;
                 case PacketType.CONNECT_ERROR:
-                    this.destroy();
                     const err = new Error(packet.data.message);
                     // @ts-ignore
                     err.data = packet.data.data;
@@ -3257,25 +3229,6 @@
          */
         get volatile() {
             this.flags.volatile = true;
-            return this;
-        }
-        /**
-         * Sets a modifier for a subsequent event emission that the callback will be called with an error when the
-         * given number of milliseconds have elapsed without an acknowledgement from the server:
-         *
-         * ```
-         * socket.timeout(5000).emit("my-event", (err) => {
-         *   if (err) {
-         *     // the server did not acknowledge the event in the given delay
-         *   }
-         * });
-         * ```
-         *
-         * @returns self
-         * @public
-         */
-        timeout(timeout) {
-            this.flags.timeout = timeout;
             return this;
         }
         /**
@@ -3684,7 +3637,13 @@
         _close() {
             this.skipReconnect = true;
             this._reconnecting = false;
-            this.onclose("forced close");
+            if ("opening" === this._readyState) {
+                // `onclose` will not fire because
+                // an open event never happened
+                this.cleanup();
+            }
+            this.backoff.reset();
+            this._readyState = "closed";
             if (this.engine)
                 this.engine.close();
         }
@@ -3899,6 +3858,7 @@
             this._pageCountElement = null;
             this._labelElements = [];
             this._lineElements = [];
+            this._inOutFocused = false;
             this.refreshPageCallback = undefined;
             this.pageUpdate = undefined;
         }
@@ -4056,7 +4016,7 @@
         }
         getInOut() {
             if (this._inOut === undefined) {
-                this._inOut = this._inOutElement.value;
+                this._inOut = this._inOutElement.innerText;
             }
             return this._inOut;
         }
@@ -4069,7 +4029,7 @@
          */
         setInOut(content) {
             this._inOut = content;
-            this._inOutElement.value = this._inOut;
+            this._inOutElement.innerText = this._inOut;
             //diffAndSetText(this._inOutElement, this._inOut);
             if (content === BaseFMC.clrValue) {
                 this._inOutElement.style.paddingLeft = '8%';
@@ -5833,7 +5793,6 @@
                     this.getChildById('line-' + i + '-center')
                 ];
             }
-            this._inOutElement = this.querySelector('#inOut-line-html');
             this.onLetterInput = (l) => {
                 if (this.inOut === BaseFMC.clrValue) {
                     this.inOut = '';
@@ -5954,6 +5913,20 @@
                 });
             });
             this.recalculateTHRRedAccTransAlt();
+            this._inOutElement = this.querySelector('#inOut-line-html');
+            this._inOutRectElement = this.querySelector('#inOut-line');
+            /*
+                    this._inOutRectElement.addEventListener('click', () => {
+                        this._inOutFocused = !this._inOutFocused;
+                        if(this._inOutFocused){
+                            this._inOutRectElement.setAttribute('style', 'fill: red; fill-opacity: 0.2;')
+                        } else {
+                            this._inOutRectElement.setAttribute('style', 'fill: black;')
+                        }
+                        console.log('click')
+                    });
+            */
+            //Coherent.call('UNFOCUS_INPUT_FIELD');
         }
         onApproachUpdated() {
             if (this._approachInitialized) {
@@ -12567,7 +12540,6 @@
                         if (Simplane.getIsGrounded()) {
                             if (this._fmc.currentFlightPhase <= FlightPhase.FLIGHT_PHASE_CLIMB) {
                                 this._fmc.clearUserInput();
-                                console.log('1');
                                 this.setOrigin(value.padEnd(4));
                             }
                             else {
@@ -12830,19 +12802,14 @@
             });
         }
         setOrigin(icao) {
-            console.log('2');
             if (!SimVar.GetSimVarValue('SIM ON GROUND', 'boolean')) {
                 this._fmc.showErrorMessage('NOT ON GROUND');
                 return;
             }
-            console.log('3');
             this._fmc.tmpDestination = undefined;
             this._fmc.flightPlanManager.createNewFlightPlan(() => {
-                console.log('4');
                 this._fmc.updateRouteOrigin(icao, (result) => {
-                    console.log('5');
                     if (result) {
-                        console.log('6');
                         this._fmc.fpHasChanged = true;
                         SimVar.SetSimVarValue('L:WT_CJ4_INHIBIT_SEQUENCE', 'number', 0);
                         //this._fmc.updateVSpeeds();
@@ -18015,16 +17982,12 @@
          * @param callback
          */
         updateRouteOrigin(newRouteOrigin, callback = EmptyCallback.Boolean) {
-            console.log('10');
             this.dataManager.GetAirportByIdent(newRouteOrigin).then(airport => {
-                console.log('11');
                 if (!airport) {
                     this.showErrorMessage('NOT IN DATABASE');
                     return callback(false);
                 }
-                console.log('12');
                 this.flightPlanManager.setOrigin(airport.icao, () => {
-                    console.log('13');
                     this.tmpOrigin = airport.ident;
                     callback(true);
                 });

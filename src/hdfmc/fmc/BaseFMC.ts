@@ -115,6 +115,8 @@ export class BaseFMC extends BaseAirliners {
 	protected _labelElements: HTMLElement[][] = [];
 	protected _lineElements: HTMLElement[][] = [];
 	protected _inOutElement: HTMLInputElement | undefined;
+	protected _inOutRectElement: SVGRectElement | undefined;
+	protected _inOutFocused: boolean = false;
 	public _cruiseFlightLevel: number;
 	public dataManager: FMCDataManager;
 	public refAirport: WayPoint;
@@ -327,7 +329,7 @@ export class BaseFMC extends BaseAirliners {
 
 	getInOut(): string {
 		if (this._inOut === undefined) {
-			this._inOut = this._inOutElement.value;
+			this._inOut = this._inOutElement.innerText;
 		}
 		return this._inOut;
 	}
@@ -343,7 +345,7 @@ export class BaseFMC extends BaseAirliners {
 	setInOut(content: string) {
 		this._inOut = content;
 
-		this._inOutElement.value = this._inOut;
+		this._inOutElement.innerText = this._inOut;
 		//diffAndSetText(this._inOutElement, this._inOut);
 		if (content === BaseFMC.clrValue) {
 			this._inOutElement.style.paddingLeft = '8%';
@@ -2215,7 +2217,6 @@ export class BaseFMC extends BaseAirliners {
 				this.getChildById('line-' + i + '-center')
 			];
 		}
-		this._inOutElement = this.querySelector('#inOut-line-html');
 
 		this.onLetterInput = (l) => {
 			if (this.inOut === BaseFMC.clrValue) {
@@ -2330,6 +2331,22 @@ export class BaseFMC extends BaseAirliners {
 			});
 		});
 		this.recalculateTHRRedAccTransAlt();
+
+		this._inOutElement = this.querySelector('#inOut-line-html');
+		this._inOutRectElement = this.querySelector('#inOut-line');
+/*
+		this._inOutRectElement.addEventListener('click', () => {
+			this._inOutFocused = !this._inOutFocused;
+			if(this._inOutFocused){
+				this._inOutRectElement.setAttribute('style', 'fill: red; fill-opacity: 0.2;')
+			} else {
+				this._inOutRectElement.setAttribute('style', 'fill: black;')
+			}
+			console.log('click')
+		});
+*/
+
+		//Coherent.call('UNFOCUS_INPUT_FIELD');
 	}
 
 	onApproachUpdated(): void {
