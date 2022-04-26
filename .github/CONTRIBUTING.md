@@ -1,5 +1,4 @@
 # Contributing to B78X Heavy
-<img src="https://media.discordapp.net/attachments/927293618295824415/966187066058764338/hdgithub_banner.png">
 
 # What can be worked on/altered? 
 
