@@ -23,6 +23,7 @@
     "http": "^0.0.1-security",
     "merge2": "^1.4.1",
     "path": "^0.12.7",
+    "rollup": "^2.70.2",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-stream": "^1.24.1",
     "socket.io": "^4.3.2",

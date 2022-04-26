@@ -26,6 +26,7 @@ export class B787_10_FMC_HeavyConfigurationPage {
 
 		let simBriefCell = (this.isSimBriefFilled() ? '[color=green]FILLED[/color]>' : '[color=red]NOT FILLED[/color]>');
 		let unitsCell = (HDSDK.HeavyDivision.Configuration.useImperial() ? '[color=green]IMPERIAL[/color]←→[size=small]METRIC[/size]>' : '[size=small]IMPERIAL[/size]←→[color=green]METRIC[/color]>');
+		let focusableScratchpadCell = (HDSDK.HeavyDivision.Configuration.isFocusableScratchpadEnabled() ? '[color=green]ENABLED[/color]←→[size=small]DISABLED[/size]>' : '[size=small]ENABLED[/size]←→[color=green]DISABLED[/color]>');
 
 		fmc._renderer.renderTitle('HEAVY CONFIGURATION');
 		fmc._renderer.render([
@@ -35,8 +36,8 @@ export class B787_10_FMC_HeavyConfigurationPage {
 			['', fpSyncCell],
 			['', 'UNITS'],
 			['', unitsCell],
-			[''],
-			[''],
+			['', 'FOCUSABLE SCRATCHPAD'],
+			['', focusableScratchpadCell],
 			[''],
 			[''],
 			[''],
@@ -81,6 +82,17 @@ export class B787_10_FMC_HeavyConfigurationPage {
 				HDSDK.HeavyDataStorage.set('USE_IMPERIAL', '0');
 			} else {
 				HDSDK.HeavyDataStorage.set('USE_IMPERIAL', '1');
+			}
+			B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
+		};
+
+		fmc._renderer.rsk(4).event = () => {
+			if (HDSDK.HeavyDivision.Configuration.isFocusableScratchpadEnabled()) {
+				HDSDK.HeavyDataStorage.set('IS_FOCUSABLE_SCRATCHPAD_ENABLED', '0');
+				fmc.disableFocusableScratchpad();
+			} else {
+				fmc.enableFocusableScratchpad();
+				HDSDK.HeavyDataStorage.set('IS_FOCUSABLE_SCRATCHPAD_ENABLED', '1');
 			}
 			B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
 		};
