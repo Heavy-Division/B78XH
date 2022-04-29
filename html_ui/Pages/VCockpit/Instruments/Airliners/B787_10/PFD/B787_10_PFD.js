@@ -307,52 +307,74 @@ class B787_10_PFD_Altimeter extends NavSystemElement {
 	constructor() {
 		super();
 		this.isMTRSActive = false;
-		this.minimumReference = 200;
-		SimVar.SetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number', this.minimumReference);
+		this.lastTimeKnobUsed = 0;
+		this.lastTimeKnobUsedHits = 0;
+		this.resetState = false;
 	}
-
 	init(root) {
-		this.altimeter = this.gps.getChildById('Altimeter');
+		this.altimeter = this.gps.getChildById("Altimeter");
 		this.altimeter.aircraft = Aircraft.AS01B;
 		this.altimeter.gps = this.gps;
 	}
-
 	onEnter() {
 	}
-
 	onUpdate(_deltaTime) {
 		this.altimeter.update(_deltaTime);
 	}
-
 	onExit() {
 	}
-
 	onEvent(_event) {
+		let increment = 1;
+		if (Date.now() - this.lastTimeKnobUsed < 300) {
+			if (this.lastTimeKnobUsedHits > 3) {
+				increment = 10;
+			}
+			this.lastTimeKnobUsedHits++;
+		}
+		else {
+			increment = 1;
+			this.lastTimeKnobUsedHits = 0;
+		}
+		this.lastTimeKnobUsed = Date.now();
+		const decisionHeightMode = Simplane.getMinimumReferenceMode();
 		switch (_event) {
-			case 'BARO_INC':
-				SimVar.SetSimVarValue('K:KOHLSMAN_INC', 'number', 1);
+			case "BARO_INC":
+				SimVar.SetSimVarValue("K:KOHLSMAN_INC", "number", 1);
 				break;
-			case 'BARO_DEC':
-				SimVar.SetSimVarValue('K:KOHLSMAN_DEC', 'number', 1);
+			case "BARO_DEC":
+				SimVar.SetSimVarValue("K:KOHLSMAN_DEC", "number", 1);
 				break;
-			case 'MTRS':
+			case "MTRS":
 				this.isMTRSActive = !this.isMTRSActive;
 				this.altimeter.showMTRS(this.isMTRSActive);
 				break;
-			case 'Mins_INC':
-				this.minimumReference += 10;
-				this.altimeter.minimumReferenceValue = this.minimumReference;
-				SimVar.SetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number', this.altimeter.minimumReferenceValue);
+			case "Mins_INC":
+				if (decisionHeightMode === MinimumReferenceMode.BARO) {
+					SimVar.SetSimVarValue("K:INCREASE_DECISION_ALTITUDE_MSL", "number", increment);
+					this.altimeter.setMinimumBaroVisibility(true);
+				}
+				else {
+					SimVar.SetSimVarValue("K:INCREASE_DECISION_HEIGHT", "number", increment);
+				}
 				break;
-			case 'Mins_DEC':
-				this.minimumReference -= 10;
-				this.altimeter.minimumReferenceValue = this.minimumReference;
-				SimVar.SetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number', this.altimeter.minimumReferenceValue);
+			case "Mins_DEC":
+				if (decisionHeightMode === MinimumReferenceMode.BARO) {
+					SimVar.SetSimVarValue("K:DECREASE_DECISION_ALTITUDE_MSL", "number", increment);
+					this.altimeter.setMinimumBaroVisibility(true);
+				}
+				else {
+					SimVar.SetSimVarValue("K:DECREASE_DECISION_HEIGHT", "number", increment);
+				}
 				break;
-			case 'Mins_Press':
-				this.minimumReference = 200;
-				this.altimeter.minimumReferenceValue = this.minimumReference;
-				SimVar.SetSimVarValue('L:B78XH_MINIMUM_REFERENCE', 'Number', this.altimeter.minimumReferenceValue);
+			case "Mins_Press":
+				if (decisionHeightMode === MinimumReferenceMode.BARO) {
+					SimVar.SetSimVarValue("K:SET_DECISION_ALTITUDE_MSL", "number", this.altimeter.minimumResetValue);
+					this.altimeter.setMinimumBaroVisibility(this.resetState);
+					this.resetState = !this.resetState;
+				}
+				else {
+					SimVar.SetSimVarValue("K:SET_DECISION_HEIGHT", "number", this.altimeter.minimumResetValue);
+				}
 				break;
 		}
 	}
