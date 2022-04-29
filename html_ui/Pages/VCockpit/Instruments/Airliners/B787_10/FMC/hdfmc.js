@@ -10356,8 +10356,11 @@
     class RemoveStarParserMiddleware {
         apply(data) {
             const fixes = data.navlog.fix;
+            if (fixes.length === 0) {
+                return data;
+            }
             const destination = data.destination.icao_code;
-            const lastWaypointIndex = (fixes[fixes.length - 1].ident === destination ? fixes.length - 2 : fixes.length - 1);
+            const lastWaypointIndex = (fixes[fixes.length - 1] && fixes[fixes.length - 1].ident === destination ? fixes.length - 2 : fixes.length - 1);
             const isLastWaypointInStar = parseInt(String(fixes[lastWaypointIndex].is_sid_star));
             const star = fixes[lastWaypointIndex].via_airway !== 'DCT' ? (isLastWaypointInStar !== 0 ? fixes[lastWaypointIndex].via_airway : 'DCT') : 'DCT';
             if (star === 'DCT') {
