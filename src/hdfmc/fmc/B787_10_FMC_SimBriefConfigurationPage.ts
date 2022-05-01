@@ -14,11 +14,24 @@ export class B787_10_FMC_SimBriefConfigurationPage {
 		this.fmc.cleanUpPage();
 
 		let simBriefUsernameCell = this.getSimBriefUsernameCell();
+
 		let simBriefUserIdCell = this.getSimBriefUserIdCell();
-		let routeOnlyCell = (HDSDK.HeavyDivision.SimBrief.importRouteOnly() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
-		let withSidCell = (HDSDK.HeavyDivision.SimBrief.importSid() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
-		let withStarCell = (HDSDK.HeavyDivision.SimBrief.importStar() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
-		let importStrategyCell = (HDSDK.HeavyDivision.SimBrief.importStrategy() === 'INGAME' ? '<[color=green]INGAME[/color]←→[size=small]SB[/size]' : '<[size=small]INGAME[/size]←→[color=green]SB[/color]');
+
+		let routeOnlyCell = (HDSDK.HeavyDivision.SimBrief.importRouteOnly() ?
+			`${this.fmc.resizeContent(this.fmc.colorizeContent('<YES', 'green'), 'large')}←→${this.fmc.resizeContent('NO', 'small')}` :
+			`${this.fmc.resizeContent('<YES', 'small')}←→${this.fmc.resizeContent(this.fmc.colorizeContent('NO', 'green'), 'large')}`);
+
+		let withSidCell =  (HDSDK.HeavyDivision.SimBrief.importSid() ?
+			`${this.fmc.resizeContent(this.fmc.colorizeContent('<YES', 'green'), 'large')}←→${this.fmc.resizeContent('NO', 'small')}` :
+			`${this.fmc.resizeContent('<YES', 'small')}←→${this.fmc.resizeContent(this.fmc.colorizeContent('NO', 'green'), 'large')}`);
+
+		let withStarCell = (HDSDK.HeavyDivision.SimBrief.importStar() ?
+			`${this.fmc.resizeContent(this.fmc.colorizeContent('<YES', 'green'), 'large')}←→${this.fmc.resizeContent('NO', 'small')}` :
+			`${this.fmc.resizeContent('<YES', 'small')}←→${this.fmc.resizeContent(this.fmc.colorizeContent('NO', 'green'), 'large')}`);
+
+		let importStrategyCell = (HDSDK.HeavyDivision.SimBrief.importStrategy() === 'INGAME' ?
+			`${this.fmc.resizeContent(this.fmc.colorizeContent('<INGAME', 'green'), 'large')}←→${this.fmc.resizeContent('SB', 'small')}` :
+			`${this.fmc.resizeContent('<INGAME', 'small')}←→${this.fmc.resizeContent(this.fmc.colorizeContent('SB', 'green'), 'large')}`);
 
 		this.fmc._renderer.renderTitle('SIMBRIEF CONFIGURATION');
 		this.fmc._renderer.render([
