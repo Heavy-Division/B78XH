@@ -18,8 +18,7 @@ Give a description about what you have added/changed, what it does, and what the
 
 ## Test Results
 
-Attach a screenshot of your command from your test bot. This will help us speed up the process of reviewing the PR. (If you update your command, while the PR is open, update the screenshot).
-
+Attach a screenshot/video of your command from your test. This will help us speed up the process of reviewing the PR.
 ## Discord Username
 
 Add your discord username, including the number to the bottom of the PR message. This will help us get in contact if we need to. 
