@@ -22,11 +22,7 @@
 
 # Source material
 
-<!--(If adding a feature or element found in the aircraft, please cite the documentation or source you found it from. -->
-
-<!--(Sources from P3D, xplane, and fsx are not valid unless the documentation is unobtainable. If you need help finding documentation. -->
-
-<!--(reach out to one of our team members who can assist you-->
+<!-- If adding a feature or element found in the aircraft, please cite the documentation or source you found it from. Sources from P3D, xplane, and fsx are not valid unless the documentation is otherwise unobtainable. If you need help finding documentation, reach out to one of our team members who can assist you. -->
 
 
 # Testing Instructions 
