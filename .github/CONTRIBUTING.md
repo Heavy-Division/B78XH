@@ -69,7 +69,7 @@ and install the following:
 
 B78XH/html_ui/Pages/VCockpit
 
-11. Remove/delete the current version of the B78XH in your community folder if you haven't already and use a [symbolic link program](https://schinagl.priv.at/nt/hardlinkshellext/HardLinkShellExt_X64.exe) to link the B78XH folder you are developing do your community folder. In the IDE terminal, run `gulp buildDEV`. Once the manifest is created enter the src directory by typing `cd src` then build the aircraft by typing `gulp monitor`. Once you're done you can open the sim You're all set to begin developing the 787-10 Heavy!
+11. Remove/delete the current version of the B78XH in your community folder if you haven't already and use a [symbolic link program](https://schinagl.priv.at/nt/hardlinkshellext/HardLinkShellExt_X64.exe) to link the B78XH folder you are developing to your community folder. In the IDE terminal, run `gulp buildDEV`. Once the manifest is created, enter the src directory by typing `cd src` then build the aircraft by typing `gulp monitor`. Once you're done you can open the sim, and you're all set to begin developing the 787-10 Heavy!
 
 # Pull Requests 
 We welcome pull requests with fixes and improvements to the project.
