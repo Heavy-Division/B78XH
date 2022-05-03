@@ -2302,6 +2302,9 @@
             static isNormalFlightPlanSynchronizationActive() {
                 return (Configuration.activeFlightPlanSynchronizationStrategy() == 3);
             }
+            static isFocusableScratchpadEnabled() {
+                return (!!parseInt(HeavyDataStorage.get('IS_FOCUSABLE_SCRATCHPAD_ENABLED', 0)));
+            }
             static useImperial() {
                 return (!!parseInt(HeavyDataStorage.get('USE_IMPERIAL', 1)));
             }
