@@ -33,7 +33,7 @@ and install the following:
 2. After installing an IDE you will need to install [node.js](https://nodejs.org/en/) and [git](https://git-scm.com/downloads)
 
 3. Open the Command Prompt (Terminal for Mac users) and run the following two separately: 
-```npm install -g npm``` , ```npm install -g gulp-cli```
+`npm install -g npm`, `npm install -g gulp-cli`
 
 >Q: "What is Gulp and why do I need it?"<br><br>
 >A: The B78XH isn't one Javascript application but rather a collection of applications working in sync.<br>
@@ -52,15 +52,15 @@ and install the following:
 
 
 5. Open the terminal in your IDE and type the following:<br>
- ```git clone <your repo URL>```
+ `git clone <your repo URL>`
 
 
 6. In the terminal, create a new branch based off the ***main*** with a clear name of what you are changing. (e.g. adding sound files for engines):<br>
-```git branch engine-custom-sounds main```
+`git branch engine-custom-sounds main`
 
 
 7. Run the following in the terminal:<br>
-```npm i```
+`npm i`
 >Installs all of the required packages to run the mod
 
 8. If working on displays such as the FMC you will need to download the [msfs web developer kit](https://github.com/dga711/msfs-webui-devkit) and extract the zipfile to your community folder.<br><br>
@@ -69,7 +69,7 @@ and install the following:
 
 B78XH/html_ui/Pages/VCockpit
 
-10. You're all set to begin developing the 787-10 Heavy!
+11. Remove/delete the current version of the B78XH in your community folder if you haven't already and use a [symbolic link program](https://schinagl.priv.at/nt/hardlinkshellext/HardLinkShellExt_X64.exe) to link the B78XH folder you are developing do your community folder. In the IDE terminal, run `gulp buildDEV`. Once the manifest is created enter the src directory by typing `cd src` then build the aircraft by typing `gulp monitor`. Once you're done you can open the sim You're all set to begin developing the 787-10 Heavy!
 
 # Pull Requests 
 We welcome pull requests with fixes and improvements to the project.
