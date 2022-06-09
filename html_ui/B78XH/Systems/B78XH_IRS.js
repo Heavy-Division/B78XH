@@ -236,7 +236,7 @@ class B78XH_IRS {
 						timeToAlign = 17;
 						timeSec = Math.floor(timeToAlign * 60);
 					} else if (planeLatitudeAbsolute > 78) {
-						timeToAlign = 100;
+						timeToAlign = 17;
 						timeSec = Math.floor(timeToAlign * 60);
 					}
 					minimal = timeSec;
