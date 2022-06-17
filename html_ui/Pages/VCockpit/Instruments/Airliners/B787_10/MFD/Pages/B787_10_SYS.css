@@ -4,7 +4,7 @@
     --eicasBlack: black;
     --eicasDarkGrey: #323232;
     --eicasLightGrey: #969696;
-    --eicasBlue: #009696;
+    --eicasBlue: #27fdfa;
     --eicasGreen: green;
     --eicasOrange: #db7200;
     --eicasRed: red;
@@ -62,7 +62,7 @@ html body {
     --eicasBlack: black;
     --eicasDarkGrey: rgb(50, 50, 50);
     --eicasLightGrey: rgb(150, 150, 150);
-    --eicasBlue: rgb(0, 150, 150);
+    --eicasBlue: rgb(39, 253, 250);
     --eicasGreen: green;
     --eicasOrange: rgb(219, 114, 0);
     --eicasRed: red;
@@ -712,8 +712,68 @@ b787-10-sys-element #Pages #FCTL_Page text.box-label {
  */
 
 b787-10-sys-element #Pages #ELEC_Page text.titles {
-    font-size: 17px;
+    font-size: 32px;
     fill: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #ELEC_Page text.subtitles {
+    font-size: 32px;
+    fill: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #ELEC_Page path.main-boxes {
+    stroke-width: 4px;    
+    stroke: var(--eicasBlue);
+}
+
+b787-10-sys-element #Pages #ELEC_Page rect.pwr-box-inactive {
+    stroke-width: 3px;
+    stroke: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #ELEC_Page rect.pwr-box-active {
+        stroke-width: 6px;
+        stroke: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #ELEC_Page path.pwr-box-line {
+    stroke-width: 8px;
+    stroke: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #ELEC_Page rect.drive-box-active {
+    stroke-width: 8px;
+    stroke: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #ELEC_Page path.pwr-line-inactive {
+    stroke-width: 3px;
+    stroke: var(--eicasWhite);
+}
+
+b787-10-sys-element #Pages #ELEC_Page path.pwr-line-active {
+    stroke-width: 8px;
+    stroke: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #ELEC_Page path.pwr-out-line-active {
+    stroke-width: 8px;
+    stroke: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #ELEC_Page text.start-titles {
+    font-size: 24px;
+    fill: var(--eicasGreen);
+}
+
+b787-10-sys-element #Pages #ELEC_Page path.bus-inactive {
+    stroke-width: 3px;
+    stroke: var(--eicasOrange);
+}
+
+b787-10-sys-element #Pages #ELEC_Page path.bus-active {
+    stroke-width: 6px;
+    stroke: var(--eicasGreen)
 }
 
 /**
