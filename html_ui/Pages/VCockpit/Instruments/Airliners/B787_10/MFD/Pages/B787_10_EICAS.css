@@ -96,12 +96,14 @@ b787-10-eicas-element text.vlabel {
 
 b787-10-eicas-element text.valueWhite {
     fill: var(--eicasWhite);
+    font-size: 32px;
     text-anchor: end;
     letter-spacing: -4px;
 }
 
 b787-10-eicas-element text.valueGreen {
     fill: var(--eicasGreen);
+    font-size: 42px;
     text-anchor: end;
     letter-spacing: -4px;
 }
