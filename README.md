@@ -10,6 +10,14 @@ B78XH is an open source and free modification of default Boeing 787-10 in Micros
 
 WO release is same as normal release but the release does not contain managers. (Payload and SimRate manager) 
 
+## Installation
+
+To install, download the [latest release](https://github.com/Heavy-Division/B78XH/releases) zip and extract it to your Community folder.
+
+## Development build
+
+The zip containing the development build can be downloaded here: https://github.com/Heavy-Division/B78XH/archive/refs/heads/main.zip
+
 ## Features Overview
 
 * ### FMC
