@@ -1,16 +1,17 @@
-name: NodeJS with Gulp
+name: NodeJS & Gulp Artifact build 
 
 on:
-  pull_request:
-    branches: [ "main" ]
-
+  pull_request_target:
+    types:
+      - opened
+      - ready_for_review
 jobs:
   build:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x]
+        node-version: [16.x]
     
     steps:
     - uses: actions/checkout@v3
