@@ -1,8 +1,6 @@
 name: NodeJS with Gulp
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
