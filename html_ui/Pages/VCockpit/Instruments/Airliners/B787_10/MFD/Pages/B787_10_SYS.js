@@ -278,16 +278,8 @@ class B787_10_SYS_Page_STAT extends B787_10_SYS_Page {
 }
 
 class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
-
 	init() {
-
 		if (this.pageRoot != null) {
-<<<<<<< Updated upstream
-			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#text-value-bat-volt'), this.getBatVolt.bind(this), 1));
-			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#text-value-bat-amps'), this.getBatAmps.bind(this), 0));
-			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#text-value-apu-volt'), this.getBatVolt.bind(this), 1));
-			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#text-value-apu-amps'), this.getBatAmps.bind(this), 0));
-=======
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#dynamic-bat-volt'), this.getBatVolt.bind(this), 1));
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#dynamic-bat-amps'), this.getBatAmps.bind(this), 0));
 			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#dynamic-apu-volt'), this.getBatVolt.bind(this), 1));
@@ -329,7 +321,7 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.l1EngPwrLine = this.pageRoot.querySelector('#l1-pwr-line');
 			this.l2EngPwrLine = this.pageRoot.querySelector('#l2-pwr-line');
 			this.rEngPwrL = this.pageRoot.querySelector('#r-eng-pwr-box-l');
-			this.rEngPwrR = this.pageRoot.querySelector('#r-eng-gen-box-r');
+			this.rEngPwrR = this.pageRoot.querySelector('#r-eng-pwr-box-r');
 			this.rEngStarterArrowL = this.pageRoot.querySelector('#r-eng-starter-arrow-l');
 			this.rEngStarterArrowR = this.pageRoot.querySelector('#r-eng-starter-arrow-r');
 			this.rEngPwrActiveL = this.pageRoot.querySelector('#r-eng-pwr-active-l');
@@ -347,24 +339,13 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.batDischarging = this.pageRoot.querySelector('#bat-status-disch');
 			this.apuCharging = this.pageRoot.querySelector('#apu-status-chg');
 			this.apuDischarging = this.pageRoot.querySelector('#apu-status-disch');
->>>>>>> Stashed changes
-		}
+        }
 	}
+
 	updateChild(_deltaTime) {
 		if (this.pageRoot != null) {
 			this.getBatVolt();
 			this.getBatAmps();
-<<<<<<< Updated upstream
-			this.updateAftExtPwrAvail();
-			this.updateFwdExtPwrAvailL();
-			this.updateFwdExtPwrAvailR();
-			this.updateFwdExtPwrLStatus();
-			this.updateFwdExtPwrRStatus();
-			this.updateAftExtPwrStatus();
-			this.updateApuGenStatus();
-			this.updateLengGenStatus();
-			this.updateRengGenStatus();
-=======
 			this.updateAftExtPwr();
 			this.updateLeftFwdExtPwr();
 			this.updateRightFwdExtPwr();
@@ -374,47 +355,11 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.updateApuGenStatus();
 			this.updateLeftEngStatus();
 			this.updateRightEngStatus();
->>>>>>> Stashed changes
-		}
+        }
 	}
 
 	/* Update External Power Availability */
-<<<<<<< Updated upstream
-	updateFwdExtPwrAvailL()	{
-		let FwdExtPwrAvailL = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:1', 'Bool');
-		let avail = 'pwr-box-active';
-		let unavail = 'pwr-box-inactive';
-		let FwdBoxL = this.pageRoot.querySelector('#FwdExtBoxL');
-		if (FwdExtPwrAvailL == 1) {
-			FwdBoxL.setAttribute('class', avail);
-		} else {
-			FwdBoxL.setAttribute('class', unavail);
-		}	
-
-	}
-	updateFwdExtPwrAvailR()	{
-		let FwdExtPwrAvailR = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:2', 'Bool');
-		let avail = 'pwr-box-active';
-		let unavail = 'pwr-box-inactive';
-		let FwdBoxR = this.pageRoot.querySelector('#FwdExtBoxR');
-		if (FwdExtPwrAvailR == 1) {
-			FwdBoxR.setAttribute('class', avail);
-		} else {
-			FwdBoxR.setAttribute('class', unavail);
-        }
-
-	}
-	updateAftExtPwrAvail() {
-		let AftExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:3', 'Bool');
-		let avail = 'pwr-box-active';
-		let unavail = 'pwr-box-inactive';
-		let Aftbox = this.pageRoot.querySelector('#AftPwrBox');
-		if (AftExtPwrAvail == 1) {
-			Aftbox.setAttribute('class', avail);
-		} else {
-			Aftbox.setAttribute('class', unavail);
-=======
-	updateLeftFwdExtPwr()	{
+	updateLeftFwdExtPwr() {
 		let leftFwdExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:1', 'Bool');
 		let available = 'pwr-box-active';
 		let unavailable = 'pwr-box-inactive';
@@ -422,19 +367,17 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.fwdExtBoxL.setAttribute('class', available);
 		} else {
 			this.fwdExtBoxL.setAttribute('class', unavailable);
-		}	
-
+		}
 	}
-	updateRightFwdExtPwr()	{
+	updateRightFwdExtPwr() {
 		let rightFwdExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:2', 'Bool');
 		let available = 'pwr-box-active';
-		let unavailable = 'pwr-box-inactive;
+		let unavailable = 'pwr-box-inactive';
 		if (rightFwdExtPwrAvail == 1) {
 			this.fwdExtBoxR.setAttribute('class', available);
 		} else {
 			this.fwdExtBoxR.setAttribute('class', unavailable);
-        }
-
+		}
 	}
 	updateAftExtPwr() {
 		let aftExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:3', 'Bool');
@@ -444,43 +387,10 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.aftExtBox.setAttribute('class', available);
 		} else {
 			this.aftExtBox.setAttribute('class', unavailable);
->>>>>>> Stashed changes
 		}
 	}
 
-	/* Update External Power State*/
-<<<<<<< Updated upstream
-	updateFwdExtPwrLStatus() {
-		let FwdExtPwrLStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:1', 'Bool');
-		let active = '100';
-		let inactive = '0';
-		let lineActive = 'pwr-line-active';
-		let lineInactive = 'pwr-line-inactive';
-		let FwdPwrBoxLineL = this.pageRoot.querySelector('#FwdExtBoxL-active');
-		let FwdPwrLineL = this.pageRoot.querySelector('#Fwd-ext-pwr-line-L');
-		if (FwdExtPwrLStatus == 1) {
-			FwdPwrBoxLineL.setAttribute('opacity', active);
-			FwdPwrLineL.setAttribute('class', lineActive);
-		} else {
-			FwdPwrBoxLineL.setAttribute('opacity', inactive);
-			FwdPwrLineL.setAttribute('class', lineInactive);
-        }
-	}
-	updateFwdExtPwrRStatus() {
-		let FwdExtPwrRStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:2', 'Bool');
-		let active = '100';
-		let inactive = '0';
-		let lineActive = 'pwr-line-active';
-		let lineInactive = 'pwr-line-inactive';
-		let FwdPwrBoxLineR = this.pageRoot.querySelector('#FwdExtBoxR-active');
-		let FwdPwrLineR = this.pageRoot.querySelector('#Fwd-ext-pwr-line-R');
-		if (FwdExtPwrRStatus == 1) {
-			FwdPwrBoxLineR.setAttribute('opacity', active);
-			FwdPwrLineR.setAttribute('class', lineActive);
-		} else {
-			FwdPwrBoxLineR.setAttribute('opacity', inactive);
-			FwdPwrLineR.setAttribute('class', lineInactive);
-=======
+	/* Update External Power Status */
 	updateLeftFwdExtPwrStatus() {
 		let leftFwdExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:1', 'Bool');
 		let active = 100;
@@ -493,7 +403,7 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 		} else {
 			this.fwdExtPwrActiveL.setAttribute('opacity', inactive);
 			this.fwdExtPwrLineL.setAttribute('class', lineInactive);
-        }
+		}
 	}
 	updateRightFwdExtPwrStatus() {
 		let rightFwdExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:2', 'Bool');
@@ -507,25 +417,10 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 		} else {
 			this.fwdExtPwrActiveR.setAttribute('opacity', inactive);
 			this.fwdExtPwrLineR.setAttribute('class', lineInactive);
->>>>>>> Stashed changes
 		}
 	}
 	updateAftExtPwrStatus() {
 		let AftExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:3', 'Bool');
-<<<<<<< Updated upstream
-		let active = '100';
-		let inactive = '0';
-		let lineActive = 'pwr-line-active';
-		let lineInactive = 'pwr-line-inactive';
-		let AftPwrBoxLine = this.pageRoot.querySelector('#AftExtBox-active');
-		let AftPwrLine = this.pageRoot.querySelector('#Aft-ext-pwr-line');
-		if (AftExtPwrStatus == 1) {
-			AftPwrBoxLine.setAttribute('opacity', active);
-			AftPwrLine.setAttribute('class', lineActive);
-		} else {
-			AftPwrBoxLine.setAttribute('opacity', inactive);
-			AftPwrLine.setAttribute('class', lineInactive);
-=======
 		let active = 100;
 		let inactive = 0;
 		let lineActive = 'pwr-line-active';
@@ -536,87 +431,11 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 		} else {
 			this.aftExtPwrActive.setAttribute('opacity', inactive);
 			this.aftExtPwrLine.setAttribute('class', lineInactive);
->>>>>>> Stashed changes
 		}
 	}
 
-	/* Update APU Gen Status*/
+	/* Update APU Gen Status */
 	updateApuGenStatus() {
-<<<<<<< Updated upstream
-		let ApuGenRpm = SimVar.GetSimVarValue('APU PCT RPM', 'percent over 100');
-		let ApuKnob = SimVar.GetSimVarValue('APU SWITCH', 'Bool');
-		let ApuGenSwitchL = SimVar.GetSimVarValue('APU GENERATOR SWITCH:1', 'Bool');
-		let ApuGenSwitchR = SimVar.GetSimVarValue('APU GENERATOR SWITCH:2', 'Bool');
-		let Active = '100';
-		let Inactive = '0';
-		let genStatActive = 'pwr-box-active';
-		let genStatInactive = 'pwr-box-inactive';
-		let pwrlineActive = 'pwr-line-active';
-		let pwrlineInactive = 'pwr-line-inactive';
-		let ApuGenL = this.pageRoot.querySelector('#APU-gen-start-L');
-		let ApuGenR = this.pageRoot.querySelector('#APU-gen-start-R');
-		let ApuStatL = this.pageRoot.querySelector('#APU-gen-stat-L');
-		let ApuStatR = this.pageRoot.querySelector('#APU-gen-stat-R');
-		let ApuPwrStatL = this.pageRoot.querySelector('#APU-pwr-box-line-L');
-		let ApuPwrStatR = this.pageRoot.querySelector('#APU-pwr-box-line-R');
-		let ApuPwrLineL = this.pageRoot.querySelector('#apu-pwr-line-L');
-		let apuPwrLineR = this.pageRoot.querySelector('#apu-pwr-line-R')
-		let apubusoutline = this.pageRoot.querySelector('#apu-bus-pwr-out-line');
-		let apuArrow = this.pageRoot.querySelector('#apu-start-arrow');
-		let apustartlabel1 = this.pageRoot.querySelector('#apu-start-title-1');
-		let apustartlabel2 = this.pageRoot.querySelector('#apu-start-title-2');
-		if (ApuKnob == 1) {
-			if (ApuGenRpm > 0.05 && ApuGenRpm < 0.99) {
-				ApuGenL.setAttribute('opacity', Active);
-				ApuGenR.setAttribute('opacity', Active);
-				apuArrow.setAttribute('opacity', Active);
-				apustartlabel1.setAttribute('opacity', Active);
-				apustartlabel2.setAttribute('opacity', Active);
-				apubusoutline.setAttribute('opacity', Active);
-			} else if (ApuGenRpm == 1) {
-				ApuGenL.setAttribute('opacity', Inactive);
-				ApuGenR.setAttribute('opacity', Inactive);
-				apuArrow.setAttribute('opacity', Inactive);
-				apustartlabel1.setAttribute('opacity', Inactive);
-				apustartlabel2.setAttribute('opacity', Inactive);
-				apubusoutline.setAttribute('opacity', Inactive);
-				ApuStatL.setAttribute('class', genStatActive);
-				ApuStatR.setAttribute('class', genStatActive);
-			}
-		} else {
-			ApuGenL.setAttribute('opacity', Inactive);
-			ApuGenR.setAttribute('opacity', Inactive);
-			apuArrow.setAttribute('opacity', Inactive);
-			apustartlabel1.setAttribute('opacity', Inactive);
-			apustartlabel2.setAttribute('opacity', Inactive);
-			apubusoutline.setAttribute('opacity', Inactive);
-			ApuStatL.setAttribute('class', genStatInactive);
-			ApuStatR.setAttribute('class', genStatInactive);
-		}
-		if (ApuGenRpm == 1) {
-			if (ApuGenSwitchL == 1) {
-				ApuPwrStatL.setAttribute('opacity', Active);
-				ApuPwrLineL.setAttribute('class', pwrlineActive);
-			} else {
-				ApuPwrStatL.setAttribute('opacity', Inactive);
-				ApuPwrLineL.setAttribute('class', pwrlineInactive);
-			}
-		} else {
-			ApuPwrStatL.setAttribute('opacity', Inactive);
-			ApuPwrLineL.setAttribute('class', pwrlineInactive);
-		}
-		if (ApuGenRpm == 1) {
-			if (ApuGenSwitchR == 1) {
-				ApuPwrStatR.setAttribute('opacity', Active);
-				apuPwrLineR.setAttribute('class', pwrlineActive);
-			} else {
-				ApuPwrStatR.setAttribute('opacity', Inactive);
-				apuPwrLineR.setAttribute('class', pwrlineInactive);
-			}
-		} else {
-			ApuPwrStatR.setAttribute('opacity', Inactive);
-			apuPwrLineR.setAttribute('class', pwrlineInactive);
-=======
 		let apuRpm = SimVar.GetSimVarValue('APU PCT RPM', 'percent over 100');
 		let apuKnob = SimVar.GetSimVarValue('APU SWITCH', 'Bool');
 		let apuGenSwitchL = SimVar.GetSimVarValue('APU GENERATOR SWITCH:1', 'Bool');
@@ -634,7 +453,7 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 				this.apuStartArrow.setAttribute('opacity', active);
 				this.apuStartText1.setAttribute('opacity', active);
 				this.apuStartText2.setAttribute('opacity', active);
-				this.apuBusOut.setAttribute('opacity', active);
+				this.apuBusOut.setAttribute('opacity', active);				
 			} else if (apuRpm == 1) {
 				this.apuStarterL.setAttribute('opacity', inactive);
 				this.apuStarterR.setAttribute('opacity', inactive);
@@ -657,128 +476,31 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 		}
 		if (apuRpm == 1) {
 			if (apuGenSwitchL == 1) {
-				this.apuPwrBoxL.setAttribute('opacity', active);
+				this.apuPwrBoxActiveL.setAttribute('opacity', active);
 				this.ApuPwrLineL.setAttribute('class', pwrlineActive);
-			} else {
-				this.apuPwrBoxL.setAttribute('opacity', inactive);
+			} else {				
+				this.apuPwrBoxActiveL.setAttribute('opacity', inactive);
 				this.ApuPwrLineL.setAttribute('class', pwrlineInactive);
 			}
-		} else {
-			this.apuPwrBoxL.setAttribute('opacity', inactive);
+		} else {			
+			this.apuPwrBoxActiveL.setAttribute('opacity', inactive);
 			this.ApuPwrLineL.setAttribute('class', pwrlineInactive);
 		}
 		if (apuRpm == 1) {
-			if (apuGenSwitchR == 1) {
-				this.apuPwrBoxR.setAttribute('opacity', active);
+			if (apuGenSwitchR == 1) {				
+				this.apuPwrBoxActiveR.setAttribute('opacity', active);
 				this.apuPwrLineR.setAttribute('class', pwrlineActive);
 			} else {
-				this.apuPwrBoxR.setAttribute('opacity', inactive);
+				this.apuPwrBoxActiveR.setAttribute('opacity', inactive);
 				this.apuPwrLineR.setAttribute('class', pwrlineInactive);
 			}
-		} else {
-			this.apuPwrBoxR.setAttribute('opacity', inactive);
+		} else {			
+			this.apuPwrBoxActiveR.setAttribute('opacity', inactive);
 			this.apuPwrLineR.setAttribute('class', pwrlineInactive);
->>>>>>> Stashed changes
 		}
-    }
-
-	/* Update L Eng Gen Status */
-<<<<<<< Updated upstream
-	updateLengGenStatus() {
-		let LengGenN2 = SimVar.GetSimVarValue('ENG N2 RPM:1', 'Bool');
-		let LengStarter = SimVar.GetSimVarValue('GENERAL ENG STARTER ACTIVE:1', 'Bool');
-		let LengFuelSwitch = SimVar.GetSimVarValue('FUELSYSTEM VALVE SWITCH:1', 'Bool');
-		let L1engMaster = SimVar.GetSimVarValue('GENERAL ENG MASTER ALTERNATOR:1', 'Bool');
-		let L2engMaster = SimVar.GetSimVarValue('GENERAL ENG MASTER ALTERNATOR:2', 'Bool');
-		let active = '100';
-		let inactive = '0';
-		let genStatActive = 'pwr-box-active';
-		let genStatInactive = 'pwr-box-inactive';
-		let driveStatActive = 'drive-box-active';
-		let LengGenL = this.pageRoot.querySelector('#L-eng-gen-box-L');
-		let LengGenR = this.pageRoot.querySelector('#L-eng-gen-box-R');
-		let LengStartL = this.pageRoot.querySelector('#L-eng-gen-start-L');
-		let LengStartR = this.pageRoot.querySelector('#L-eng-gen-start-R');
-		let LengPwrL = this.pageRoot.querySelector('#L-eng-pwr-box-line-L');
-		let LengPwrR = this.pageRoot.querySelector('#L-eng-pwr-box-line-R');
-		let LengDriveL = this.pageRoot.querySelector('#L-eng-drive-box-L');
-		let LengDriveR = this.pageRoot.querySelector('#L-eng-drive-box-R');
-		let startarrow = this.pageRoot.querySelector('#l-start-arrow');
-		let starttitle = this.pageRoot.querySelector('#l-start-title');
-		let L1outpwrline = this.pageRoot.querySelector('#l1-gen-arrow');
-		let L2outpwrline = this.pageRoot.querySelector('#l2-gen-arrow');
-		let Lbusoutline = this.pageRoot.querySelector('#l-bus-pwr-out-line');
-		let L1pwrline = this.pageRoot.querySelector('#l1-pwr-line');
-		let L2pwrline = this.pageRoot.querySelector('#l2-pwr-line');
-		if (LengStarter == 1) {
-			if (LengGenN2 > 0.008 && LengGenN2 < 0.59699) {
-				LengStartL.setAttribute('opacity', active);
-				LengStartR.setAttribute('opacity', active);
-				startarrow.setAttribute('opacity', active);
-				starttitle.setAttribute('opacity', active);
-				Lbusoutline.setAttribute('opacity', active);
-			} else if (LengGenN2 > 0.597) {
-				LengStartL.setAttribute('opacity', inactive);
-				LengStartR.setAttribute('opacity', inactive);
-				startarrow.setAttribute('opacity', inactive);
-				starttitle.setAttribute('opacity', inactive);
-				Lbusoutline.setAttribute('opacity', inactive);
-			}
-		} else {
-			LengStartL.setAttribute('opacity', inactive);
-			LengStartR.setAttribute('opacity', inactive);
-			startarrow.setAttribute('opacity', inactive);
-			starttitle.setAttribute('opacity', inactive);
-			Lbusoutline.setAttribute('opacity', inactive);
-        }
-		if (LengFuelSwitch == 1) {
-			if (LengGenN2 > 0.596) {
-				LengGenL.setAttribute('class', genStatActive);
-				LengGenR.setAttribute('class', genStatActive);
-				LengDriveL.setAttribute('class', driveStatActive);
-				LengDriveR.setAttribute('class', driveStatActive);
-			} else {
-				LengGenL.setAttribute('class', genStatInactive);
-				LengGenR.setAttribute('class', genStatInactive);
-				LengDriveL.setAttribute('class', genStatInactive);
-				LengDriveR.setAttribute('class', genStatInactive);
-			}
-		} else {
-			LengGenL.setAttribute('class', genStatInactive);
-			LengGenR.setAttribute('class', genStatInactive);
-			LengDriveL.setAttribute('class', genStatInactive);
-			LengDriveR.setAttribute('class', genStatInactive);
-        }
-		if (LengGenN2 > 0.597) {
-			if (L1engMaster == 1) {
-				LengPwrL.setAttribute('opacity', active);
-				L1outpwrline.setAttribute('opacity', active);
-				L1pwrline.setAttribute('opacity', inactive);				
-			} else {
-				LengPwrL.setAttribute('opacity', inactive);
-				L1outpwrline.setAttribute('opacity', inactive);
-				L1pwrline.setAttribute('opacity', active);				
-			}
-		} else {
-			LengPwrL.setAttribute('opacity', inactive);
-			L1outpwrline.setAttribute('opacity', inactive);
-			L1pwrline.setAttribute('opacity', active);
-		}
-		if (LengGenN2 > 0.597) {
-			if (L2engMaster == 1) {
-				LengPwrR.setAttribute('opacity', active);
-				L2outpwrline.setAttribute('opacity', active);
-				L2pwrline.setAttribute('opacity', inactive);
-			} else {
-				LengPwrR.setAttribute('opacity', inactive);
-				L2outpwrline.setAttribute('opacity', inactive)
-				L2pwrline.setAttribute('opacity', active);
-			}
-		} else {
-			LengPwrR.setAttribute('opacity', inactive);
-			L2outpwrline.setAttribute('opacity', inactive)
-			L2pwrline.setAttribute('opacity', active);
-=======
+	}
+	
+	/* Update Left Engine Status */
 	updateLeftEngStatus() {
 		let lEngGenN2 = SimVar.GetSimVarValue('ENG N2 RPM:1', 'Bool');
 		let lEngStarter = SimVar.GetSimVarValue('GENERAL ENG STARTER ACTIVE:1', 'Bool');
@@ -791,7 +513,7 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 		let genInactive = 'pwr-box-inactive';
 		let driveActive = 'drive-box-active';
 		if (lEngStarter == 1) {
-			if (lEngGenN2 > 0.008 && LengGenN2 < 0.59699) {
+			if (lEngGenN2 > 0.008 && lEngGenN2 < 0.59699) {
 				this.lEngStarterArrowL.setAttribute('opacity', active);
 				this.lEngStarterArrowR.setAttribute('opacity', active);
 				this.lEngPowerStartArrow.setAttribute('opacity', active);
@@ -810,7 +532,7 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.lEngPowerStartArrow.setAttribute('opacity', inactive);
 			this.lEngPowerStartText.setAttribute('opacity', inactive);
 			this.lEngBusOut.setAttribute('opacity', inactive);
-        }
+		}
 		if (lEngFuelSwitch == 1) {
 			if (lEngGenN2 > 0.596) {
 				this.lEngPwrL.setAttribute('class', genActive);
@@ -828,16 +550,16 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.lEngPwrR.setAttribute('class', genInactive);
 			this.lEngDriveL.setAttribute('class', genInactive);
 			this.lEngDriveR.setAttribute('class', genInactive);
-        }
+		}
 		if (lEngGenN2 > 0.597) {
 			if (l1EngMaster == 1) {
 				this.lEngPwrActiveL.setAttribute('opacity', active);
 				this.lEngOutPwrL1.setAttribute('opacity', active);
-				this.l1EngPwrLine.setAttribute('opacity', inactive);				
+				this.l1EngPwrLine.setAttribute('opacity', inactive);
 			} else {
 				this.lEngPwrActiveL.setAttribute('opacity', inactive);
 				this.lEngOutPwrL1.setAttribute('opacity', inactive);
-				this.l1EngPwrLine.setAttribute('opacity', active);				
+				this.l1EngPwrLine.setAttribute('opacity', active);
 			}
 		} else {
 			this.lEngPwrActiveL.setAttribute('opacity', inactive);
@@ -848,117 +570,20 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			if (l2EngMaster == 1) {
 				this.lEngPwrActiveR.setAttribute('opacity', active);
 				this.lEngOutPwrL2.setAttribute('opacity', active);
-				this.l1EngPwrLine.setAttribute('opacity', inactive);
+				this.l2EngPwrLine.setAttribute('opacity', inactive);
 			} else {
 				this.lEngPwrActiveR.setAttribute('opacity', inactive);
 				this.lEngOutPwrL2.setAttribute('opacity', inactive)
-				this.l1EngPwrLine.setAttribute('opacity', active);
+				this.l2EngPwrLine.setAttribute('opacity', active);
 			}
 		} else {
 			this.lEngPwrActiveR.setAttribute('opacity', inactive);
 			this.lEngOutPwrL2.setAttribute('opacity', inactive)
-			this.l1EngPwrLine.setAttribute('opacity', active);
->>>>>>> Stashed changes
+			this.l2EngPwrLine.setAttribute('opacity', active);
 		}
 	}
-
-	/* Update R Eng Gen Status */
-<<<<<<< Updated upstream
-	updateRengGenStatus() {
-		let RengGenN2 = SimVar.GetSimVarValue('ENG N2 RPM:2', 'Bool');
-		let RengStarter = SimVar.GetSimVarValue('GENERAL ENG STARTER ACTIVE:2', 'Bool');
-		let RengFuelSwitch = SimVar.GetSimVarValue('FUELSYSTEM VALVE SWITCH:2', 'Bool');
-		let R1engMaster = SimVar.GetSimVarValue('GENERAL ENG MASTER ALTERNATOR:3', 'Bool');
-		let R2engMaster = SimVar.GetSimVarValue('GENERAL ENG MASTER ALTERNATOR:4', 'Bool');
-		let active = '100';
-		let inactive = '0';
-		let genStatActive = 'pwr-box-active';
-		let genStatInactive = 'pwr-box-inactive';
-		let driveStatActive = 'drive-box-active';
-		let RengGenL = this.pageRoot.querySelector('#R-eng-gen-box-L');
-		let RengGenR = this.pageRoot.querySelector('#R-eng-gen-box-R');
-		let RengStartL = this.pageRoot.querySelector('#R-eng-gen-start-L');
-		let RengStartR = this.pageRoot.querySelector('#R-eng-gen-start-R');
-		let RengPwrL = this.pageRoot.querySelector('#R-eng-pwr-box-line-L');
-		let RengPwrR = this.pageRoot.querySelector('#R-eng-pwr-box-line-R');
-		let RengDriveL = this.pageRoot.querySelector('#R-eng-drive-box-L');
-		let RengDriveR = this.pageRoot.querySelector('#R-eng-drive-box-R');
-		let startarrow = this.pageRoot.querySelector('#r-start-arrow');
-		let starttitles = this.pageRoot.querySelector('#r-start-title');
-		let R1outpwrline = this.pageRoot.querySelector('#r1-gen-arrow');
-		let R2outpwrline = this.pageRoot.querySelector('#r2-gen-arrow');
-		let Rbusoutline = this.pageRoot.querySelector('#r-bus-pwr-out-line');
-		let r1pwrline = this.pageRoot.querySelector('#r1-pwr-line');
-		let r2pwrline = this.pageRoot.querySelector('#r2-pwr-line');
-		if (RengStarter == 1) {
-			if (RengGenN2 > 0.008 && RengGenN2 < 0.59699) {
-				RengStartL.setAttribute('opacity', active);
-				RengStartR.setAttribute('opacity', active);
-				startarrow.setAttribute('opacity', active);
-				starttitles.setAttribute('opacity', active);
-				Rbusoutline.setAttribute('opacity', active);
-			} else if (RengGenN2 > 0.597) {
-				RengStartL.setAttribute('opacity', inactive);
-				RengStartR.setAttribute('opacity', inactive);
-				startarrow.setAttribute('opacity', inactive);
-				starttitles.setAttribute('opacity', inactive);
-				Rbusoutline.setAttribute('opacity', inactive);
-			}
-		} else {
-			RengStartL.setAttribute('opacity', inactive);
-			RengStartR.setAttribute('opacity', inactive);
-			startarrow.setAttribute('opacity', inactive);
-			starttitles.setAttribute('opacity', inactive);
-			Rbusoutline.setAttribute('opacity', inactive);
-        }		
-		if (RengFuelSwitch == 1) {
-			if (RengGenN2 > 0.596) {
-				RengGenL.setAttribute('class', genStatActive);
-				RengGenR.setAttribute('class', genStatActive);
-				RengDriveL.setAttribute('class', driveStatActive);
-				RengDriveR.setAttribute('class', driveStatActive);
-			} else {
-				RengGenL.setAttribute('class', genStatInactive);
-				RengGenR.setAttribute('class', genStatInactive);
-				RengDriveL.setAttribute('class', genStatInactive);
-				RengDriveR.setAttribute('class', genStatInactive);
-			}
-		} else {
-			RengGenL.setAttribute('class', genStatInactive);
-			RengGenR.setAttribute('class', genStatInactive);
-			RengDriveL.setAttribute('class', genStatInactive);
-			RengDriveR.setAttribute('class', genStatInactive);
-		}
-		if (RengGenN2 > 0.597) {
-			if (R1engMaster == 1) {
-				RengPwrL.setAttribute('opacity', active);
-				R1outpwrline.setAttribute('opacity', active);
-				r1pwrline.setAttribute('opacity', inactive);
-			} else {
-				RengPwrL.setAttribute('opacity', inactive);
-				R1outpwrline.setAttribute('opacity', inactive);
-				r1pwrline.setAttribute('opacity', active);
-			}
-		} else {
-			RengPwrL.setAttribute('opacity', inactive);
-			R1outpwrline.setAttribute('opacity', inactive);
-			r1pwrline.setAttribute('opacity', active);
-        }
-		if (RengGenN2 > 0.597) {
-			if (R2engMaster == 1) {
-				RengPwrR.setAttribute('opacity', active);
-				R2outpwrline.setAttribute('opacity', active);
-				r2pwrline.setAttribute('opacity', inactive);
-			} else {
-				RengPwrR.setAttribute('opacity', inactive);
-				R2outpwrline.setAttribute('opacity', inactive);
-				r2pwrline.setAttribute('opacity', active);
-			}
-		} else {
-			RengPwrR.setAttribute('opacity', inactive);
-			R2outpwrline.setAttribute('opacity', inactive);
-			r2pwrline.setAttribute('opacity', active);
-=======
+	
+	/* Update Right Engine Status */
 	updateRightEngStatus() {
 		let rEngGenN2 = SimVar.GetSimVarValue('ENG N2 RPM:2', 'Bool');
 		let rEngStarter = SimVar.GetSimVarValue('GENERAL ENG STARTER ACTIVE:2', 'Bool');
@@ -990,7 +615,7 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.rEngPowerStartArrow.setAttribute('opacity', inactive);
 			this.rEngPowerStartText.setAttribute('opacity', inactive);
 			this.rEngBusOut.setAttribute('opacity', inactive);
-        }		
+		}
 		if (rEngFuelSwitch == 1) {
 			if (rEngGenN2 > 0.596) {
 				this.rEngPwrL.setAttribute('class', genActive);
@@ -1023,7 +648,7 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.rEngPwrActiveL.setAttribute('opacity', inactive);
 			this.rEngOutPwrL1.setAttribute('opacity', inactive);
 			this.r1EngPwrLine.setAttribute('opacity', active);
-        }
+		}
 		if (rEngGenN2 > 0.597) {
 			if (r2EngMaster == 1) {
 				this.rEngPwrActiveR.setAttribute('opacity', active);
@@ -1038,50 +663,14 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 			this.rEngPwrActiveR.setAttribute('opacity', inactive);
 			this.rEngOutPwrL2.setAttribute('opacity', inactive);
 			this.r2EngPwrLine.setAttribute('opacity', active);
->>>>>>> Stashed changes
-        }
+		}
 	}
 
-	/* Update Main Bat Status*/
+	/*Update Battery Status*/
 	getBatVolt() {
-		return SimVar.GetSimVarValue(B78XH_LocalVariables.ELECSYS.BAT_V, 'volts');
+		return SimVar.GetSimVarValue('ELECTRICAL BATTERY VOLTAGE', 'volts');
 	}
 	getBatAmps() {
-<<<<<<< Updated upstream
-		let batstore = SimVar.GetSimVarValue('ELECTRICAL BATTERY ESTIMATED CAPACITY PCT', 'percent over 100')
-		let batAmps = 0;
-		let active = '100';
-		let inactive = '0';
-		let charging = this.pageRoot.querySelector('#text-bat-stat-chg');
-		let discharge = this.pageRoot.querySelector('#text-bat-stat-disch');
-		let apucharging = this.pageRoot.querySelector('#text-apu-stat-chg');
-		let apudischarge = this.pageRoot.querySelector('#text-apu-stat-disch');
-		batAmps = SimVar.GetSimVarValue('ELECTRICAL MAIN BUS AMPS', 'amperes');
-		if (batstore == 1) {
-			if (batAmps > 0) {
-				batAmps = Math.floor(batAmps / 100);
-				charging.setAttribute('opacity', inactive);
-				apucharging.setAttribute('opacity', inactive);
-			} else if (batAmps < 0) {
-				batAmps = Math.abs(Math.floor(batAmps / 100));
-				charging.setAttribute('opacity', inactive);
-				apucharging.setAttribute('opacity', inactive);
-			}
-		}
-		if (batstore < 1) {
-			if (batAmps > 0) {
-				batAmps = Math.floor(batAmps / 100);
-				charging.setAttribute('opacity', active);
-				apucharging.setAttribute('opacity', active);
-				discharge.setAttribute('opacity', inactive);
-				apudischarge.setAttribute('opacity', inactive);
-			} else if (batAmps < 0) {
-				batAmps = Math.abs(Math.floor(batAmps / 100));
-				charging.setAttribute('opacity', inactive);
-				apucharging.setAttribute('opacity', inactive);
-				discharge.setAttribute('opacity', active);
-				apudischarge.setAttribute('opacity', active);
-=======
 		let batStoragePct = SimVar.GetSimVarValue('ELECTRICAL BATTERY ESTIMATED CAPACITY PCT', 'percent over 100')
 		let batAmps = 0;
 		let active = 100;
@@ -1111,7 +700,6 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 				this.apuCharging.setAttribute('opacity', inactive);
 				this.batDischarging.setAttribute('opacity', active);
 				this.apuDischarging.setAttribute('opacity', active);
->>>>>>> Stashed changes
 			}
 		}
 		return batAmps;
@@ -1120,6 +708,7 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 	getName() {
 		return 'ELEC';
 	}
+
 }
 
 class B787_10_SYS_Page_HYD extends B787_10_SYS_Page {
