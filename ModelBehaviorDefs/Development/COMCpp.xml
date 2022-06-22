@@ -1,0 +1,284 @@
+<ModelBehaviors>
+    <Template Name="ASOBO_BOEING_TCP_Template">
+        <Parameters Type="Default">
+            <ID>1</ID>
+            <BUTTON_NAME_PREFIX>BOEING_TCP</BUTTON_NAME_PREFIX>
+            <BTN_NODE_ID_1>vhf</BTN_NODE_ID_1>
+            <BTN_NODE_ID_2>hf</BTN_NODE_ID_2>
+            <BTN_NODE_ID_3>sat</BTN_NODE_ID_3>
+            <BTN_NODE_ID_4>cab</BTN_NODE_ID_4>
+            <BTN_NODE_ID_5>gpws</BTN_NODE_ID_5>
+            <BTN_NODE_ID_6>wxr</BTN_NODE_ID_6>
+            <BTN_NODE_ID_7>xpdr</BTN_NODE_ID_7>
+            <BTN_NODE_ID_8>L1</BTN_NODE_ID_8>
+            <BTN_NODE_ID_9>L2</BTN_NODE_ID_9>
+            <BTN_NODE_ID_10>L3</BTN_NODE_ID_10>
+            <BTN_NODE_ID_11>L4</BTN_NODE_ID_11>
+            <BTN_NODE_ID_12>R1</BTN_NODE_ID_12>
+            <BTN_NODE_ID_13>R2</BTN_NODE_ID_13>
+            <BTN_NODE_ID_14>R3</BTN_NODE_ID_14>
+            <BTN_NODE_ID_15>R4</BTN_NODE_ID_15>
+            <BTN_NODE_ID_16>1</BTN_NODE_ID_16>
+            <BTN_NODE_ID_17>2</BTN_NODE_ID_17>
+            <BTN_NODE_ID_18>3</BTN_NODE_ID_18>
+            <BTN_NODE_ID_19>4</BTN_NODE_ID_19>
+            <BTN_NODE_ID_20>5</BTN_NODE_ID_20>
+            <BTN_NODE_ID_21>6</BTN_NODE_ID_21>
+            <BTN_NODE_ID_22>7</BTN_NODE_ID_22>
+            <BTN_NODE_ID_23>8</BTN_NODE_ID_23>
+            <BTN_NODE_ID_24>9</BTN_NODE_ID_24>
+            <BTN_NODE_ID_25>0</BTN_NODE_ID_25>
+            <BTN_NODE_ID_26>clr</BTN_NODE_ID_26>
+            <BTN_NODE_ID_27>star</BTN_NODE_ID_27>
+            <BTN_NODE_ID_28>prev</BTN_NODE_ID_28>
+            <BTN_NODE_ID_29>next</BTN_NODE_ID_29>
+            <BTN_NODE_ID_30>nav</BTN_NODE_ID_30>
+            <BTN_NODE_ID_31>menu</BTN_NODE_ID_31>
+            <BTN_NODE_ID_32>paneloff</BTN_NODE_ID_32>
+            <BTN_NODE_ID_33>stbyup</BTN_NODE_ID_33>
+            <BTN_NODE_ID_34>stbydn</BTN_NODE_ID_34>
+            <BTN_NODE_ID_35>swap</BTN_NODE_ID_35>
+            <TT_ID_1>AIRLINER_COM_PUSH_VHF</TT_ID_1>
+            <TT_ID_2>AIRLINER_COM_PUSH_HF</TT_ID_2>
+            <TT_ID_3>AIRLINER_COMMNAV_SAT</TT_ID_3>
+            <TT_ID_4>AIRLINER_COMMNAV_CAB</TT_ID_4>
+            <TT_ID_5>AIRLINER_COMMNAV_GPWS</TT_ID_5>
+            <TT_ID_6>AIRLINER_COMMNAV_WXR</TT_ID_6>
+            <TT_ID_7>AIRLINER_COMMNAV_XPDR</TT_ID_7>
+            <TT_ID_8>SOFTKEY</TT_ID_8>
+            <TT_ID_9>SOFTKEY</TT_ID_9>
+            <TT_ID_10>SOFTKEY</TT_ID_10>
+            <TT_ID_11>SOFTKEY</TT_ID_11>
+            <TT_ID_12>SOFTKEY</TT_ID_12>
+            <TT_ID_13>SOFTKEY</TT_ID_13>
+            <TT_ID_14>SOFTKEY</TT_ID_14>
+            <TT_ID_15>SOFTKEY</TT_ID_15>
+            <TT_SOFTKEY_SIDE_8>@TT_Left</TT_SOFTKEY_SIDE_8>
+            <TT_SOFTKEY_SIDE_9>@TT_Left</TT_SOFTKEY_SIDE_9>
+            <TT_SOFTKEY_SIDE_10>@TT_Left</TT_SOFTKEY_SIDE_10>
+            <TT_SOFTKEY_SIDE_11>@TT_Left</TT_SOFTKEY_SIDE_11>
+            <TT_SOFTKEY_SIDE_12>@TT_Right</TT_SOFTKEY_SIDE_12>
+            <TT_SOFTKEY_SIDE_13>@TT_Right</TT_SOFTKEY_SIDE_13>
+            <TT_SOFTKEY_SIDE_14>@TT_Right</TT_SOFTKEY_SIDE_14>
+            <TT_SOFTKEY_SIDE_15>@TT_Right</TT_SOFTKEY_SIDE_15>
+            <TT_SOFTKEY_ID_8>1</TT_SOFTKEY_ID_8>
+            <TT_SOFTKEY_ID_9>2</TT_SOFTKEY_ID_9>
+            <TT_SOFTKEY_ID_10>3</TT_SOFTKEY_ID_10>
+            <TT_SOFTKEY_ID_11>4</TT_SOFTKEY_ID_11>
+            <TT_SOFTKEY_ID_12>1</TT_SOFTKEY_ID_12>
+            <TT_SOFTKEY_ID_13>2</TT_SOFTKEY_ID_13>
+            <TT_SOFTKEY_ID_14>3</TT_SOFTKEY_ID_14>
+            <TT_SOFTKEY_ID_15>4</TT_SOFTKEY_ID_15>
+            <!-- <TT_ID_16>1</TT_ID_16> -->
+            <!-- <TT_ID_17>2</TT_ID_17> -->
+            <!-- <TT_ID_18>3</TT_ID_18> -->
+            <!-- <TT_ID_19>4</TT_ID_19> -->
+            <!-- <TT_ID_20>5</TT_ID_20> -->
+            <!-- <TT_ID_21>6</TT_ID_21> -->
+            <!-- <TT_ID_22>7</TT_ID_22> -->
+            <!-- <TT_ID_23>8</TT_ID_23> -->
+            <!-- <TT_ID_24>9</TT_ID_24> -->
+            <!-- <TT_ID_25>0</TT_ID_25> -->
+            <TT_ID_26>TRANSPONDER_PUSH_CLR</TT_ID_26>
+            <!-- <TT_ID_27>star</TT_ID_27> -->
+            <TT_ID_28>FMC_PUSH_PREVPAGE</TT_ID_28>
+            <TT_ID_29>FMC_PUSH_NEXTPAGE</TT_ID_29>
+            <TT_ID_30>EICAS_PUSH_NAV</TT_ID_30>
+            <TT_ID_31>FMC_PUSH_MENU</TT_ID_31>
+            <TT_ID_32>TCP_PUSH_PANEL_OFF</TT_ID_32>
+            <TT_ID_33>TCP_PUSH_STBY_UP</TT_ID_33>
+            <TT_ID_34>TCP_PUSH_STBY_DN</TT_ID_34>
+            <TT_ID_35>AIRLINER_COM_PUSH_SWAP</TT_ID_35>
+        </Parameters>
+        <Parameters Type="Override">
+            <Switch Param="ID">
+                <Case Value="1">
+                    <TT_INDEX>'TCP' (R:1:@TT_Package.GT_STATE_PILOT_FMS) @sprintf</TT_INDEX>
+                    <INPUT_EVENT_ID_SOURCE>AIRLINER_TCP_Pilot</INPUT_EVENT_ID_SOURCE>
+                </Case>
+                <Case Value="2">
+                    <TT_INDEX>'TCP' (R:1:@TT_Package.GT_STATE_COPILOT_FMS) @sprintf</TT_INDEX>
+                    <INPUT_EVENT_ID_SOURCE>AIRLINER_TCP_Copilot</INPUT_EVENT_ID_SOURCE>
+                </Case>
+                <Case Value="3">
+                    <TT_INDEX>'TCP' (R:1:@TT_Package.GT_STATE_PEDESTAL_FMS) @sprintf</TT_INDEX>
+                    <INPUT_EVENT_ID_SOURCE>AIRLINER_TCP_Pedestal</INPUT_EVENT_ID_SOURCE>
+                </Case>
+            </Switch>
+            <BTN_ID_1>#BTN_NODE_ID_1#</BTN_ID_1>
+            <BTN_ID_2>#BTN_NODE_ID_2#</BTN_ID_2>
+            <BTN_ID_3>#BTN_NODE_ID_3#</BTN_ID_3>
+            <BTN_ID_4>#BTN_NODE_ID_4#</BTN_ID_4>
+            <BTN_ID_5>#BTN_NODE_ID_5#</BTN_ID_5>
+            <BTN_ID_6>#BTN_NODE_ID_6#</BTN_ID_6>
+            <BTN_ID_7>#BTN_NODE_ID_7#</BTN_ID_7>
+            <BTN_ID_8>#BTN_NODE_ID_8#</BTN_ID_8>
+            <BTN_ID_9>#BTN_NODE_ID_9#</BTN_ID_9>
+            <BTN_ID_10>#BTN_NODE_ID_10#</BTN_ID_10>
+            <BTN_ID_11>#BTN_NODE_ID_11#</BTN_ID_11>
+            <BTN_ID_12>#BTN_NODE_ID_12#</BTN_ID_12>
+            <BTN_ID_13>#BTN_NODE_ID_13#</BTN_ID_13>
+            <BTN_ID_14>#BTN_NODE_ID_14#</BTN_ID_14>
+            <BTN_ID_15>#BTN_NODE_ID_15#</BTN_ID_15>
+            <BTN_ID_16>BTN_#BTN_NODE_ID_16#</BTN_ID_16>
+            <BTN_ID_17>BTN_#BTN_NODE_ID_17#</BTN_ID_17>
+            <BTN_ID_18>BTN_#BTN_NODE_ID_18#</BTN_ID_18>
+            <BTN_ID_19>BTN_#BTN_NODE_ID_19#</BTN_ID_19>
+            <BTN_ID_20>BTN_#BTN_NODE_ID_20#</BTN_ID_20>
+            <BTN_ID_21>BTN_#BTN_NODE_ID_21#</BTN_ID_21>
+            <BTN_ID_22>BTN_#BTN_NODE_ID_22#</BTN_ID_22>
+            <BTN_ID_23>BTN_#BTN_NODE_ID_23#</BTN_ID_23>
+            <BTN_ID_24>BTN_#BTN_NODE_ID_24#</BTN_ID_24>
+            <BTN_ID_25>BTN_#BTN_NODE_ID_25#</BTN_ID_25>
+            <BTN_ID_26>#BTN_NODE_ID_26#</BTN_ID_26>
+            <BTN_ID_27>#BTN_NODE_ID_27#</BTN_ID_27>
+            <BTN_ID_28>#BTN_NODE_ID_28#</BTN_ID_28>
+            <BTN_ID_29>#BTN_NODE_ID_29#</BTN_ID_29>
+            <BTN_ID_30>#BTN_NODE_ID_30#</BTN_ID_30>
+            <BTN_ID_31>#BTN_NODE_ID_31#</BTN_ID_31>
+            <BTN_ID_32>#BTN_NODE_ID_32#</BTN_ID_32>
+            <BTN_ID_33>#BTN_NODE_ID_33#</BTN_ID_33>
+            <BTN_ID_34>#BTN_NODE_ID_34#</BTN_ID_34>
+            <BTN_ID_35>#BTN_NODE_ID_35#</BTN_ID_35>
+        </Parameters>
+        <UseTemplate Name="ASOBO_GT_Helper_Suffix_ID_Appender">
+            <Switch Param="PLANE_PREFIX">
+                <Default>
+                    <TEMPLATE_TO_CALL>ASOBO_BOEING_TCP_SubTemplate</TEMPLATE_TO_CALL>
+                </Default>
+                <!--
+                ____________________________________________________________________________________
+                OVERRIDE SECTION START
+
+                This section replaces default animation setting
+                ____________________________________________________________________________________
+                -->
+                <Case Value="B787_10">
+                    <TEMPLATE_TO_CALL>HEAVY_BOEING_TCP_SubTemplate</TEMPLATE_TO_CALL>
+                </Case>
+            </Switch>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_TCP_SubTemplate">
+        <Parameters Type="Default">
+            <SCREEN_NODE_ID>#BUTTON_NAME_PREFIX#_Screen#SUFFIX_ID#</SCREEN_NODE_ID>
+        </Parameters>
+        <Parameters Type="Override">
+            <SYSTEM_NAME>Com_#ID#</SYSTEM_NAME>
+        </Parameters>
+        <Component ID="TCP#SUFFIX_ID#">
+            <Loop>
+                <Setup>
+                    <Param>CUR_ID</Param>
+                    <From>1</From>
+                    <Inc>1</Inc>
+                    <To>35</To>
+                </Setup>
+                <Do>
+                    <Parameters Type="Override">
+                        <BTN_NODE_ID Process="Param">BTN_NODE_ID_#CUR_ID#</BTN_NODE_ID>
+                        <ID_BTN Process="Param">BTN_ID_#CUR_ID#</ID_BTN>
+                        <Condition NotEmpty="TT_ID_#CUR_ID#">
+                            <TT_ID Process="Param">TT_ID_#CUR_ID#</TT_ID>
+                        </Condition>
+                    </Parameters>
+                    <Parameters Type="Override">
+                        <Condition NotEmpty="TT_ID">
+                            <True>
+                                <Switch Param="TT_ID">
+                                    <Case Value="SOFTKEY">
+                                        <TT_SOFTKEY_ID Process="Param">TT_SOFTKEY_ID_#CUR_ID#</TT_SOFTKEY_ID>
+                                        <TT_SOFTKEY_SIDE Process="Param">TT_SOFTKEY_SIDE_#CUR_ID#</TT_SOFTKEY_SIDE>
+                                    </Case>
+                                </Switch>
+                            </True>
+                        </Condition>
+                    </Parameters>
+                    <Parameters Type="Default">
+                        <BUTTON_#CUR_ID#_ANIM_NAME>#BUTTON_NAME_PREFIX#_Push_#BTN_NODE_ID##SUFFIX_ID#</BUTTON_#CUR_ID#_ANIM_NAME>
+                        <BUTTON_#CUR_ID#_NODE_ID>#BUTTON_NAME_PREFIX#_Push_#BTN_NODE_ID##SUFFIX_ID#</BUTTON_#CUR_ID#_NODE_ID>
+                        <Condition NotEmpty="TT_ID">
+                            <True>
+                                <Switch Param="TT_ID">
+                                    <Case Value="SOFTKEY">
+                                        <TOOLTIP_TITLE_ID>@TT_Package.FMC_PUSH_OPTION_TITLE</TOOLTIP_TITLE_ID>
+                                        <TOOLTIP_TITLE_INDEX>#TT_INDEX#</TOOLTIP_TITLE_INDEX>
+                                        <TT_DESCRIPTION_ID>@TT_Package.FMC_PUSH_OPTION_ACTION</TT_DESCRIPTION_ID>
+                                        <TT_DESCRIPTION_INDEX>#TT_INDEX# #TT_SOFTKEY_ID# #TT_SOFTKEY_SIDE#</TT_DESCRIPTION_INDEX>
+                                    </Case>
+                                    <Default>
+                                        <TOOLTIP_TITLE>@TT_Package.#TT_ID#_TITLE</TOOLTIP_TITLE>
+                                        <TT_DESCRIPTION_ID>@TT_Package.#TT_ID#_ACTION</TT_DESCRIPTION_ID>
+                                    </Default>
+                                </Switch>
+                            </True>
+                            <False>
+                                <TT_DESCRIPTION_ID>@TT_Package.FMC_PUSH_CHAR_ACTION</TT_DESCRIPTION_ID>
+                                <TT_DESCRIPTION_INDEX>#TT_INDEX# '#ID_BTN#'</TT_DESCRIPTION_INDEX>
+                                <TOOLTIP_DISABLED>True</TOOLTIP_DISABLED>
+                            </False>
+                        </Condition>
+                    </Parameters>
+                    <UseTemplate Name="HEAVY_BOEING_Push_HTML_Generic_Template">
+                        <ANIM_NAME Process="Param">BUTTON_#CUR_ID#_ANIM_NAME</ANIM_NAME>
+                        <NODE_ID Process="Param">BUTTON_#CUR_ID#_NODE_ID</NODE_ID>
+                    </UseTemplate>
+                </Do>
+            </Loop>
+            <Component ID="#SCREEN_NODE_ID#" Node="#SCREEN_NODE_ID#">
+                <UseTemplate Name="ASOBO_GT_Emissive_Gauge">
+                    <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+                </UseTemplate>
+            </Component>
+        </Component>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_HTML_Generic_Template">
+        <Parameters Type="Default">
+            <ID>1</ID>
+        </Parameters>
+        <Parameters Type="Default">
+            <NODE_ID>BOEING_Push_#ID_BTN#_#ID#</NODE_ID>
+            <ANIM_NAME>BOEING_Push_#ID_BTN#_#ID#</ANIM_NAME>
+            <Condition Valid="EMISSIVE_BUTTON">
+                <False>
+                    <NODE_ID_DECAL>BOEING_Push_#ID_BTN#_#ID#_Text</NODE_ID_DECAL>
+                </False>
+            </Condition>
+            <PART_ID>BOEING_Push_#ID_BTN#</PART_ID>
+            <WWISE_EVENT_1>autopilot_push_button2_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>autopilot_push_button2_off</WWISE_EVENT_2>
+            <ON_PUSH_EVENT>#CUR_ID# (&gt;L:CONTROL_SWITCH_COM_#ID#)</ON_PUSH_EVENT>
+            <Condition>
+                <Test>
+                    <And>
+                        <Arg Valid="EMISSIVE_BUTTON"/>
+                        <Arg Check="POTENTIOMETER"/>
+                    </And>
+                </Test>
+                <True>
+                    <EMISSIVE_TEMPLATE_TO_USE>ASOBO_GT_Emissive_Potentiometer</EMISSIVE_TEMPLATE_TO_USE>
+                </True>
+            </Condition>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AIRLINER_Base_Template">
+            <INTERACTION_TYPE>Push</INTERACTION_TYPE>
+            <SET_STATE_EXTERNAL>if{ #ON_PUSH_EVENT# }</SET_STATE_EXTERNAL>
+            <IE_NAME>#ID_BTN#_#ID#</IE_NAME>
+        </UseTemplate>
+        <Condition>
+            <Test>
+                <And>
+                    <Arg Valid="NODE_ID_DECAL"/>
+                    <Arg Check="POTENTIOMETER"/>
+                </And>
+            </Test>
+            <True>
+                <Component ID="#NODE_ID_DECAL#" Node="#NODE_ID_DECAL#">
+                    <UseTemplate Name="ASOBO_GT_Emissive_Potentiometer"/>
+                </Component>
+            </True>
+        </Condition>
+    </Template>
+</ModelBehaviors>

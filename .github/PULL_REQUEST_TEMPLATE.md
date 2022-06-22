@@ -6,6 +6,7 @@
 <!-- Use an appropriate title -->
 <!--Please use the appropriate prefix in your PR Title-->
 
+<!--
 * feat: A new feature<br><br>
 * fix: A bug fix<br><br>
 * docs: Documentation only changes<br><br>
@@ -14,6 +15,7 @@
 * perf: A code change that improves performance<br><br>
 * test: Adding missing tests<br><br>
 * chore : Maintain. Changes to the build process or auxiliary tools/libraries/documentation
+-->
 
 # Description 
 
