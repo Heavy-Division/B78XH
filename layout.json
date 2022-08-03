@@ -48,7 +48,7 @@
         {
             "path": "html_ui/B78XH/b78xh.json",
             "size": 119,
-            "date": 133039660290916370
+            "date": 133039675965057820
         },
         {
             "path": "html_ui/plans/plan.pln",
@@ -266,19 +266,14 @@
             "date": 133039600015233540
         },
         {
-            "path": "ModelBehaviorDefs/Heavy/Extensions/BaroStdFix.xml",
-            "size": 1645,
-            "date": 133039600015233540
-        },
-        {
             "path": "ModelBehaviorDefs/Heavy/Extensions/Emissive.xml",
             "size": 4170,
             "date": 133039600015233540
         },
         {
             "path": "ModelBehaviorDefs/Heavy/Extensions/Index.xml",
-            "size": 283,
-            "date": 133039652969017090
+            "size": 228,
+            "date": 133039675922938430
         },
         {
             "path": "ModelBehaviorDefs/Heavy/Extensions/Interactions.xml",
@@ -326,14 +321,14 @@
             "date": 133039600015841920
         },
         {
-            "path": "SimObjects/Airplanes/Asobo_B787_10/panel/B78XH-wasm.wasm",
-            "size": 1447642,
-            "date": 133039600015812260
-        },
-        {
             "path": "SimObjects/Airplanes/Asobo_B787_10/panel/PANEL.CFG",
             "size": 2764,
             "date": 133039600015821980
+        },
+        {
+            "path": "SimObjects/Airplanes/Asobo_B787_10/panel/B78XH-wasm.wasm",
+            "size": 1447642,
+            "date": 133039600015812260
         },
         {
             "path": "SimObjects/Airplanes/Asobo_B787_10/TEXTURE/787_10_COCKPIT_MAINPANEL_ALBD.PNG.DDS",
@@ -1021,13 +1016,13 @@
             "date": 133039600016320640
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_INFO.html",
-            "size": 2669,
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_INFO.css",
+            "size": 1782,
             "date": 133039600016320640
         },
         {
-            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_INFO.css",
-            "size": 1782,
+            "path": "html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/MFD/Pages/B787_10_INFO.html",
+            "size": 2669,
             "date": 133039600016320640
         },
         {
