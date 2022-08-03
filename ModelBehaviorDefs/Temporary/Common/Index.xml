@@ -1,4 +1,3 @@
 <ModelBehaviors>
     <Include RelativeFile="Autopilot.xml"/>
-    <Include RelativeFile="Electrical.xml"/>
 </ModelBehaviors>

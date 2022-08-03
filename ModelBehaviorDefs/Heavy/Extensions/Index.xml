@@ -3,7 +3,5 @@
     <Include RelativeFile="Animations.xml"/>
     <Include RelativeFile="Emissive.xml"/>
     <!-- <Include RelativeFile="BaroStdFix.xml"/> -->
-    <!-- TODO rename the file -->
-    <Include RelativeFile="ExternalPowerFix.xml"/>
     <!-- <Include RelativeFile="PushButton.xml"/> -->
 </ModelBehaviors>
