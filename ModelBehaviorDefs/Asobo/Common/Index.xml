@@ -15,5 +15,4 @@
     <Include RelativeFile="Pilot.xml"/>
     <Include RelativeFile="Pressurization.xml"/>
     <Include RelativeFile="Safety.xml"/>
-    <Include RelativeFile="..\..\Temporary\Index.xml"/>
 </ModelBehaviors>
