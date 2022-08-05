@@ -1,0 +1,17 @@
+[package]
+name = "b787_systems"
+version = "0.1.0"
+authors = ["Heavy Division"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+uom = "0.32.0"
+rand = "0.8.0"
+nalgebra = "0.25.0"
+ntest = "0.7.2"
+systems = { path = "../systems" }
+
+[dev-dependencies]
+rstest = "0.10.0"

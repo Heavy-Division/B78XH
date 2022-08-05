@@ -1,0 +1,27 @@
+Found MSFS SDK: "C:\\MSFS SDK\\"
+cargo:rerun-if-changed=src/bindgen_support/wrapper.h
+cargo:rerun-if-changed=C:\MSFS SDK\/WASM/include\MSFS/Legacy/gauges.h
+cargo:rerun-if-changed=C:\MSFS SDK\/WASM/include\MSFS/Legacy/..\MSFS_WindowsTypes.h
+cargo:rerun-if-changed=src/bindgen_support\bits\alltypes.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\stdint.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vcruntime.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\sal.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\concurrencysal.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vadefs.h
+cargo:rerun-if-changed=src/bindgen_support\stdio.h
+cargo:rerun-if-changed=src/bindgen_support\wchar.h
+cargo:rerun-if-changed=C:\MSFS SDK\/WASM/include\MSFS\MSFS_Render.h
+cargo:rerun-if-changed=C:\MSFS SDK\/WASM/include\MSFS/MSFS.h
+cargo:rerun-if-changed=C:\MSFS SDK\/WASM/include\MSFS\MSFS_Render.h
+cargo:rerun-if-changed=C:\MSFS SDK\/WASM/include\MSFS/Render/nanovg.h
+cargo:rerun-if-changed=C:\MSFS SDK\/WASM/include\MSFS\MSFS_Render.h
+cargo:rerun-if-changed=C:\MSFS SDK\/SimConnect SDK/include\SimConnect.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\float.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt\corecrt.h
+cargo:rerun-if-changed=C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include\vcruntime.h
+cargo:rustc-link-search=C:\MSFS SDK\/SimConnect SDK/lib/static
+cargo:rustc-link-lib=SimConnect
+cargo:rustc-link-lib=shlwapi
+cargo:rustc-link-lib=user32
+cargo:rustc-link-lib=ws2_32
+cargo:rustc-link-lib=shell32

@@ -1,0 +1,13 @@
+[package]
+name = "b78xh_sysems"
+version = "0.1.0"
+authors = ["Heavy Division"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+uom = "0.30.0"
+msfs = { git = "https://github.com/flybywiresim/msfs-rs", branch = "main" }
+fxhash = "0.2.1"
+enum_dispatch = "0.3.7"

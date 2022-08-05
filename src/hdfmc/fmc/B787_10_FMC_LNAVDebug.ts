@@ -8,7 +8,7 @@ import {Level} from '../../hdlogger/levels/level';
  */
 
 export class B787_10_FMC_LNAVDebug {
-
+	private readonly fmc: B787_10_FMC;
 	static lnav: LNAV = new LNAV();
 	static updater: number = 0;
 

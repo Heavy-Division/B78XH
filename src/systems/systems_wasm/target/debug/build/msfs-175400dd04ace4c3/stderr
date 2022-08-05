@@ -1,0 +1,21 @@
+clang version 14.0.6
+Target: x86_64-pc-windows-msvc
+Thread model: posix
+InstalledDir: 
+ignoring nonexistent directory "lib\clang\14.0.6\include"
+ignoring nonexistent directory "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\atlmfc\include"
+#include "..." search starts here:
+#include <...> search starts here:
+ C:\MSFS SDK\/WASM/include
+ C:\MSFS SDK\/SimConnect SDK/include
+ src/bindgen_support
+ C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Tools\MSVC\14.32.31326\include
+ C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\ucrt
+ C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\shared
+ C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\um
+ C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\winrt
+ C:\Program Files (x86)\Windows Kits\10\Include\10.0.19041.0\cppwinrt
+End of search list.
+C:\MSFS SDK\/WASM/include\MSFS/Legacy/gauges.h:118:9: warning: 'UINT8_MAX' macro redefined [-Wmacro-redefined], err: false
+C:\MSFS SDK\/WASM/include\MSFS/Legacy/gauges.h:124:9: warning: 'UINT16_MAX' macro redefined [-Wmacro-redefined], err: false
+C:\MSFS SDK\/WASM/include\MSFS/Legacy/gauges.h:130:9: warning: 'UINT32_MAX' macro redefined [-Wmacro-redefined], err: false

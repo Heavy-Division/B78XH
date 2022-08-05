@@ -16656,10 +16656,18 @@
             this.fmc.cleanUpPage();
             let simBriefUsernameCell = this.getSimBriefUsernameCell();
             let simBriefUserIdCell = this.getSimBriefUserIdCell();
-            let routeOnlyCell = (HeavyDivision.SimBrief.importRouteOnly() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
-            let withSidCell = (HeavyDivision.SimBrief.importSid() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
-            let withStarCell = (HeavyDivision.SimBrief.importStar() ? '<[color=green]YES[/color]←→[size=small]NO[/size]' : '<[size=small]YES[/size]←→[color=green]NO[/color]');
-            let importStrategyCell = (HeavyDivision.SimBrief.importStrategy() === 'INGAME' ? '<[color=green]INGAME[/color]←→[size=small]SB[/size]' : '<[size=small]INGAME[/size]←→[color=green]SB[/color]');
+            let routeOnlyCell = (HeavyDivision.SimBrief.importRouteOnly() ?
+                `${this.fmc.resizeContent(this.fmc.colorizeContent('<YES', 'green'), 'large')}←→${this.fmc.resizeContent('NO', 'small')}` :
+                `${this.fmc.resizeContent('<YES', 'small')}←→${this.fmc.resizeContent(this.fmc.colorizeContent('NO', 'green'), 'large')}`);
+            let withSidCell = (HeavyDivision.SimBrief.importSid() ?
+                `${this.fmc.resizeContent(this.fmc.colorizeContent('<YES', 'green'), 'large')}←→${this.fmc.resizeContent('NO', 'small')}` :
+                `${this.fmc.resizeContent('<YES', 'small')}←→${this.fmc.resizeContent(this.fmc.colorizeContent('NO', 'green'), 'large')}`);
+            let withStarCell = (HeavyDivision.SimBrief.importStar() ?
+                `${this.fmc.resizeContent(this.fmc.colorizeContent('<YES', 'green'), 'large')}←→${this.fmc.resizeContent('NO', 'small')}` :
+                `${this.fmc.resizeContent('<YES', 'small')}←→${this.fmc.resizeContent(this.fmc.colorizeContent('NO', 'green'), 'large')}`);
+            let importStrategyCell = (HeavyDivision.SimBrief.importStrategy() === 'INGAME' ?
+                `${this.fmc.resizeContent(this.fmc.colorizeContent('<INGAME', 'green'), 'large')}←→${this.fmc.resizeContent('SB', 'small')}` :
+                `${this.fmc.resizeContent('<INGAME', 'small')}←→${this.fmc.resizeContent(this.fmc.colorizeContent('SB', 'green'), 'large')}`);
             this.fmc._renderer.renderTitle('SIMBRIEF CONFIGURATION');
             this.fmc._renderer.render([
                 ['Route Only', 'Username'],
@@ -16850,174 +16858,83 @@
         }
     }
 
-    class LNAV {
-        constructor() {
-        }
-        async setManagedMode(value) {
-            if (value) {
-                await SimVar.SetSimVarValue('K:AP_AVIONICS_MANAGED_ON', 'number', 0);
-            }
-            else {
-                await SimVar.SetSimVarValue('K:AP_AVIONICS_MANAGED_OFF', 'number', 0);
-            }
-        }
-        enableManagedMode() {
-            this.setManagedMode(true);
-        }
-        disableManagedMode() {
-            this.setManagedMode(false);
-        }
-        async setBank(degrees) {
-            await SimVar.SetSimVarValue('AUTOPILOT BANK HOLD REF', 'degrees', degrees);
-        }
-        setBankHold(value) {
-            SimVar.SetSimVarValue('AUTOPILOT BANK HOLD', 'Bool', value);
-        }
-        enableBankHold() {
-            this.setBankHold(true);
-        }
-        disableBankHold() {
-            this.setBankHold(false);
-        }
-    }
-
-    /**
-     * TODO: WIND_LEVELER is probably bugged in 787 I was talked about it with WT...
-     */
-    class B787_10_FMC_LNAVDebug {
-        static async showPage(fmc) {
+    class B787_10_FMC_HeavySimRatePage {
+        static ShowPage1(fmc) {
             fmc.cleanUpPage();
-            HDLogger.log('AP MANAGED MODE: ' + SimVar.GetSimVarValue('AUTOPILOT AVIONICS MANAGED', 'number'), Level.debug);
-            HDLogger.log('WING LEVELER: ' + SimVar.GetSimVarValue('AUTOPILOT WING LEVELER', 'number'), Level.debug);
-            HDLogger.log('BANK REF: ' + SimVar.GetSimVarValue('AUTOPILOT BANK HOLD REF', 'degrees'), Level.debug);
-            HDLogger.log('BANK HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT BANK HOLD', 'Bool'), Level.debug);
-            HDLogger.log('PITCH REF: ' + SimVar.GetSimVarValue('AUTOPILOT PITCH HOLD REF', 'degrees'), Level.debug);
-            HDLogger.log('PITCH HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT PITCH HOLD', 'Bool'), Level.debug);
-            HDLogger.log('APPROACH HOLD: ' + SimVar.GetSimVarValue('AUTOPILOT APPROACH HOLD', 'boolean'), Level.debug);
-            fmc.pageUpdate = () => {
-                this.updater += 1;
-                if (this.updater > 10) {
-                    this.updater = 0;
-                    B787_10_FMC_LNAVDebug.showPage(fmc);
-                }
+            let title = (fmc) => {
+                fmc._renderer.renderTitle('SIMRATE MANAGER: OFF');
             };
-            //SimVar.SetSimVarValue('K:AP_WING_LEVELER_OFF', 'number', 0);
-            //SimVar.SetSimVarValue('K:HEADING_SLOT_INDEX_SET', 'number', 2);
-            //SimVar.SetSimVarValue('L:AP_HEADING_HOLD_ACTIVE', 'Number', 0);
-            //Simplane.setAPLNAVArmed(1);
-            //Simplane.setAPLNAVActive(1);
-            //SimVar.SetSimVarValue('K:AP_NAV1_HOLD_ON', 'number', 0);
-            //SimVar.SetSimVarValue('AUTOPILOT WING LEVELER', 'Bool', false);
-            //SimVar.SetSimVarValue('K:AUTOPILOT_BANK_HOLD', 'number', 0);
-            fmc._renderer.renderTitle('MANAGED LNAV DEBUG');
+            SimVar.GetGlobalVarValue('SIMULATION RATE', 'Number');
+            let isSimRateManagerActive = SimVar.GetSimVarValue(B78XH_LocalVariables.SIM_RATE_MANAGER.ACTIVATED, 'BOOLEAN');
+            // const simRateRefresh = () => {
+            //    while (isSimRateManagerActive === 0) {
+            //        const renderSimRate = fmc._renderer.render(actualSimRate);
+            //    }
+            //    simRateRefresh();
+            // };
+            // const simRate = simRateRefresh();
+            title(fmc);
             fmc._renderer.render([
+                [''],
                 ['', ''],
-                ['<ENABLE', 'MANAGED', 'DISABLE>'],
+                [''],
                 ['', ''],
-                ['<ENABLE', 'BANK HOLD', 'DISABLE>'],
+                [''],
                 ['', ''],
-                ['<BANK LEFT', '5°', 'BANK RIGHT>'],
+                [''],
                 ['', ''],
-                ['<BANK LEFT', '10°', 'BANK RIGHT>'],
-                ['', ''],
-                ['<BANK LEFT', '15°', 'BANK RIGHT>'],
-                ['', ''],
-                ['<', 'COHERENT', 'BANK MODE>'],
-                ['', '']
+                [''],
+                [isSimRateManagerActive][''],
+                ['<BACK', '']
             ]);
-            fmc._renderer.lsk(1).event = () => {
-                this.lnav.enableManagedMode();
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.rsk(1).event = () => {
-                this.lnav.disableManagedMode();
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.lsk(2).event = () => {
-                this.lnav.enableBankHold();
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.rsk(2).event = () => {
-                this.lnav.disableBankHold();
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.lsk(3).event = () => {
-                this.lnav.setBank(-5);
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.lsk(4).event = () => {
-                this.lnav.setBank(-10);
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.lsk(5).event = () => {
-                this.lnav.setBank(-15);
-                B787_10_FMC_LNAVDebug.showPage(fmc);
+            fmc._renderer.lsk(6).event = () => {
+                B787_10_FMC_InitRefIndexPage.ShowPage1(fmc);
             };
             fmc._renderer.lsk(6).event = () => {
-                this.lnav.setBank(-20);
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.rsk(3).event = () => {
-                this.lnav.setBank(5);
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.rsk(4).event = () => {
-                this.lnav.setBank(10);
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.rsk(5).event = () => {
-                this.lnav.setBank(15);
-                B787_10_FMC_LNAVDebug.showPage(fmc);
-            };
-            fmc._renderer.rsk(6).event = async () => {
-                B787_10_FMC_LNAVDebug.showPage(fmc);
+                B787_10_FMC_HeavyPage.ShowPage1(fmc);
             };
         }
+        showPage() {
+        }
     }
-    B787_10_FMC_LNAVDebug.lnav = new LNAV();
-    B787_10_FMC_LNAVDebug.updater = 0;
 
     class B787_10_FMC_HeavyPage {
         static ShowPage1(fmc) {
             fmc.cleanUpPage();
-            let rows = [
+            fmc._renderer.render([
+                [''],
+                ['SIMRATE MANAGER', 'IRS MENU>'],
+                [''],
+                ['', 'PAYLOAD MANAGER>'],
                 [''],
                 ['', ''],
-                [''],
-                ['', ''],
-                [''],
-                ['', 'LNAV DEBUG'],
                 [''],
                 [''],
                 [''],
                 [''],
                 [''],
                 ['', 'CONFIGURATION>']
-            ];
-            if (!B787_10_FMC_HeavyPage.WITHOUT_MANAGERS) {
-                rows[1] = ['', 'IRS Menu>'];
-                rows[3] = ['', 'Payload Manager>'];
-                //rows[5] = ['', 'SimRate Manager>'];
-                fmc._renderer.rsk(1).event = () => {
-                    new B787_10_FMC_HeavyIRSPage(fmc).showPage();
-                };
-                fmc._renderer.rsk(2).event = () => {
-                    new B787_10_FMC_PayloadManagerPage(fmc).showPage();
-                };
-                /*
-                 fmc._renderer.rsk(3).event = () => {
-                 new B787_10_FMC_SimRateManagerPage(fmc).showPage();
-                 };
-                 */
-            }
-            fmc._renderer.rsk(3).event = () => {
-                B787_10_FMC_LNAVDebug.showPage(fmc);
+            ]);
+            // if (!B787_10_FMC_HeavyPage.WITHOUT_MANAGERS) {
+            // 	rows[1] = ['', 'IRS Menu>'];
+            // 	rows[3] = ['', 'Payload Manager>'];
+            // 	// rows[7] = ['', 'SimRate Manager>'];
+            fmc._renderer.rsk(1).event = () => {
+                new B787_10_FMC_HeavyIRSPage(fmc).showPage();
+            };
+            fmc._renderer.rsk(2).event = () => {
+                new B787_10_FMC_PayloadManagerPage(fmc).showPage();
             };
             fmc._renderer.rsk(6).event = () => {
                 B787_10_FMC_HeavyConfigurationPage.ShowPage1(fmc);
             };
-            fmc._renderer.renderTitle('HEAVY MENU');
-            fmc._renderer.render(rows);
+            // fmc._renderer.rsk(3).event = () => {
+            // 	new B787_10_FMC_LNAVDebug(fmc).showPage();
+            // };
+            // TODO: Throws an error for some reason.
+            fmc._renderer.lsk(1).event = () => {
+                B787_10_FMC_HeavySimRatePage.ShowPage1(fmc);
+            };
         }
     }
     B787_10_FMC_HeavyPage.WITHOUT_MANAGERS = false;

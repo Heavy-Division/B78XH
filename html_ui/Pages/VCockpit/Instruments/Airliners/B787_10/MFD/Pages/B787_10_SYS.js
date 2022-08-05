@@ -278,17 +278,437 @@ class B787_10_SYS_Page_STAT extends B787_10_SYS_Page {
 }
 
 class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
-
 	init() {
-
+		if (this.pageRoot != null) {
+			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#dynamic-bat-volt'), this.getBatVolt.bind(this), 1));
+			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#dynamic-bat-amps'), this.getBatAmps.bind(this), 0));
+			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#dynamic-apu-volt'), this.getBatVolt.bind(this), 1));
+			this.allTextValueComponents.push(new Airliners.DynamicValueComponent(this.pageRoot.querySelector('#dynamic-apu-amps'), this.getBatAmps.bind(this), 0));
+			this.fwdExtBoxL = this.pageRoot.querySelector('#fwd-ext-l-pwr-box');
+			this.fwdExtPwrLineL = this.pageRoot.querySelector('#fwd-ext-pwr-line-l');
+			this.fwdExtPwrActiveL = this.pageRoot.querySelector('#fwd-ext-l-pwr-active');
+			this.fwdExtBoxR = this.pageRoot.querySelector('#fwd-ext-r-pwr-box');
+			this.fwdExtPwrLineR = this.pageRoot.querySelector('#fwd-ext-pwr-line-r');
+			this.fwdExtPwrActiveR = this.pageRoot.querySelector('#fwd-ext-r-pwr-active');
+			this.aftExtBox = this.pageRoot.querySelector('#aft-ext-pwr-box');
+			this.aftExtPwrLine = this.pageRoot.querySelector('#aft-ext-pwr-line');
+			this.aftExtPwrActive = this.pageRoot.querySelector('#aft-ext-pwr-active');
+			this.apuStarterL = this.pageRoot.querySelector('#apu-l-starter-arrow');
+			this.apuStarterR = this.pageRoot.querySelector('#apu-r-starter-arrow');
+			this.apuPwrBoxL = this.pageRoot.querySelector('#apu-l-pwr-box');
+			this.apuPwrBoxR = this.pageRoot.querySelector('#apu-r-pwr-box');
+			this.apuPwrBoxActiveL = this.pageRoot.querySelector('#apu-l-pwr-active');
+			this.apuPwrBoxActiveR = this.pageRoot.querySelector('#apu-r-pwr-active');
+			this.ApuPwrLineL = this.pageRoot.querySelector('#apu-pwr-line-l');
+			this.apuPwrLineR = this.pageRoot.querySelector('#apu-pwr-line-r')
+			this.apuBusOut = this.pageRoot.querySelector('#apu-bus-pwr-out');
+			this.apuStartArrow = this.pageRoot.querySelector('#apu-start-arrow');
+			this.apuStartText1 = this.pageRoot.querySelector('#apu-start-text-1');
+			this.apuStartText2 = this.pageRoot.querySelector('#apu-start-text-2');
+			this.lEngPwrL = this.pageRoot.querySelector('#l-eng-pwr-box-l');
+			this.lEngPwrR = this.pageRoot.querySelector('#l-eng-pwr-box-r');
+			this.lEngStarterArrowL = this.pageRoot.querySelector('#l-eng-starter-arrow-l');
+			this.lEngStarterArrowR = this.pageRoot.querySelector('#l-eng-starter-arrow-r');
+			this.lEngPwrActiveL = this.pageRoot.querySelector('#l-eng-pwr-active-l');
+			this.lEngPwrActiveR = this.pageRoot.querySelector('#l-eng-pwr-active-r');
+			this.lEngDriveL = this.pageRoot.querySelector('#l-eng-drive-box-l');
+			this.lEngDriveR = this.pageRoot.querySelector('#l-eng-drive-box-r');
+			this.lEngPowerStartArrow = this.pageRoot.querySelector('#l-start-arrow');
+			this.lEngPowerStartText = this.pageRoot.querySelector('#l-start-text');
+			this.lEngOutPwrL1 = this.pageRoot.querySelector('#l1-gen-out-arrow');
+			this.lEngOutPwrL2 = this.pageRoot.querySelector('#l2-gen-out-arrow');
+			this.lEngBusOut = this.pageRoot.querySelector('#l-bus-pwr-out');
+			this.l1EngPwrLine = this.pageRoot.querySelector('#l1-pwr-line');
+			this.l2EngPwrLine = this.pageRoot.querySelector('#l2-pwr-line');
+			this.rEngPwrL = this.pageRoot.querySelector('#r-eng-pwr-box-l');
+			this.rEngPwrR = this.pageRoot.querySelector('#r-eng-pwr-box-r');
+			this.rEngStarterArrowL = this.pageRoot.querySelector('#r-eng-starter-arrow-l');
+			this.rEngStarterArrowR = this.pageRoot.querySelector('#r-eng-starter-arrow-r');
+			this.rEngPwrActiveL = this.pageRoot.querySelector('#r-eng-pwr-active-l');
+			this.rEngPwrActiveR = this.pageRoot.querySelector('#r-eng-pwr-active-r');
+			this.rEngDriveL = this.pageRoot.querySelector('#r-eng-drive-box-l');
+			this.rEngDriveR = this.pageRoot.querySelector('#r-eng-drive-box-r');
+			this.rEngPowerStartArrow = this.pageRoot.querySelector('#r-start-arrow');
+			this.rEngPowerStartText = this.pageRoot.querySelector('#r-start-text');
+			this.rEngOutPwrL1 = this.pageRoot.querySelector('#r1-gen-out-arrow');
+			this.rEngOutPwrL2 = this.pageRoot.querySelector('#r2-gen-out-arrow');
+			this.rEngBusOut = this.pageRoot.querySelector('#r-bus-pwr-out');
+			this.r1EngPwrLine = this.pageRoot.querySelector('#r1-pwr-line');
+			this.r2EngPwrLine = this.pageRoot.querySelector('#r2-pwr-line');
+			this.batCharging = this.pageRoot.querySelector('#bat-status-chg');
+			this.batDischarging = this.pageRoot.querySelector('#bat-status-disch');
+			this.apuCharging = this.pageRoot.querySelector('#apu-status-chg');
+			this.apuDischarging = this.pageRoot.querySelector('#apu-status-disch');
+        }
 	}
 
 	updateChild(_deltaTime) {
+		if (this.pageRoot != null) {
+			this.getBatVolt();
+			this.getBatAmps();
+			this.updateAftExtPwr();
+			this.updateLeftFwdExtPwr();
+			this.updateRightFwdExtPwr();
+			this.updateLeftFwdExtPwrStatus();
+			this.updateRightFwdExtPwrStatus();
+			this.updateAftExtPwrStatus();
+			this.updateApuGenStatus();
+			this.updateLeftEngStatus();
+			this.updateRightEngStatus();
+        }
+	}
+
+	/* Update External Power Availability */
+	updateLeftFwdExtPwr() {
+		let leftFwdExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:1', 'Bool');
+		let available = 'pwr-box-active';
+		let unavailable = 'pwr-box-inactive';
+		if (leftFwdExtPwrAvail == 1) {
+			this.fwdExtBoxL.setAttribute('class', available);
+		} else {
+			this.fwdExtBoxL.setAttribute('class', unavailable);
+		}
+	}
+	updateRightFwdExtPwr() {
+		let rightFwdExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:2', 'Bool');
+		let available = 'pwr-box-active';
+		let unavailable = 'pwr-box-inactive';
+		if (rightFwdExtPwrAvail == 1) {
+			this.fwdExtBoxR.setAttribute('class', available);
+		} else {
+			this.fwdExtBoxR.setAttribute('class', unavailable);
+		}
+	}
+	updateAftExtPwr() {
+		let aftExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:3', 'Bool');
+		let available = 'pwr-box-active';
+		let unavailable = 'pwr-box-inactive';
+		if (aftExtPwrAvail == 1) {
+			this.aftExtBox.setAttribute('class', available);
+		} else {
+			this.aftExtBox.setAttribute('class', unavailable);
+		}
+	}
+
+	/* Update External Power Status */
+	updateLeftFwdExtPwrStatus() {
+		let leftFwdExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:1', 'Bool');
+		let active = 100;
+		let inactive = 0;
+		let lineActive = 'pwr-line-active';
+		let lineInactive = 'pwr-line-inactive';
+		if (leftFwdExtPwrStatus == 1) {
+			this.fwdExtPwrActiveL.setAttribute('opacity', active);
+			this.fwdExtPwrLineL.setAttribute('class', lineActive);
+		} else {
+			this.fwdExtPwrActiveL.setAttribute('opacity', inactive);
+			this.fwdExtPwrLineL.setAttribute('class', lineInactive);
+		}
+	}
+	updateRightFwdExtPwrStatus() {
+		let rightFwdExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:2', 'Bool');
+		let active = 100;
+		let inactive = 0;
+		let lineActive = 'pwr-line-active';
+		let lineInactive = 'pwr-line-inactive';
+		if (rightFwdExtPwrStatus == 1) {
+			this.fwdExtPwrActiveR.setAttribute('opacity', active);
+			this.fwdExtPwrLineR.setAttribute('class', lineActive);
+		} else {
+			this.fwdExtPwrActiveR.setAttribute('opacity', inactive);
+			this.fwdExtPwrLineR.setAttribute('class', lineInactive);
+		}
+	}
+	updateAftExtPwrStatus() {
+		let AftExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:3', 'Bool');
+		let active = 100;
+		let inactive = 0;
+		let lineActive = 'pwr-line-active';
+		let lineInactive = 'pwr-line-inactive';
+		if (AftExtPwrStatus == 1) {
+			this.aftExtPwrActive.setAttribute('opacity', active);
+			this.aftExtPwrLine.setAttribute('class', lineActive);
+		} else {
+			this.aftExtPwrActive.setAttribute('opacity', inactive);
+			this.aftExtPwrLine.setAttribute('class', lineInactive);
+		}
+	}
+
+	/* Update APU Gen Status */
+	updateApuGenStatus() {
+		let apuRpm = SimVar.GetSimVarValue('APU PCT RPM', 'percent over 100');
+		let apuKnob = SimVar.GetSimVarValue('APU SWITCH', 'Bool');
+		let apuGenSwitchL = SimVar.GetSimVarValue('APU GENERATOR SWITCH:1', 'Bool');
+		let apuGenSwitchR = SimVar.GetSimVarValue('APU GENERATOR SWITCH:2', 'Bool');
+		let active = 100;
+		let inactive = 0;
+		let pwrActive = 'pwr-box-active';
+		let pwrInactive = 'pwr-box-inactive';
+		let pwrlineActive = 'pwr-line-active';
+		let pwrlineInactive = 'pwr-line-inactive';
+		if (apuKnob == 1) {
+			if (apuRpm > 0.05 && apuRpm < 0.99) {
+				this.apuStarterL.setAttribute('opacity', active);
+				this.apuStarterR.setAttribute('opacity', active);
+				this.apuStartArrow.setAttribute('opacity', active);
+				this.apuStartText1.setAttribute('opacity', active);
+				this.apuStartText2.setAttribute('opacity', active);
+				this.apuBusOut.setAttribute('opacity', active);				
+			} else if (apuRpm == 1) {
+				this.apuStarterL.setAttribute('opacity', inactive);
+				this.apuStarterR.setAttribute('opacity', inactive);
+				this.apuStartArrow.setAttribute('opacity', inactive);
+				this.apuStartText1.setAttribute('opacity', inactive);
+				this.apuStartText2.setAttribute('opacity', inactive);
+				this.apuBusOut.setAttribute('opacity', inactive);
+				this.apuPwrBoxL.setAttribute('class', pwrActive);
+				this.apuPwrBoxR.setAttribute('class', pwrActive);
+			}
+		} else {
+			this.apuStarterL.setAttribute('opacity', inactive);
+			this.apuStarterR.setAttribute('opacity', inactive);
+			this.apuStartArrow.setAttribute('opacity', inactive);
+			this.apuStartText1.setAttribute('opacity', inactive);
+			this.apuStartText2.setAttribute('opacity', inactive);
+			this.apuBusOut.setAttribute('opacity', inactive);
+			this.apuPwrBoxL.setAttribute('class', pwrInactive);
+			this.apuPwrBoxR.setAttribute('class', pwrInactive);
+		}
+		if (apuRpm == 1) {
+			if (apuGenSwitchL == 1) {
+				this.apuPwrBoxActiveL.setAttribute('opacity', active);
+				this.ApuPwrLineL.setAttribute('class', pwrlineActive);
+			} else {				
+				this.apuPwrBoxActiveL.setAttribute('opacity', inactive);
+				this.ApuPwrLineL.setAttribute('class', pwrlineInactive);
+			}
+		} else {			
+			this.apuPwrBoxActiveL.setAttribute('opacity', inactive);
+			this.ApuPwrLineL.setAttribute('class', pwrlineInactive);
+		}
+		if (apuRpm == 1) {
+			if (apuGenSwitchR == 1) {				
+				this.apuPwrBoxActiveR.setAttribute('opacity', active);
+				this.apuPwrLineR.setAttribute('class', pwrlineActive);
+			} else {
+				this.apuPwrBoxActiveR.setAttribute('opacity', inactive);
+				this.apuPwrLineR.setAttribute('class', pwrlineInactive);
+			}
+		} else {			
+			this.apuPwrBoxActiveR.setAttribute('opacity', inactive);
+			this.apuPwrLineR.setAttribute('class', pwrlineInactive);
+		}
+	}
+	
+	/* Update Left Engine Status */
+	updateLeftEngStatus() {
+		let lEngGenN2 = SimVar.GetSimVarValue('ENG N2 RPM:1', 'Bool');
+		let lEngStarter = SimVar.GetSimVarValue('GENERAL ENG STARTER ACTIVE:1', 'Bool');
+		let lEngFuelSwitch = SimVar.GetSimVarValue('FUELSYSTEM VALVE SWITCH:1', 'Bool');
+		let l1EngMaster = SimVar.GetSimVarValue('GENERAL ENG MASTER ALTERNATOR:1', 'Bool');
+		let l2EngMaster = SimVar.GetSimVarValue('GENERAL ENG MASTER ALTERNATOR:2', 'Bool');
+		let active = 100;
+		let inactive = 0;
+		let genActive = 'pwr-box-active';
+		let genInactive = 'pwr-box-inactive';
+		let driveActive = 'drive-box-active';
+		if (lEngStarter == 1) {
+			if (lEngGenN2 > 0.008 && lEngGenN2 < 0.59699) {
+				this.lEngStarterArrowL.setAttribute('opacity', active);
+				this.lEngStarterArrowR.setAttribute('opacity', active);
+				this.lEngPowerStartArrow.setAttribute('opacity', active);
+				this.lEngPowerStartText.setAttribute('opacity', active);
+				this.lEngBusOut.setAttribute('opacity', active);
+			} else if (lEngGenN2 > 0.597) {
+				this.lEngStarterArrowL.setAttribute('opacity', inactive);
+				this.lEngStarterArrowR.setAttribute('opacity', inactive);
+				this.lEngPowerStartArrow.setAttribute('opacity', inactive);
+				this.lEngPowerStartText.setAttribute('opacity', inactive);
+				this.lEngBusOut.setAttribute('opacity', inactive);
+			}
+		} else {
+			this.lEngStarterArrowL.setAttribute('opacity', inactive);
+			this.lEngStarterArrowR.setAttribute('opacity', inactive);
+			this.lEngPowerStartArrow.setAttribute('opacity', inactive);
+			this.lEngPowerStartText.setAttribute('opacity', inactive);
+			this.lEngBusOut.setAttribute('opacity', inactive);
+		}
+		if (lEngFuelSwitch == 1) {
+			if (lEngGenN2 > 0.596) {
+				this.lEngPwrL.setAttribute('class', genActive);
+				this.lEngPwrR.setAttribute('class', genActive);
+				this.lEngDriveL.setAttribute('class', driveActive);
+				this.lEngDriveR.setAttribute('class', driveActive);
+			} else {
+				this.lEngPwrL.setAttribute('class', genInactive);
+				this.lEngPwrR.setAttribute('class', genInactive);
+				this.lEngDriveL.setAttribute('class', genInactive);
+				this.lEngDriveR.setAttribute('class', genInactive);
+			}
+		} else {
+			this.lEngPwrL.setAttribute('class', genInactive);
+			this.lEngPwrR.setAttribute('class', genInactive);
+			this.lEngDriveL.setAttribute('class', genInactive);
+			this.lEngDriveR.setAttribute('class', genInactive);
+		}
+		if (lEngGenN2 > 0.597) {
+			if (l1EngMaster == 1) {
+				this.lEngPwrActiveL.setAttribute('opacity', active);
+				this.lEngOutPwrL1.setAttribute('opacity', active);
+				this.l1EngPwrLine.setAttribute('opacity', inactive);
+			} else {
+				this.lEngPwrActiveL.setAttribute('opacity', inactive);
+				this.lEngOutPwrL1.setAttribute('opacity', inactive);
+				this.l1EngPwrLine.setAttribute('opacity', active);
+			}
+		} else {
+			this.lEngPwrActiveL.setAttribute('opacity', inactive);
+			this.lEngOutPwrL1.setAttribute('opacity', inactive);
+			this.l1EngPwrLine.setAttribute('opacity', active);
+		}
+		if (lEngGenN2 > 0.597) {
+			if (l2EngMaster == 1) {
+				this.lEngPwrActiveR.setAttribute('opacity', active);
+				this.lEngOutPwrL2.setAttribute('opacity', active);
+				this.l2EngPwrLine.setAttribute('opacity', inactive);
+			} else {
+				this.lEngPwrActiveR.setAttribute('opacity', inactive);
+				this.lEngOutPwrL2.setAttribute('opacity', inactive)
+				this.l2EngPwrLine.setAttribute('opacity', active);
+			}
+		} else {
+			this.lEngPwrActiveR.setAttribute('opacity', inactive);
+			this.lEngOutPwrL2.setAttribute('opacity', inactive)
+			this.l2EngPwrLine.setAttribute('opacity', active);
+		}
+	}
+	
+	/* Update Right Engine Status */
+	updateRightEngStatus() {
+		let rEngGenN2 = SimVar.GetSimVarValue('ENG N2 RPM:2', 'Bool');
+		let rEngStarter = SimVar.GetSimVarValue('GENERAL ENG STARTER ACTIVE:2', 'Bool');
+		let rEngFuelSwitch = SimVar.GetSimVarValue('FUELSYSTEM VALVE SWITCH:2', 'Bool');
+		let r1EngMaster = SimVar.GetSimVarValue('GENERAL ENG MASTER ALTERNATOR:3', 'Bool');
+		let r2EngMaster = SimVar.GetSimVarValue('GENERAL ENG MASTER ALTERNATOR:4', 'Bool');
+		let active = '100';
+		let inactive = '0';
+		let genActive = 'pwr-box-active';
+		let genInactive = 'pwr-box-inactive';
+		let driveActive = 'drive-box-active';
+		if (rEngStarter == 1) {
+			if (rEngGenN2 > 0.008 && rEngGenN2 < 0.59699) {
+				this.rEngStarterArrowL.setAttribute('opacity', active);
+				this.rEngStarterArrowR.setAttribute('opacity', active);
+				this.rEngPowerStartArrow.setAttribute('opacity', active);
+				this.rEngPowerStartText.setAttribute('opacity', active);
+				this.rEngBusOut.setAttribute('opacity', active);
+			} else if (rEngGenN2 > 0.597) {
+				this.rEngStarterArrowL.setAttribute('opacity', inactive);
+				this.rEngStarterArrowR.setAttribute('opacity', inactive);
+				this.rEngPowerStartArrow.setAttribute('opacity', inactive);
+				this.rEngPowerStartText.setAttribute('opacity', inactive);
+				this.rEngBusOut.setAttribute('opacity', inactive);
+			}
+		} else {
+			this.rEngStarterArrowL.setAttribute('opacity', inactive);
+			this.rEngStarterArrowR.setAttribute('opacity', inactive);
+			this.rEngPowerStartArrow.setAttribute('opacity', inactive);
+			this.rEngPowerStartText.setAttribute('opacity', inactive);
+			this.rEngBusOut.setAttribute('opacity', inactive);
+		}
+		if (rEngFuelSwitch == 1) {
+			if (rEngGenN2 > 0.596) {
+				this.rEngPwrL.setAttribute('class', genActive);
+				this.rEngPwrR.setAttribute('class', genActive);
+				this.rEngDriveL.setAttribute('class', driveActive);
+				this.rEngDriveR.setAttribute('class', driveActive);
+			} else {
+				this.rEngPwrL.setAttribute('class', genInactive);
+				this.rEngPwrR.setAttribute('class', genInactive);
+				this.rEngDriveL.setAttribute('class', genInactive);
+				this.rEngDriveR.setAttribute('class', genInactive);
+			}
+		} else {
+			this.rEngPwrL.setAttribute('class', genInactive);
+			this.rEngPwrR.setAttribute('class', genInactive);
+			this.rEngDriveL.setAttribute('class', genInactive);
+			this.rEngDriveR.setAttribute('class', genInactive);
+		}
+		if (rEngGenN2 > 0.597) {
+			if (r1EngMaster == 1) {
+				this.rEngPwrActiveL.setAttribute('opacity', active);
+				this.rEngOutPwrL1.setAttribute('opacity', active);
+				this.r1EngPwrLine.setAttribute('opacity', inactive);
+			} else {
+				this.rEngPwrActiveL.setAttribute('opacity', inactive);
+				this.rEngOutPwrL1.setAttribute('opacity', inactive);
+				this.r1EngPwrLine.setAttribute('opacity', active);
+			}
+		} else {
+			this.rEngPwrActiveL.setAttribute('opacity', inactive);
+			this.rEngOutPwrL1.setAttribute('opacity', inactive);
+			this.r1EngPwrLine.setAttribute('opacity', active);
+		}
+		if (rEngGenN2 > 0.597) {
+			if (r2EngMaster == 1) {
+				this.rEngPwrActiveR.setAttribute('opacity', active);
+				this.rEngOutPwrL2.setAttribute('opacity', active);
+				this.r2EngPwrLine.setAttribute('opacity', inactive);
+			} else {
+				this.rEngPwrActiveR.setAttribute('opacity', inactive);
+				this.rEngOutPwrL2.setAttribute('opacity', inactive);
+				this.r2EngPwrLine.setAttribute('opacity', active);
+			}
+		} else {
+			this.rEngPwrActiveR.setAttribute('opacity', inactive);
+			this.rEngOutPwrL2.setAttribute('opacity', inactive);
+			this.r2EngPwrLine.setAttribute('opacity', active);
+		}
+	}
+
+	/*Update Battery Status*/
+	getBatVolt() {
+		return SimVar.GetSimVarValue('ELECTRICAL BATTERY VOLTAGE', 'volts');
+	}
+	getBatAmps() {
+		let batStoragePct = SimVar.GetSimVarValue('ELECTRICAL BATTERY ESTIMATED CAPACITY PCT', 'percent over 100')
+		let batAmps = 0;
+		let active = 100;
+		let inactive = 0;
+		batAmps = SimVar.GetSimVarValue('ELECTRICAL MAIN BUS AMPS', 'amperes');
+		if (batStoragePct == 1) {
+			if (batAmps > 0) {
+				batAmps = Math.floor(batAmps / 100);
+				this.batCharging.setAttribute('opacity', inactive);
+				this.apuCharging.setAttribute('opacity', inactive);
+			} else if (batAmps < 0) {
+				batAmps = Math.abs(Math.floor(batAmps / 100));
+				this.batCharging.setAttribute('opacity', inactive);
+				this.apuCharging.setAttribute('opacity', inactive);
+			}
+		}
+		if (batStoragePct < 1) {
+			if (batAmps > 0) {
+				batAmps = Math.floor(batAmps / 100);
+				this.batCharging.setAttribute('opacity', active);
+				this.apuCharging.setAttribute('opacity', active);
+				this.batDischarging.setAttribute('opacity', inactive);
+				this.apuDischarging.setAttribute('opacity', inactive);
+			} else if (batAmps < 0) {
+				batAmps = Math.abs(Math.floor(batAmps / 100));
+				this.batCharging.setAttribute('opacity', inactive);
+				this.apuCharging.setAttribute('opacity', inactive);
+				this.batDischarging.setAttribute('opacity', active);
+				this.apuDischarging.setAttribute('opacity', active);
+			}
+		}
+		return batAmps;
 	}
 
 	getName() {
 		return 'ELEC';
 	}
+
 }
 
 class B787_10_SYS_Page_HYD extends B787_10_SYS_Page {
