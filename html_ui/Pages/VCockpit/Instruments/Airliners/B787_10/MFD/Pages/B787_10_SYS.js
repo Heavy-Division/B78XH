@@ -393,13 +393,19 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 	/* Update External Power Status */
 	updateLeftFwdExtPwrStatus() {
 		let leftFwdExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:1', 'Bool');
+		let leftFwdExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:1', 'Bool');
 		let active = 100;
 		let inactive = 0;
 		let lineActive = 'pwr-line-active';
 		let lineInactive = 'pwr-line-inactive';
-		if (leftFwdExtPwrStatus == 1) {
-			this.fwdExtPwrActiveL.setAttribute('opacity', active);
-			this.fwdExtPwrLineL.setAttribute('class', lineActive);
+		if (leftFwdExtPwrAvail == 1){
+			if (leftFwdExtPwrStatus == 1) {
+				this.fwdExtPwrActiveL.setAttribute('opacity', active);
+				this.fwdExtPwrLineL.setAttribute('class', lineActive);
+			} else {
+				this.fwdExtPwrActiveL.setAttribute('opacity', inactive);
+				this.fwdExtPwrLineL.setAttribute('class', lineInactive);
+			}
 		} else {
 			this.fwdExtPwrActiveL.setAttribute('opacity', inactive);
 			this.fwdExtPwrLineL.setAttribute('class', lineInactive);
@@ -407,13 +413,19 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 	}
 	updateRightFwdExtPwrStatus() {
 		let rightFwdExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:2', 'Bool');
+		let rightFwdExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:2', 'Bool');
 		let active = 100;
 		let inactive = 0;
 		let lineActive = 'pwr-line-active';
 		let lineInactive = 'pwr-line-inactive';
-		if (rightFwdExtPwrStatus == 1) {
-			this.fwdExtPwrActiveR.setAttribute('opacity', active);
-			this.fwdExtPwrLineR.setAttribute('class', lineActive);
+		if (rightFwdExtPwrAvail == 1){
+			if (rightFwdExtPwrStatus == 1) {
+				this.fwdExtPwrActiveR.setAttribute('opacity', active);
+				this.fwdExtPwrLineR.setAttribute('class', lineActive);
+			} else {
+				this.fwdExtPwrActiveR.setAttribute('opacity', inactive);
+				this.fwdExtPwrLineR.setAttribute('class', lineInactive);
+			}
 		} else {
 			this.fwdExtPwrActiveR.setAttribute('opacity', inactive);
 			this.fwdExtPwrLineR.setAttribute('class', lineInactive);
@@ -421,13 +433,19 @@ class B787_10_SYS_Page_ELEC extends B787_10_SYS_Page {
 	}
 	updateAftExtPwrStatus() {
 		let AftExtPwrStatus = SimVar.GetSimVarValue('EXTERNAL POWER ON:3', 'Bool');
+		let aftExtPwrAvail = SimVar.GetSimVarValue('EXTERNAL POWER AVAILABLE:3', 'Bool');
 		let active = 100;
 		let inactive = 0;
 		let lineActive = 'pwr-line-active';
 		let lineInactive = 'pwr-line-inactive';
-		if (AftExtPwrStatus == 1) {
-			this.aftExtPwrActive.setAttribute('opacity', active);
-			this.aftExtPwrLine.setAttribute('class', lineActive);
+		if (aftExtPwrAvail == 1){
+			if (AftExtPwrStatus == 1) {
+				this.aftExtPwrActive.setAttribute('opacity', active);
+				this.aftExtPwrLine.setAttribute('class', lineActive);
+			} else {
+				this.aftExtPwrActive.setAttribute('opacity', inactive);
+				this.aftExtPwrLine.setAttribute('class', lineInactive);
+			}
 		} else {
 			this.aftExtPwrActive.setAttribute('opacity', inactive);
 			this.aftExtPwrLine.setAttribute('class', lineInactive);
