@@ -8,19 +8,17 @@ Thank you for your interest in contributing to the B78X Heavy project. Before yo
 
 ### Possible projects/changes ✅
 * All display frontends (Except EFB)
-* Autopilot logic (With some exceptions such as using the bank angle variable)
-* Custom panel textures (not including text)
+* Autopilot logic 
+* Custom panel textures
 * Custom Sounds (Engines, Cockpit, Switches, etc.)
-
-### Unable to alter due to encryption ❌
-* Forking into a separate aircraft from the default
-* Alterations to the 3D model 
+* Flight Model and Behavior
 * Lighting
-* EFB Support 
-* Flight Model and Behavior 
 * System Connections (e.g. Hydraulic systems affect on 3d model animations and flight behavior)
-* Unable to animate currently non-animated switches/knobs/buttons 
+* Animations
 
+### Unable to alter/add due to encryption ❌
+* Forking into a separate aircraft from the default
+* Alterations to the 3D model (e.g. EFB)
 
 ## Setup
 
