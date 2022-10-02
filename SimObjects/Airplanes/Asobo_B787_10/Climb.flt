@@ -1,0 +1,202 @@
+[SimVarForSpawningInTheAir.0]
+IAS=300
+FlapsDegree=0000.00
+
+[Avionics.0]
+Comm1Active=125.300
+Comm1Standby=124.850
+Comm2Active=124.850
+Comm2Standby=124.850
+Comm3Active=124.850
+Comm3Standby=124.850
+Nav1Active=110.50
+Nav1Standby=113.90
+OBS1=360
+Nav2Active=110.50
+Nav2Standby=113.90
+OBS2=360
+
+TransponderState=4
+ADFActive=890
+ADF2Active=890
+DMESelected=1
+ComTransmit=1
+ComReceiveBoth=False
+Com1Receive=True
+Com2Receive=False
+Com3Receive=False
+AudioNav1Listen=False
+AudioNav2Listen=False
+AudioMarkerListen=True
+AudioDmeListen=False
+AudioAdfListen=False
+AudioAdf2Listen=False
+AvionicsSwitch=True
+
+[Engine Parameters.1.0]
+ThrottleLeverPct=1
+PropellerLeverPct=0.99993896484375
+MixtureLeverPct=0.99993896484375
+Pct Engine RPM=1.0555886939947713987
+MaxReachedEngineRPM=31586.987738769817952
+LeftMagneto=True
+RightMagneto=True
+GeneratorSwitch=True
+CowlFlapPct=0
+FuelPumpSwitch=True
+FuelPumpSwitch_EX1=-1
+CarbHeat/DeiceSwitch=False
+EngineMasterSwitch=True
+GlowPlugTemperaturePct=1
+IgnitionSwitch=0
+Afterburner=0
+EGT_DegR=1250
+ITT_DegR=1600
+
+[Engine Parameters.2.0]
+ThrottleLeverPct=1
+PropellerLeverPct=0.99993896484375
+MixtureLeverPct=0.99993896484375
+Pct Engine RPM=1.0555886939947713987
+MaxReachedEngineRPM=31586.987738769817952
+LeftMagneto=False
+RightMagneto=False
+GeneratorSwitch=True
+CowlFlapPct=0
+FuelPumpSwitch=True
+FuelPumpSwitch_EX1=-1
+CarbHeat/DeiceSwitch=False
+EngineMasterSwitch=True
+GlowPlugTemperaturePct=1
+IgnitionSwitch=0
+Afterburner=0
+EGT_DegR=1250
+ITT_DegR=1600
+
+[FuelSystem.0]
+Valve.1=True
+Valve.2=True
+Valve.3=False
+Valve.4=False
+Valve.5=False
+Valve.6=False
+Valve.7=False
+Valve.8=False
+Valve.9=False
+Pump.1=True
+Pump.2=True
+Pump.3=True
+Pump.4=True
+Pump.5=True
+Pump.6=True
+
+[Systems.0]
+BatterySwitch=True
+StructuralDeiceSwitch=False
+PropDeiceSwitch=False
+Autobrakes=1
+StandbyVacuum=False
+PropSync=False
+AutoFeatherSwitch=False
+FlightDirector=True
+LaunchBarSwitch=False
+LaunchBarState=0
+TailhookHandle=False
+TailhookState=0
+FoldingWingsHandle=False
+FoldingWingsState=0, 0
+
+[LocalVars.0]
+XMLVAR_SeatBelts=1
+
+[Electrical.0]
+circuit.73=False
+circuit.75=False
+
+[Gauges.0]
+KollsmanSetting=30.107828140258789063
+
+[BleedAir.0]
+BleedAirSource=0
+
+[Switches.0]
+PitotHeat=False
+BeaconLights=True
+LandingLights=False
+LogoLights=True
+NavLights=True
+PanelLights=True
+RecognitionLights=True
+StrobeLights=True
+TaxiLights=False
+WingLights=True
+CabinLights=True
+GlareshieldLights=False
+PedestalLights=False
+WindshieldDeice=1
+Potentiometer.16 = 0.5
+Potentiometer.17 = 0.5
+Potentiometer.18 = 0.5
+Potentiometer.19 = 0.5
+Potentiometer.20 = 0
+Potentiometer.21 = 0.5
+Potentiometer.22 = 0
+Potentiometer.23 = 0.5
+Potentiometer.24 = 0.5
+Potentiometer.25 = 0
+Potentiometer.26 = 0.5
+Potentiometer.27 = 0.5
+Potentiometer.28 = 0.5
+Potentiometer.29 = 0.5
+Potentiometer.30 = 0.5
+Potentiometer.31 = 0.5
+
+[AutoPilot.0]
+MasterSwitch=False
+WingLeveler=False
+Nav1Lock=False
+HeadingLock=False
+HeadingValue=0
+AltitudeLock=False
+AltitudeValue=10000
+AttitudeHold=False
+AirspeedHold=False
+AirspeedValue=200
+MachHold=False
+MachValue=0
+VerticalSpeedHold=False
+VerticalSpeedValue=0
+RPMHold=False
+RPMValue=0
+GlideslopeHold=False
+ApproachHold=False
+BackCourseHold=False
+YawDamper=False
+ToGa=False
+AutoThrottleArm=False
+GPSdrivesNAV1=True
+IsUsedForLesson=False
+ForceDisplayUI=False
+
+[Controls.0]
+SpoilersHandle=000.00
+FlapsHandle=000.00
+LeftFlap=000.00
+RightFlap=000.00
+GearsHandle=000.00
+Gear1=000.00
+Gear2=000.00
+Gear3=000.00
+YokeY=050.00
+YokeX=050.00
+Rudder=050.00
+LeftBrake=000.00
+RightBrake=000.00
+ParkingBrake=000.00
+
+RudderTrimPct=0
+AileronTrimPct=0
+AileronTrimDisabled=False
+ElevatorTrimDisabled=False
+RudderTrimDisabled=False
+SpoilersArmed=True
