@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ModelInfo>
+    <LODS>
+        <LOD minSize="150" ModelFile="B787_10_interior_LOD00.gltf"/>
+        <LOD minSize="90" ModelFile="B787_10_interior_LOD01.gltf"/>
+        <LOD minSize="60" ModelFile="B787_10_interior_LOD02.gltf"/>
+        <LOD minSize="40" ModelFile="B787_10_interior_LOD03.gltf"/>
+        <LOD minSize="10" ModelFile="B787_10_interior_LOD04.gltf"/>
+        <LOD minSize="3" ModelFile="B787_10_interior_LOD05.gltf"/>
+        <LOD minSize="1" ModelFile="B787_10_interior_LOD06.gltf"/>
+    </LODS>
+    <!-- TEMPLATE
+        <UseTemplate Name="">
+            <NODE_ID></NODE_ID>
+            <ANIM_NAME></ANIM_NAME>
+            <SEQ2_NODE_ID></SEQ2_NODE_ID>
+            <TOOLTIP_TITLE>@TT_Package.</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.</TT_DESCRIPTION_ID>
+        </UseTemplate>
+    -->
+
+    <Behaviors>
+        <!-- Name: Includes -->
+        <Include ModelBehaviorFile="Asobo\Common.xml"/>
+        <Include ModelBehaviorFile="Asobo\Airliner\FMC.xml"/>
+        <Include ModelBehaviorFile="Asobo\Airliner\Boeing.xml"/>
+        <Include ModelBehaviorFile="Asobo\Airliner\AirlinerCommon.xml"/>
+        <!-- End: Includes -->
+
+        <Component ID="Overhead">
+            <DefaultTemplateParameters>
+                <TYPE>BOEING</TYPE>
+                <POTENTIOMETER_SEQ1>24</POTENTIOMETER_SEQ1>
+                <POTENTIOMETER_SEQ2></POTENTIOMETER_SEQ2>
+                <SEQ1_EMISSIVE_DRIVE_VISIBILITY>false</SEQ1_EMISSIVE_DRIVE_VISIBILITY>
+                <SEQ1_CODE_DRIVES_VISIBILITY>true</SEQ1_CODE_DRIVES_VISIBILITY>
+                <SEQ1_CODE_DRIVES_DOWN_STATE>true</SEQ1_CODE_DRIVES_DOWN_STATE>
+            </DefaultTemplateParameters>
+
+            <!-- Name: Electrical Panel -->
+            <!-- Ref: 6.10.1 -->
+            <Component ID="Electrical_Panel">
+                <Component ID="Battery">
+                    <!-- Name: Battery Button -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Switch_Battery_Master_Template">
+                        <ID>1</ID>
+                        <NODE_ID>ELECTRICAL_Push_Battery</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Push_Battery</ANIM_NAME>
+                    </UseTemplate>
+                    <!-- End: Battery Button -->
+                </Component>
+                <Component ID="Utility"></Component>
+
+                <Component ID="APUGens">
+                    <!-- Name: Left APU Generator Button -->
+                    <!-- State: Requires TEST -->
+                    <!-- Tester: ??? -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_APU_Generator_Template">
+                        <ID>1</ID>
+                        <NODE_ID>ELECTRICAL_Push_APU_Generator_1</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Push_APU_Generator_1</ANIM_NAME>
+                        <TYPE>AS01B</TYPE>
+                    </UseTemplate>
+                    <!-- End: Left APU Generator Button -->
+
+                    <!-- Name: Right APU Generator Button -->
+                    <!-- State: Requires TEST -->
+                    <!-- Tester: ??? -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_APU_Generator_Template">
+                        <ID>2</ID>
+                        <NODE_ID>ELECTRICAL_Push_APU_Generator_2</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Push_APU_Generator_2</ANIM_NAME>
+                        <TYPE>AS01B</TYPE>
+                    </UseTemplate>
+                    <!-- End: Right APU Generator Button -->
+                </Component>
+
+                <Component ID="APUStarter">
+                    <!-- Name: APU Starter Knob -->
+                    <!-- State: Requires TEST -->
+                    <!-- Tester: ??? -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Switch_APU_Starter_Template">
+                        <NODE_ID>ELECTRICAL_Knob_APU_Starter</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Knob_APU_Starter</ANIM_NAME>
+                        <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
+                        <SWITCH_POSITION_VAR>XMLVAR_APU_StarterKnob_Pos</SWITCH_POSITION_VAR>
+                        <ACTIVE_FUEL_PUMP_ON_RPM>7</ACTIVE_FUEL_PUMP_ON_RPM>
+                    </UseTemplate>
+                    <!-- End: APU Starter Knob -->
+
+                    <!-- Name: APU Starter Annunciator -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
+                        <NODE_ID>ELECTRICAL_Indicator_APU</NODE_ID>
+                        <SEQ1_EMISSIVE_CODE>
+                            <!-- Store Previous APU Switch position to register -->
+                            (O:PreviousAPUSwitchPosition) s1
+                            <!-- Store APU Switch position to register -->
+                            (L:XMLVAR_APU_StarterKnob_Pos) s2
+
+                            <!-- if previous APU switch position == 1 (ON) and APU switch position == 2 (START) -->
+                            l1 1 == l2 2 == and if{
+                                <!-- Add 0.7 second to simulation time and store the value -->
+                                (E:SIMULATION TIME, seconds) 0.7 + (&gt;O:FaultEmissiveTime)
+                            }
+
+                            <!-- Update Previous APU Switch position -->
+                            l2 (&gt;O:PreviousAPUSwitchPosition)
+                            <!-- Return TRUE if FAULT should be emissive -->
+                            (E:SIMULATION TIME, seconds) (O:FaultEmissiveTime) &lt;
+                        </SEQ1_EMISSIVE_CODE>
+                        <NO_SEQ2>true</NO_SEQ2>
+                    </UseTemplate>
+                    <!-- End: APU Starter Annunciator -->
+                </Component>
+
+                <Component ID="ExternalPower">
+                    <!-- Name: Left Forward External Power Button -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+                        <ID>1</ID>
+                        <NODE_ID>ELECTRICAL_Switch_ExternalPower_FWD_1</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_FWD_1</ANIM_NAME>
+                    </UseTemplate>
+                    <!-- End: Left Forward External Power Button -->
+
+                    <!-- Name: Right Forward External Power Button -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+                        <ID>2</ID>
+                        <NODE_ID>ELECTRICAL_Switch_ExternalPower_FWD_2</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_FWD_2</ANIM_NAME>
+                    </UseTemplate>
+                    <!-- End: Right Forward External Power Button -->
+
+                    <!-- Name: AFT External Power Button -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+                        <ID>3</ID>
+                        <NODE_ID>ELECTRICAL_Switch_ExternalPower_AFT</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_AFT</ANIM_NAME>
+                    </UseTemplate>
+                    <!-- End: AFT Forward External Power Button -->
+                </Component>
+                <Component ID="GenCTRL">
+                    <!-- Name: Generator Control (Alternator) Left Engine 1 Button -->
+                    <!-- State: Requires TEST -->
+                    <!-- Tester: ??? -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template">
+                        <ID>1</ID>
+                        <NODE_ID>ELECTRICAL_Push_Bus_1_1</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Push_Bus_1_1</ANIM_NAME>
+                        <ENGINE_ID>1</ENGINE_ID>
+                    </UseTemplate>
+                    <!-- End: Generator Control (Alternator) Left Engine 1 Button -->
+
+                    <!-- Name: Generator Control (Alternator) Left Engine 2 Button -->
+                    <!-- State: Requires TEST -->
+                    <!-- Tester: ??? -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template">
+                        <ID>2</ID>
+                        <NODE_ID>ELECTRICAL_Push_Bus_1_2</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Push_Bus_1_2</ANIM_NAME>
+                        <ENGINE_ID>1</ENGINE_ID>
+                    </UseTemplate>
+                    <!-- End: Generator Control (Alternator) Left Engine 2 Button -->
+
+                    <!-- Name: Generator Control (Alternator) Right Engine 1 Button -->
+                    <!-- State: Requires TEST -->
+                    <!-- Tester: ??? -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template">
+                        <ID>3</ID>
+                        <NODE_ID>ELECTRICAL_Push_Bus_2_1</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Push_Bus_2_1</ANIM_NAME>
+                        <ENGINE_ID>2</ENGINE_ID>
+                    </UseTemplate>
+                    <!-- End: Generator Control (Alternator) Right Engine 1 Button -->
+
+                    <!-- Name: Generator Control (Alternator) Right Engine 2 Button -->
+                    <!-- State: Requires TEST -->
+                    <!-- Tester: ??? -->
+                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template">
+                        <ID>4</ID>
+                        <NODE_ID>ELECTRICAL_Push_Bus_2_2</NODE_ID>
+                        <ANIM_NAME>ELECTRICAL_Push_Bus_2_2</ANIM_NAME>
+                        <ENGINE_ID>2</ENGINE_ID>
+                    </UseTemplate>
+                    <!-- End: Generator Control (Alternator) Right Engine 2 Button -->
+
+                </Component>
+                <Component ID="GenDRIVE">
+
+                </Component>
+            </Component>
+
+
+            <!-- Name: AntiIce Panel -->
+            <!-- Ref: 3.10.1 -->
+            <Component ID="AntiIce_Panel">
+                <!-- Name: Wing/Airframe Knob -->
+                <!-- State: Requires TEST -->
+                <!-- Tester: ??? -->
+                <!-- Notes: Add INIT?? -->
+                <UseTemplate Name="ASOBO_DEICE_Switch_Airframe_Template">
+                    <NODE_ID>DEICE_Knob_Wing</NODE_ID>
+                    <ANIM_NAME>DEICE_Knob_Wing</ANIM_NAME>
+                    <SWITCH_TYPE>OFF_AUTO_ON</SWITCH_TYPE>
+                    <SWITCH_DIRECTION>HORIZONTAL</SWITCH_DIRECTION>
+                    <ARROW_TYPE>CURVED</ARROW_TYPE>
+                    <TT_ICON>ROTATE</TT_ICON>
+                </UseTemplate>
+                <!-- End: Wing/Airframe Knob -->
+
+                <!-- Name: Left Engine Knob -->
+                <!-- State: Requires TEST -->
+                <!-- Tester: ??? -->
+                <!-- Notes: Add INIT?? -->
+                <UseTemplate Name="ASOBO_DEICE_Knob_Engine_Template">
+                    <ID>1</ID>
+                    <NODE_ID>DEICE_Knob_Engine_1</NODE_ID>
+                    <ANIM_NAME>DEICE_Knob_Engine_1</ANIM_NAME>
+                    <DEICE_ENGINE_TYPE>ON_AUTO_OFF</DEICE_ENGINE_TYPE>
+                    <POS_OFF>0</POS_OFF>
+                    <POS_AUTO>1</POS_AUTO>
+                    <POS_ON>2</POS_ON>
+                    <SWITCH_DIRECTION>HORIZONTAL</SWITCH_DIRECTION>
+                    <ARROW_TYPE>CURVED</ARROW_TYPE>
+                    <TT_ICON>ROTATE</TT_ICON>
+                </UseTemplate>
+                <!-- End: Left Engine Knob -->
+
+                <!-- Name: Right Engine Knob -->
+                <!-- State: Requires TEST -->
+                <!-- Tester: ??? -->
+                <!-- Notes: Add INIT?? -->
+                <UseTemplate Name="ASOBO_DEICE_Knob_Engine_Template">
+                    <ID>2</ID>
+                    <NODE_ID>DEICE_Knob_Engine_2</NODE_ID>
+                    <ANIM_NAME>DEICE_Knob_Engine_2</ANIM_NAME>
+                    <DEICE_ENGINE_TYPE>ON_AUTO_OFF</DEICE_ENGINE_TYPE>
+                    <POS_OFF>0</POS_OFF>
+                    <POS_AUTO>1</POS_AUTO>
+                    <POS_ON>2</POS_ON>
+                    <SWITCH_DIRECTION>HORIZONTAL</SWITCH_DIRECTION>
+                    <ARROW_TYPE>CURVED</ARROW_TYPE>
+                    <TT_ICON>ROTATE</TT_ICON>
+                </UseTemplate>
+                <!-- End: Right Engine Knob -->
+            </Component>
+            <!-- End: AntiIce Panel -->
+
+            <!-- Name: Lightning Panel -->
+            <!-- Ref: 1.30.5 -->
+            <Component ID="Lightning_Panel">
+                <OverrideTemplateParameters>
+                    <PUSH_TYPE>AIRLINER</PUSH_TYPE>
+                    <POTENTIOMETER_SEQ2>24</POTENTIOMETER_SEQ2>
+                    <SEQ2_EMISSIVE_DRIVES_VISIBILITY>false</SEQ2_EMISSIVE_DRIVES_VISIBILITY>
+                    <SEQ2_EMISSIVE_CODE>1</SEQ2_EMISSIVE_CODE>
+                </OverrideTemplateParameters>
+
+                <Component ID="Push_Buttons">
+                    <!-- Name: Beacon Push Button -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Beacon_Template">
+                        <NODE_ID>LIGHTING_Push_Light_Beacon_1</NODE_ID>
+                        <ANIM_NAME>LIGHTING_Push_Light_Beacon_1</ANIM_NAME>
+                        <SEQ2_NODE_ID>LIGHTING_Push_Light_Beacon_1</SEQ2_NODE_ID>
+                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_BEACON_TITLE</TOOLTIP_TITLE>
+                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_BEACON_ACTION</TT_DESCRIPTION_ID>
+                    </UseTemplate>
+                    <!-- End: Beacon Push Button -->
+
+                    <!-- Name: Navigation Push Button -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Navigation_Template">
+                        <NODE_ID>LIGHTING_Push_Light_NAV_1</NODE_ID>
+                        <ANIM_NAME>LIGHTING_Push_Light_NAV_1</ANIM_NAME>
+                        <SEQ2_NODE_ID>LIGHTING_Push_Light_NAV_1</SEQ2_NODE_ID>
+                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_NAV_TITLE</TOOLTIP_TITLE>
+                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_NAV_ACTION</TT_DESCRIPTION_ID>
+                    </UseTemplate>
+                    <!-- End: Navigation Push Button -->
+
+                    <!-- Name: Logo Push Button -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Logo_Template">
+                        <NODE_ID>LIGHTING_Push_Light_Logo_1</NODE_ID>
+                        <ANIM_NAME>LIGHTING_Push_Light_Logo_1</ANIM_NAME>
+                        <SEQ2_NODE_ID>LIGHTING_Push_Light_Logo_1</SEQ2_NODE_ID>
+                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_LOGO_TITLE</TOOLTIP_TITLE>
+                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_LOGO_ACTION</TT_DESCRIPTION_ID>
+                    </UseTemplate>
+                    <!-- End: Logo Push Button -->
+
+                    <!-- Name: Wing Push Button -->
+                    <!-- State: OK -->
+                    <!-- Tester: Co-mi -->
+                    <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Wing_Template">
+                        <NODE_ID>LIGHTING_Push_Light_Wing_1</NODE_ID>
+                        <ANIM_NAME>LIGHTING_Push_Light_Wing_1</ANIM_NAME>
+                        <SEQ2_NODE_ID>LIGHTING_Push_Light_Wing_1</SEQ2_NODE_ID>
+                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_WING_TITLE</TOOLTIP_TITLE>
+                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_WING_ACTION</TT_DESCRIPTION_ID>
+                    </UseTemplate>
+                    <!-- End: Wing Push Button -->
+                </Component>
+
+                <Component ID="Switches">
+                    <DefaultTemplateParameters>
+                        <TYPE>OnOff</TYPE>
+                        <INVERT_SWITCH_ON_CONDITION>true</INVERT_SWITCH_ON_CONDITION>
+                    </DefaultTemplateParameters>
+
+                    <!-- Name: Runway Turnoff Left -->
+                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Taxi_Template">
+                        <ID>2</ID>
+                        <NODE_ID>LIGHTING_Switch_RunwayTurnOff_L</NODE_ID>
+                        <ANIM_NAME>LIGHTING_Switch_RunwayTurnOff_L</ANIM_NAME>
+                        <SIMVAR_INDEX>2</SIMVAR_INDEX>
+                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_RUNWAY_TITLE</TOOLTIP_TITLE>
+                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_RUNWAY_ACTION</TT_DESCRIPTION_ID>
+                        <TT_DESCRIPTION_INDEX>(R:1:@TT_Package.GT_STATE_LEFT)</TT_DESCRIPTION_INDEX>
+                    </UseTemplate>
+                    <!-- End: Runway Turnoff Left -->
+
+                    <!-- Name: Runway Turnoff Right -->
+                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Taxi_Template">
+                        <ID>3</ID>
+                        <NODE_ID>LIGHTING_Switch_RunwayTurnOff_R</NODE_ID>
+                        <ANIM_NAME>LIGHTING_Switch_RunwayTurnOff_R</ANIM_NAME>
+                        <SIMVAR_INDEX>3</SIMVAR_INDEX>
+                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_RUNWAY_TITLE</TOOLTIP_TITLE>
+                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_RUNWAY_ACTION</TT_DESCRIPTION_ID>
+                        <TT_DESCRIPTION_INDEX>(R:1:@TT_Package.GT_STATE_RIGHT)</TT_DESCRIPTION_INDEX>
+                    </UseTemplate>
+                    <!-- End: Runway Turnoff Right -->
+
+                    <!-- Name: Taxi -->
+                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Taxi_Template">
+                        <ID>1</ID>
+                        <NODE_ID>LIGHTING_Switch_Light_Taxi_1</NODE_ID>
+                        <ANIM_NAME>LIGHTING_Switch_Light_Taxi_1</ANIM_NAME>
+                        <SIMVAR_INDEX>1</SIMVAR_INDEX>
+                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_TAXI_TITLE</TOOLTIP_TITLE>
+                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_TAXI_ACTION_SET</TT_DESCRIPTION_ID>
+                    </UseTemplate>
+                    <!-- End: Taxi -->
+
+                    <!-- Name: Strobe -->
+                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Strobe_Template">
+                        <NODE_ID>LIGHTING_Switch_Light_Strobe_1</NODE_ID>
+                        <ANIM_NAME>LIGHTING_Switch_Light_Strobe_1</ANIM_NAME>
+                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_STROBE_TITLE</TOOLTIP_TITLE>
+                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_STROBE_ACTION</TT_DESCRIPTION_ID>
+                    </UseTemplate>
+                    <!-- End: Strobe -->
+                </Component>
+
+            </Component>
+            <!-- End: Lightning Panel -->
+        </Component>
+        <!--
+        <Compoment ID="Glareshield"></Compoment>
+        <Compoment ID="Left_Forward"></Compoment>
+        <Compoment ID="Right_Forward"></Compoment>
+        <Compoment ID="Center_Forward"></Compoment>
+        <Compoment ID="Left_Sidewall"></Compoment>
+        <Compoment ID="Right_Sidewall"></Compoment>
+        <Compoment ID="Forward_Aisle_Stand"></Compoment>
+        <Compoment ID="Aft_Aisle_Stand"></Compoment>
+        <Compoment ID="Control_Stand"></Compoment>
+        <Compoment ID="Left_HUD"></Compoment>
+        <Compoment ID="Right_HUD"></Compoment>
+        -->
+    </Behaviors>
+</ModelInfo>
