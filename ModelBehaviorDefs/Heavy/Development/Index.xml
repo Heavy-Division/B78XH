@@ -1,0 +1,4 @@
+<ModelBehaviors>
+    <Include RelativeFile="CDUFix.xml"/>
+    <Include RelativeFile="COMCpp.xml"/>
+</ModelBehaviors>

@@ -1,5 +1,5 @@
 <ModelBehaviors>
-    <Template Name="ASOBO_GT_Interaction_NoInteraction">
+    <Template Name="Heavy_Interaction">
         <Switch Param="NODE_ID">
             <Default>
                 <DefaultTemplateParameters>
