@@ -220,20 +220,47 @@ class B78XH_IRS {
 					maximal = 270;
 					break;
 				case B78XH_IRS.ALIGN_SPEED.REAL:
-					let timeConstant = 5.4;
-					let distanceConstant = 0.9;
+					let sqr = 0;
+					let timeToAlign = 0;
+					let timeSec = 0;
 					let planeLatitudeAbsolute = Math.abs(SimVar.GetSimVarValue('PLANE LATITUDE', 'degree latitude'));
-					let timeToAlign = Math.floor((planeLatitudeAbsolute / distanceConstant) * timeConstant);
-					minimal = timeToAlign + 360 - 20;
-					maximal = timeToAlign + 360 + 20;
+					if (planeLatitudeAbsolute <= 60) {
+						let fix = 1.07415;
+						sqr = Math.pow(fix, planeLatitudeAbsolute - 37.5);
+						timeToAlign = (sqr + 5);
+						timeSec = Math.floor(timeToAlign * 60);
+					} else if (planeLatitudeAbsolute > 60 && planeLatitudeAbsolute <=70) {
+						timeToAlign = 10;
+						timeSec = Math.floor(timeToAlign * 60);
+					} else if (planeLatitudeAbsolute > 70 && planeLatitudeAbsolute <=78) {
+						timeToAlign = 17;
+						timeSec = Math.floor(timeToAlign * 60);
+					} else if (planeLatitudeAbsolute > 78) {
+						timeToAlign = 17;
+						timeSec = Math.floor(timeToAlign * 60);
+					}
+					minimal = timeSec;
+					maximal = timeSec;
 					break;
 				default:
 					minimal = 230;
 					maximal = 270;
 			}
 		}
-
-		let ret = Math.floor(Math.random() * (maximal - minimal + 1)) + minimal
+		let ret = 0;
+		if (maximal > 0) {
+			switch (HeavyDataStorage.get('IRS_ALIGN_SPEED', B78XH_IRS.ALIGN_SPEED.REAL)) {
+				case B78XH_IRS.ALIGN_SPEED.FAST:
+					ret = Math.floor(Math.random() * (maximal - minimal + 1)) + minimal;
+					break;
+				case B78XH_IRS.ALIGN_SPEED.NORMAL:
+					ret = Math.floor(Math.random() * (maximal - minimal + 1)) + minimal;
+					break;
+				case B78XH_IRS.ALIGN_SPEED.REAL:
+					ret = maximal;
+					break;
+			}
+		}
 		SimVar.SetSimVarValue('L:B78XH_IRS_' + irsId + '_TIME_FOR_ALIGN', 'Number', ret);
 		return ret;
 	}
