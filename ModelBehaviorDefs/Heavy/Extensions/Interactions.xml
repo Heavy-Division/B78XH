@@ -1,10 +1,11 @@
 <ModelBehaviors>
-    <Template Name="Heavy_Interaction">
+    <Template Name="ASOBO_GT_Interaction_NoInteraction">
         <Switch Param="NODE_ID">
             <Default>
                 <DefaultTemplateParameters>
                     <MOUSEFLAGS/>
                     <DISABLE_INTERACTION_LOCK>True</DISABLE_INTERACTION_LOCK>
+                    <DISABLE_MOUSERECT>True</DISABLE_MOUSERECT>
                 </DefaultTemplateParameters>
 
                 <UseTemplate Name="ASOBO_GT_MouseRect">
