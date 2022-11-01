@@ -1274,9 +1274,6 @@
                         <TOOLTIP_TITLE>@TT_Package.LIGHTING_KNOB_LOWERDISPLAY_BRIGHTNESS_TITLE</TOOLTIP_TITLE>
                         <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_KNOB_LOWERDISPLAY_BRIGHTNESS_ACTION</TT_DESCRIPTION_ID>
                     </UseTemplate>
-
-
-
                 </Component>
             </Component>
             <!-- End: Wipers Panel -->
@@ -1994,6 +1991,16 @@
             <Parameters Type="Defaults">
                 <ALT_CODE>s0 l0 0 &gt; sp1 (A:LIGHT POTENTIOMETER:31, Percent over 100) 0 (L:XMLVAR_LightMasterActive) l1 and ?</ALT_CODE>
             </Parameters>
+
+            <Component ID="Displays">
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <ID>3</ID>
+                    <NODE_ID>Screen_MFD_3</NODE_ID>
+                    <POTENTIOMETER>30</POTENTIOMETER>
+                    <FAILURE_CIRCUIT>27</FAILURE_CIRCUIT>
+                </UseTemplate>
+            </Component>
+
             <Component ID="Capitan">
                 <Parameters Type="Defaults">
                     <ID>1</ID>
