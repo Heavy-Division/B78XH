@@ -1,5 +1,5 @@
 <ModelBehaviors>
-    <Template Name="ASOBO_BOEING_TCP_Template">
+    <Template Name="HEAVY_BOEING_TCP_Template">
         <Parameters Type="Default">
             <ID>1</ID>
             <BUTTON_NAME_PREFIX>BOEING_TCP</BUTTON_NAME_PREFIX>
@@ -144,7 +144,7 @@
         <UseTemplate Name="ASOBO_GT_Helper_Suffix_ID_Appender">
             <Switch Param="PLANE_PREFIX">
                 <Default>
-                    <TEMPLATE_TO_CALL>ASOBO_BOEING_TCP_SubTemplate</TEMPLATE_TO_CALL>
+                    <TEMPLATE_TO_CALL>HEAVY_BOEING_TCP_SubTemplate</TEMPLATE_TO_CALL>
                 </Default>
                 <!--
                 ____________________________________________________________________________________
