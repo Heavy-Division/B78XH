@@ -4,7 +4,7 @@ labels: [MODEL BEHAVIOR]
 body:
   - type: markdown
     attributes:
-      value: "# B78XH Feature Request Form"
+      value: "# B78XH Model behavior report"
   - type: input
     id: name
     attributes:
