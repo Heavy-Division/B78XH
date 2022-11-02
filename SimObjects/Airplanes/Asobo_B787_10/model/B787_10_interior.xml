@@ -2006,8 +2006,7 @@
                     <ID>1</ID>
                     <POTENTIOMETER_SEQ1>23</POTENTIOMETER_SEQ1>
                     <SEQ1_EMISSIVE_CODE>0.5</SEQ1_EMISSIVE_CODE>
-                    <SEQ1_CODE_DRIVES_VISIBILITY>FALSE</SEQ1_CODE_DRIVES_VISIBILITY>
-                    <SEQ1_SUFFIX>TRUE</SEQ1_SUFFIX>
+                    <SEQ1_SUFFIX></SEQ1_SUFFIX>
                 </Parameters>
                 <Component ID="CDU">
                     <UseTemplate Name="HEAVY_CDU_AS01B" />
@@ -2019,8 +2018,7 @@
                     <ID>2</ID>
                     <POTENTIOMETER_SEQ1>23</POTENTIOMETER_SEQ1>
                     <SEQ1_EMISSIVE_CODE>0.5</SEQ1_EMISSIVE_CODE>
-                    <SEQ1_CODE_DRIVES_VISIBILITY>FALSE</SEQ1_CODE_DRIVES_VISIBILITY>
-                    <SEQ1_SUFFIX>TRUE</SEQ1_SUFFIX>
+                    <SEQ1_SUFFIX></SEQ1_SUFFIX>
                     <INOP_BUTTONS>TRUE</INOP_BUTTONS>
                 </Parameters>
                 <Component ID="CDU">
