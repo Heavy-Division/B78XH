@@ -29,9 +29,6 @@
                     <ID>2</ID>
                 </UseTemplate>
             </Case>
-
-            <Case Value="TRANSPONDER_Knob_Mode">
-            </Case>
         </Switch>
     </Template>
 </ModelBehaviors>

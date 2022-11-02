@@ -2152,6 +2152,21 @@
                 </UseTemplate>
             </Component>
 
+            <Component ID="Transponder">
+                <UseTemplate Name="ASOBO_AIRLINER_ATC_Transponder_Mode_Knob_Template">
+                    <NODE_ID>TRANSPONDER_Knob_Mode</NODE_ID>
+                    <ANIM_NAME>TRANSPONDER_Knob_Mode</ANIM_NAME>
+                    <ANIM_NAME_PUSH>TRANSPONDER_Knob_Mode_Push</ANIM_NAME_PUSH>
+                    <CODE_POS_STBY>0</CODE_POS_STBY>
+                    <CODE_POS_ALT>1</CODE_POS_ALT>
+                    <CODE_POS_XPNDR>2</CODE_POS_XPNDR>
+                    <CODE_POS_TA>3</CODE_POS_TA>
+                    <CODE_POS_TARA>4</CODE_POS_TARA>
+                    <IDENT>TRUE</IDENT>
+                    <EVENT_TARGER>AS01B_ATC</EVENT_TARGER>
+                </UseTemplate>
+            </Component>
+
             <Component ID="Rudder_Trim">
                 <UseTemplate Name="HEAVY_HANDLING_Switch_RudderTrim_Template" />
             </Component>
