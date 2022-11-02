@@ -1421,6 +1421,14 @@
                     <PLANE_PREFIX>AS01B</PLANE_PREFIX>
                 </Parameters>
 
+                <Component ID="Clock_Map_Mic">
+                    <UseTemplate Name="ASOBO_AIRLINER_Push_Clock_Template">
+                        <NODE_ID>Btn_main_panel_clock_pilot</NODE_ID>
+                        <ANIM_NAME>Btn_main_panel_clock_pilot</ANIM_NAME>
+                        <PLANE_PREFIX>AS01B_PFD</PLANE_PREFIX>
+                    </UseTemplate>
+                </Component>
+
                 <!-- Name: Master WARNING/CAUTION + Datalink Panel -->
                 <!-- Ref: 15.10.5 -->
                 <!-- Ref: 5.10.19 -->
@@ -1514,6 +1522,14 @@
                     <DONT_APPEND_ID>true</DONT_APPEND_ID>
                     <PLANE_PREFIX>AS01B</PLANE_PREFIX>
                 </Parameters>
+
+                <Component ID="Clock_Map_Mic">
+                    <UseTemplate Name="ASOBO_AIRLINER_Push_Clock_Template">
+                        <NODE_ID>Btn_main_panel_clock_copilot</NODE_ID>
+                        <ANIM_NAME>Btn_main_panel_clock_copilot</ANIM_NAME>
+                        <PLANE_PREFIX>AS01B_PFD</PLANE_PREFIX>
+                    </UseTemplate>
+                </Component>
 
                 <!-- Name: Master WARNING/CAUTION + Datalink Panel -->
                 <!-- Ref: 15.10.5 -->
