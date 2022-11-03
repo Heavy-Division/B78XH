@@ -683,10 +683,34 @@
         </UseTemplate>
     </Template>
 
+    <Template Name="HEAVY_BOEING_Push_WXR_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>WXR</BUTTON>
+            <ACTION>WRX</ACTION>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_TFC_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>TFC</BUTTON>
+            <PACKAGE>CCP</PACKAGE>
+            <SUB_PACKAGE></SUB_PACKAGE>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_TERR_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>TERR</BUTTON>
+            <ACTION>TERRONND</ACTION>
+            <SUB_PACKAGE></SUB_PACKAGE>
+        </UseTemplate>
+    </Template>
+
     <!-- TODO: Reimplement (too many cases)-->
     <Template Name="HEAVY_BOEING_Push_Display_Select_Template">
         <Parameters Type="Defaults">
             <PACKAGE>AIRLINER</PACKAGE>
+            <ACTION>#BUTTON#</ACTION>
             <Switch Param="BUTTON">
                 <Case Value="EICAS">
                     <NODE_ID>DISPLAY_Push_EICAS_#ID#</NODE_ID>
@@ -706,12 +730,17 @@
                 </Default>
             </Switch>
         </Parameters>
-            <UseTemplate Name="ASOBO_BOEING_Push_HTML_Generic_Template">
-                <SYSTEM_NAME>MFD</SYSTEM_NAME>
-                <ID_BTN>#BUTTON#</ID_BTN>
-                <TOOLTIP_TITLE>@TT_Package.#PACKAGE##SUB_PACKAGE#_PUSH_#BUTTON#_TITLE</TOOLTIP_TITLE>
-                <TT_DESCRIPTION_ID>@TT_Package.#PACKAGE##SUB_PACKAGE#_PUSH_#BUTTON#_ACTION</TT_DESCRIPTION_ID>
-            </UseTemplate>
+        <Parameters Type="Override">
+            <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_GLARESHIELD</POTENTIOMETER>
+            <EMISSIVE_BUTTON>true</EMISSIVE_BUTTON>
+            <TYPE>AS01B</TYPE>
+        </Parameters>
+        <UseTemplate Name="ASOBO_BOEING_Push_HTML_Generic_Template">
+            <SYSTEM_NAME>MFD</SYSTEM_NAME>
+            <ID_BTN>#BUTTON#</ID_BTN>
+            <TOOLTIP_TITLE>@TT_Package.#PACKAGE##SUB_PACKAGE#_PUSH_#ACTION#_TITLE</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.#PACKAGE##SUB_PACKAGE#_PUSH_#ACTION#_ACTION</TT_DESCRIPTION_ID>
+        </UseTemplate>
     </Template>
 
 

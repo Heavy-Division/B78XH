@@ -1317,20 +1317,20 @@
                     <!-- Name: ND Controls -->
                     <!-- Ref: 10.10.36 -->
                     <Component ID="ND_Controls">
-                        <Parameters Type="Defaults">
-                            <POTENTIOMETER>21</POTENTIOMETER>
-                            <EMISSIVE_BUTTON>true</EMISSIVE_BUTTON>
-                            <TYPE>AS01B</TYPE>
-                        </Parameters>
                         <Component ID="Knobs">
+                            <Parameters Type="Defaults">
+                                <POTENTIOMETER>21</POTENTIOMETER>
+                                <EMISSIVE_BUTTON>true</EMISSIVE_BUTTON>
+                                <TYPE>AS01B</TYPE>
+                            </Parameters>
                             <UseTemplate Name="HEAVY_BOEING_Knob_ND_Cursor_Template" />
                             <UseTemplate Name="HEAVY_BOEING_Knob_ND_Range_Template" />
                         </Component>
 
                         <Component ID="Buttons">
-                            <UseTemplate Name="ASOBO_BOEING_Push_WXR_Template" />
-                            <UseTemplate Name="ASOBO_BOEING_Push_TFC_Template" />
-                            <UseTemplate Name="ASOBO_BOEING_Push_TERR_Template" />
+                            <UseTemplate Name="HEAVY_BOEING_Push_WXR_Template" />
+                            <UseTemplate Name="HEAVY_BOEING_Push_TFC_Template" />
+                            <UseTemplate Name="HEAVY_BOEING_Push_TERR_Template" />
                         </Component>
                     </Component>
                     <!-- Name: ND Controls -->
@@ -1340,12 +1340,6 @@
                 <!-- Name: Display Select Panel -->
                 <!-- Ref: 10.10.44 -->
                 <Component ID="Display_Select_Panel">
-                    <Parameters Type="Defaults">
-                        <POTENTIOMETER>21</POTENTIOMETER>
-                        <EMISSIVE_BUTTON>true</EMISSIVE_BUTTON>
-                        <TYPE>AS01B</TYPE>
-                    </Parameters>
-
                     <Component ID="Buttons">
                         <UseTemplate Name="HEAVY_BOEING_Push_MFD_Template">
                             <SIDE>L</SIDE>
@@ -1419,20 +1413,20 @@
                     <!-- Name: ND Controls -->
                     <!-- Ref: 10.10.36 -->
                     <Component ID="ND_Controls">
-                        <Parameters Type="Defaults">
-                            <POTENTIOMETER>21</POTENTIOMETER>
-                            <EMISSIVE_BUTTON>true</EMISSIVE_BUTTON>
-                            <TYPE>AS01B</TYPE>
-                        </Parameters>
                         <Component ID="Knobs">
+                            <Parameters Type="Defaults">
+                                <POTENTIOMETER>21</POTENTIOMETER>
+                                <EMISSIVE_BUTTON>true</EMISSIVE_BUTTON>
+                                <TYPE>AS01B</TYPE>
+                            </Parameters>
                             <UseTemplate Name="HEAVY_BOEING_Knob_ND_Cursor_Template" />
                             <UseTemplate Name="HEAVY_BOEING_Knob_ND_Range_Template" />
                         </Component>
 
                         <Component ID="Buttons">
-                            <UseTemplate Name="ASOBO_BOEING_Push_WXR_Template" />
-                            <UseTemplate Name="ASOBO_BOEING_Push_TFC_Template" />
-                            <UseTemplate Name="ASOBO_BOEING_Push_TERR_Template" />
+                            <UseTemplate Name="HEAVY_BOEING_Push_WXR_Template" />
+                            <UseTemplate Name="HEAVY_BOEING_Push_TFC_Template" />
+                            <UseTemplate Name="HEAVY_BOEING_Push_TERR_Template" />
                         </Component>
                     </Component>
                     <!-- Name: ND Controls -->
@@ -1442,12 +1436,6 @@
                 <!-- Name: Display Select Panel -->
                 <!-- Ref: 10.10.44 -->
                 <Component ID="Display_Select_Panel">
-                    <Parameters Type="Defaults">
-                        <POTENTIOMETER>21</POTENTIOMETER>
-                        <EMISSIVE_BUTTON>true</EMISSIVE_BUTTON>
-                        <TYPE>AS01B</TYPE>
-                    </Parameters>
-
                     <Component ID="Buttons">
                         <UseTemplate Name="HEAVY_BOEING_Push_MFD_Template">
                             <SIDE>L</SIDE>
