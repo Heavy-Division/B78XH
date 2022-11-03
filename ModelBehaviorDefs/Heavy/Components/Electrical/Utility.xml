@@ -1783,6 +1783,156 @@
             <NODE_ID>Decals_Text_416</NODE_ID>
         </UseTemplate>
 
+        <!-- AUDIO PANELS Buttons and Knobs -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_L_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_C_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_R_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_FlightDeck_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Cabin_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_PA_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Speaker_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_HF_L_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_HF_R_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_SAT_1_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_SAT_2_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Volume_Beacon_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Volume_Approach_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VOR_ADF_Selector_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Filter_Selector_1</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Approach_Selector_1</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_L_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_C_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_R_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_FlightDeck_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Cabin_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_PA_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Speaker_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_HF_L_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_HF_R_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_SAT_1_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_SAT_2_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Volume_Beacon_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Volume_Approach_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VOR_ADF_Selector_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Filter_Selector_2</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Approach_Selector_2</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_L_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_C_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VHF_R_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_FlightDeck_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Cabin_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_PA_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Speaker_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_HF_L_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_HF_R_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_SAT_1_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_SAT_2_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_Volume_Beacon_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Volume_Approach_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AudioPanel_Knob_VOR_ADF_Selector_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Filter_Selector_3</NODE_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Audiopanel_Knob_Approach_Selector_3</NODE_ID>
+        </UseTemplate>
+
+        <!-- End of AUDIO PANELS Buttons and Knobs -->
+
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Center_Forward_Backlights">
