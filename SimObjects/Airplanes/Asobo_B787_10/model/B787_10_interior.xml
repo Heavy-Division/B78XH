@@ -586,10 +586,7 @@
                     <!-- Tester: Co-mi -->
                     <!-- TODO: Implement AUTO position -->
 
-                    <UseTemplate Name="ASOBO_AIRLINER_Knob_Seatbelts_Template">
-                        <NODE_ID>PASSENGERS_Knob_Seatbelts</NODE_ID>
-                        <ANIM_NAME>PASSENGERS_Knob_Seatbelts</ANIM_NAME>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_AIRLINER_Knob_Seatbelts_Template" />
                     <!-- End: Seat Belt Signs Button -->
                 </Component>
 
