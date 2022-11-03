@@ -2202,9 +2202,23 @@
 
             <!-- NOTE: Holds screens of cockpit -->
             <Component ID="Screens">
-                <Parameters Type="Defaults">
-                    <ALT_CODE>(A:LIGHT POTENTIOMETER:31, Percent over 100) 0 (L:XMLVAR_LightMasterActive) ?</ALT_CODE>
-                </Parameters>
+                <Component ID="Mode_Control_Panel">
+                    <UseTemplate Name="HEAVY_SCREEN_Emissive_Template">
+                        <NAME>IAS</NAME>
+                    </UseTemplate>
+
+                    <UseTemplate Name="HEAVY_SCREEN_Emissive_Template">
+                        <NAME>HDG</NAME>
+                    </UseTemplate>
+
+                    <UseTemplate Name="HEAVY_SCREEN_Emissive_Template">
+                        <NAME>VSPEED</NAME>
+                    </UseTemplate>
+
+                    <UseTemplate Name="HEAVY_SCREEN_Emissive_Template">
+                        <NAME>ALT</NAME>
+                    </UseTemplate>
+                </Component>
             </Component>
         </Component>
 
