@@ -1778,34 +1778,30 @@
             <FAILURE>(A:LIGHT PANEL ON:3, Bool)</FAILURE>
         </Parameters>
 
-        <Component ID="Knobs">
-            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
-                <NODE_ID>HANDLING_Knob_Autobrakes</NODE_ID>
-            </UseTemplate>
-        </Component>
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>HANDLING_Knob_Autobrakes</NODE_ID>
+        </UseTemplate>
 
-        <Component ID="Buttons">
-            <!-- NOTE: IFSD Fake button (APP) -->
-            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
-                <NODE_ID>Decals_Text_022</NODE_ID>
-            </UseTemplate>
-            <!-- NOTE: IFSD Fake button (HP/IN) -->
-            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
-                <NODE_ID>Decals_Text_023</NODE_ID>
-            </UseTemplate>
-            <!-- NOTE: IFSD Fake button (+) -->
-            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
-                <NODE_ID>Decals_Text_024</NODE_ID>
-            </UseTemplate>
-            <!-- NOTE: IFSD Fake button (-) -->
-            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
-                <NODE_ID>Decals_Text_025</NODE_ID>
-            </UseTemplate>
-            <!-- NOTE: IFSD Fake button (RST) -->
-            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
-                <NODE_ID>Decals_Text_026</NODE_ID>
-            </UseTemplate>
-        </Component>
+        <!-- NOTE: IFSD Fake button (APP) -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Decals_Text_022</NODE_ID>
+        </UseTemplate>
+        <!-- NOTE: IFSD Fake button (HP/IN) -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Decals_Text_023</NODE_ID>
+        </UseTemplate>
+        <!-- NOTE: IFSD Fake button (+) -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Decals_Text_024</NODE_ID>
+        </UseTemplate>
+        <!-- NOTE: IFSD Fake button (-) -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Decals_Text_025</NODE_ID>
+        </UseTemplate>
+        <!-- NOTE: IFSD Fake button (RST) -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>Decals_Text_026</NODE_ID>
+        </UseTemplate>
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Glareshield_Backlights">
