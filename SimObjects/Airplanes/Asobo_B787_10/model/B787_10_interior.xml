@@ -2197,6 +2197,9 @@
                         <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_AISLE_STAND</POTENTIOMETER>
                     </UseTemplate>
 
+                    <UseTemplate Name="HEAVY_LIGHTNING_Center_Forward_Backlights">
+                        <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_AISLE_STAND</POTENTIOMETER>
+                    </UseTemplate>
                 </Component>
             </Component>
 
