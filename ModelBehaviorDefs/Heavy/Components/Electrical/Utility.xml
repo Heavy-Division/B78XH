@@ -1430,6 +1430,205 @@
         <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
             <NODE_ID>knob_mainpanel_map_#SIDE_SUFFIX#</NODE_ID>
         </UseTemplate>
+
+        <Switch Param="ID">
+            <Case Value="1">
+
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_452</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_453</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_456</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_457</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_460</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_461</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_463</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_466</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_467</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_470</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_471</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_473</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_476</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_477</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_479</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_481</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_483</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_485</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_488</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_490</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_491</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_493</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_496</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_498</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_500</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_501</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_503</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_505</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_508</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_510</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Btn_touchpad_plt_pwr_decal</NODE_ID>
+                </UseTemplate>
+            </Case>
+            <Case Value="2">
+
+
+
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_451</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_459</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_509</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_507</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_506</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_489</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_487</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_486</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_484</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_482</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_492</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_480</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_478</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_458</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_455</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_454</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_462</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_464</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_465</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_468</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_469</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_472</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_474</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_475</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_494</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_495</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_497</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_499</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_502</NODE_ID>
+                </UseTemplate>
+                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <NODE_ID>Decals_Text_504</NODE_ID>
+                </UseTemplate>
+            </Case>
+        </Switch>
+
+
+
+
+
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Overhead_Backlights">
