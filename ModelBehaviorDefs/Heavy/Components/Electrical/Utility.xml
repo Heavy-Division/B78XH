@@ -1302,4 +1302,283 @@
         <UseTemplate Name="ASOBO_HANDLING_Switch_RudderTrim_Template" />
     </Template>
 
+    <Template Name="HEAVY_LIGHTING_Knob_Cabin_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>LIGHTING_Knob_Flood_#ID#</NODE_ID>
+            <ANIM_NAME>LIGHTING_Knob_Flood_#ID#</ANIM_NAME>
+            <Condition NotEmpty="BASE_POTENTIOMETER">
+                <TRUE>
+                    <POTENTIOMETER Process="Int">#BASE_POTENTIOMETER#</POTENTIOMETER>
+                </TRUE>
+            </Condition>
+            <SIMVAR_INDEX>1</SIMVAR_INDEX>
+        </Parameters>
+        <UseTemplate Name="ASOBO_LIGHTING_Knob_Cabin_Template" />
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Knob_Panel_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>LIGHTING_Knob_Panel_#ID#</NODE_ID>
+            <ANIM_NAME>LIGHTING_Knob_Panel_#ID#</ANIM_NAME>
+            <Condition NotEmpty="BASE_POTENTIOMETER">
+                <TRUE>
+                    <POTENTIOMETER Process="Int">#BASE_POTENTIOMETER# 1 +</POTENTIOMETER>
+                </TRUE>
+            </Condition>
+            <SIMVAR_INDEX>1</SIMVAR_INDEX>
+        </Parameters>
+        <UseTemplate Name="ASOBO_LIGHTING_Knob_Panel_Template" />
+    </Template>
+
+    <Template Name="HEAVY_LIGHTNING_Sidewall_Backlights">
+        <Parameters Type="Defaults">
+            <Condition Check="ID" Match="1">
+                <TRUE>
+                    <SIDE_SUFFIX>pilot</SIDE_SUFFIX>
+                </TRUE>
+                <FALSE>
+                    <SIDE_SUFFIX>copilot</SIDE_SUFFIX>
+                </FALSE>
+            </Condition>
+            <FAILURE>(A:LIGHT PANEL ON:#ID#, Bool)</FAILURE>
+            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+        </Parameters>
+
+        <!-- The backlight should use ASOBO_LIGHTING_Panel_Emissive_Template but there is a bug with emissives
+            (backlight intensity is really strong when you turn off the backlight and turn the backlight on back) -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Backlight_Panel_#ID#_Emissive</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>knob_heater_shoulder_#SIDE_SUFFIX#</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>knob_heater_foot_#SIDE_SUFFIX#</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Knob_PFD_#ID#_Brightness</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Knob_PFD_#ID#_Contrast</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Knob_MFD_#ID#_Brightness</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Knob_MFD_#ID#_Contrast</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Knob_Panel_#ID#</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Knob_Flood_#ID#</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>knob_heater_chart_#SIDE_SUFFIX#</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>knob_heater_worktable_#SIDE_SUFFIX#</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>knob_airData_#SIDE_SUFFIX#</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>DISPLAY_Knob_Mode_#ID#</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>knob_mainpanel_map_#SIDE_SUFFIX#</NODE_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_LIGHTNING_Overhead_Backlights">
+        <Parameters Type="Defaults">
+            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+            <FAILURE>(A:LIGHT PANEL ON:4, Bool)</FAILURE>
+        </Parameters>
+
+        <!-- The backlight should use ASOBO_LIGHTING_Panel_Emissive_Template but there is a bug with emissives
+            (backlight intensity is really strong when you turn off the backlight and turn the backlight on back) -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Backlight_Overhead_Emissive</NODE_ID>
+        </UseTemplate>
+
+        <Component ID="Knobs">
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>INSTRUMENT_Knob_IRS_1</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>INSTRUMENT_Knob_IRS_2</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>ELECTRICAL_Knob_APU_Starter</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>SAFETY_KNOB_WIPERS_LEFT</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>LIGHTING_Knob_LowerDisplay_Brightness</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>LIGHTING_Knob_LowerDisplay_Contrast</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>HYDRAULIC_Knob_Demand_1</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>HYDRAULICS_Knob_C1</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>HYDRAULICS_Knob_C2</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>HYDRAULIC_Knob_Demand_2</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>PASSENGERS_Knob_Seatbelts</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>LIGHTING_Knob_Panel_Overhead</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>LIGHTING_Knob_Dome</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>LIGHTING_Knob_Panel_Glareshield</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>LIGHTING_Knob_Flood_Glareshield</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>LIGHTING_Knob_MasterBright</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>SAFETY_Knob_GroundTest</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>ENGINE_Knob_Starter_1</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>ENGINE_Knob_Starter_2</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>DEICE_Knob_Wing</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>DEICE_Knob_Engine_1</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>DEICE_Knob_Engine_2</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>knob_ovh_cargoTemp_flow</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>PASSENGER_Knob_Temperature_Cargo</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>PASSENGER_Knob_Temperature_FlightDeck</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>PASSENGER_Knob_Temperature_Cabin</NODE_ID>
+            </UseTemplate>
+
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>SAFETY_KNOB_WIPERS_RIGHT</NODE_ID>
+            </UseTemplate>
+        </Component>
+    </Template>
+
+    <Template Name="HEAVY_LIGHTNING_Aisle_Stand_Backlights">
+        <Parameters Type="Defaults">
+            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+            <FAILURE>(A:LIGHT PANEL ON:3, Bool)</FAILURE>
+        </Parameters>
+
+        <!-- The backlight should use ASOBO_LIGHTING_Panel_Emissive_Template but there is a bug with emissives
+            (backlight intensity is really strong when you turn off the backlight and turn the backlight on back) -->
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>LIGHTING_Backlight_Pedestal_Emissive</NODE_ID>
+        </UseTemplate>
+
+        <Component ID="Knobs">
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>HANDLING_Knob_Autobrakes</NODE_ID>
+            </UseTemplate>
+        </Component>
+
+        <Component ID="Buttons">
+            <!-- NOTE: IFSD Fake button (APP) -->
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>Decals_Text_022</NODE_ID>
+            </UseTemplate>
+            <!-- NOTE: IFSD Fake button (HP/IN) -->
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>Decals_Text_023</NODE_ID>
+            </UseTemplate>
+            <!-- NOTE: IFSD Fake button (+) -->
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>Decals_Text_024</NODE_ID>
+            </UseTemplate>
+            <!-- NOTE: IFSD Fake button (-) -->
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>Decals_Text_025</NODE_ID>
+            </UseTemplate>
+            <!-- NOTE: IFSD Fake button (RST) -->
+            <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <NODE_ID>Decals_Text_026</NODE_ID>
+            </UseTemplate>
+        </Component>
+    </Template>
+    <!-- End: Center Forward Emissives -->
+
+    <Template Name="HEAVY_LIGHTNING_Glareshield_Backlights">
+        <Parameters Type="Defaults">
+            <FAILURE>(A:LIGHT PANEL ON:#ID#, Bool)</FAILURE>
+            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+
+        </Parameters>
+        <UseTemplate Name="ASOBO_LIGHTING_Panel_Emissive_Template">
+            <NODE_ID>LIGHTING_Backlight_Glareshield_Emissive</NODE_ID>
+            <SIMVAR_INDEX>#ID#</SIMVAR_INDEX>
+        </UseTemplate>
+    </Template>
+
 </ModelBehaviors>
