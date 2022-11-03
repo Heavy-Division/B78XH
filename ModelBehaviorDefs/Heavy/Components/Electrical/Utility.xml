@@ -1770,6 +1770,15 @@
         <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
             <NODE_ID>LIGHTING_Knob_Flood_Pedestal</NODE_ID>
         </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>HANDLING_Knob_FlapsMode</NODE_ID>
+        </UseTemplate>
+
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+            <NODE_ID>AUDIO_Knob_OBS</NODE_ID>
+        </UseTemplate>
+
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Center_Forward_Backlights">
