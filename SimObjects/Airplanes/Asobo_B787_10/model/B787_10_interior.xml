@@ -4,8 +4,8 @@
         <LOD minSize="150" ModelFile="B787_10_interior_LOD00.gltf"/>
         <LOD minSize="90" ModelFile="B787_10_interior_LOD01.gltf"/>
         <LOD minSize="60" ModelFile="B787_10_interior_LOD02.gltf"/>
-        <LOD minSize="40" ModelFile="B787_10_interior_LOD03.gltf"/>
-        <LOD minSize="10" ModelFile="B787_10_interior_LOD04.gltf"/>
+        <LOD minSize="30" ModelFile="B787_10_interior_LOD03.gltf"/>
+        <LOD minSize="15" ModelFile="B787_10_interior_LOD04.gltf"/>
         <LOD minSize="3" ModelFile="B787_10_interior_LOD05.gltf"/>
         <LOD minSize="1" ModelFile="B787_10_interior_LOD06.gltf"/>
     </LODS>
