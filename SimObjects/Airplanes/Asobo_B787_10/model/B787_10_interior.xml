@@ -584,8 +584,6 @@
                     <!-- Name: Seat Belt Signs Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <!-- TODO: Implement AUTO position -->
-
                     <UseTemplate Name="HEAVY_AIRLINER_Knob_Seatbelts_Template" />
                     <!-- End: Seat Belt Signs Button -->
                 </Component>

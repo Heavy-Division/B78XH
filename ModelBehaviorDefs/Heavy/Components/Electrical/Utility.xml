@@ -1230,6 +1230,8 @@
             <POS_DOWN>0</POS_DOWN>
             <DRAG_SPEED>10</DRAG_SPEED>
             <INVERT_IM_DRAG_INPUT_SCALAR>TRUE</INVERT_IM_DRAG_INPUT_SCALAR>
+            <STEPS_NUMBER>2</STEPS_NUMBER>
+            <DRAG_SPEED>10</DRAG_SPEED>
         </Parameters>
         <UseTemplate Name="ASOBO_HANDLING_Lever_Spoilers_Template" />
     </Template>
