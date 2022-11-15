@@ -2,10 +2,10 @@
     <!-- ## Emissive -->
     <Template Name="HEAVY_SCREEN_Emissive_Template">
         <Parameters Type="Defaults">
-            <ALT_CODE>s0 l0 0 &gt; sp1 (A:LIGHT POTENTIOMETER:31, Percent over 100) 0 (L:XMLVAR_LightMasterActive) l1 and ?</ALT_CODE>
-            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+            <ALT_CODE>@ALT_CODE_DEFAULT</ALT_CODE>
+            <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
             <NODE_ID>SCREEN_#NAME#</NODE_ID>
-            <DONT_APPEND_ID>TRUE</DONT_APPEND_ID>
+            <DONT_APPEND_ID>@HG_TRUE</DONT_APPEND_ID>
         </Parameters>
 
         <UseTemplate Name="ASOBO_GT_Helper_Suffix_ID_Appender">

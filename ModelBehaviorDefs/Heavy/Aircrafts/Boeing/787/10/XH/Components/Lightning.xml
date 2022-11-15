@@ -39,7 +39,7 @@
                 </FALSE>
             </Condition>
             <FAILURE>(A:LIGHT PANEL ON:#ID#, Bool)</FAILURE>
-            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+            <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
         </Parameters>
 
         <!-- The backlight should use ASOBO_LIGHTING_Panel_Emissive_Template but there is a bug with emissives
@@ -299,7 +299,7 @@
 
     <Template Name="HEAVY_LIGHTNING_Overhead_Backlights">
         <Parameters Type="Defaults">
-            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+            <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
             <FAILURE>(A:LIGHT PANEL ON:4, Bool)</FAILURE>
         </Parameters>
 
@@ -422,7 +422,7 @@
 
     <Template Name="HEAVY_LIGHTNING_Aisle_Stand_Backlights">
         <Parameters Type="Defaults">
-            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+            <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
             <FAILURE>(A:LIGHT PANEL ON:3, Bool)</FAILURE>
         </Parameters>
 
@@ -606,7 +606,7 @@
 
     <Template Name="HEAVY_LIGHTNING_Center_Forward_Backlights">
         <Parameters Type="Defaults">
-            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+            <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
             <FAILURE>(A:LIGHT PANEL ON:3, Bool)</FAILURE>
         </Parameters>
 
@@ -639,7 +639,7 @@
     <Template Name="HEAVY_LIGHTNING_Glareshield_Backlights">
         <Parameters Type="Defaults">
             <FAILURE>(A:LIGHT PANEL ON:#ID#, Bool)</FAILURE>
-            <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+            <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
 
         </Parameters>
         <UseTemplate Name="ASOBO_LIGHTING_Panel_Emissive_Template">

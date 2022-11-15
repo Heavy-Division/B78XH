@@ -13,12 +13,12 @@
     <Template Name="HEAVY_HANDLING_Lever_Spoilers_Template">
         <Parameters Type="Defaults">
             <TYPE>AIRLINER</TYPE>
-            <PHYSICAL_AUTOSPOILERS>TRUE</PHYSICAL_AUTOSPOILERS>
-            <RETRACT_ARMED_FULL>TRUE</RETRACT_ARMED_FULL>
+            <PHYSICAL_AUTOSPOILERS>@HG_TRUE</PHYSICAL_AUTOSPOILERS>
+            <RETRACT_ARMED_FULL>@HG_TRUE</RETRACT_ARMED_FULL>
             <POS_ARM>1</POS_ARM>
             <POS_DOWN>0</POS_DOWN>
             <DRAG_SPEED>10</DRAG_SPEED>
-            <INVERT_IM_DRAG_INPUT_SCALAR>TRUE</INVERT_IM_DRAG_INPUT_SCALAR>
+            <INVERT_IM_DRAG_INPUT_SCALAR>@HG_TRUE</INVERT_IM_DRAG_INPUT_SCALAR>
             <STEPS_NUMBER>2</STEPS_NUMBER>
             <DRAG_SPEED>10</DRAG_SPEED>
         </Parameters>
@@ -33,7 +33,7 @@
             <ANIM_NAME_REVERSER>ENGINE_Lever_Throttle_Reverser_#ID#</ANIM_NAME_REVERSER>
             <LEVER_TYPE>BOEING</LEVER_TYPE>
             <DRAG_SPEED>0.5</DRAG_SPEED>
-            <REVERSER_INVERT_IM_DRAG_INPUT_SCALAR>TRUE</REVERSER_INVERT_IM_DRAG_INPUT_SCALAR>
+            <REVERSER_INVERT_IM_DRAG_INPUT_SCALAR>@HG_TRUE</REVERSER_INVERT_IM_DRAG_INPUT_SCALAR>
         </Parameters>
 
         <UseTemplate Name="ASOBO_ENGINE_Lever_Throttle_Template"/>
@@ -77,9 +77,9 @@
     <Template Name="HEAVY_AIRLINER_Audio_Panel_Template">
         <Parameters Type="Defaults">
             <TYPE>AS01B</TYPE>
-            <NO_LIGHT>TRUE</NO_LIGHT>
-            <NO_SEQ2>TRUE</NO_SEQ2>
-            <SUFFIX_ID>FALSE</SUFFIX_ID>
+            <NO_LIGHT>@HG_TRUE</NO_LIGHT>
+            <NO_SEQ2>@HG_TRUE</NO_SEQ2>
+            <SUFFIX_ID>@HG_FALSE</SUFFIX_ID>
 
             <NODE_ID_BUTTON_VHF_L>AUDIOPANEL_PUSH_VHF_L_#ID#</NODE_ID_BUTTON_VHF_L>
             <NODE_ID_BUTTON_VHF_C>AUDIOPANEL_PUSH_VHF_C_#ID#</NODE_ID_BUTTON_VHF_C>
@@ -115,9 +115,9 @@
 
     <Template Name="HEAVY_HANDLING_Switch_RudderTrim_Template">
         <Parameters Type="Defaults">
-            <NO_RESET_PUSH>TRUE</NO_RESET_PUSH>
-            <CREATE_SOUNDEVENTS_SAME_TRIGGER>TRUE</CREATE_SOUNDEVENTS_SAME_TRIGGER>
-            <DONT_CREATE_SOUND_ANIM_TRIGGERS>TRUE</DONT_CREATE_SOUND_ANIM_TRIGGERS>
+            <NO_RESET_PUSH>@HG_TRUE</NO_RESET_PUSH>
+            <CREATE_SOUNDEVENTS_SAME_TRIGGER>@HG_TRUE</CREATE_SOUNDEVENTS_SAME_TRIGGER>
+            <DONT_CREATE_SOUND_ANIM_TRIGGERS>@HG_TRUE</DONT_CREATE_SOUND_ANIM_TRIGGERS>
         </Parameters>
         <UseTemplate Name="ASOBO_HANDLING_Switch_RudderTrim_Template"/>
     </Template>
@@ -204,6 +204,13 @@
         </Parameters>
 
         <Parameters Type="Override">
+            <POTENTIOMETER>23</POTENTIOMETER>
+            <PLANE_PREFIX>B787_10</PLANE_PREFIX>
+            <BUTTON_NAME_PREFIX>COMNAV</BUTTON_NAME_PREFIX>
+            <EMISSIVE_BUTTON>@HG_TRUE</EMISSIVE_BUTTON>
+        </Parameters>
+
+        <Parameters Type="Override">
             <Switch Param="ID">
                 <Case Value="1">
                     <TT_INDEX>'TCP' (R:1:@TT_Package.GT_STATE_PILOT_FMS) @sprintf</TT_INDEX>
@@ -278,7 +285,7 @@
                             <False>
                                 <TT_DESCRIPTION_ID>@TT_Package.FMC_PUSH_CHAR_ACTION</TT_DESCRIPTION_ID>
                                 <TT_DESCRIPTION_INDEX>#TT_INDEX# '#ID_BTN#'</TT_DESCRIPTION_INDEX>
-                                <TOOLTIP_DISABLED>True</TOOLTIP_DISABLED>
+                                <TOOLTIP_DISABLED>@HG_TRUE</TOOLTIP_DISABLED>
                             </False>
                         </Condition>
                     </Parameters>
@@ -290,10 +297,25 @@
             </Loop>
             <Component ID="#SCREEN_NODE_ID#" Node="#SCREEN_NODE_ID#">
                 <UseTemplate Name="ASOBO_GT_Emissive_Gauge">
-                    <EMISSIVE_CODE>0.5</EMISSIVE_CODE>
+                    <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
                 </UseTemplate>
             </Component>
         </Component>
+    </Template>
+
+    <Template Name="HEAVY_AIRLINER_ATC_Transponder_Mode_Knob_Template">
+        <UseTemplate Name="ASOBO_AIRLINER_ATC_Transponder_Mode_Knob_Template">
+            <NODE_ID>TRANSPONDER_Knob_Mode</NODE_ID>
+            <ANIM_NAME>TRANSPONDER_Knob_Mode</ANIM_NAME>
+            <ANIM_NAME_PUSH>TRANSPONDER_Knob_Mode_Push</ANIM_NAME_PUSH>
+            <CODE_POS_STBY>0</CODE_POS_STBY>
+            <CODE_POS_ALT>1</CODE_POS_ALT>
+            <CODE_POS_XPNDR>2</CODE_POS_XPNDR>
+            <CODE_POS_TA>3</CODE_POS_TA>
+            <CODE_POS_TARA>4</CODE_POS_TARA>
+            <IDENT>@HG_TRUE</IDENT>
+            <EVENT_TARGER>AS01B_ATC</EVENT_TARGER>
+        </UseTemplate>
     </Template>
     <!-- ## End: Aisle Stand -->
 </ModelBehaviors>

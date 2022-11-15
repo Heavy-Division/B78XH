@@ -13,8 +13,8 @@
     <!-- ## End: Pilots ID Helpers -->
 
 
-    <!-- ## Pilots ID Helpers -->
+    <!-- ## Boolean Helpers -->
     <Macro Name="HG_TRUE">TRUE</Macro>
     <Macro Name="HG_FALSE">FALSE</Macro>
-    <!-- ## End: Pilots ID Helpers -->
+    <!-- ## End: Boolean Helpers -->
 </ModelBehaviors>

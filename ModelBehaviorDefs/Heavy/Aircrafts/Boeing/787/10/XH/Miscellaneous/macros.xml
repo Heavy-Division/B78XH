@@ -27,5 +27,6 @@
     <!-- ## End: Potentiometers -->
 
     <Macro Name="ALT_CODE_DEFAULT">s0 l0 0 &gt; sp1 (A:LIGHT POTENTIOMETER:31, Percent over 100) 0 (L:XMLVAR_LightMasterActive) l1 and ?</Macro>
+    <Macro Name="EMISSIVE_CODE_DEFAULT">0.5</Macro>
 
 </ModelBehaviors>

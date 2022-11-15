@@ -24,7 +24,7 @@
             <ANIM_NAME>SAFETY_Push_WarningCaution_#ID#</ANIM_NAME>
             <NODE_ID_SEQ_1>SAFETY_Push_WarningCaution_#ID#_SEQ1</NODE_ID_SEQ_1>
             <NODE_ID_SEQ_2>SAFETY_Push_WarningCaution_#ID#_SEQ2</NODE_ID_SEQ_2>
-            <NO_EMISSIVE_ON_HELD>TRUE</NO_EMISSIVE_ON_HELD>
+            <NO_EMISSIVE_ON_HELD>@HG_TRUE</NO_EMISSIVE_ON_HELD>
         </Parameters>
 
         <UseTemplate Name="ASOBO_SAFETY_Push_WarningCaution_Template" />
@@ -162,7 +162,7 @@
                         }
                     </CALCULATED_EMISSIVE_ID>
                 </Case>
-                <PROTECT_PUSH>FALSE</PROTECT_PUSH>
+                <PROTECT_PUSH>@HG_FALSE</PROTECT_PUSH>
             </Switch>
         </Parameters>
         <Condition Valid="PROTECT_PUSH">
@@ -233,7 +233,7 @@
             <ANIM_NAME>AUTOPILOT_Push_Autopilot_#ID#</ANIM_NAME>
         </Parameters>
         <Parameters Type="Override">
-            <DONT_APPEND_ID>TRUE</DONT_APPEND_ID>
+            <DONT_APPEND_ID>@HG_TRUE</DONT_APPEND_ID>
         </Parameters>
 
         <UseTemplate Name="ASOBO_AUTOPILOT_Push_Autopilot_Template" />
@@ -241,8 +241,8 @@
 
     <Template Name="HEAVY_AUTOPILOT_Push_FlightDirector_Template">
         <Parameters Type="Defaults">
-            <TOGGLEABLE>TRUE</TOGGLEABLE>
-            <NO_INDICATOR>TRUE</NO_INDICATOR>
+            <TOGGLEABLE>@HG_TRUE</TOGGLEABLE>
+            <NO_INDICATOR>@HG_TRUE</NO_INDICATOR>
             <NODE_ID>AUTOPILOT_Switch_FlightDirector_#ID#</NODE_ID>
             <ANIM_NAME>AUTOPILOT_Switch_FlightDirector_#ID#</ANIM_NAME>
             <SUFFIX_ID>_#ID#</SUFFIX_ID>
@@ -261,10 +261,10 @@
 
     <Template Name="HEAVY_AUTOPILOT_Push_Disengage_Bar_Template">
         <Parameters Type="Defaults">
-            <TOGGLEABLE>TRUE</TOGGLEABLE>
-            <NO_INDICATOR>TRUE</NO_INDICATOR>
-            <NO_TEXT_EMISSIVE>TRUE</NO_TEXT_EMISSIVE>
-            <INVERT_SWITCH_ON_CONDITION>TRUE</INVERT_SWITCH_ON_CONDITION>
+            <TOGGLEABLE>@HG_TRUE</TOGGLEABLE>
+            <NO_INDICATOR>@HG_TRUE</NO_INDICATOR>
+            <NO_TEXT_EMISSIVE>@HG_TRUE</NO_TEXT_EMISSIVE>
+            <INVERT_SWITCH_ON_CONDITION>@HG_TRUE</INVERT_SWITCH_ON_CONDITION>
         </Parameters>
 
         <UseTemplate Name="ASOBO_AUTOPILOT_Push_Disconnect_Template" />
@@ -274,9 +274,9 @@
         <Parameters Type="Defaults">
             <ID>0</ID>
             <TYPE>AS01B</TYPE>
-            <TOGGLEABLE>TRUE</TOGGLEABLE>
-            <NO_INDICATOR>TRUE</NO_INDICATOR>
-            <NO_TEXT_EMISSIVE>TRUE</NO_TEXT_EMISSIVE>
+            <TOGGLEABLE>@HG_TRUE</TOGGLEABLE>
+            <NO_INDICATOR>@HG_TRUE</NO_INDICATOR>
+            <NO_TEXT_EMISSIVE>@HG_TRUE</NO_TEXT_EMISSIVE>
             <ANIMTIP_0>TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AUTOTHROTTLE_#SIDE#_OFF</ANIMTIP_0>
             <ANIMTIP_1>TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AUTOTHROTTLE_#SIDE#_ARMED</ANIMTIP_1>
 
@@ -323,8 +323,8 @@
 
     <Template Name="HEAVY_AUTOPILOT_Push_SpeedToggle_Template">
         <Parameters Type="Defaults">
-            <NO_INDICATOR>TRUE</NO_INDICATOR>
-            <NO_TEXT_EMISSIVE>TRUE</NO_TEXT_EMISSIVE>
+            <NO_INDICATOR>@HG_TRUE</NO_INDICATOR>
+            <NO_TEXT_EMISSIVE>@HG_TRUE</NO_TEXT_EMISSIVE>
         </Parameters>
 
         <UseTemplate Name="ASOBO_AUTOPILOT_Push_SpeedToggle_Template" />
@@ -364,7 +364,7 @@
             <NODE_ID>AUTOPILOT_Knob_Bank_Limit</NODE_ID>
             <ANIM_NAME>AUTOPILOT_Knob_Bank_Limit</ANIM_NAME>
             <WWISE_EVENT>autopilot_hdg_bank_knob</WWISE_EVENT>
-            <WRAP>False</WRAP>
+            <WRAP>@HG_FALSE</WRAP>
             <USE_INPUT_EVENT_ID>AUTOPILOT</USE_INPUT_EVENT_ID>
             <SWITCH_DIRECTION>Horizontal</SWITCH_DIRECTION>
             <TT_ICON>ROTATE</TT_ICON>
@@ -474,7 +474,7 @@
 
     <Template Name="HEAVY_AUTOPILOT_Knob_VerticalSpeed_Template">
         <UseTemplate Name="ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template">
-            <UP_DEC_DN_INC>TRUE</UP_DEC_DN_INC>
+            <UP_DEC_DN_INC>@HG_TRUE</UP_DEC_DN_INC>
         </UseTemplate>
     </Template>
 
@@ -505,7 +505,7 @@
 
     <Template Name="HEAVY_AUTOPILOT_Push_Approach_Template">
         <Parameters Type="Defaults">
-            <DISABLE_GPS_MODE>FALSE</DISABLE_GPS_MODE>
+            <DISABLE_GPS_MODE>@HG_FALSE</DISABLE_GPS_MODE>
         </Parameters>
         <UseTemplate Name="ASOBO_AUTOPILOT_Push_Approach_Template" />
     </Template>

@@ -79,7 +79,7 @@
             <ANIMREF_ID>0</ANIMREF_ID>
             <ANIMCURSOR_MIN>0</ANIMCURSOR_MIN>
             <ANIMCURSOR_MAX>1</ANIMCURSOR_MAX>
-            <INVERT_ANIM_PUSH>False</INVERT_ANIM_PUSH>
+            <INVERT_ANIM_PUSH>@HG_FALSE</INVERT_ANIM_PUSH>
             <Condition NotEmpty="ANIM_NAME_PUSH">
                 <ANIM_LENGTH_PUSH>100</ANIM_LENGTH_PUSH>
             </Condition>

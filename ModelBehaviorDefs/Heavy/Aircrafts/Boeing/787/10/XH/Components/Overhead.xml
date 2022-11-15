@@ -287,7 +287,7 @@
             <ANIM_EVENT_EFFECT_NAME>CAM_ENGINE0#ID#</ANIM_EVENT_EFFECT_NAME>
             <NORMALIZED_TIME>0.5</NORMALIZED_TIME>
             <DIRECTION>Forward</DIRECTION>
-            <FORCE_FULL_ANIM>True</FORCE_FULL_ANIM>
+            <FORCE_FULL_ANIM>@HG_TRUE</FORCE_FULL_ANIM>
             <ANIM_TIME_IN_SEC>0.5</ANIM_TIME_IN_SEC>
             <Switch Param="ID">
                 <Case Value="1">
@@ -362,12 +362,12 @@
 
     <Template Name="HEAVY_ENGINE_Switch_Hydraulic_Template">
         <Parameters Type="Default">
-            <IS_AIRLINER>true</IS_AIRLINER>
+            <IS_AIRLINER>@HG_TRUE</IS_AIRLINER>
         </Parameters>
         <UseTemplate Name="HEAVY_ENGINE_Switch_Hydraulic_SubTemplate">
             <NODE_ID>HYDRAULIC_Push_Pump_#ID#</NODE_ID>
             <ANIM_NAME>HYDRAULIC_Push_Pump_#ID#</ANIM_NAME>
-            <EMISSIVE_DRIVES_VISIBILITY>True</EMISSIVE_DRIVES_VISIBILITY>
+            <EMISSIVE_DRIVES_VISIBILITY>@HG_TRUE</EMISSIVE_DRIVES_VISIBILITY>
         </UseTemplate>
     </Template>
 
@@ -376,7 +376,7 @@
             <NODE_ID>ENGINE_Switch_Hydraulic</NODE_ID>
             <ANIM_NAME>ENGINE_Switch_Hydraulic</ANIM_NAME>
             <PART_ID>ENGINE_Switch_Hydraulic</PART_ID>
-            <IS_AIRLINER>False</IS_AIRLINER>
+            <IS_AIRLINER>@HG_FALSE</IS_AIRLINER>
             <PRESS_WARNING_THRESHOLD_PSI>4850</PRESS_WARNING_THRESHOLD_PSI>
             <TT_DESCRIPTION_ID>@TT_Package.HYDRAULIC_PUSH_PUMP_ACTION</TT_DESCRIPTION_ID>
             <TOOLTIP_TITLE>@TT_Package.HYDRAULIC_PUSH_PUMP_TITLE</TOOLTIP_TITLE>
@@ -390,14 +390,14 @@
                 <UseTemplate Name="ASOBO_AIRLINER_Base_Template">
                     <IE_NAME>hydraulic_pump_#ID#</IE_NAME>
                     <INTERACTION_TYPE>Push</INTERACTION_TYPE>
-                    <IS_AIRLINER>True</IS_AIRLINER>
+                    <IS_AIRLINER>@HG_TRUE</IS_AIRLINER>
                     <SET_STATE_EXTERNAL>#ID# (&gt;K:HYDRAULIC_SWITCH_TOGGLE)</SET_STATE_EXTERNAL>
                     <GET_STATE_EXTERNAL>(A:HYDRAULIC SWITCH:#ID#) sp0</GET_STATE_EXTERNAL>
                     <SIMVAR_TO_WATCH_0>HYDRAULIC SWITCH:#ID#</SIMVAR_TO_WATCH_0>
                     <SEQ1_EMISSIVE_CODE>(A:HYDRAULIC SWITCH:#ID#, Bool)</SEQ1_EMISSIVE_CODE>
                     <SEQ2_EMISSIVE_CODE>(A:HYDRAULIC RESERVOIR PERCENT:#ID#, Percent) 1 &lt; (A:HYDRAULIC SYSTEM INTEGRITY, Percent over 100) 0.1 &lt; (A:HYDRAULIC SWITCH:#ID#, Boolean) 0 == or</SEQ2_EMISSIVE_CODE>
                     <TT_VALUE>(A:HYDRAULIC SWITCH:#ID#,Bool) @TT_OnOff_Cond</TT_VALUE>
-                    <TT_VALUE_IS_DYNAMIC>True</TT_VALUE_IS_DYNAMIC>
+                    <TT_VALUE_IS_DYNAMIC>@HG_TRUE</TT_VALUE_IS_DYNAMIC>
                 </UseTemplate>
             </True>
         </Condition>
@@ -521,7 +521,7 @@
         </Parameters>
         <Parameters Type="Override">
             <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_GLARESHIELD</POTENTIOMETER>
-            <EMISSIVE_BUTTON>true</EMISSIVE_BUTTON>
+            <EMISSIVE_BUTTON>@HG_TRUE</EMISSIVE_BUTTON>
             <TYPE>AS01B</TYPE>
         </Parameters>
         <UseTemplate Name="ASOBO_BOEING_Push_HTML_Generic_Template">
