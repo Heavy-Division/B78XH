@@ -561,9 +561,9 @@
                 </Component>
 
                 <Component ID="Lightning_Knobs">
-                    <DefaultTemplateParameters>
+                    <Parameters Type="Defaults">
                         <KNOB_TURN_SPEED>5</KNOB_TURN_SPEED>
-                    </DefaultTemplateParameters>
+                    </Parameters>
                     <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template">
                         <NODE_ID>LIGHTING_Knob_MasterBright</NODE_ID>
                         <ANIM_NAME>LIGHTING_Knob_MasterBright</ANIM_NAME>
@@ -669,10 +669,10 @@
             <!-- Ref: 12.10.1 -->
             <Component ID="Fuel_Panel">
                 <Component ID="Fuel_System">
-                    <DefaultTemplateParameters>
+                    <Parameters Type="Defaults">
                         <TYPE>BOEING</TYPE>
                         <VARIANT>AS01B</VARIANT>
-                    </DefaultTemplateParameters>
+                    </Parameters>
 
                     <!-- Name: Left Center Fuel Pump Button -->
                     <!-- State: Requires TEST -->
@@ -774,9 +774,9 @@
                 </Component>
 
                 <Component ID="Jettison_Fuel_System">
-                    <DefaultTemplateParameters>
+                    <Parameters Type="Defaults">
                         <TYPE>BOEING</TYPE>
-                    </DefaultTemplateParameters>
+                    </Parameters>
 
                     <!-- Name: Left Nozzle valve Button -->
                     <!-- State: Requires TEST -->

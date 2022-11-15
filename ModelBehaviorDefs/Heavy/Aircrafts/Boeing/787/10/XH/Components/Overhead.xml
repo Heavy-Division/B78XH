@@ -372,7 +372,7 @@
     </Template>
 
     <Template Name="HEAVY_ENGINE_Switch_Hydraulic_SubTemplate">
-        <DefaultTemplateParameters>
+        <Parameters Type="Defaults">
             <NODE_ID>ENGINE_Switch_Hydraulic</NODE_ID>
             <ANIM_NAME>ENGINE_Switch_Hydraulic</ANIM_NAME>
             <PART_ID>ENGINE_Switch_Hydraulic</PART_ID>
@@ -380,7 +380,7 @@
             <PRESS_WARNING_THRESHOLD_PSI>4850</PRESS_WARNING_THRESHOLD_PSI>
             <TT_DESCRIPTION_ID>@TT_Package.HYDRAULIC_PUSH_PUMP_ACTION</TT_DESCRIPTION_ID>
             <TOOLTIP_TITLE>@TT_Package.HYDRAULIC_PUSH_PUMP_TITLE</TOOLTIP_TITLE>
-        </DefaultTemplateParameters>
+        </Parameters>
         <Condition Valid="IS_AIRLINER">
             <True>
                 <Parameters Type="Default">
@@ -405,7 +405,7 @@
 
 
     <Template Name="HEAVY_TEMPERATURE_Switch_Template">
-        <DefaultTemplateParameters>
+        <Parameters Type="Defaults">
             <NODE_ID>PASSENGER_Knob_Temperature_#ID#</NODE_ID>
             <ANIM_NAME>PASSENGER_Knob_Temperature_#ID#</ANIM_NAME>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
@@ -414,7 +414,7 @@
             <ANIMTIP_0_ON_CURSOR>TurnLeft</ANIMTIP_0_ON_CURSOR>
             <ANIMTIP_1>Increase</ANIMTIP_1>
             <ANIMTIP_1_ON_CURSOR>TurnRight</ANIMTIP_1_ON_CURSOR>
-        </DefaultTemplateParameters>
+        </Parameters>
         <Component ID="#NODE_ID#" Node="#NODE_ID#">
             <UseTemplate Name="ASOBO_GT_Switch_7States">
                 <SWITCH_DIRECTION>Horizontal</SWITCH_DIRECTION>
@@ -425,7 +425,7 @@
     </Template>
 
     <Template Name="HEAVY_B78XH_TEMPERATURE_Switch_Template">
-        <DefaultTemplateParameters>
+        <Parameters Type="Defaults">
             <NODE_ID>PASSENGER_Knob_Temperature_#ID#</NODE_ID>
             <ANIM_NAME>PASSENGER_Knob_Temperature_#ID#</ANIM_NAME>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
@@ -434,7 +434,7 @@
             <ANIMTIP_0_ON_CURSOR>TurnLeft</ANIMTIP_0_ON_CURSOR>
             <ANIMTIP_1>Increase</ANIMTIP_1>
             <ANIMTIP_1_ON_CURSOR>TurnRight</ANIMTIP_1_ON_CURSOR>
-        </DefaultTemplateParameters>
+        </Parameters>
         <Component ID="#NODE_ID#" Node="#NODE_ID#">
             <UseTemplate Name="ASOBO_GT_Switch_7States">
                 <SWITCH_DIRECTION>Horizontal</SWITCH_DIRECTION>
@@ -445,7 +445,7 @@
     </Template>
 
     <Template Name="HEAVY_B78XH_TEMPERATURE_Cargo_Switch_Template">
-        <DefaultTemplateParameters>
+        <Parameters Type="Defaults">
             <NODE_ID>PASSENGER_Knob_Temperature_#ID#</NODE_ID>
             <ANIM_NAME>PASSENGER_Knob_Temperature_#ID#</ANIM_NAME>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
@@ -454,7 +454,7 @@
             <ANIMTIP_0_ON_CURSOR>TurnLeft</ANIMTIP_0_ON_CURSOR>
             <ANIMTIP_1>Increase</ANIMTIP_1>
             <ANIMTIP_1_ON_CURSOR>TurnRight</ANIMTIP_1_ON_CURSOR>
-        </DefaultTemplateParameters>
+        </Parameters>
         <Component ID="#NODE_ID#" Node="#NODE_ID#">
             <UseTemplate Name="ASOBO_GT_Switch_XStates">
                 <NUM_STATES>8</NUM_STATES>
@@ -561,7 +561,7 @@
     </Template>
 
     <Template Name="HEAVY_B78XH_Switch_Elec_Template">
-        <DefaultTemplateParameters>
+        <Parameters Type="Defaults">
             <Switch Param="ID">
                 <Case Value="L">
                     <NODE_ID>HYDRAULIC_Knob_Demand_1</NODE_ID>
@@ -577,7 +577,7 @@
                 </Default>
             </Switch>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
-        </DefaultTemplateParameters>
+        </Parameters>
         <Component ID="#NODE_ID#" Node="#NODE_ID#">
             <UseTemplate Name="ASOBO_GT_Switch_3States">
                 <SWITCH_DIRECTION>Horizontal</SWITCH_DIRECTION>
@@ -589,7 +589,7 @@
     </Template>
 
     <Template Name="HEAVY_B78XH_IRS_Switch_Template">
-        <DefaultTemplateParameters>
+        <Parameters Type="Defaults">
             <NODE_ID>INSTRUMENT_Knob_IRS_#ID#</NODE_ID>
             <ANIM_NAME>INSTRUMENT_Knob_IRS_#ID#</ANIM_NAME>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
@@ -603,7 +603,7 @@
                     <SWITCH_POSITION_VAR>B78XH_IRS_R_SWITCH_STATE</SWITCH_POSITION_VAR>
                 </Case>
             </Switch>
-        </DefaultTemplateParameters>
+        </Parameters>
         <Component ID="#NODE_ID#" Node="#NODE_ID#">
             <UseTemplate Name="ASOBO_GT_Switch_2States">
                 <SWITCH_DIRECTION>Horizontal</SWITCH_DIRECTION>
