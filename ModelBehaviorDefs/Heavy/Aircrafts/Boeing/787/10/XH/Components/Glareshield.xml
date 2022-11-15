@@ -1,0 +1,517 @@
+<ModelBehaviors>
+    <!-- ## Glareshield -->
+    <Template Name="HEAVY_AIRLINER_Push_Clock_Template">
+        <Parameters Type="Defaults">
+            <Condition Check="ID" Match="1">
+                <TRUE>
+                    <SIDE_SUFFIX>pilot</SIDE_SUFFIX>
+                </TRUE>
+                <FALSE>
+                    <SIDE_SUFFIX>copilot</SIDE_SUFFIX>
+                </FALSE>
+            </Condition>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AIRLINER_Push_Clock_Template">
+            <NODE_ID>Btn_main_panel_clock_#SIDE_SUFFIX#</NODE_ID>
+            <ANIM_NAME>Btn_main_panel_clock_#SIDE_SUFFIX#</ANIM_NAME>
+            <PLANE_PREFIX>AS01B_PFD</PLANE_PREFIX>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_SAFETY_Push_WarningCaution_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>SAFETY_Push_WarningCaution_#ID#</NODE_ID>
+            <ANIM_NAME>SAFETY_Push_WarningCaution_#ID#</ANIM_NAME>
+            <NODE_ID_SEQ_1>SAFETY_Push_WarningCaution_#ID#_SEQ1</NODE_ID_SEQ_1>
+            <NODE_ID_SEQ_2>SAFETY_Push_WarningCaution_#ID#_SEQ2</NODE_ID_SEQ_2>
+            <NO_EMISSIVE_ON_HELD>TRUE</NO_EMISSIVE_ON_HELD>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_SAFETY_Push_WarningCaution_Template" />
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Knob_Mins_Template">
+        <UseTemplate Name="ASOBO_BOEING_Knob_Mins_Template">
+            <NODE_ID>Knob_Minimums_#ID#</NODE_ID>
+            <ANIM_NAME>Knob_Minimums_#ID#</ANIM_NAME>
+            <BUTTON_NODE_ID>Push_Minimums_Reset_#ID#</BUTTON_NODE_ID>
+            <BUTTON_ANIM_NAME>Push_Minimums_Reset_#ID#</BUTTON_ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Switch_Mins_Selector_Template">
+        <UseTemplate Name="ASOBO_BOEING_Switch_Mins_Selector_Template">
+            <NODE_ID>Knob_Minimums_Selector_#ID#</NODE_ID>
+            <ANIM_NAME>Knob_Minimums_Selector_#ID#</ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+
+    <Template Name="HEAVY_AIRLINER_Switch_Baro_Selector_Template">
+        <UseTemplate Name="ASOBO_AIRLINER_Switch_Baro_Selector_Template">
+            <NODE_ID>Knob_Baroset_Selector_#ID#</NODE_ID>
+            <ANIM_NAME>Knob_Baroset_Selector_#ID#</ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_STD_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_STD_Template">
+            <NODE_ID>AUTOPILOT_Knob_Baro_#ID#_Push</NODE_ID>
+            <ANIM_NAME>AUTOPILOT_Knob_Baro_#ID#_Push</ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Knob_Baro_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Knob_Baro_Template">
+            <TYPE>AS01B</TYPE>
+            <THRESHOLD_INPUT>0.05</THRESHOLD_INPUT>
+            <THRESHOLD_MOUSE>0.005</THRESHOLD_MOUSE>
+            <Switch Param="ID">
+                <Case Value="2">
+                    <BARO_ID>1</BARO_ID>
+                </Case>
+                <Case Value="3">
+                    <BARO_ID>2</BARO_ID>
+                </Case>
+            </Switch>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_FPV_Template">
+        <UseTemplate Name="ASOBO_BOEING_Push_FPV_Template">
+            <NODE_ID>EFIS_Push_Feet_#ID#</NODE_ID>
+            <ANIM_NAME>EFIS_Push_Feet_#ID#</ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_MTRS_Template">
+        <UseTemplate Name="ASOBO_BOEING_Push_MTRS_Template">
+            <NODE_ID>EFIS_Push_Meters_#ID#</NODE_ID>
+            <ANIM_NAME>EFIS_Push_Meters_#ID#</ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+    <!--
+       TODO: FO Animation moves with Capitan knob for some reason... -> Reimplement
+    -->
+
+    <Template Name="HEAVY_BOEING_Knob_ND_Cursor_Template">
+        <UseTemplate Name="ASOBO_AIRLINER_Knob_ND_Cursor_Template">
+            <NODE_ID>AIRLINER_Knob_Autopilot_ND_Cursor_#ID#</NODE_ID>
+            <ANIM_NAME>AIRLINER_Knob_Autopilot_ND_Cursor_#ID#</ANIM_NAME>
+            <BUTTON_NODE_ID>AIRLINER_Knob_Autopilot_ND_Cursor_#ID#_Push</BUTTON_NODE_ID>
+            <BUTTON_ANIM_NAME>AIRLINER_Knob_Autopilot_ND_Cursor_#ID#_Push</BUTTON_ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+    <!--
+       TODO: FO Center button (ID 2) switches Capitan ND for some reason... -> Reimplement
+    -->
+    <Template Name="HEAVY_BOEING_Knob_ND_Range_Template">
+        <UseTemplate Name="ASOBO_AIRLINER_Knob_ND_Range_Template">
+            <NODE_ID>AIRLINER_Knob_Autopilot_ND_Range_#ID#</NODE_ID>
+            <ANIM_NAME>AIRLINER_Knob_Autopilot_ND_Range_#ID#</ANIM_NAME>
+            <BUTTON_NODE_ID>AIRLINER_Knob_Autopilot_ND_Range_#ID#_Push</BUTTON_NODE_ID>
+            <BUTTON_ANIM_NAME>AIRLINER_Knob_Autopilot_ND_Range_#ID#_Push</BUTTON_ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_WXR_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>WXR</BUTTON>
+            <ACTION>WRX</ACTION>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_TFC_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>TFC</BUTTON>
+            <PACKAGE>CCP</PACKAGE>
+            <SUB_PACKAGE></SUB_PACKAGE>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_TERR_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>TERR</BUTTON>
+            <ACTION>TERRONND</ACTION>
+            <SUB_PACKAGE></SUB_PACKAGE>
+        </UseTemplate>
+    </Template>
+
+    <!-- TODO: Add left/right switch protection for display with EICAS-->
+    <!-- NOTE: EICAS position variable L:XMLVAR_EICAS_INDEX-->
+    <Template Name="HEAVY_BOEING_Push_MFD_Template">
+        <Parameters Type="Default">
+            <Switch Param="SIDE">
+                <Case Value="L">
+                    <CALCULATED_EMISSIVE_ID Process="Int">
+                        #ID# 1 == if{
+                        11
+                        } els{
+                        13
+                        }
+                    </CALCULATED_EMISSIVE_ID>
+                </Case>
+                <Case Value="R">
+                    <CALCULATED_EMISSIVE_ID Process="Int">
+                        #ID# 1 == if{
+                        12
+                        } els{
+                        14
+                        }
+                    </CALCULATED_EMISSIVE_ID>
+                </Case>
+                <PROTECT_PUSH>FALSE</PROTECT_PUSH>
+            </Switch>
+        </Parameters>
+        <Condition Valid="PROTECT_PUSH">
+            <FALSE>
+                <UseTemplate Name="ASOBO_BOEING_Push_MFD_Template">
+                    <NODE_ID>DISPLAY_Push_MFD_#SIDE#_#ID#</NODE_ID>
+                    <ANIM_NAME>DISPLAY_Push_MFD_#SIDE#_#ID#</ANIM_NAME>
+                    <EMISSIVE_NODE_ID>Btn_main_panel_I_0#CALCULATED_EMISSIVE_ID#_Active</EMISSIVE_NODE_ID>
+                </UseTemplate>
+            </FALSE>
+        </Condition>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_SYS_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>SYS</BUTTON>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_CDU_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>CDU</BUTTON>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_INFO_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>INFO</BUTTON>
+            <PACKAGE>EICAS</PACKAGE>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_ENG_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>ENG</BUTTON>
+            <PACKAGE>EICAS</PACKAGE>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_CHKL_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>CHKL</BUTTON>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_COMM_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>COMM</BUTTON>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_ND_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>ND</BUTTON>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_EICAS_Template">
+        <UseTemplate Name="HEAVY_BOEING_Push_Display_Select_Template">
+            <BUTTON>EICAS</BUTTON>
+            <PACKAGE>EICAS</PACKAGE>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Autopilot_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>AUTOPILOT_Push_Autopilot_#ID#</NODE_ID>
+            <ANIM_NAME>AUTOPILOT_Push_Autopilot_#ID#</ANIM_NAME>
+        </Parameters>
+        <Parameters Type="Override">
+            <DONT_APPEND_ID>TRUE</DONT_APPEND_ID>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Autopilot_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_FlightDirector_Template">
+        <Parameters Type="Defaults">
+            <TOGGLEABLE>TRUE</TOGGLEABLE>
+            <NO_INDICATOR>TRUE</NO_INDICATOR>
+            <NODE_ID>AUTOPILOT_Switch_FlightDirector_#ID#</NODE_ID>
+            <ANIM_NAME>AUTOPILOT_Switch_FlightDirector_#ID#</ANIM_NAME>
+            <SUFFIX_ID>_#ID#</SUFFIX_ID>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_FlightDirector_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Fake_FlightDirector_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>AUTOPILOT_Switch_FlightDirector_#SWITCH_ID#</NODE_ID>
+            <ANIM_NAME>AUTOPILOT_Switch_FlightDirector_#SWITCH_ID#</ANIM_NAME>
+        </Parameters>
+        <UseTemplate Name="HEAVY_AUTOPILOT_Push_FlightDirector_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Disengage_Bar_Template">
+        <Parameters Type="Defaults">
+            <TOGGLEABLE>TRUE</TOGGLEABLE>
+            <NO_INDICATOR>TRUE</NO_INDICATOR>
+            <NO_TEXT_EMISSIVE>TRUE</NO_TEXT_EMISSIVE>
+            <INVERT_SWITCH_ON_CONDITION>TRUE</INVERT_SWITCH_ON_CONDITION>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Disconnect_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_AutoThrottle_Template">
+        <Parameters Type="Defaults">
+            <ID>0</ID>
+            <TYPE>AS01B</TYPE>
+            <TOGGLEABLE>TRUE</TOGGLEABLE>
+            <NO_INDICATOR>TRUE</NO_INDICATOR>
+            <NO_TEXT_EMISSIVE>TRUE</NO_TEXT_EMISSIVE>
+            <ANIMTIP_0>TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AUTOTHROTTLE_#SIDE#_OFF</ANIMTIP_0>
+            <ANIMTIP_1>TT:COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_AUTOTHROTTLE_#SIDE#_ARMED</ANIMTIP_1>
+
+            <Switch Param="SIDE">
+                <Case Value="R">
+                    <NODE_ID>AUTOPILOT_Push_AutoThrottle_2</NODE_ID>
+                    <ANIM_NAME>AUTOPILOT_Push_AutoThrottle_2</ANIM_NAME>
+                </Case>
+            </Switch>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_AutoThrottle_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Speed_Template">
+        <Parameters Type="Default">
+            <DEFAULT_NAME>Speed</DEFAULT_NAME>
+            <IS_MACH_CODE>0</IS_MACH_CODE>
+            <ON_SPEED_MODE_SWITCH/>
+            <TT_DESCRIPTION_ID_SPEED>@TT_Package.AUTOPILOT_PUSH_SPEEDMODE_ACTION_SET</TT_DESCRIPTION_ID_SPEED>
+            <TOOLTIP_TITLE_SPEED>@TT_Package.AUTOPILOT_PUSH_SPEEDMODE_TITLE</TOOLTIP_TITLE_SPEED>
+        </Parameters>
+        <Parameters Type="Override">
+            <KEY_PREFIX>AS01B</KEY_PREFIX>
+            <EMISSIVE_CODE_ACTIVE>(A:AUTOPILOT AIRSPEED HOLD, Bool) (A:AUTOPILOT MACH HOLD, Bool) (A:AUTOPILOT THROTTLE ARM, Bool) or and</EMISSIVE_CODE_ACTIVE>
+            <IS_SWITCH_ON>(A:AUTOPILOT AIRSPEED HOLD, Bool) (A:AUTOPILOT MACH HOLD, Bool) (A:AUTOPILOT THROTTLE ARM, Bool) or and</IS_SWITCH_ON>
+            <SIMVAR_TO_WATCH_0>AUTOPILOT AIRSPEED HOLD</SIMVAR_TO_WATCH_0>
+            <SIMVAR_TO_WATCH_1>AUTOPILOT MACH HOLD</SIMVAR_TO_WATCH_1>
+            <SIMVAR_TO_WATCH_2>AUTOPILOT THROTTLE ARM</SIMVAR_TO_WATCH_2>
+            <ON_AP_MODE_STATE_CHANGED>#ON_SPEED_MODE_SWITCH#</ON_AP_MODE_STATE_CHANGED>
+            <SET_STATE_EXTERNAL>(&gt;H:#KEY_PREFIX#_FMC_1_AP_SPD)</SET_STATE_EXTERNAL>
+            <TT_DESCRIPTION_ID>@TT_Package.AIRLINER_AUTOPILOT_PUSH_SPEED_ACTION</TT_DESCRIPTION_ID>
+            <TOOLTIP_TITLE>@TT_Package.AIRLINER_AUTOPILOT_PUSH_SPEED_TITLE</TOOLTIP_TITLE>
+            <BTN_ID>IAS_Mode</BTN_ID>
+            <LOCAL_VAR_TO_WATCH_0>AP_SPD_ACTIVE</LOCAL_VAR_TO_WATCH_0>
+            <BINDING_SET_0_EVENT_ID>AP_AIRSPEED_HOLD</BINDING_SET_0_EVENT_ID>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Template">
+            <SIM_STATE_IS_ON_EXTERNAL>l0</SIM_STATE_IS_ON_EXTERNAL>
+            <GET_STATE_EXTERNAL>#IS_SWITCH_ON# sp0</GET_STATE_EXTERNAL>
+            <SET_STATE_EXTERNAL>#SET_STATE_EXTERNAL# #ON_AP_MODE_STATE_CHANGED#</SET_STATE_EXTERNAL>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_SpeedToggle_Template">
+        <Parameters Type="Defaults">
+            <NO_INDICATOR>TRUE</NO_INDICATOR>
+            <NO_TEXT_EMISSIVE>TRUE</NO_TEXT_EMISSIVE>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_SpeedToggle_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Knob_SpeedMach_Template">
+        <Parameters Type="Defaults">
+            <TYPE>AS01B</TYPE>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_AUTOPILOT_Knob_SpeedMach_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Lateral_Navigation_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Navigation_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Vertical_Navigation_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Vertical_Navigation_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Flight_Level_Change_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_FlightLevelChange_Template" />
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_Heading_Track_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>Btn_main_panel_H_007</NODE_ID>
+            <ANIM_NAME>Btn_main_panel_H_007</ANIM_NAME>
+        </Parameters>
+        <UseTemplate Name="ASOBO_BOEING_Push_Heading_Track_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Knob_Bank_Limit_Template">
+        <Parameters Type="Defaults">
+            <SETTINGS_COUNT>5</SETTINGS_COUNT>
+            <NODE_ID>AUTOPILOT_Knob_Bank_Limit</NODE_ID>
+            <ANIM_NAME>AUTOPILOT_Knob_Bank_Limit</ANIM_NAME>
+            <WWISE_EVENT>autopilot_hdg_bank_knob</WWISE_EVENT>
+            <WRAP>False</WRAP>
+            <USE_INPUT_EVENT_ID>AUTOPILOT</USE_INPUT_EVENT_ID>
+            <SWITCH_DIRECTION>Horizontal</SWITCH_DIRECTION>
+            <TT_ICON>ROTATE</TT_ICON>
+        </Parameters>
+
+        <Parameters Type="Override">
+            <KNOB_ID>Bank_Limit</KNOB_ID>
+            <NUM_STATES Process="Int">#SETTINGS_COUNT# 1 +</NUM_STATES>
+            <CODE_POS_0>(&gt;B:AUTOPILOT_Bank_Limit_0)</CODE_POS_0>
+            <CODE_POS_1>(&gt;B:AUTOPILOT_Bank_Limit_1)</CODE_POS_1>
+            <CODE_POS_2>(&gt;B:AUTOPILOT_Bank_Limit_2)</CODE_POS_2>
+            <CODE_POS_3>(&gt;B:AUTOPILOT_Bank_Limit_3)</CODE_POS_3>
+            <CODE_POS_4>(&gt;B:AUTOPILOT_Bank_Limit_4)</CODE_POS_4>
+            <CODE_POS_5>(&gt;B:AUTOPILOT_Bank_Limit_5)</CODE_POS_5>
+            <STR_STATE_0>0</STR_STATE_0>
+            <STR_STATE_1>1</STR_STATE_1>
+            <STR_STATE_2>2</STR_STATE_2>
+            <STR_STATE_3>3</STR_STATE_3>
+            <STR_STATE_4>4</STR_STATE_4>
+            <STR_STATE_5>5</STR_STATE_5>
+            <SET_STATE_2>3 (&gt;K:AP_MAX_BANK_SET)</SET_STATE_2>
+            <SET_STATE_3>2 (&gt;K:AP_MAX_BANK_SET)</SET_STATE_3>
+            <SET_STATE_1>4 (&gt;K:AP_MAX_BANK_SET)</SET_STATE_1>
+            <SET_STATE_4>1 (&gt;K:AP_MAX_BANK_SET)</SET_STATE_4>
+            <SET_STATE_0>5 (&gt;K:AP_MAX_BANK_SET)</SET_STATE_0>
+            <SET_STATE_5>0 (&gt;K:AP_MAX_BANK_SET)</SET_STATE_5>
+            <STATE0_TEST>(B:AUTOPILOT_Bank_Limit, Number) 0 ==</STATE0_TEST>
+            <STATE1_TEST>(B:AUTOPILOT_Bank_Limit, Number) 1 ==</STATE1_TEST>
+            <STATE2_TEST>(B:AUTOPILOT_Bank_Limit, Number) 2 ==</STATE2_TEST>
+            <STATE3_TEST>(B:AUTOPILOT_Bank_Limit, Number) 3 ==</STATE3_TEST>
+            <STATE4_TEST>(B:AUTOPILOT_Bank_Limit, Number) 4 ==</STATE4_TEST>
+            <STATE5_TEST>(B:AUTOPILOT_Bank_Limit, Number) 5 ==</STATE5_TEST>
+            <OVERRIDE_ANIM_LENGTH Process="Int">600</OVERRIDE_ANIM_LENGTH>
+        </Parameters>
+
+        <Component ID="#NODE_ID#" Node="#NODE_ID#">
+            <UseTemplate Name="HEAVY_AUTOPILOT_Knob_Template">
+                <TOOLTIP_TITLE>@TT_Package.AUTOPILOT_KNOB_HDG_BANK_LIMIT_TITLE</TOOLTIP_TITLE>
+                <TT_DESCRIPTION_ID>@TT_Package.AUTOPILOT_KNOB_HDG_BANK_LIMIT_ACTION</TT_DESCRIPTION_ID>
+                <TT_VALUE>(A:AUTOPILOT MAX BANK ID, Number) #SETTINGS_COUNT# &lt; if{ (A:AUTOPILOT MAX BANK, degrees) '%d°' @sprintf } els{ @TT_Auto }</TT_VALUE>
+                <GET_STATE_EXTERNAL>(A:AUTOPILOT MAX BANK ID, Number)</GET_STATE_EXTERNAL>
+                <ENUM_VAL_TO_POS_EXTERNAL>-1 * #SETTINGS_COUNT# +</ENUM_VAL_TO_POS_EXTERNAL>
+                <ANIM>EXTERNAL</ANIM>
+            </UseTemplate>
+        </Component>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Knob_Template">
+        <Parameters Type="Default">
+            <INPUT_EVENT_ID_SOURCE>AUTOPILOT</INPUT_EVENT_ID_SOURCE>
+            <USE_INPUT_EVENT_ID>AUTOPILOT</USE_INPUT_EVENT_ID>
+        </Parameters>
+        <Parameters Type="Default">
+            <KNOB_TYPE>Finite_Code</KNOB_TYPE>
+            <BTN_ID>#KNOB_ID#</BTN_ID>
+            <CURSOR_LEFT>TurnLeftSmall</CURSOR_LEFT>
+            <CURSOR_RIGHT>TurnRightSmall</CURSOR_RIGHT>
+        </Parameters>
+        <Parameters Type="Default">
+            <COUNT>36</COUNT>
+            <Condition Valid="TOOLTIP_TITLE">
+                <TOOLTIP_ENTRY_0>#INPUT_EVENT_ID_SOURCE#_#KNOB_ID#</TOOLTIP_ENTRY_0>
+            </Condition>
+        </Parameters>
+        <Parameters Type="Override">
+            <CLOCKWISE_CODE>1 (&gt;B:#INPUT_EVENT_ID_SOURCE#_#KNOB_ID#_Inc)</CLOCKWISE_CODE>
+            <ANTICLOCKWISE_CODE>1 (&gt;B:#INPUT_EVENT_ID_SOURCE#_#KNOB_ID#_Dec)</ANTICLOCKWISE_CODE>
+        </Parameters>
+        <Parameters Type="Override">
+            <TEMPLATE_TO_CALL>HEAVY_GT_Custom_Switch_XStates</TEMPLATE_TO_CALL>
+        </Parameters>
+        <UseInputEvent ID="#USE_INPUT_EVENT_ID#"/>
+        <UseTemplate Name="#TEMPLATE_TO_CALL#"/>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_VS_FPA_Template">
+        <Parameters Type="Default">
+            <NODE_ID>Btn_main_panel_H_009</NODE_ID>
+            <ANIM_NAME>Btn_main_panel_H_009</ANIM_NAME>
+            <PART_ID>Btn_main_panel_H_009</PART_ID>
+            <STATE_VAR_NAME>XMLVAR_FPA_MODE_ACTIVE</STATE_VAR_NAME>
+            <TOOLTIP_TITLE>@TT_Package.AIRLINER_AUTOPILOT_PUSH_VS_FPA_TITLE</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.AIRLINER_AUTOPILOT_PUSH_VS_FPA_ACTION</TT_DESCRIPTION_ID>
+            <WWISE_EVENT_1>autopilot_push_button2_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>autopilot_push_button2_off</WWISE_EVENT_2>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AIRLINER_Base_Template">
+            <IE_NAME>VS_FPA</IE_NAME>
+            <INTERACTION_TYPE>Push</INTERACTION_TYPE>
+            <SET_STATE_EXTERNAL>p0 (&gt;L:#STATE_VAR_NAME#)</SET_STATE_EXTERNAL>
+            <GET_STATE_EXTERNAL>(L:#STATE_VAR_NAME#) sp0</GET_STATE_EXTERNAL>
+            <LOCAL_VAR_TO_WATCH_0>#STATE_VAR_NAME#</LOCAL_VAR_TO_WATCH_0>
+            <STR_STATE_ON>FPA</STR_STATE_ON>
+            <STR_STATE_OFF>VS</STR_STATE_OFF>
+            <TT_VALUE_ON>'FPA'</TT_VALUE_ON>
+            <TT_VALUE_OFF>'VS'</TT_VALUE_OFF>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Knob_Heading_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Knob_Heading_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Heading_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Heading_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Knob_VerticalSpeed_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Knob_VerticalSpeed_Template">
+            <UP_DEC_DN_INC>TRUE</UP_DEC_DN_INC>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_VerticalSpeed_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_VerticalSpeed_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Knob_Altitude_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>AUTOPILOT_Knob_Altitude_100</NODE_ID>
+            <ANIM_NAME_KNOB>AUTOPILOT_Knob_Altitude_100</ANIM_NAME_KNOB>
+            <ANIM_NAME_PUSH>AUTOPILOT_Knob_Altitude_100_Push</ANIM_NAME_PUSH>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AUTOPILOT_Knob_Altitude_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Switch_Altitude_Increment_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>AUTOPILOT_Knob_Altitude_1000</NODE_ID>
+            <ANIM_NAME>AUTOPILOT_Knob_Altitude_1000</ANIM_NAME>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AUTOPILOT_Switch_Altitude_Increment_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Altitude_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Altitude_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Approach_Template">
+        <Parameters Type="Defaults">
+            <DISABLE_GPS_MODE>FALSE</DISABLE_GPS_MODE>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Approach_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_Localizer_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Push_Localizer_Template" />
+    </Template>
+    <!-- ## End: Glareshield -->
+</ModelBehaviors>

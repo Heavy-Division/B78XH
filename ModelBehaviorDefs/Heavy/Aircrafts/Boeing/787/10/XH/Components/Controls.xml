@@ -1,0 +1,48 @@
+<ModelBehaviors>
+    <!-- ## Controls -->
+    <Template Name="HEAVY_HANDLING_Yoke_Hideable_Template">
+        <UseTemplate Name="ASOBO_HANDLING_Yoke_Hideable_Template">
+            <ID>#ID#</ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Yoke_Hider_Template">
+        <UseTemplate Name="ASOBO_HANDLING_Yoke_Hider_Template">
+            <ID>#ID#</ID>
+            <NODE_ID>HANDLING_Yoke_Hider_#ID#_Static</NODE_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Switch_ElevatorTrim_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>HANDLING_Switch_Elevator_Trim_#ID#</NODE_ID>
+            <ANIM_NAME>HANDLING_Switch_Elevator_Trim_#ID#</ANIM_NAME>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_HANDLING_Switch_ElevatorTrim_Template" />
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Push_AP_Trim_Disc_Template">
+        <UseTemplate Name="ASOBO_HANDLING_Push_AP_Trim_Disc_Template" />
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_RudderPedals_Template">
+        <UseTemplate Name="ASOBO_HANDLING_RudderPedals_Template">
+            <RUDDERPEDALS_TYPE>MIXED</RUDDERPEDALS_TYPE>
+            <DONT_BRAKE_ON_PARKINGBRAKE>True</DONT_BRAKE_ON_PARKINGBRAKE>
+            <NODE_ID_L_BRAKE_1>HANDLING_RudderPedals_1_1</NODE_ID_L_BRAKE_1>
+            <NODE_ID_L_BRAKE_2>HANDLING_RudderPedals_2_1</NODE_ID_L_BRAKE_2>
+            <NODE_ID_R_BRAKE_1>HANDLING_RudderPedals_1_2</NODE_ID_R_BRAKE_1>
+            <NODE_ID_R_BRAKE_2>HANDLING_RudderPedals_2_2</NODE_ID_R_BRAKE_2>
+            <NODE_ID_L_RUDDER>HANDLING_RudderPedals_1_Helper</NODE_ID_L_RUDDER>
+            <NODE_ID_R_RUDDER>HANDLING_RudderPedals_2_Helper</NODE_ID_R_RUDDER>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Steering_Tiller_Template">
+        <UseTemplate Name="ASOBO_HANDLING_Steering_Tiller_Template">
+            <ID>#ID#</ID>
+        </UseTemplate>
+    </Template>
+    <!-- ## End: Controls -->
+</ModelBehaviors>

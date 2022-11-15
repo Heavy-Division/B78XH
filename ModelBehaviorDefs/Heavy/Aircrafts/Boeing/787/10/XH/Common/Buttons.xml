@@ -1,0 +1,218 @@
+<ModelBehaviors>
+    <!-- Common Buttons -->
+    <Template Name="HEAVY_LVariable_Push_Button_Airliner">
+        <Condition NotEmpty="VARIABLE_NAME">
+            <UseTemplate Name="ASOBO_GT_Push_Button_Airliner">
+                <Condition NotEmpty="VARIABLE_PREFIX">
+                    <TRUE>
+                        <Condition Valid="REVERSE_CONDITION">
+                            <TRUE>
+                                <LEFT_SINGLE_CODE>(L:#VARIABLE_PREFIX#_#VARIABLE_NAME#) ! (&gt;L:#VARIABLE_PREFIX#_#VARIABLE_NAME#)</LEFT_SINGLE_CODE>
+                                <DOWN_STATE_CODE>(L:#VARIABLE_PREFIX#_#VARIABLE_NAME#) !</DOWN_STATE_CODE>
+                                <SEQ1_EMISSIVE_CODE>(L:#VARIABLE_PREFIX#_#VARIABLE_NAME#) !</SEQ1_EMISSIVE_CODE>
+                                <SEQ2_EMISSIVE_CODE>(L:#VARIABLE_PREFIX#_#VARIABLE_NAME#)</SEQ2_EMISSIVE_CODE>
+                            </TRUE>
+                            <FALSE>
+                                <LEFT_SINGLE_CODE>(L:#VARIABLE_PREFIX#_#VARIABLE_NAME#) ! (&gt;L:#VARIABLE_PREFIX#_#VARIABLE_NAME#)</LEFT_SINGLE_CODE>
+                                <DOWN_STATE_CODE>(L:#VARIABLE_PREFIX#_#VARIABLE_NAME#)</DOWN_STATE_CODE>
+                                <SEQ1_EMISSIVE_CODE>(L:#VARIABLE_PREFIX#_#VARIABLE_NAME#)</SEQ1_EMISSIVE_CODE>
+                                <SEQ2_EMISSIVE_CODE>(L:#VARIABLE_PREFIX#_#VARIABLE_NAME#) !</SEQ2_EMISSIVE_CODE>
+                            </FALSE>
+                        </Condition>
+                    </TRUE>
+                    <FALSE>
+                        <Condition Valid="REVERSE_CONDITION">
+                            <TRUE>
+                                <LEFT_SINGLE_CODE>(L:#VARIABLE_NAME#) ! (&gt;L:#VARIABLE_NAME#)</LEFT_SINGLE_CODE>
+                                <DOWN_STATE_CODE>(L:#VARIABLE_NAME#) !</DOWN_STATE_CODE>
+                                <SEQ1_EMISSIVE_CODE>(L:#VARIABLE_NAME#) !</SEQ1_EMISSIVE_CODE>
+                                <SEQ2_EMISSIVE_CODE>(L:#VARIABLE_NAME#)</SEQ2_EMISSIVE_CODE>
+                            </TRUE>
+                            <FALSE>
+                                <LEFT_SINGLE_CODE>(L:#VARIABLE_NAME#) ! (&gt;L:#VARIABLE_NAME#)</LEFT_SINGLE_CODE>
+                                <DOWN_STATE_CODE>(L:#VARIABLE_NAME#)</DOWN_STATE_CODE>
+                                <SEQ1_EMISSIVE_CODE>(L:#VARIABLE_NAME#)</SEQ1_EMISSIVE_CODE>
+                                <SEQ2_EMISSIVE_CODE>(L:#VARIABLE_NAME#) !</SEQ2_EMISSIVE_CODE>
+                            </FALSE>
+                        </Condition>
+                    </FALSE>
+                </Condition>
+            </UseTemplate>
+        </Condition>
+    </Template>
+
+    <Template Name="HEAVY_ELECTRICAL_CIRCUIT_Push_Button_Airliner">
+        <UseTemplate Name="ASOBO_GT_Push_Button_Airliner">
+            <LEFT_SINGLE_CODE>#CIRCUIT# (&gt;K:ELECTRICAL_CIRCUIT_TOGGLE)</LEFT_SINGLE_CODE>
+            <DOWN_STATE_CODE>(A:CIRCUIT SWITCH ON:#CIRCUIT#, Bool)</DOWN_STATE_CODE>
+            <SEQ1_EMISSIVE_CODE>(A:CIRCUIT SWITCH ON:#CIRCUIT#, Bool)</SEQ1_EMISSIVE_CODE>
+            <SEQ2_EMISSIVE_CODE>(A:CIRCUIT SWITCH ON:#CIRCUIT#, Bool) !</SEQ2_EMISSIVE_CODE>
+        </UseTemplate>
+    </Template>
+
+    <!-- Custom XStates Switch with OVERRIDE_ANIM_LENGTH support (See: HEAVY_GT_Switch_XStates_SubTemplate) -->
+    <Template Name = "HEAVY_GT_Custom_Switch_XStates">
+        <Parameters Type="Default">
+            <NODE_ID>#ANIM_NAME#</NODE_ID>
+        </Parameters>
+
+        <UseTemplate Name="HEAVY_GT_Switch_XStates_SubTemplate">
+        </UseTemplate>
+    </Template>
+
+    <!-- Custom XStates SubTemplate -> supports OVERRIDE_ANIM_LENGTH for knobs what does not require full animation range -->
+    <Template Name = "HEAVY_GT_Switch_XStates_SubTemplate">
+        <Parameters Type="Default">
+            <SWITCH_POSITION_TYPE>O</SWITCH_POSITION_TYPE>
+            <SWITCH_POSITION_VAR>SwitchState</SWITCH_POSITION_VAR>
+            <DRAG_ANIMATION_VARIABLE_TYPE>O</DRAG_ANIMATION_VARIABLE_TYPE>
+            <DRAG_ANIMATION_VARIABLE_NAME>XMLVAR_#NODE_ID#_Animation_Position</DRAG_ANIMATION_VARIABLE_NAME>
+            <DRAG_ANIMATION_TARGET_VARIABLE_TYPE>O</DRAG_ANIMATION_TARGET_VARIABLE_TYPE>
+            <DRAG_ANIMATION_TARGET_VARIABLE_NAME>XMLVAR_#NODE_ID#_Animation_Target_Position</DRAG_ANIMATION_TARGET_VARIABLE_NAME>
+            <ANIM_LAG>400</ANIM_LAG>
+            <UPARROW_DRAG_IM/>
+            <DOWNARROW_DRAG_IM/>
+            <LEFTARROW_DRAG_IM/>
+            <RIGHTARROW_DRAG_IM/>
+            <CURSOR_CENTER_DRAG_IM/>
+            <CURSOR_DRAG_IM>Grab</CURSOR_DRAG_IM>
+            <ANIMREF_ID>0</ANIMREF_ID>
+            <ANIMCURSOR_MIN>0</ANIMCURSOR_MIN>
+            <ANIMCURSOR_MAX>1</ANIMCURSOR_MAX>
+            <INVERT_ANIM_PUSH>False</INVERT_ANIM_PUSH>
+            <Condition NotEmpty="ANIM_NAME_PUSH">
+                <ANIM_LENGTH_PUSH>100</ANIM_LENGTH_PUSH>
+            </Condition>
+        </Parameters>
+        <Parameters Type="Override">
+            <Condition Check="IS_LOOPING">
+                <True>
+                    <ANIM_WRAP>1</ANIM_WRAP>
+                    <ANIM_LENGTH Process="Int">#NUM_STATES# 100 *</ANIM_LENGTH>
+                </True>
+                <False>
+                    <ANIM_LENGTH Process="Int">#NUM_STATES# 1 - 100 *</ANIM_LENGTH>
+                </False>
+            </Condition>
+        </Parameters>
+
+        <Parameters Type="Override">
+            <Condition Valid="OVERRIDE_ANIM_LENGTH">
+                <ANIM_LENGTH>#OVERRIDE_ANIM_LENGTH#</ANIM_LENGTH>
+            </Condition>
+        </Parameters>
+
+        <UseTemplate Name = "ASOBO_GT_Anim_Code">
+            <Condition Valid="OVERRIDE_ANIM_CODE">
+                <True>
+                    <ANIM_CODE>#OVERRIDE_ANIM_CODE#</ANIM_CODE>
+                </True>
+                <False>
+                    <ANIM_CODE>
+                        (#DRAG_ANIMATION_VARIABLE_TYPE#:#DRAG_ANIMATION_VARIABLE_NAME#)
+                    </ANIM_CODE>
+                </False>
+            </Condition>
+        </UseTemplate>
+
+        <Condition>
+            <Test>
+                <And>
+                    <Or>
+                        <Arg NotEmpty="ON_PRIMARY_EVENT"/>
+                        <Arg NotEmpty="ON_SECONDARY_EVENT"/>
+                    </Or>
+                    <Arg NotEmpty="ANIM_NAME_PUSH"/>
+                </And>
+            </Test>
+            <True>
+                <UseTemplate Name = "ASOBO_GT_Anim_Code">
+                    <ANIM_NAME>#ANIM_NAME_PUSH#</ANIM_NAME>
+                    <ANIM_CODE>#ANIM_CODE_PUSH#</ANIM_CODE>
+                    <ANIM_LENGTH>#ANIM_LENGTH_PUSH#</ANIM_LENGTH>
+                    <INVERT_ANIM>#INVERT_ANIM_PUSH#</INVERT_ANIM>
+                    <ANIM_WRAP>0</ANIM_WRAP>
+                </UseTemplate>
+                <UseTemplate Name = "ASOBO_GT_AnimTriggers_2SoundEvents">
+                    <ANIM_NAME>#ANIM_NAME_PUSH#</ANIM_NAME>
+                    <Condition Check="WWISE_PUSH_EVENT_1">
+                        <WWISE_EVENT_1>#WWISE_PUSH_EVENT_1#</WWISE_EVENT_1>
+                    </Condition>
+                    <Condition Check="WWISE_PUSH_EVENT_2">
+                        <WWISE_EVENT_2>#WWISE_PUSH_EVENT_2#</WWISE_EVENT_2>
+                    </Condition>
+                </UseTemplate>
+            </True>
+        </Condition>
+
+        <UseTemplate Name = "ASOBO_GT_AnimTriggers_SoundEvents_Same">
+            <Condition Check="IS_LOOPING">
+                <True>
+                    <COUNT Process="Int">#NUM_STATES#</COUNT>
+                </True>
+                <False>
+                    <COUNT Process="Int">#NUM_STATES# 1 -</COUNT>
+                </False>
+            </Condition>
+        </UseTemplate>
+
+        <Condition Valid="CONSISTENCY_CHECKED_BY_INPUT_EVENT">
+            <False>
+                <UseTemplate Name = "ASOBO_GT_Update_EnsureVariableConsistency_MultiStates"/>
+            </False>
+        </Condition>
+
+        <UseTemplate Name = "ASOBO_GT_Interaction_LeftSingle_MultiStates">
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_BOEING_Push_HTML_Generic_Template">
+        <Parameters Type="Default">
+            <ID>1</ID>
+        </Parameters>
+        <Parameters Type="Default">
+            <NODE_ID>BOEING_Push_#ID_BTN#_#ID#</NODE_ID>
+            <ANIM_NAME>BOEING_Push_#ID_BTN#_#ID#</ANIM_NAME>
+            <Condition Valid="EMISSIVE_BUTTON">
+                <False>
+                    <NODE_ID_DECAL>BOEING_Push_#ID_BTN#_#ID#_Text</NODE_ID_DECAL>
+                </False>
+            </Condition>
+            <PART_ID>BOEING_Push_#ID_BTN#</PART_ID>
+            <WWISE_EVENT_1>autopilot_push_button2_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>autopilot_push_button2_off</WWISE_EVENT_2>
+            <ON_PUSH_EVENT>#CUR_ID# (&gt;L:CONTROL_SWITCH_COM_#ID#)</ON_PUSH_EVENT>
+            <Condition>
+                <Test>
+                    <And>
+                        <Arg Valid="EMISSIVE_BUTTON"/>
+                        <Arg Check="POTENTIOMETER"/>
+                    </And>
+                </Test>
+                <True>
+                    <EMISSIVE_TEMPLATE_TO_USE>ASOBO_GT_Emissive_Potentiometer</EMISSIVE_TEMPLATE_TO_USE>
+                </True>
+            </Condition>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AIRLINER_Base_Template">
+            <INTERACTION_TYPE>Push</INTERACTION_TYPE>
+            <SET_STATE_EXTERNAL>if{ #ON_PUSH_EVENT# }</SET_STATE_EXTERNAL>
+            <IE_NAME>#ID_BTN#_#ID#</IE_NAME>
+        </UseTemplate>
+        <Condition>
+            <Test>
+                <And>
+                    <Arg Valid="NODE_ID_DECAL"/>
+                    <Arg Check="POTENTIOMETER"/>
+                </And>
+            </Test>
+            <True>
+                <Component ID="#NODE_ID_DECAL#" Node="#NODE_ID_DECAL#">
+                    <UseTemplate Name="ASOBO_GT_Emissive_Potentiometer"/>
+                </Component>
+            </True>
+        </Condition>
+    </Template>
+    <!-- End: Common Buttons -->
+
+</ModelBehaviors>

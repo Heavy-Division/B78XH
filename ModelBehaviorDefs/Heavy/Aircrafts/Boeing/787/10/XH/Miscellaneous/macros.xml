@@ -1,0 +1,31 @@
+<ModelBehaviors>
+    <!-- Macros -->
+
+    <!-- ## Includes -->
+    <Include ModelBehaviorFile="Refactoring\Global\macros.xml" />
+    <!-- ## End: Includes -->
+
+    <!-- ## Potentiometers -->
+    <Macro Name="POT_LIGHT_BASE_CAPITAN">16</Macro>
+    <Macro Name="POT_LIGHT_FLOODLIGHT_CAPITAN">16</Macro>
+    <Macro Name="POT_LIGHT_BACKLIGHT_CAPITAN">17</Macro>
+
+    <Macro Name="POT_LIGHT_BASE_FIRST_OFFICER">18</Macro>
+    <Macro Name="POT_LIGHT_FLOODLIGHT_FIRST_OFFICER">18</Macro>
+    <Macro Name="POT_LIGHT_BACKLIGHT_FIRST_OFFICER">19</Macro>
+
+    <Macro Name="POT_LIGHT_BASE_GLARESHIELD">20</Macro>
+    <Macro Name="POT_LIGHT_FLOODLIGHT_GLARESHIELD">20</Macro>
+    <Macro Name="POT_LIGHT_BACKLIGHT_GLARESHIELD">21</Macro>
+
+    <Macro Name="POT_LIGHT_BASE_AISLE_STAND">25</Macro>
+    <Macro Name="POT_LIGHT_FLOODLIGHT_AISLE_STAND">22</Macro>
+    <Macro Name="POT_LIGHT_BACKLIGHT_AISLE_STAND">23</Macro>
+
+    <Macro Name="POT_LIGHT_BACKLIGHT_OVERHEAD">24</Macro>
+    <Macro Name="POT_LIGHT_FLOODLIGHT_DOME">25</Macro>
+    <!-- ## End: Potentiometers -->
+
+    <Macro Name="ALT_CODE_DEFAULT">s0 l0 0 &gt; sp1 (A:LIGHT POTENTIOMETER:31, Percent over 100) 0 (L:XMLVAR_LightMasterActive) l1 and ?</Macro>
+
+</ModelBehaviors>

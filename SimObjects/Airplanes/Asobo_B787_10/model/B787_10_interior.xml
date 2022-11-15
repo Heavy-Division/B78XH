@@ -20,87 +20,45 @@
     -->
 
     <Behaviors>
-        <!-- Move to Tools file -->
-        <Macro Name="HTT_Action">COCKPIT.TOOLTIPSV3.ACTION</Macro>
-        <Macro Name="HTT_State">COCKPIT.TOOLTIPSV3.STATE</Macro>
-        <Macro Name="HTT_Title">COCKPIT.TOOLTIPSV3.TITLE</Macro>
-
-
-        <Macro Name="POT_LIGHT_BASE_CAPITAN">16</Macro>
-        <Macro Name="POT_LIGHT_FLOODLIGHT_CAPITAN">16</Macro>
-        <Macro Name="POT_LIGHT_BACKLIGHT_CAPITAN">17</Macro>
-
-        <Macro Name="POT_LIGHT_BASE_FIRST_OFFICER">18</Macro>
-        <Macro Name="POT_LIGHT_FLOODLIGHT_FIRST_OFFICER">18</Macro>
-        <Macro Name="POT_LIGHT_BACKLIGHT_FIRST_OFFICER">19</Macro>
-
-        <Macro Name="POT_LIGHT_BASE_GLARESHIELD">20</Macro>
-        <Macro Name="POT_LIGHT_FLOODLIGHT_GLARESHIELD">20</Macro>
-        <Macro Name="POT_LIGHT_BACKLIGHT_GLARESHIELD">21</Macro>
-
-        <Macro Name="POT_LIGHT_BASE_AISLE_STAND">25</Macro>
-        <Macro Name="POT_LIGHT_FLOODLIGHT_AISLE_STAND">22</Macro>
-        <Macro Name="POT_LIGHT_BACKLIGHT_AISLE_STAND">23</Macro>
-
-        <Macro Name="POT_LIGHT_BACKLIGHT_OVERHEAD">24</Macro>
-        <Macro Name="POT_LIGHT_FLOODLIGHT_DOME">25</Macro>
-
-        <!-- End: Move to Tools file -->
-
         <!-- Name: Includes -->
-        <Include ModelBehaviorFile="Asobo\Common.xml"/>
-        <Include ModelBehaviorFile="Asobo\Airliner\FMC.xml"/>
-        <Include ModelBehaviorFile="Asobo\Airliner\Boeing.xml"/>
-        <Include ModelBehaviorFile="Asobo\Airliner\AirlinerCommon.xml"/>
-        <Include ModelBehaviorFile="Heavy\Components\Index.xml"/>
+        <Include ModelBehaviorFile="Heavy\Aircrafts\Boeing\787\10\XH\Index.xml"/>
         <!-- End: Includes -->
 
         <Component ID="Controls">
-            <Component ID="Yokes">
-                <UseTemplate Name="ASOBO_HANDLING_Yoke_Hideable_Template">
-                    <ID>1</ID>
-                </UseTemplate>
-                <UseTemplate Name="ASOBO_HANDLING_Yoke_Hideable_Template">
-                    <ID>2</ID>
-                </UseTemplate>
-                <UseTemplate Name="ASOBO_HANDLING_Yoke_Hider_Template">
-                    <ID>1</ID>
-                    <NODE_ID>HANDLING_Yoke_Hider_1_Static</NODE_ID>
-                </UseTemplate>
-                <UseTemplate Name="ASOBO_HANDLING_Yoke_Hider_Template">
-                    <ID>2</ID>
-                    <NODE_ID>HANDLING_Yoke_Hider_2_Static</NODE_ID>
-                </UseTemplate>
+            <Component ID="Capitan">
+                <Parameters Type="Defaults">
+                    <ID>@HID_CAPITAN</ID>
+                </Parameters>
+                <Component ID="Yoke">
+                    <UseTemplate Name="HEAVY_HANDLING_Yoke_Hideable_Template" />
+                    <UseTemplate Name="HEAVY_HANDLING_Yoke_Hider_Template" />
+                    <UseTemplate Name="HEAVY_HANDLING_Switch_ElevatorTrim_Template" />
+                    <UseTemplate Name="HEAVY_HANDLING_Push_AP_Trim_Disc_Template" />
+                </Component>
 
-                <UseTemplate Name="ASOBO_HANDLING_Switch_ElevatorTrim_Template">
-                    <ID>1</ID>
-                    <NODE_ID>HANDLING_Switch_Elevator_Trim_1</NODE_ID>
-                    <ANIM_NAME>HANDLING_Switch_Elevator_Trim_1</ANIM_NAME>
-                </UseTemplate>
-
-                <UseTemplate Name="ASOBO_HANDLING_Push_AP_Trim_Disc_Template" />
+                <Component ID="Steering_Tiller">
+                    <UseTemplate Name="HEAVY_HANDLING_Steering_Tiller_Template" />
+                </Component>
             </Component>
 
-            <Component ID="Pedals">
-                <UseTemplate Name="ASOBO_HANDLING_RudderPedals_Template">
-                    <RUDDERPEDALS_TYPE>MIXED</RUDDERPEDALS_TYPE>
-                    <DONT_BRAKE_ON_PARKINGBRAKE>True</DONT_BRAKE_ON_PARKINGBRAKE>
-                    <NODE_ID_L_BRAKE_1>HANDLING_RudderPedals_1_1</NODE_ID_L_BRAKE_1>
-                    <NODE_ID_L_BRAKE_2>HANDLING_RudderPedals_2_1</NODE_ID_L_BRAKE_2>
-                    <NODE_ID_R_BRAKE_1>HANDLING_RudderPedals_1_2</NODE_ID_R_BRAKE_1>
-                    <NODE_ID_R_BRAKE_2>HANDLING_RudderPedals_2_2</NODE_ID_R_BRAKE_2>
-                    <NODE_ID_L_RUDDER>HANDLING_RudderPedals_1_Helper</NODE_ID_L_RUDDER>
-                    <NODE_ID_R_RUDDER>HANDLING_RudderPedals_2_Helper</NODE_ID_R_RUDDER>
-                </UseTemplate>
+            <Component ID="First_Officer">
+                <Parameters Type="Defaults">
+                    <ID>@HID_FO</ID>
+                </Parameters>
+                <Component ID="Yoke">
+                    <UseTemplate Name="HEAVY_HANDLING_Yoke_Hideable_Template" />
+                    <UseTemplate Name="HEAVY_HANDLING_Yoke_Hider_Template" />
+                </Component>
+
+                <Component ID="Steering_Tiller">
+                    <UseTemplate Name="HEAVY_HANDLING_Steering_Tiller_Template" />
+                </Component>
             </Component>
 
-            <Component ID="Steering_Tillers">
-                <UseTemplate Name="ASOBO_HANDLING_Steering_Tiller_Template">
-                    <ID>1</ID>
-                </UseTemplate>
-                <UseTemplate Name="ASOBO_HANDLING_Steering_Tiller_Template">
-                    <ID>2</ID>
-                </UseTemplate>
+            <Component ID="Other">
+                <Component ID="Pedals">
+                    <UseTemplate Name="HEAVY_HANDLING_RudderPedals_Template" />
+                </Component>
             </Component>
         </Component>
 
@@ -1258,12 +1216,12 @@
 
         <Component ID="Glareshield">
             <Parameters Type="Defaults">
-                <ALT_CODE>s0 l0 0 &gt; sp1 (A:LIGHT POTENTIOMETER:31, Percent over 100) 0 (L:XMLVAR_LightMasterActive) l1 and ?</ALT_CODE>
+                <ALT_CODE>@ALT_CODE_DEFAULT</ALT_CODE>
             </Parameters>
 
             <Component ID="Capitan">
                 <Parameters Type="Defaults">
-                    <ID>1</ID>
+                    <ID>@HID_CAPITAN</ID>
                     <POTENTIOMETER>10</POTENTIOMETER>
                     <POTENTIOMETER_SEQ1>10</POTENTIOMETER_SEQ1>
                     <NO_TEXT_EMISSIVE>true</NO_TEXT_EMISSIVE>
@@ -1272,11 +1230,7 @@
                 </Parameters>
 
                 <Component ID="Clock_Map_Mic">
-                    <UseTemplate Name="ASOBO_AIRLINER_Push_Clock_Template">
-                        <NODE_ID>Btn_main_panel_clock_pilot</NODE_ID>
-                        <ANIM_NAME>Btn_main_panel_clock_pilot</ANIM_NAME>
-                        <PLANE_PREFIX>AS01B_PFD</PLANE_PREFIX>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_AIRLINER_Push_Clock_Template" />
                 </Component>
 
                 <!-- Name: Master WARNING/CAUTION + Datalink Panel -->
@@ -1359,7 +1313,7 @@
 
             <Component ID="First_Officer">
                 <Parameters Type="Defaults">
-                    <ID>2</ID>
+                    <ID>@HID_FO</ID>
                     <POTENTIOMETER>10</POTENTIOMETER>
                     <POTENTIOMETER_SEQ1>10</POTENTIOMETER_SEQ1>
                     <NO_TEXT_EMISSIVE>true</NO_TEXT_EMISSIVE>
@@ -1368,11 +1322,7 @@
                 </Parameters>
 
                 <Component ID="Clock_Map_Mic">
-                    <UseTemplate Name="ASOBO_AIRLINER_Push_Clock_Template">
-                        <NODE_ID>Btn_main_panel_clock_copilot</NODE_ID>
-                        <ANIM_NAME>Btn_main_panel_clock_copilot</ANIM_NAME>
-                        <PLANE_PREFIX>AS01B_PFD</PLANE_PREFIX>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_AIRLINER_Push_Clock_Template" />
                 </Component>
 
                 <!-- Name: Master WARNING/CAUTION + Datalink Panel -->
@@ -1935,24 +1885,18 @@
 
         <Component ID="Left_HUD">
             <Parameters Type="Defaults">
-                <ID>1</ID>
+                <ID>@HID_CAPITAN</ID>
             </Parameters>
 
-            <UseTemplate Name="ASOBO_AIRLINER_HUD_Template">
-                <NODE_ID>INSTRUMENT_HeadUpDisplay_UP_DN_#ID#</NODE_ID>
-                <ANIM_NAME>INSTRUMENT_HeadUpDisplay_UP_DN_#ID#</ANIM_NAME>
-            </UseTemplate>
+            <UseTemplate Name="HEAVY_AIRLINER_HUD_Template" />
         </Component>
 
         <Component ID="Right_HUD">
             <Parameters Type="Defaults">
-                <ID>2</ID>
+                <ID>@HID_FO</ID>
             </Parameters>
 
-            <UseTemplate Name="ASOBO_AIRLINER_HUD_Template">
-                <NODE_ID>INSTRUMENT_HeadUpDisplay_UP_DN_#ID#</NODE_ID>
-                <ANIM_NAME>INSTRUMENT_HeadUpDisplay_UP_DN_#ID#</ANIM_NAME>
-            </UseTemplate>
+            <UseTemplate Name="HEAVY_AIRLINER_HUD_Template" />
         </Component>
 
         <Component ID="Global">
@@ -1997,11 +1941,11 @@
                     </Parameters>
 
                     <Component ID="Floodlights">
-                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Cabin_Template" />
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template" />
                     </Component>
 
                     <Component ID="Backlights">
-                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Panel_Template">
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Panel_Template">
                             <ANIM_WRAP>FALSE</ANIM_WRAP>
                             <SIMVAR_INDEX>1</SIMVAR_INDEX>
                         </UseTemplate>
@@ -2016,11 +1960,11 @@
                     </Parameters>
 
                     <Component ID="Floodlights">
-                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Cabin_Template" />
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template" />
                     </Component>
 
                     <Component ID="Backlights">
-                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Panel_Template">
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Panel_Template">
                             <ANIM_WRAP>FALSE</ANIM_WRAP>
                             <SIMVAR_INDEX>2</SIMVAR_INDEX>
                         </UseTemplate>
@@ -2029,7 +1973,7 @@
 
                 <Component ID="Global">
                     <Component ID="Floodlights">
-                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Cabin_Template">
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
                             <NODE_ID>LIGHTING_Knob_Flood_Glareshield</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Flood_Glareshield</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_GLARESHIELD</POTENTIOMETER>
@@ -2038,7 +1982,7 @@
                             <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_KNOB_GLARESHIELD_ACTION</TT_DESCRIPTION_ID>
                         </UseTemplate>
 
-                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Cabin_Template">
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
                             <NODE_ID>LIGHTING_Knob_Dome</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Dome</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_DOME</POTENTIOMETER>
@@ -2047,7 +1991,7 @@
                             <TT_DESCRIPTION_ID>@TT_Package.AIRLINER_OVHD_KNOB_LIGHT_DOME_ACTION</TT_DESCRIPTION_ID>
                         </UseTemplate>
 
-                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Cabin_Template">
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
                             <NODE_ID>LIGHTING_Knob_Flood_Pedestal</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Flood_Pedestal</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_AISLE_STAND</POTENTIOMETER>

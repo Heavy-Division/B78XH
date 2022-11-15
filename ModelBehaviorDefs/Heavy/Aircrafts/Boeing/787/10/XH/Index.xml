@@ -1,0 +1,22 @@
+<ModelBehaviors>
+
+    <!-- ## Includes -->
+    <Include RelativeFile="Miscellaneous\macros.xml" />
+
+    <Include ModelBehaviorFile="Asobo\Common.xml"/>
+    <Include ModelBehaviorFile="Asobo\Airliner\FMC.xml"/>
+    <Include ModelBehaviorFile="Asobo\Airliner\Boeing.xml"/>
+    <Include ModelBehaviorFile="Asobo\Airliner\AirlinerCommon.xml"/>
+
+    <Include RelativeFile="Common\Buttons.xml" />
+
+    <Include RelativeFile="Components\Aisle_Stand.xml" />
+    <Include RelativeFile="Components\Controls.xml" />
+    <Include RelativeFile="Components\Emissive.xml" />
+    <Include RelativeFile="Components\Glareshield.xml" />
+    <Include RelativeFile="Components\Huds.xml" />
+    <Include RelativeFile="Components\Lightning.xml" />
+    <Include RelativeFile="Components\Overhead.xml" />
+
+    <!-- ## End: Includes -->
+</ModelBehaviors>

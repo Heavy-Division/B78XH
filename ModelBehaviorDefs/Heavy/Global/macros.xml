@@ -1,0 +1,20 @@
+<ModelBehaviors>
+    <!-- # Macros -->
+
+    <!-- ## Tooltip Helpers -->
+    <Macro Name="HTT_Action">COCKPIT.TOOLTIPSV3.ACTION</Macro>
+    <Macro Name="HTT_State">COCKPIT.TOOLTIPSV3.STATE</Macro>
+    <Macro Name="HTT_Title">COCKPIT.TOOLTIPSV3.TITLE</Macro>
+    <!-- ## End: Tooltip Helpers -->
+
+    <!-- ## Pilots ID Helpers -->
+    <Macro Name="HID_CAPITAN">1</Macro>
+    <Macro Name="HID_FO">2</Macro>
+    <!-- ## End: Pilots ID Helpers -->
+
+
+    <!-- ## Pilots ID Helpers -->
+    <Macro Name="HG_TRUE">TRUE</Macro>
+    <Macro Name="HG_FALSE">FALSE</Macro>
+    <!-- ## End: Pilots ID Helpers -->
+</ModelBehaviors>

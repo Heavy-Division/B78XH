@@ -1,4 +1,127 @@
 <ModelBehaviors>
+    <!-- ## Aisle Stand -->
+    <Template Name="HEAVY_CDU_AS01B">
+        <UseTemplate Name="ASOBO_FMC_AS01B">
+            <NODE_ID_PREV_PAGE>CDU_Push_Prev_#ID#</NODE_ID_PREV_PAGE>
+            <NODE_ID_NEXT_PAGE>CDU_Push_Next_#ID#</NODE_ID_NEXT_PAGE>
+            <NODE_ID_EMISSIVE_EXEC>CDU_Push_Exec_Active_#ID#</NODE_ID_EMISSIVE_EXEC>
+            <ANIM_NAME_PREV_PAGE>CDU_Push_Prev_#ID#</ANIM_NAME_PREV_PAGE>
+            <ANIM_NAME_NEXT_PAGE>CDU_Push_Next_#ID#</ANIM_NAME_NEXT_PAGE>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Lever_Spoilers_Template">
+        <Parameters Type="Defaults">
+            <TYPE>AIRLINER</TYPE>
+            <PHYSICAL_AUTOSPOILERS>TRUE</PHYSICAL_AUTOSPOILERS>
+            <RETRACT_ARMED_FULL>TRUE</RETRACT_ARMED_FULL>
+            <POS_ARM>1</POS_ARM>
+            <POS_DOWN>0</POS_DOWN>
+            <DRAG_SPEED>10</DRAG_SPEED>
+            <INVERT_IM_DRAG_INPUT_SCALAR>TRUE</INVERT_IM_DRAG_INPUT_SCALAR>
+            <STEPS_NUMBER>2</STEPS_NUMBER>
+            <DRAG_SPEED>10</DRAG_SPEED>
+        </Parameters>
+        <UseTemplate Name="ASOBO_HANDLING_Lever_Spoilers_Template" />
+    </Template>
+
+    <Template Name="HEAVY_ENGINE_Lever_Throttle_Template">
+        <Parameters Type="Defaults">
+            <NODE_ID>ENGINE_Lever_Throttle_#ID#</NODE_ID>
+            <ANIM_NAME>ENGINE_Lever_Throttle_#ID#</ANIM_NAME>
+            <NODE_ID_REVERSER>ENGINE_Lever_Throttle_Reverser_#ID#</NODE_ID_REVERSER>
+            <ANIM_NAME_REVERSER>ENGINE_Lever_Throttle_Reverser_#ID#</ANIM_NAME_REVERSER>
+            <LEVER_TYPE>BOEING</LEVER_TYPE>
+            <DRAG_SPEED>0.5</DRAG_SPEED>
+            <REVERSER_INVERT_IM_DRAG_INPUT_SCALAR>TRUE</REVERSER_INVERT_IM_DRAG_INPUT_SCALAR>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_ENGINE_Lever_Throttle_Template" />
+    </Template>
+
+    <Template Name="HEAVY_ENGINE_Push_TOGA_Template">
+        <Parameters Type="Defaults">
+            <ON_PUSH_TO_GA>(&gt;H:AS01B_FMC_1_THROTTLE_TO_GA)</ON_PUSH_TO_GA>
+        </Parameters>
+        <UseTemplate Name="ASOBO_ENGINE_Push_TOGA_Template" />
+    </Template>
+
+    <Template Name="HEAVY_FUEL_Switch_Valve_Template">
+        <Parameters Type="Defaults">
+            <Switch Param="SIDE">
+                <Case Value="L">
+                    <ID>1</ID>
+                    <IE_VALVE_ID>L</IE_VALVE_ID>
+                </Case>
+
+                <Case Value="R">
+                    <ID>2</ID>
+                    <IE_VALVE_ID>R</IE_VALVE_ID>
+                </Case>
+            </Switch>
+
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_FUEL_Switch_Valve_Template" />
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Lever_Flaps_Template">
+        <Parameters Type="Defaults">
+            <ANIM_LAG>35</ANIM_LAG>
+            <MAX_HANLDE_INDEX>9</MAX_HANLDE_INDEX>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_HANDLING_Lever_Flaps_Template" />
+    </Template>
+
+    <Template Name="HEAVY_AIRLINER_Audio_Panel_Template">
+        <Parameters Type="Defaults">
+            <TYPE>AS01B</TYPE>
+            <NO_LIGHT>TRUE</NO_LIGHT>
+            <NO_SEQ2>TRUE</NO_SEQ2>
+            <SUFFIX_ID>FALSE</SUFFIX_ID>
+
+            <NODE_ID_BUTTON_VHF_L>AUDIOPANEL_PUSH_VHF_L_#ID#</NODE_ID_BUTTON_VHF_L>
+            <NODE_ID_BUTTON_VHF_C>AUDIOPANEL_PUSH_VHF_C_#ID#</NODE_ID_BUTTON_VHF_C>
+            <NODE_ID_BUTTON_VHF_R>AUDIOPANEL_PUSH_VHF_R_#ID#</NODE_ID_BUTTON_VHF_R>
+
+            <ANIM_NAME_BUTTON_VHF_L>AUDIOPANEL_PUSH_VHF_L_#ID#</ANIM_NAME_BUTTON_VHF_L>
+            <ANIM_NAME_BUTTON_VHF_C>AUDIOPANEL_PUSH_VHF_C_#ID#</ANIM_NAME_BUTTON_VHF_C>
+            <ANIM_NAME_BUTTON_VHF_R>AUDIOPANEL_PUSH_VHF_R_#ID#</ANIM_NAME_BUTTON_VHF_R>
+
+            <NODE_ID_RECEIVER_VHF_L>AUDIOPANEL_Knob_VHF_L_#ID#</NODE_ID_RECEIVER_VHF_L>
+            <NODE_ID_RECEIVER_VHF_C>AUDIOPANEL_Knob_VHF_C_#ID#</NODE_ID_RECEIVER_VHF_C>
+            <NODE_ID_RECEIVER_VHF_R>AUDIOPANEL_Knob_VHF_R_#ID#</NODE_ID_RECEIVER_VHF_R>
+
+            <ANIM_NAME_KNOB_RECEIVER_VHF_L>AUDIOPANEL_Knob_VHF_L_#ID#</ANIM_NAME_KNOB_RECEIVER_VHF_L>
+            <ANIM_NAME_KNOB_RECEIVER_VHF_C>AUDIOPANEL_Knob_VHF_C_#ID#</ANIM_NAME_KNOB_RECEIVER_VHF_C>
+            <ANIM_NAME_KNOB_RECEIVER_VHF_R>AUDIOPANEL_Knob_VHF_R_#ID#</ANIM_NAME_KNOB_RECEIVER_VHF_R>
+
+            <ANIM_NAME_PUSH_RECEIVER_VHF_L>AUDIOPANEL_KNOB_VHF_L_PUSH_#ID#</ANIM_NAME_PUSH_RECEIVER_VHF_L>
+            <ANIM_NAME_PUSH_RECEIVER_VHF_C>AUDIOPANEL_KNOB_VHF_C_PUSH_#ID#</ANIM_NAME_PUSH_RECEIVER_VHF_C>
+            <ANIM_NAME_PUSH_RECEIVER_VHF_R>AUDIOPANEL_KNOB_VHF_R_PUSH_#ID#</ANIM_NAME_PUSH_RECEIVER_VHF_R>
+
+            <NODE_ID_LED_RECEIVER_VHF_L>AUDIOPANEL_Knob_VHF_LEFT_ACTIVE_#ID#</NODE_ID_LED_RECEIVER_VHF_L>
+            <NODE_ID_LED_RECEIVER_VHF_C>AUDIOPANEL_Knob_VHF_CENTER_ACTIVE_#ID#</NODE_ID_LED_RECEIVER_VHF_C>
+            <NODE_ID_LED_RECEIVER_VHF_R>AUDIOPANEL_Knob_VHF_RIGHT_ACTIVE_#ID#</NODE_ID_LED_RECEIVER_VHF_R>
+
+            <NODE_ID_BUTTON_SEQ1_VHF_L>AUDIOPANEL_Push_VHF_L_ACTIVE_#ID#</NODE_ID_BUTTON_SEQ1_VHF_L>
+            <NODE_ID_BUTTON_SEQ1_VHF_C>AUDIOPANEL_Push_VHF_C_ACTIVE_#ID#</NODE_ID_BUTTON_SEQ1_VHF_C>
+            <NODE_ID_BUTTON_SEQ1_VHF_R>AUDIOPANEL_Push_VHF_R_ACTIVE_#ID#</NODE_ID_BUTTON_SEQ1_VHF_R>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_AIRLINER_Audio_Panel_Template" />
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Switch_RudderTrim_Template">
+        <Parameters Type="Defaults">
+            <NO_RESET_PUSH>TRUE</NO_RESET_PUSH>
+            <CREATE_SOUNDEVENTS_SAME_TRIGGER>TRUE</CREATE_SOUNDEVENTS_SAME_TRIGGER>
+            <DONT_CREATE_SOUND_ANIM_TRIGGERS>TRUE</DONT_CREATE_SOUND_ANIM_TRIGGERS>
+        </Parameters>
+        <UseTemplate Name="ASOBO_HANDLING_Switch_RudderTrim_Template" />
+    </Template>
+
     <Template Name="HEAVY_BOEING_TCP_Template">
         <Parameters Type="Default">
             <ID>1</ID>
@@ -220,10 +343,10 @@
                             </False>
                         </Condition>
                     </Parameters>
-                    <UseTemplate Name="HEAVY_BOEING_Push_HTML_Generic_Template">
-                        <ANIM_NAME Process="Param">BUTTON_#CUR_ID#_ANIM_NAME</ANIM_NAME>
-                        <NODE_ID Process="Param">BUTTON_#CUR_ID#_NODE_ID</NODE_ID>
-                    </UseTemplate>
+                <UseTemplate Name="HEAVY_BOEING_Push_HTML_Generic_Template">
+                    <ANIM_NAME Process="Param">BUTTON_#CUR_ID#_ANIM_NAME</ANIM_NAME>
+                    <NODE_ID Process="Param">BUTTON_#CUR_ID#_NODE_ID</NODE_ID>
+                </UseTemplate>
                 </Do>
             </Loop>
             <Component ID="#SCREEN_NODE_ID#" Node="#SCREEN_NODE_ID#">
@@ -233,52 +356,5 @@
             </Component>
         </Component>
     </Template>
-
-    <Template Name="HEAVY_BOEING_Push_HTML_Generic_Template">
-        <Parameters Type="Default">
-            <ID>1</ID>
-        </Parameters>
-        <Parameters Type="Default">
-            <NODE_ID>BOEING_Push_#ID_BTN#_#ID#</NODE_ID>
-            <ANIM_NAME>BOEING_Push_#ID_BTN#_#ID#</ANIM_NAME>
-            <Condition Valid="EMISSIVE_BUTTON">
-                <False>
-                    <NODE_ID_DECAL>BOEING_Push_#ID_BTN#_#ID#_Text</NODE_ID_DECAL>
-                </False>
-            </Condition>
-            <PART_ID>BOEING_Push_#ID_BTN#</PART_ID>
-            <WWISE_EVENT_1>autopilot_push_button2_on</WWISE_EVENT_1>
-            <WWISE_EVENT_2>autopilot_push_button2_off</WWISE_EVENT_2>
-            <ON_PUSH_EVENT>#CUR_ID# (&gt;L:CONTROL_SWITCH_COM_#ID#)</ON_PUSH_EVENT>
-            <Condition>
-                <Test>
-                    <And>
-                        <Arg Valid="EMISSIVE_BUTTON"/>
-                        <Arg Check="POTENTIOMETER"/>
-                    </And>
-                </Test>
-                <True>
-                    <EMISSIVE_TEMPLATE_TO_USE>ASOBO_GT_Emissive_Potentiometer</EMISSIVE_TEMPLATE_TO_USE>
-                </True>
-            </Condition>
-        </Parameters>
-        <UseTemplate Name="ASOBO_AIRLINER_Base_Template">
-            <INTERACTION_TYPE>Push</INTERACTION_TYPE>
-            <SET_STATE_EXTERNAL>if{ #ON_PUSH_EVENT# }</SET_STATE_EXTERNAL>
-            <IE_NAME>#ID_BTN#_#ID#</IE_NAME>
-        </UseTemplate>
-        <Condition>
-            <Test>
-                <And>
-                    <Arg Valid="NODE_ID_DECAL"/>
-                    <Arg Check="POTENTIOMETER"/>
-                </And>
-            </Test>
-            <True>
-                <Component ID="#NODE_ID_DECAL#" Node="#NODE_ID_DECAL#">
-                    <UseTemplate Name="ASOBO_GT_Emissive_Potentiometer"/>
-                </Component>
-            </True>
-        </Condition>
-    </Template>
+    <!-- ## End: Aisle Stand -->
 </ModelBehaviors>

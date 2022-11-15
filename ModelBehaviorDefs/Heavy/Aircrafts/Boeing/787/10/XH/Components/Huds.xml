@@ -1,0 +1,10 @@
+<ModelBehaviors>
+    <!-- ## Huds -->
+    <Template Name="HEAVY_AIRLINER_HUD_Template">
+        <UseTemplate Name="ASOBO_AIRLINER_HUD_Template">
+            <NODE_ID>INSTRUMENT_HeadUpDisplay_UP_DN_#ID#</NODE_ID>
+            <ANIM_NAME>INSTRUMENT_HeadUpDisplay_UP_DN_#ID#</ANIM_NAME>
+        </UseTemplate>
+    </Template>
+    <!-- ## End: Huds -->
+</ModelBehaviors>
