@@ -77,16 +77,19 @@
             <!-- Ref: 13.10.8 -->
             <Component ID="Flight_Control_Surface_Panel">
                 <Component ID="Buttons">
+                    <Parameters Type="Defaults">
+                        <SEQ1_EMISSIVE_CODE>1</SEQ1_EMISSIVE_CODE>
+                        <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
+                        <SEQ2_CODE_DRIVES_VISIBILITY>@HG_FALSE</SEQ2_CODE_DRIVES_VISIBILITY>
+                    </Parameters>
+
                     <!-- Name: Tail Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
                     <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
                         <NODE_ID>Btn_ovhd_flightCTRL_tail</NODE_ID>
-                        <SEQ1_EMISSIVE_CODE>1</SEQ1_EMISSIVE_CODE>
-                        <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
                         <SEQ1_NODE_ID>Decals_Text_122</SEQ1_NODE_ID>
                         <SEQ2_NODE_ID>Decals_Text_127</SEQ2_NODE_ID>
-                        <SEQ2_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ2_CODE_DRIVES_VISIBILITY>
                     </UseTemplate>
                     <!-- End: Tail Button -->
 
@@ -95,11 +98,8 @@
                     <!-- Tester: ??? -->
                     <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
                         <NODE_ID>Btn_ovhd_flightCTRL_wing</NODE_ID>
-                        <SEQ1_EMISSIVE_CODE>1</SEQ1_EMISSIVE_CODE>
-                        <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
                         <SEQ1_NODE_ID>Decals_Text_123</SEQ1_NODE_ID>
                         <SEQ2_NODE_ID>Decals_Text_128</SEQ2_NODE_ID>
-                        <SEQ2_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ2_CODE_DRIVES_VISIBILITY>
                     </UseTemplate>
                     <!-- End: Wings Button -->
                 </Component>
@@ -143,10 +143,8 @@
                     <!-- Name: Battery Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Switch_Battery_Master_Template">
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Switch_Battery_Master_Template">
                         <ID>1</ID>
-                        <NODE_ID>ELECTRICAL_Push_Battery</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Push_Battery</ANIM_NAME>
                     </UseTemplate>
                     <!-- End: Battery Button -->
                 </Component>
@@ -154,19 +152,13 @@
                     <!-- Name: IFE Button Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_IFE_Template">
-                        <NODE_ID>Btn_ovh_electrical_ife</NODE_ID>
-                        <ANIM_NAME>Btn_ovh_electrical_ife</ANIM_NAME>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_IFE_Template" />
                     <!-- End: IFE Button Button -->
 
                     <!-- Name: Cabin/Utility Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_CABIN_Template">
-                        <NODE_ID>Btn_ovh_electrical_cabin</NODE_ID>
-                        <ANIM_NAME>Btn_ovh_electrical_cabin</ANIM_NAME>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_CABIN_Template" />
                     <!-- End: Cabin/Utility Button -->
 
                 </Component>
@@ -174,22 +166,16 @@
                     <!-- Name: Left APU Generator Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_APU_Generator_Template">
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_APU_Generator_Template">
                         <ID>1</ID>
-                        <NODE_ID>ELECTRICAL_Push_APU_Generator_1</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Push_APU_Generator_1</ANIM_NAME>
-                        <TYPE>AS01B</TYPE>
                     </UseTemplate>
                     <!-- End: Left APU Generator Button -->
 
                     <!-- Name: Right APU Generator Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_APU_Generator_Template">
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_APU_Generator_Template">
                         <ID>2</ID>
-                        <NODE_ID>ELECTRICAL_Push_APU_Generator_2</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Push_APU_Generator_2</ANIM_NAME>
-                        <TYPE>AS01B</TYPE>
                     </UseTemplate>
                     <!-- End: Right APU Generator Button -->
                 </Component>
@@ -197,69 +183,37 @@
                     <!-- Name: APU Starter Knob -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Switch_APU_Starter_Template">
-                        <NODE_ID>ELECTRICAL_Knob_APU_Starter</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Knob_APU_Starter</ANIM_NAME>
-                        <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
-                        <SWITCH_POSITION_VAR>XMLVAR_APU_StarterKnob_Pos</SWITCH_POSITION_VAR>
-                        <ACTIVE_FUEL_PUMP_ON_RPM>7</ACTIVE_FUEL_PUMP_ON_RPM>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Switch_APU_Starter_Template" />
                     <!-- End: APU Starter Knob -->
 
                     <!-- Name: APU Starter Annunciator -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
-                        <NODE_ID>ELECTRICAL_Indicator_APU</NODE_ID>
-                        <SEQ1_EMISSIVE_CODE>
-                            <!-- Store Previous APU Switch position to register -->
-                            (O:PreviousAPUSwitchPosition) s1
-                            <!-- Store APU Switch position to register -->
-                            (L:XMLVAR_APU_StarterKnob_Pos) s2
-
-                            <!-- if previous APU switch position == 1 (ON) and APU switch position == 2 (START) -->
-                            l1 1 == l2 2 == and if{
-                            <!-- Add 0.7 second to simulation time and store the value -->
-                            (E:SIMULATION TIME, seconds) 0.7 + (&gt;O:FaultEmissiveTime)
-                            }
-
-                            <!-- Update Previous APU Switch position -->
-                            l2 (&gt;O:PreviousAPUSwitchPosition)
-                            <!-- Return TRUE if FAULT should be emissive -->
-                            (E:SIMULATION TIME, seconds) (O:FaultEmissiveTime) &lt;
-                        </SEQ1_EMISSIVE_CODE>
-                        <NO_SEQ2>@HG_TRUE</NO_SEQ2>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Annunciator_APU_Starter_Template" />
                     <!-- End: APU Starter Annunciator -->
                 </Component>
                 <Component ID="ExternalPower">
                     <!-- Name: Left Forward External Power Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_ExternalPower_Template">
                         <ID>1</ID>
-                        <NODE_ID>ELECTRICAL_Switch_ExternalPower_FWD_1</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_FWD_1</ANIM_NAME>
                     </UseTemplate>
                     <!-- End: Left Forward External Power Button -->
 
                     <!-- Name: Right Forward External Power Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_ExternalPower_Template">
                         <ID>2</ID>
-                        <NODE_ID>ELECTRICAL_Switch_ExternalPower_FWD_2</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_FWD_2</ANIM_NAME>
                     </UseTemplate>
                     <!-- End: Right Forward External Power Button -->
 
                     <!-- Name: AFT External Power Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_ExternalPower_Template">
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_ExternalPower_Template">
                         <ID>3</ID>
-                        <NODE_ID>ELECTRICAL_Switch_ExternalPower_AFT</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Switch_ExternalPower_AFT</ANIM_NAME>
                     </UseTemplate>
                     <!-- End: AFT Forward External Power Button -->
                 </Component>
@@ -1746,7 +1700,7 @@
                     <POTENTIOMETER_SEQ1>23</POTENTIOMETER_SEQ1>
                     <SEQ1_EMISSIVE_CODE>0.5</SEQ1_EMISSIVE_CODE>
                     <SEQ1_SUFFIX></SEQ1_SUFFIX>
-                    <INOP_BUTTONS>@HG_TRUE</INOP_BUTTONS>
+                    <INOP_BUTTONS>TRUE</INOP_BUTTONS>
                 </Parameters>
                 <Component ID="CDU">
                     <UseTemplate Name="HEAVY_CDU_AS01B" />
@@ -1761,7 +1715,7 @@
 
             <Component ID="Parking_Brake">
                 <UseTemplate Name="ASOBO_LANDING_GEAR_Switch_ParkingBrake_Template">
-                    <INVERT_SWITCH_ON_CONDITION>@HG_TRUE</INVERT_SWITCH_ON_CONDITION>
+                    <INVERT_SWITCH_ON_CONDITION>TRUE</INVERT_SWITCH_ON_CONDITION>
                 </UseTemplate>
             </Component>
 

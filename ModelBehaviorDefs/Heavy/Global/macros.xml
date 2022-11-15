@@ -16,5 +16,8 @@
     <!-- ## Boolean Helpers -->
     <Macro Name="HG_TRUE">TRUE</Macro>
     <Macro Name="HG_FALSE">FALSE</Macro>
+
+    <Macro Name="HG_ON">1</Macro>
+    <Macro Name="HG_OFF">0</Macro>
     <!-- ## End: Boolean Helpers -->
 </ModelBehaviors>
