@@ -1,0 +1,11 @@
+<ModelBehaviors>
+    <!-- ## Includes -->
+    <Include RelativeFile="Aisle_Stand.xml" />
+    <Include RelativeFile="Controls.xml" />
+    <Include RelativeFile="Emissive.xml" />
+    <Include RelativeFile="Glareshield.xml" />
+    <Include RelativeFile="Huds.xml" />
+    <Include RelativeFile="Lightning.xml" />
+    <Include RelativeFile="Overhead.xml" />
+    <!-- ## End: Includes -->
+</ModelBehaviors>

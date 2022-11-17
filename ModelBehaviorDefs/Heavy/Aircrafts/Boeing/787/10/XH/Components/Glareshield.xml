@@ -55,9 +55,40 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Push_STD_Template">
-        <UseTemplate Name="ASOBO_AUTOPILOT_Push_STD_Template">
+        <Parameters Type="Default">
+            <ID>1</ID>
             <NODE_ID>AUTOPILOT_Knob_Baro_#ID#_Push</NODE_ID>
             <ANIM_NAME>AUTOPILOT_Knob_Baro_#ID#_Push</ANIM_NAME>
+        </Parameters>
+        <UseTemplate Name="ASOBO_GT_Helper_Suffix_ID_Appender">
+            <TEMPLATE_TO_CALL>HEAVY_AUTOPILOT_Push_STD_SubTemplate</TEMPLATE_TO_CALL>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Push_STD_SubTemplate">
+        <Parameters Type="Default">
+            <BARO_ID>#ID#</BARO_ID>
+        </Parameters>
+        <Parameters Type="Default">
+            <NODE_ID>AUTOPILOT_Push_STD#SUFFIX_ID#</NODE_ID>
+            <ANIM_NAME>AUTOPILOT_Push_STD#SUFFIX_ID#</ANIM_NAME>
+            <IE_NAME>AUTOPILOT_Push_STD#SUFFIX_ID#</IE_NAME>
+        </Parameters>
+
+        <UseTemplate Name="ASOBO_AUTOPILOT_Base_Template">
+            <SET_STATE_EXTERNAL>
+                (L:XMLVAR_Baro#BARO_ID#_ForcedToSTD) ! (&gt;L:XMLVAR_Baro#BARO_ID#_ForcedToSTD)
+                (L:XMLVAR_Baro#BARO_ID#_ForcedToSTD) if{
+                (A:KOHLSMAN SETTING MB:#BARO_ID#, mbars) 16 * (&gt;L:XMLVAR_Baro#BARO_ID#_SavedPressure)
+                #BARO_ID# (&gt;K:BAROMETRIC_STD_PRESSURE)
+                } els{
+                #BARO_ID# (L:XMLVAR_Baro#BARO_ID#_SavedPressure) (&gt;K:2:KOHLSMAN_SET)
+                }
+            </SET_STATE_EXTERNAL>
+            <GET_STATE_EXTERNAL>(L:XMLVAR_Baro#BARO_ID#_ForcedToSTD) sp0</GET_STATE_EXTERNAL>
+            <TOOLTIP_TITLE>COCKPIT.TOOLTIPS.AUTOPILOT_PANEL_BARO_KNOB_PUSH</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.AUTOPILOT_KNOB_BARO_ACTION_SET_STD</TT_DESCRIPTION_ID>
+            <INTERACTION_TYPE>Push</INTERACTION_TYPE>
         </UseTemplate>
     </Template>
 

@@ -102,6 +102,7 @@
     <Template Name="HEAVY_ELECTRICAL_Push_Drive_Template">
         <UseTemplate Name="HEAVY_ELECTRICAL_Drive_SubTemplate">
             <INTERACTION_TYPE>Push</INTERACTION_TYPE>
+            <LEFT_SINGLE_CODE></LEFT_SINGLE_CODE>
         </UseTemplate>
     </Template>
 
@@ -197,22 +198,24 @@
             </Condition>
 
             <Condition Valid="IS_INOP">
-                <SEQ1_EMISSIVE_CODE>1</SEQ1_EMISSIVE_CODE>
-                <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
-                <TOOLTIP_TITLE/>
-                <TOOLTIP_TITLE_ID/>
-                <TOOLTIPID>TT:COCKPIT.TOOLTIPS.INOP</TOOLTIPID>
-                <Switch Param="INOP_POSITION">
-                    <Case Value="UP">
-                        <DOWN_STATE_CODE>0</DOWN_STATE_CODE>
-                    </Case>
-                    <Case Value="DOWN">
-                        <DOWN_STATE_CODE>1</DOWN_STATE_CODE>
-                    </Case>
-                    <Default>
-                        <DOWN_STATE_CODE>0</DOWN_STATE_CODE>
-                    </Default>
-                </Switch>
+                <True>
+                    <SEQ1_EMISSIVE_CODE>1</SEQ1_EMISSIVE_CODE>
+                    <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
+                    <TOOLTIP_TITLE/>
+                    <TOOLTIP_TITLE_ID/>
+                    <TOOLTIPID>TT:COCKPIT.TOOLTIPS.INOP</TOOLTIPID>
+                    <Switch Param="INOP_POSITION">
+                        <Case Value="UP">
+                            <DOWN_STATE_CODE>0</DOWN_STATE_CODE>
+                        </Case>
+                        <Case Value="DOWN">
+                            <DOWN_STATE_CODE>1</DOWN_STATE_CODE>
+                        </Case>
+                        <Default>
+                            <DOWN_STATE_CODE>0</DOWN_STATE_CODE>
+                        </Default>
+                    </Switch>
+                </True>
             </Condition>
         </Parameters>
         <Switch Param="INTERACTION_TYPE">
@@ -247,6 +250,7 @@
     <Template Name="HEAVY_ENGINE_Push_EEC_Template">
         <UseTemplate Name="HEAVY_ENGINE_EEC_SubTemplate">
             <INTERACTION_TYPE>Push</INTERACTION_TYPE>
+            <LEFT_SINGLE_CODE></LEFT_SINGLE_CODE>
         </UseTemplate>
     </Template>
 
@@ -474,7 +478,7 @@
                     <INTERACTION_TYPE>Push</INTERACTION_TYPE>
                     <IS_AIRLINER>@HG_TRUE</IS_AIRLINER>
                     <SET_STATE_EXTERNAL>#ID# (&gt;K:HYDRAULIC_SWITCH_TOGGLE)</SET_STATE_EXTERNAL>
-                    <GET_STATE_EXTERNAL>(A:HYDRAULIC SWITCH:#ID#) sp0</GET_STATE_EXTERNAL>
+                    <GET_STATE_EXTERNAL>(A:HYDRAULIC SWITCH:#ID#, Bool) sp0</GET_STATE_EXTERNAL>
                     <SIMVAR_TO_WATCH_0>HYDRAULIC SWITCH:#ID#</SIMVAR_TO_WATCH_0>
                     <SEQ1_EMISSIVE_CODE>(A:HYDRAULIC SWITCH:#ID#, Bool)</SEQ1_EMISSIVE_CODE>
                     <SEQ2_EMISSIVE_CODE>(A:HYDRAULIC RESERVOIR PERCENT:#ID#, Percent) 1 &lt; (A:HYDRAULIC SYSTEM INTEGRITY, Percent over 100) 0.1 &lt; (A:HYDRAULIC SWITCH:#ID#, Boolean) 0 == or</SEQ2_EMISSIVE_CODE>
@@ -693,6 +697,195 @@
                 <WWISE_EVENT>wipers_switch</WWISE_EVENT>
             </UseTemplate>
         </Component>
+    </Template>
+
+    <Template Name="HEAVY_ELECTRICAL_Push_Alternator_Template">
+        <Parameters Type="Defaults">
+            <ID Process="Int">
+                #ENGINE_ID# 1 == if{
+                    #GEN_ID#
+                } els{
+                    #ENGINE_ID# #GEN_ID# +
+                }
+            </ID>
+            <NODE_ID>ELECTRICAL_Push_Bus_#ENGINE_ID#_#GEN_ID#</NODE_ID>
+            <ANIM_NAME>ELECTRICAL_Push_Bus_#ENGINE_ID#_#GEN_ID#</ANIM_NAME>
+        </Parameters>
+        <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template" />
+    </Template>
+
+    <Template Name="HEAVY_ELECTRICAL_Push_Button_Ram_Air_Template">
+        <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
+            <NODE_ID>Btn_ovhd_ramAir</NODE_ID>
+            <SEQ1_EMISSIVE_CODE>0</SEQ1_EMISSIVE_CODE>
+            <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
+            <SEQ1_NODE_ID>FUEL_Push_Pump_1_AFT_SEQ003</SEQ1_NODE_ID>
+            <SEQ2_NODE_ID>FUEL_Push_Pump_1_AFT_SEQ004</SEQ2_NODE_ID>
+            <SEQ1_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ1_CODE_DRIVES_VISIBILITY>
+            <SEQ2_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ2_CODE_DRIVES_VISIBILITY>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_LIGHTNING_Push_Button_Storm_Template">
+        <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
+            <NODE_ID>LIGHTING_Push_Light_Storm_1</NODE_ID>
+            <SEQ1_EMISSIVE_CODE>0</SEQ1_EMISSIVE_CODE>
+            <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
+            <SEQ1_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ1_CODE_DRIVES_VISIBILITY>
+            <SEQ2_EMISSIVE_DRIVES_VISIBILITY>@HG_FALSE</SEQ2_EMISSIVE_DRIVES_VISIBILITY>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_MISC_Push_Button_Heading_Template">
+        <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
+            <NODE_ID>HEADING_Push</NODE_ID>
+            <SEQ1_EMISSIVE_CODE>1</SEQ1_EMISSIVE_CODE>
+            <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
+            <SEQ1_NODE_ID>HEADING_Knob_SEQ1</SEQ1_NODE_ID>
+            <SEQ2_NODE_ID>HEADING_Knob_SEQ2</SEQ2_NODE_ID>
+            <SEQ2_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ2_CODE_DRIVES_VISIBILITY>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_MISC_Push_Button_Flight_Control_Tail_Template">
+        <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
+            <NODE_ID>Btn_ovhd_flightCTRL_tail</NODE_ID>
+            <SEQ1_NODE_ID>Decals_Text_122</SEQ1_NODE_ID>
+            <SEQ2_NODE_ID>Decals_Text_127</SEQ2_NODE_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_MISC_Push_Button_Flight_Control_Wing_Template">
+        <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
+            <NODE_ID>Btn_ovhd_flightCTRL_wing</NODE_ID>
+            <SEQ1_NODE_ID>Decals_Text_123</SEQ1_NODE_ID>
+            <SEQ2_NODE_ID>Decals_Text_128</SEQ2_NODE_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Knob_Autobrakes_Template">
+        <UseTemplate Name="ASOBO_HANDLING_Knob_Autobrakes_Template">
+            <NODE_ID>HANDLING_Knob_Autobrakes</NODE_ID>
+            <ANIM_NAME>HANDLING_Knob_Autobrakes</ANIM_NAME>
+            <AIRLINER_TYPE>BOEING</AIRLINER_TYPE>
+            <THRESHOLD_INPUT>0.0005</THRESHOLD_INPUT>
+            <THRESHOLD_MOUSE>0.05</THRESHOLD_MOUSE>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_HANDLING_Knob_Wipers_Template">
+        <Parameters Type="Defaults">
+            <Switch Param="SIDE">
+                <Case Value="L">
+                    <NODE_ID>SAFETY_KNOB_WIPERS_LEFT</NODE_ID>
+                    <ANIM_NAME>SAFETY_KNOB_WIPERS_LEFT</ANIM_NAME>
+                    <TT_DESCRIPTION_INDEX>@TT_Left</TT_DESCRIPTION_INDEX>
+                    <CIRCUIT_ID_WIPERS>73</CIRCUIT_ID_WIPERS>
+                </Case>
+                <Case Value="R">
+                    <NODE_ID>SAFETY_KNOB_WIPERS_RIGHT</NODE_ID>
+                    <ANIM_NAME>SAFETY_KNOB_WIPERS_RIGHT</ANIM_NAME>
+                    <TT_DESCRIPTION_INDEX>@TT_Right</TT_DESCRIPTION_INDEX>
+                    <CIRCUIT_ID_WIPERS>75</CIRCUIT_ID_WIPERS>
+                </Case>
+            </Switch>
+        </Parameters>
+        <UseTemplate Name="ASOBO_HANDLING_Knob_Wipers_Template">
+            <OFF_INT_LOW_HIGH>@HG_TRUE</OFF_INT_LOW_HIGH>
+            <TT_DESCRIPTION_ID>@TT_Package.HANDLING_KNOB_WIPERS_ACTION</TT_DESCRIPTION_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Switch_Light_Taxi_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Taxi_Template" />
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Switch_Light_Strobe_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Strobe_Template">
+            <NODE_ID>LIGHTING_Switch_Light_Strobe_1</NODE_ID>
+            <ANIM_NAME>LIGHTING_Switch_Light_Strobe_1</ANIM_NAME>
+            <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_STROBE_TITLE</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_STROBE_ACTION</TT_DESCRIPTION_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Push_Light_Wing_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Wing_Template">
+            <NODE_ID>LIGHTING_Push_Light_Wing_1</NODE_ID>
+            <ANIM_NAME>LIGHTING_Push_Light_Wing_1</ANIM_NAME>
+            <SEQ2_NODE_ID>LIGHTING_Push_Light_Wing_1</SEQ2_NODE_ID>
+            <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_WING_TITLE</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_WING_ACTION</TT_DESCRIPTION_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Push_Light_Logo_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Logo_Template">
+            <NODE_ID>LIGHTING_Push_Light_Logo_1</NODE_ID>
+            <ANIM_NAME>LIGHTING_Push_Light_Logo_1</ANIM_NAME>
+            <SEQ2_NODE_ID>LIGHTING_Push_Light_Logo_1</SEQ2_NODE_ID>
+            <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_LOGO_TITLE</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_LOGO_ACTION</TT_DESCRIPTION_ID>
+        </UseTemplate>
+    </Template>
+    <Template Name="HEAVY_LIGHTING_Push_Light_Navigation_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Navigation_Template">
+            <NODE_ID>LIGHTING_Push_Light_NAV_1</NODE_ID>
+            <ANIM_NAME>LIGHTING_Push_Light_NAV_1</ANIM_NAME>
+            <SEQ2_NODE_ID>LIGHTING_Push_Light_NAV_1</SEQ2_NODE_ID>
+            <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_NAV_TITLE</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_NAV_ACTION</TT_DESCRIPTION_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Push_Light_Beacon_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Beacon_Template">
+            <NODE_ID>LIGHTING_Push_Light_Beacon_1</NODE_ID>
+            <ANIM_NAME>LIGHTING_Push_Light_Beacon_1</ANIM_NAME>
+            <SEQ2_NODE_ID>LIGHTING_Push_Light_Beacon_1</SEQ2_NODE_ID>
+            <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_BEACON_TITLE</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_BEACON_ACTION</TT_DESCRIPTION_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_DEICE_Knob_Engine_Template">
+        <UseTemplate Name="ASOBO_DEICE_Knob_Engine_Template">
+            <NODE_ID>DEICE_Knob_Engine_#ID#</NODE_ID>
+            <ANIM_NAME>DEICE_Knob_Engine_#ID#</ANIM_NAME>
+            <POS_OFF>0</POS_OFF>
+            <POS_AUTO>1</POS_AUTO>
+            <POS_ON>2</POS_ON>
+        </UseTemplate>
+    </Template>
+    <Template Name="HEAVY_DEICE_Switch_Airframe_Template">
+        <UseTemplate Name="ASOBO_DEICE_Switch_Airframe_Template">
+            <NODE_ID>DEICE_Knob_Wing</NODE_ID>
+            <ANIM_NAME>DEICE_Knob_Wing</ANIM_NAME>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_FUEL_Push_Valve_Template">
+        <UseTemplate Name="ASOBO_FUEL_Push_Valve_Template" />
+    </Template>
+
+    <Template Name="HEAVY_FUEL_Push_Balance_Template">
+        <UseTemplate Name="ASOBO_FUEL_Push_Balance_Template">
+            <NODE_ID>FUEL_Push_Balance</NODE_ID>
+            <ANIM_NAME>FUEL_Push_Balance</ANIM_NAME>
+            <TANK_ID_LEFT>2</TANK_ID_LEFT>
+            <TANK_ID_RIGHT>3</TANK_ID_RIGHT>
+            <TRIGGER_ID_LEFTTORIGHT>3</TRIGGER_ID_LEFTTORIGHT>
+            <TRIGGER_ID_RIGHTTOLEFT>4</TRIGGER_ID_RIGHTTOLEFT>
+            <TRIGGER_ID_ENDBALANCE>5</TRIGGER_ID_ENDBALANCE>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_FUEL_Push_Pump_Template">
+        <UseTemplate Name="ASOBO_FUEL_Push_Pump_Template" />
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Switch_Light_Landing_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Landing_Template" />
     </Template>
     <!-- ## End: Overhead panel -->
 </ModelBehaviors>

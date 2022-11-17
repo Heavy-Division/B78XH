@@ -12,5 +12,30 @@
             <TEMPLATE_TO_CALL>ASOBO_GT_Component_Emissive_Gauge</TEMPLATE_TO_CALL>
         </UseTemplate>
     </Template>
+
+
+    <Template Name="HEAVY_LIGHTING_Cabin_Emissive_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Cabin_Emissive_Template" />
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Potentiometer_Emissive_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Potentiometer_Emissive_Template" />
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Knob_Potentiometer_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template" />
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Knob_Panel_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Knob_Panel_Template" />
+    </Template>
+
+    <Template Name="HEAVY_GT_Component_Emissive_Gauge">
+        <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge" />
+    </Template>
+
+    <Template Name="HEAVY_LIGHTING_Ambient_Template">
+        <UseTemplate Name="ASOBO_LIGHTING_Ambient_Template" />
+    </Template>
     <!-- ## End: Emissive -->
 </ModelBehaviors>

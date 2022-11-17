@@ -1,0 +1,5 @@
+<ModelBehaviors>
+    <Template Name="HEAVY_DEICE_Update_Pitot_On">
+        <UseTemplate Name="ASOBO_DEICE_Update_Pitot_On" />
+    </Template>
+</ModelBehaviors>

@@ -1,0 +1,5 @@
+<ModelBehaviors>
+    <!-- ## Includes -->
+    <Include RelativeFile="Buttons.xml" />
+    <!-- ## End: Includes -->
+</ModelBehaviors>

@@ -34,6 +34,7 @@
             <LEVER_TYPE>BOEING</LEVER_TYPE>
             <DRAG_SPEED>0.5</DRAG_SPEED>
             <REVERSER_INVERT_IM_DRAG_INPUT_SCALAR>@HG_TRUE</REVERSER_INVERT_IM_DRAG_INPUT_SCALAR>
+            <ON_BEFORE_SET></ON_BEFORE_SET>
         </Parameters>
 
         <UseTemplate Name="ASOBO_ENGINE_Lever_Throttle_Template"/>
@@ -317,5 +318,28 @@
             <EVENT_TARGER>AS01B_ATC</EVENT_TARGER>
         </UseTemplate>
     </Template>
+
+    <Template Name="HEAVY_LANDING_GEAR_Switch_ParkingBrake_Template">
+        <UseTemplate Name="ASOBO_LANDING_GEAR_Switch_ParkingBrake_Template">
+            <INVERT_SWITCH_ON_CONDITION>TRUE</INVERT_SWITCH_ON_CONDITION>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_AUTOPILOT_Knob_Baro_Backup_Template">
+        <UseTemplate Name="ASOBO_AUTOPILOT_Knob_Baro_Template">
+            <ID>3</ID>
+            <NODE_ID>AUTOPILOT_Knob_Baro_Backup</NODE_ID>
+            <ANIM_NAME>AUTOPILOT_Knob_Baro</ANIM_NAME>
+            <BARO_ID>2</BARO_ID>
+            <USE_PUSH_STD>@HG_TRUE</USE_PUSH_STD>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="HEAVY_LANDING_GEAR_Lever_Gear_Template">
+        <UseTemplate Name="ASOBO_LANDING_GEAR_Lever_Gear_Template">
+            <NO_GEARUP_ON_GROUND>@HG_TRUE</NO_GEARUP_ON_GROUND>
+        </UseTemplate>
+    </Template>
+
     <!-- ## End: Aisle Stand -->
 </ModelBehaviors>

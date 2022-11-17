@@ -1,0 +1,5 @@
+<ModelBehaviors>
+    <Template Name="HEAVY_GT_Anim_Setup">
+        <UseTemplate Name="ASOBO_GT_Anim_Setup" />
+    </Template>
+</ModelBehaviors>

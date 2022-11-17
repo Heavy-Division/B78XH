@@ -1,0 +1,8 @@
+<ModelBehaviors>
+
+    <!-- ## Includes -->
+    <Include RelativeFile="Deice.xml" />
+    <Include RelativeFile="Audio.xml" />
+
+    <!-- ## End: Includes -->
+</ModelBehaviors>

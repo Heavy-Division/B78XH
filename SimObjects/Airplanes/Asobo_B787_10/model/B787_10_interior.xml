@@ -86,21 +86,13 @@
                     <!-- Name: Tail Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
-                        <NODE_ID>Btn_ovhd_flightCTRL_tail</NODE_ID>
-                        <SEQ1_NODE_ID>Decals_Text_122</SEQ1_NODE_ID>
-                        <SEQ2_NODE_ID>Decals_Text_127</SEQ2_NODE_ID>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_MISC_Push_Button_Flight_Control_Tail_Template" />
                     <!-- End: Tail Button -->
 
                     <!-- Name: Wings Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
-                        <NODE_ID>Btn_ovhd_flightCTRL_wing</NODE_ID>
-                        <SEQ1_NODE_ID>Decals_Text_123</SEQ1_NODE_ID>
-                        <SEQ2_NODE_ID>Decals_Text_128</SEQ2_NODE_ID>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_MISC_Push_Button_Flight_Control_Wing_Template" />
                     <!-- End: Wings Button -->
                 </Component>
             </Component>
@@ -113,14 +105,7 @@
                     <!-- Name: Heading Ref Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
-                        <NODE_ID>HEADING_Push</NODE_ID>
-                        <SEQ1_EMISSIVE_CODE>1</SEQ1_EMISSIVE_CODE>
-                        <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
-                        <SEQ1_NODE_ID>HEADING_Knob_SEQ1</SEQ1_NODE_ID>
-                        <SEQ2_NODE_ID>HEADING_Knob_SEQ2</SEQ2_NODE_ID>
-                        <SEQ2_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ2_CODE_DRIVES_VISIBILITY>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_MISC_Push_Button_Heading_Template" />
                     <!-- End: Heading Ref Button -->
                 </Component>
 
@@ -221,10 +206,8 @@
                     <!-- Name: Generator Control (Alternator) Left Engine 1 Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template">
-                        <ID>1</ID>
-                        <NODE_ID>ELECTRICAL_Push_Bus_1_1</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Push_Bus_1_1</ANIM_NAME>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_Alternator_Template">
+                        <GEN_ID>1</GEN_ID>
                         <ENGINE_ID>1</ENGINE_ID>
                     </UseTemplate>
                     <!-- End: Generator Control (Alternator) Left Engine 1 Button -->
@@ -232,10 +215,8 @@
                     <!-- Name: Generator Control (Alternator) Left Engine 2 Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template">
-                        <ID>2</ID>
-                        <NODE_ID>ELECTRICAL_Push_Bus_1_2</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Push_Bus_1_2</ANIM_NAME>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_Alternator_Template">
+                        <GEN_ID>2</GEN_ID>
                         <ENGINE_ID>1</ENGINE_ID>
                     </UseTemplate>
                     <!-- End: Generator Control (Alternator) Left Engine 2 Button -->
@@ -243,10 +224,8 @@
                     <!-- Name: Generator Control (Alternator) Right Engine 1 Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template">
-                        <ID>3</ID>
-                        <NODE_ID>ELECTRICAL_Push_Bus_2_1</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Push_Bus_2_1</ANIM_NAME>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_Alternator_Template">
+                        <GEN_ID>1</GEN_ID>
                         <ENGINE_ID>2</ENGINE_ID>
                     </UseTemplate>
                     <!-- End: Generator Control (Alternator) Right Engine 1 Button -->
@@ -254,10 +233,8 @@
                     <!-- Name: Generator Control (Alternator) Right Engine 2 Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_ELECTRICAL_Push_Alternator_Template">
-                        <ID>4</ID>
-                        <NODE_ID>ELECTRICAL_Push_Bus_2_2</NODE_ID>
-                        <ANIM_NAME>ELECTRICAL_Push_Bus_2_2</ANIM_NAME>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_Alternator_Template">
+                        <GEN_ID>2</GEN_ID>
                         <ENGINE_ID>2</ENGINE_ID>
                     </UseTemplate>
                     <!-- End: Generator Control (Alternator) Right Engine 2 Button -->
@@ -300,12 +277,16 @@
                     <!-- Name: Generator DRIVE Button + Cover (Right Engine, 2) -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <!-- Notes: Cover is working, Button INOP -->
+                    <!-- Notes: Cover INOP, Button INOP -->
+                    <!-- Notes: Cover can be operable without DUMMY_BUTTON parameter but then console returns Error message for missing ANIM_NAME -->
+                    <!-- Notes: The problem with missing ANIM_NAME can be fixed by setting ANIM_NAME to same value as COVER_ANIM_NAME but then the cover is opening only to middle position -->
                     <!-- Important note: This button should be always INOP because animation for button and cover has same name  -->
+                    <!-- Important note: This button should have DUMMY_BUTTON parameter set to TRUE to protect opening the cover  -->
                     <UseTemplate Name="HEAVY_ELECTRICAL_Push_Drive_Template">
                         <ID>2</ID>
                         <ENGINE_ID>2</ENGINE_ID>
                         <IS_INOP>@HG_TRUE</IS_INOP>
+                        <DUMMY_BUTTON>@HG_TRUE</DUMMY_BUTTON>
                     </UseTemplate>
                     <!-- End: Generator DRIVE Button + Cover (Right Engine, 2) -->
                 </Component>
@@ -316,7 +297,7 @@
             <!-- Ref: 3.10.2 -->
             <Component ID="Windows_Heat_Panel">
                 <Component ID="Updates">
-                    <UseTemplate Name="ASOBO_DEICE_Update_Pitot_On" />
+                    <UseTemplate Name="HEAVY_DEICE_Update_Pitot_On" />
                 </Component>
 
                 <Component ID="Backup">
@@ -383,15 +364,7 @@
                     <!-- Name: RAM Air Turbine Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
-                        <NODE_ID>Btn_ovhd_ramAir</NODE_ID>
-                        <SEQ1_EMISSIVE_CODE>0</SEQ1_EMISSIVE_CODE>
-                        <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
-                        <SEQ1_NODE_ID>FUEL_Push_Pump_1_AFT_SEQ003</SEQ1_NODE_ID>
-                        <SEQ2_NODE_ID>FUEL_Push_Pump_1_AFT_SEQ004</SEQ2_NODE_ID>
-                        <SEQ1_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ1_CODE_DRIVES_VISIBILITY>
-                        <SEQ2_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ2_CODE_DRIVES_VISIBILITY>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_ELECTRICAL_Push_Button_Ram_Air_Template" />
                     <!-- End: RAM Air Turbine Button -->
 
                     <!-- Name: Primary Left Engine Hydraulic Button -->
@@ -449,7 +422,7 @@
                     <!-- Name: L Elec FAULT annunciator -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                         <NODE_ID>DECALS_Text_181</NODE_ID>
                         <EMISSIVE_CODE>(A:HYDRAULIC RESERVOIR PERCENT:2, Percent) 1 &lt; (L:B78XH_HYDRAULIC_ELEC_L_SWITCH_STATE, Number) 0 == or</EMISSIVE_CODE>
                         <EMISSIVE_DRIVES_VISIBILITY>@HG_TRUE</EMISSIVE_DRIVES_VISIBILITY>
@@ -459,7 +432,7 @@
                     <!-- Name: C1 Elec FAULT annunciator -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                         <NODE_ID>DECALS_Text_423</NODE_ID>
                         <EMISSIVE_CODE>(A:HYDRAULIC RESERVOIR PERCENT:2, Percent) 1 &lt; (L:B78XH_HYDRAULIC_ELEC_C1_SWITCH_STATE, Number) 0 == or</EMISSIVE_CODE>
                         <EMISSIVE_DRIVES_VISIBILITY>@HG_TRUE</EMISSIVE_DRIVES_VISIBILITY>
@@ -469,7 +442,7 @@
                     <!-- Name: C2 Elec FAULT annunciator -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                         <NODE_ID>DECALS_Text_424</NODE_ID>
                         <EMISSIVE_CODE>(A:HYDRAULIC RESERVOIR PERCENT:2, Percent) 1 &lt; (L:B78XH_HYDRAULIC_ELEC_C2_SWITCH_STATE, Number) 0 == or</EMISSIVE_CODE>
                         <EMISSIVE_DRIVES_VISIBILITY>@HG_TRUE</EMISSIVE_DRIVES_VISIBILITY>
@@ -479,7 +452,7 @@
                     <!-- Name: R Elec FAULT annunciator -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                    <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                         <NODE_ID>DECALS_Text_182</NODE_ID>
                         <EMISSIVE_CODE>(A:HYDRAULIC RESERVOIR PERCENT:2, Percent) 1 &lt; (L:B78XH_HYDRAULIC_ELEC_R_SWITCH_STATE, Number) 0 == or</EMISSIVE_CODE>
                         <EMISSIVE_DRIVES_VISIBILITY>@HG_TRUE</EMISSIVE_DRIVES_VISIBILITY>
@@ -504,13 +477,7 @@
                     <!-- Name: Storm Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
-                        <NODE_ID>LIGHTING_Push_Light_Storm_1</NODE_ID>
-                        <SEQ1_EMISSIVE_CODE>0</SEQ1_EMISSIVE_CODE>
-                        <SEQ2_EMISSIVE_CODE>0</SEQ2_EMISSIVE_CODE>
-                        <SEQ1_CODE_DRIVES_VISIBILITY>@HG_TRUE</SEQ1_CODE_DRIVES_VISIBILITY>
-                        <SEQ2_EMISSIVE_DRIVES_VISIBILITY>@HG_FALSE</SEQ2_EMISSIVE_DRIVES_VISIBILITY>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_LIGHTNING_Push_Button_Storm_Template" />
                     <!-- End: Storm Button -->
                 </Component>
 
@@ -518,7 +485,7 @@
                     <Parameters Type="Defaults">
                         <KNOB_TURN_SPEED>5</KNOB_TURN_SPEED>
                     </Parameters>
-                    <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Knob_Potentiometer_Template">
                         <NODE_ID>LIGHTING_Knob_MasterBright</NODE_ID>
                         <ANIM_NAME>LIGHTING_Knob_MasterBright</ANIM_NAME>
                         <POTENTIOMETER>31</POTENTIOMETER>
@@ -541,34 +508,34 @@
                 </Component>
 
                 <Component ID="Switches">
-                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Landing_Template">
+                    <Parameters Type="Defaults">
+                    </Parameters>
+                    <Parameters Type="Override">
+                        <INVERT_SWITCH_ON_CONDITION>@HG_TRUE</INVERT_SWITCH_ON_CONDITION>
+                        <TT_DESCRIPTION_ID>@TT_Package.AIRLINER_LIGHTING_SWITCH_LIGHT_LANDING_ACTION</TT_DESCRIPTION_ID>
+                        <TYPE>ONOFF</TYPE>
+                    </Parameters>
+                    <UseTemplate Name="HEAVY_LIGHTING_Switch_Light_Landing_Template">
                         <ID>1</ID>
-                        <TYPE>ONOFF</TYPE>
                         <SIMVAR_INDEX>2</SIMVAR_INDEX>
-                        <INVERT_SWITCH_ON_CONDITION>@HG_TRUE</INVERT_SWITCH_ON_CONDITION>
-                        <TT_DESCRIPTION_INDEX>@TT_Package.AIRLINER_LIGHTING_SWITCH_LIGHT_LANDING_ACTION</TT_DESCRIPTION_INDEX>
-                        <TT_DESCRIPTION_ID>@TT_Package.GT_STATE_LEFT</TT_DESCRIPTION_ID>
+                        <TT_DESCRIPTION_INDEX>@TT_Left</TT_DESCRIPTION_INDEX>
                     </UseTemplate>
 
-                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Landing_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Switch_Light_Landing_Template">
                         <ID>2</ID>
-                        <TYPE>ONOFF</TYPE>
                         <SIMVAR_INDEX>3</SIMVAR_INDEX>
-                        <INVERT_SWITCH_ON_CONDITION>@HG_TRUE</INVERT_SWITCH_ON_CONDITION>
-                        <TT_DESCRIPTION_INDEX>@TT_Package.AIRLINER_LIGHTING_SWITCH_LIGHT_LANDING_ACTION</TT_DESCRIPTION_INDEX>
-                        <TT_DESCRIPTION_ID>@TT_Package.GT_STATE_RIGHT</TT_DESCRIPTION_ID>
+                        <TT_DESCRIPTION_INDEX>@TT_Right</TT_DESCRIPTION_INDEX>
                     </UseTemplate>
 
-                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Landing_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Switch_Light_Landing_Template">
                         <ID>3</ID>
                         <NODE_ID>LIGHTING_Switch_Light_Landing_Nose</NODE_ID>
                         <ANIM_NAME>LIGHTING_Switch_Light_Landing_Nose</ANIM_NAME>
-                        <TYPE>ONOFF</TYPE>
                         <SIMVAR_INDEX>1</SIMVAR_INDEX>
-                        <INVERT_SWITCH_ON_CONDITION>@HG_TRUE</INVERT_SWITCH_ON_CONDITION>
-                        <TT_DESCRIPTION_INDEX>@TT_Package.AIRLINER_LIGHTING_SWITCH_LIGHT_LANDING_ACTION</TT_DESCRIPTION_INDEX>
-                        <TT_DESCRIPTION_ID>@TT_Package.GT_STATE_NOSE</TT_DESCRIPTION_ID>
+                        <TT_DESCRIPTION_INDEX>(R:1:@TT_Package.GT_STATE_NOSE)</TT_DESCRIPTION_INDEX>
                     </UseTemplate>
+
+
                 </Component>
             </Component>
             <!-- End Seat Belt Signs and Lighting Panel -->
@@ -631,7 +598,7 @@
                     <!-- Name: Left Center Fuel Pump Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Pump_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Pump_Template">
                         <ID>1</ID>
                         <NODE_ID>FUEL_Push_Pump_Center_1</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Pump_Center_1</ANIM_NAME>
@@ -643,7 +610,7 @@
                     <!-- Name: Right Center Fuel Pump Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Pump_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Pump_Template">
                         <ID>2</ID>
                         <NODE_ID>FUEL_Push_Pump_Center_2</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Pump_Center_2</ANIM_NAME>
@@ -655,7 +622,7 @@
                     <!-- Name: Left AFT Fuel Pump Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Pump_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Pump_Template">
                         <ID>3</ID>
                         <NODE_ID>FUEL_Push_Pump_1_AFT</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Pump_1_AFT</ANIM_NAME>
@@ -667,7 +634,7 @@
                     <!-- Name: Right AFT Fuel Pump Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Pump_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Pump_Template">
                         <ID>5</ID>
                         <NODE_ID>FUEL_Push_Pump_2_AFT</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Pump_2_AFT</ANIM_NAME>
@@ -679,7 +646,7 @@
                     <!-- Name: Left FWD Fuel Pump Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Pump_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Pump_Template">
                         <ID>4</ID>
                         <NODE_ID>FUEL_Push_Pump_1_FWD</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Pump_1_FWD</ANIM_NAME>
@@ -691,7 +658,7 @@
                     <!-- Name: Right FWD Fuel Pump Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Pump_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Pump_Template">
                         <ID>6</ID>
                         <NODE_ID>FUEL_Push_Pump_2_FWD</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Pump_2_FWD</ANIM_NAME>
@@ -703,7 +670,7 @@
                     <!-- Name: XFeed valve Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Valve_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Valve_Template">
                         <ID>3</ID>
                         <NODE_ID>FUEL_Push_Valve_1</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Valve_1</ANIM_NAME>
@@ -714,15 +681,7 @@
                     <!-- Name: Balance Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Balance_Template">
-                        <NODE_ID>FUEL_Push_Balance</NODE_ID>
-                        <ANIM_NAME>FUEL_Push_Balance</ANIM_NAME>
-                        <TANK_ID_LEFT>2</TANK_ID_LEFT>
-                        <TANK_ID_RIGHT>3</TANK_ID_RIGHT>
-                        <TRIGGER_ID_LEFTTORIGHT>3</TRIGGER_ID_LEFTTORIGHT>
-                        <TRIGGER_ID_RIGHTTOLEFT>4</TRIGGER_ID_RIGHTTOLEFT>
-                        <TRIGGER_ID_ENDBALANCE>5</TRIGGER_ID_ENDBALANCE>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_FUEL_Push_Balance_Template" />
                     <!-- Name: Balance Button -->
 
                 </Component>
@@ -735,7 +694,7 @@
                     <!-- Name: Left Nozzle valve Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Valve_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Valve_Template">
                         <ID>4</ID>
                         <NODE_ID>FUEL_Push_Nozzle_1</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Nozzle_1</ANIM_NAME>
@@ -748,7 +707,7 @@
                     <!-- Name: Right Nozzle valve Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Valve_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Valve_Template">
                         <ID>5</ID>
                         <NODE_ID>FUEL_Push_Nozzle_2</NODE_ID>
                         <ANIM_NAME>FUEL_Push_Nozzle_2</ANIM_NAME>
@@ -761,7 +720,7 @@
                     <!-- Name: Jettison Arm valve Button -->
                     <!-- State: Requires TEST -->
                     <!-- Tester: ??? -->
-                    <UseTemplate Name="ASOBO_FUEL_Push_Valve_Template">
+                    <UseTemplate Name="HEAVY_FUEL_Push_Valve_Template">
                         <ID>8</ID>
                         <ID2>9</ID2>
                         <NODE_ID>FUEL_Push_Jettison_Arm</NODE_ID>
@@ -777,35 +736,26 @@
             <!-- Name: AntiIce Panel -->
             <!-- Ref: 3.10.1 -->
             <Component ID="AntiIce_Panel">
+                <Parameters Type="Defaults">
+                    <SWITCH_TYPE>OFF_AUTO_ON</SWITCH_TYPE>
+                    <DEICE_ENGINE_TYPE>ON_AUTO_OFF</DEICE_ENGINE_TYPE>
+                    <SWITCH_DIRECTION>HORIZONTAL</SWITCH_DIRECTION>
+                    <ARROW_TYPE>CURVED</ARROW_TYPE>
+                    <TT_ICON>ROTATE</TT_ICON>
+                </Parameters>
                 <!-- Name: Wing/Airframe Knob -->
                 <!-- State: Requires TEST -->
                 <!-- Tester: ??? -->
                 <!-- Notes: Add INIT?? -->
-                <UseTemplate Name="ASOBO_DEICE_Switch_Airframe_Template">
-                    <NODE_ID>DEICE_Knob_Wing</NODE_ID>
-                    <ANIM_NAME>DEICE_Knob_Wing</ANIM_NAME>
-                    <SWITCH_TYPE>OFF_AUTO_ON</SWITCH_TYPE>
-                    <SWITCH_DIRECTION>HORIZONTAL</SWITCH_DIRECTION>
-                    <ARROW_TYPE>CURVED</ARROW_TYPE>
-                    <TT_ICON>ROTATE</TT_ICON>
-                </UseTemplate>
+                <UseTemplate Name="HEAVY_DEICE_Switch_Airframe_Template" />
                 <!-- End: Wing/Airframe Knob -->
 
                 <!-- Name: Left Engine Knob -->
                 <!-- State: Requires TEST -->
                 <!-- Tester: ??? -->
                 <!-- Notes: Add INIT?? -->
-                <UseTemplate Name="ASOBO_DEICE_Knob_Engine_Template">
+                <UseTemplate Name="HEAVY_DEICE_Knob_Engine_Template">
                     <ID>1</ID>
-                    <NODE_ID>DEICE_Knob_Engine_1</NODE_ID>
-                    <ANIM_NAME>DEICE_Knob_Engine_1</ANIM_NAME>
-                    <DEICE_ENGINE_TYPE>ON_AUTO_OFF</DEICE_ENGINE_TYPE>
-                    <POS_OFF>0</POS_OFF>
-                    <POS_AUTO>1</POS_AUTO>
-                    <POS_ON>2</POS_ON>
-                    <SWITCH_DIRECTION>HORIZONTAL</SWITCH_DIRECTION>
-                    <ARROW_TYPE>CURVED</ARROW_TYPE>
-                    <TT_ICON>ROTATE</TT_ICON>
                 </UseTemplate>
                 <!-- End: Left Engine Knob -->
 
@@ -813,17 +763,8 @@
                 <!-- State: Requires TEST -->
                 <!-- Tester: ??? -->
                 <!-- Notes: Add INIT?? -->
-                <UseTemplate Name="ASOBO_DEICE_Knob_Engine_Template">
+                <UseTemplate Name="HEAVY_DEICE_Knob_Engine_Template">
                     <ID>2</ID>
-                    <NODE_ID>DEICE_Knob_Engine_2</NODE_ID>
-                    <ANIM_NAME>DEICE_Knob_Engine_2</ANIM_NAME>
-                    <DEICE_ENGINE_TYPE>ON_AUTO_OFF</DEICE_ENGINE_TYPE>
-                    <POS_OFF>0</POS_OFF>
-                    <POS_AUTO>1</POS_AUTO>
-                    <POS_ON>2</POS_ON>
-                    <SWITCH_DIRECTION>HORIZONTAL</SWITCH_DIRECTION>
-                    <ARROW_TYPE>CURVED</ARROW_TYPE>
-                    <TT_ICON>ROTATE</TT_ICON>
                 </UseTemplate>
                 <!-- End: Right Engine Knob -->
             </Component>
@@ -843,49 +784,25 @@
                     <!-- Name: Beacon Push Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Beacon_Template">
-                        <NODE_ID>LIGHTING_Push_Light_Beacon_1</NODE_ID>
-                        <ANIM_NAME>LIGHTING_Push_Light_Beacon_1</ANIM_NAME>
-                        <SEQ2_NODE_ID>LIGHTING_Push_Light_Beacon_1</SEQ2_NODE_ID>
-                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_BEACON_TITLE</TOOLTIP_TITLE>
-                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_BEACON_ACTION</TT_DESCRIPTION_ID>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_LIGHTING_Push_Light_Beacon_Template" />
                     <!-- End: Beacon Push Button -->
 
                     <!-- Name: Navigation Push Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Navigation_Template">
-                        <NODE_ID>LIGHTING_Push_Light_NAV_1</NODE_ID>
-                        <ANIM_NAME>LIGHTING_Push_Light_NAV_1</ANIM_NAME>
-                        <SEQ2_NODE_ID>LIGHTING_Push_Light_NAV_1</SEQ2_NODE_ID>
-                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_NAV_TITLE</TOOLTIP_TITLE>
-                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_NAV_ACTION</TT_DESCRIPTION_ID>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_LIGHTING_Push_Light_Navigation_Template" />
                     <!-- End: Navigation Push Button -->
 
                     <!-- Name: Logo Push Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Logo_Template">
-                        <NODE_ID>LIGHTING_Push_Light_Logo_1</NODE_ID>
-                        <ANIM_NAME>LIGHTING_Push_Light_Logo_1</ANIM_NAME>
-                        <SEQ2_NODE_ID>LIGHTING_Push_Light_Logo_1</SEQ2_NODE_ID>
-                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_LOGO_TITLE</TOOLTIP_TITLE>
-                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_LOGO_ACTION</TT_DESCRIPTION_ID>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_LIGHTING_Push_Light_Logo_Template" />
                     <!-- End: Logo Push Button -->
 
                     <!-- Name: Wing Push Button -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Push_Light_Wing_Template">
-                        <NODE_ID>LIGHTING_Push_Light_Wing_1</NODE_ID>
-                        <ANIM_NAME>LIGHTING_Push_Light_Wing_1</ANIM_NAME>
-                        <SEQ2_NODE_ID>LIGHTING_Push_Light_Wing_1</SEQ2_NODE_ID>
-                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_WING_TITLE</TOOLTIP_TITLE>
-                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_WING_ACTION</TT_DESCRIPTION_ID>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_LIGHTING_Push_Light_Wing_Template" />
                     <!-- End: Wing Push Button -->
                 </Component>
 
@@ -898,7 +815,7 @@
                     <!-- Name: Runway Turnoff Left -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Taxi_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Switch_Light_Taxi_Template">
                         <ID>2</ID>
                         <NODE_ID>LIGHTING_Switch_RunwayTurnOff_L</NODE_ID>
                         <ANIM_NAME>LIGHTING_Switch_RunwayTurnOff_L</ANIM_NAME>
@@ -912,7 +829,7 @@
                     <!-- Name: Runway Turnoff Right -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Taxi_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Switch_Light_Taxi_Template">
                         <ID>3</ID>
                         <NODE_ID>LIGHTING_Switch_RunwayTurnOff_R</NODE_ID>
                         <ANIM_NAME>LIGHTING_Switch_RunwayTurnOff_R</ANIM_NAME>
@@ -926,7 +843,7 @@
                     <!-- Name: Taxi -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Taxi_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Switch_Light_Taxi_Template">
                         <ID>1</ID>
                         <NODE_ID>LIGHTING_Switch_Light_Taxi_1</NODE_ID>
                         <ANIM_NAME>LIGHTING_Switch_Light_Taxi_1</ANIM_NAME>
@@ -939,12 +856,7 @@
                     <!-- Name: Strobe -->
                     <!-- State: OK -->
                     <!-- Tester: Co-mi -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Switch_Light_Strobe_Template">
-                        <NODE_ID>LIGHTING_Switch_Light_Strobe_1</NODE_ID>
-                        <ANIM_NAME>LIGHTING_Switch_Light_Strobe_1</ANIM_NAME>
-                        <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_STROBE_TITLE</TOOLTIP_TITLE>
-                        <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_STROBE_ACTION</TT_DESCRIPTION_ID>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_LIGHTING_Switch_Light_Strobe_Template" />
                     <!-- End: Strobe -->
                 </Component>
 
@@ -1136,27 +1048,17 @@
             <!-- Ref: none -->
             <Component ID="Wipers_Panel">
                 <Component ID="Wipers_Knobs">
-                    <UseTemplate Name="ASOBO_HANDLING_Knob_Wipers_Template">
-                        <NODE_ID>SAFETY_KNOB_WIPERS_LEFT</NODE_ID>
-                        <ANIM_NAME>SAFETY_KNOB_WIPERS_LEFT</ANIM_NAME>
-                        <CIRCUIT_ID_WIPERS>73</CIRCUIT_ID_WIPERS>
-                        <OFF_INT_LOW_HIGH>@HG_TRUE</OFF_INT_LOW_HIGH>
-                        <TT_DESCRIPTION_INDEX>@TT_Package.HANDLING_KNOB_WIPERS_ACTION</TT_DESCRIPTION_INDEX>
-                        <TT_DESCRIPTION_ID>@TT_Package.GT_STATE_LEFT</TT_DESCRIPTION_ID>
+                    <UseTemplate Name="HEAVY_HANDLING_Knob_Wipers_Template">
+                        <SIDE>L</SIDE>
                     </UseTemplate>
 
-                    <UseTemplate Name="ASOBO_HANDLING_Knob_Wipers_Template">
-                        <NODE_ID>SAFETY_KNOB_WIPERS_RIGHT</NODE_ID>
-                        <ANIM_NAME>SAFETY_KNOB_WIPERS_RIGHT</ANIM_NAME>
-                        <CIRCUIT_ID_WIPERS>75</CIRCUIT_ID_WIPERS>
-                        <OFF_INT_LOW_HIGH>@HG_TRUE</OFF_INT_LOW_HIGH>
-                        <TT_DESCRIPTION_INDEX>@TT_Package.HANDLING_KNOB_WIPERS_ACTION</TT_DESCRIPTION_INDEX>
-                        <TT_DESCRIPTION_ID>@TT_Package.GT_STATE_RIGHT</TT_DESCRIPTION_ID>
+                    <UseTemplate Name="HEAVY_HANDLING_Knob_Wipers_Template">
+                        <SIDE>R</SIDE>
                     </UseTemplate>
                 </Component>
 
                 <Component ID="Lightning_Knobs">
-                    <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Knob_Potentiometer_Template">
                         <NODE_ID>LIGHTING_Knob_LowerDisplay_Brightness</NODE_ID>
                         <ANIM_NAME>LIGHTING_Knob_LowerDisplay_Brightness</ANIM_NAME>
                         <POTENTIOMETER>30</POTENTIOMETER>
@@ -1509,13 +1411,13 @@
                 <ID>@HID_CAPITAN</ID>
             </Parameters>
             <Component ID="Displays">
-                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                     <NODE_ID>Screen_PFD_#ID#</NODE_ID>
                     <POTENTIOMETER>27</POTENTIOMETER>
                     <FAILURE_CIRCUIT>23</FAILURE_CIRCUIT>
                 </UseTemplate>
 
-                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                     <NODE_ID>Screen_MFD_#ID#</NODE_ID>
                     <POTENTIOMETER>26</POTENTIOMETER>
                     <FAILURE_CIRCUIT>25</FAILURE_CIRCUIT>
@@ -1523,14 +1425,14 @@
             </Component>
 
             <Component ID="Displays_Ambient_Lights">
-                <UseTemplate Name="ASOBO_LIGHTING_Ambient_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Ambient_Template">
                     <ID>CAPITAN_OUTBOARD_DISPLAY_AMBIENT</ID>
                     <POTENTIOMETER>32</POTENTIOMETER>
                     <FAILURE_CIRCUIT>23</FAILURE_CIRCUIT>
                     <BOUNCE_POTENTIOMETER_PERCENT>(A:LIGHT POTENTIOMETER:27, Percent) 0.5 * 1 + (L:B787_10_PFD_ScreenLuminosity) *</BOUNCE_POTENTIOMETER_PERCENT>
                 </UseTemplate>
 
-                <UseTemplate Name="ASOBO_LIGHTING_Ambient_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Ambient_Template">
                     <ID>CAPITAN_INBOARD_DISPLAY_AMBIENT</ID>
                     <POTENTIOMETER>33</POTENTIOMETER>
                     <FAILURE_CIRCUIT>25</FAILURE_CIRCUIT>
@@ -1539,7 +1441,7 @@
             </Component>
 
             <Component ID="Airdata">
-                <UseTemplate Name="ASOBO_GT_Anim_Setup">
+                <UseTemplate Name="HEAVY_GT_Anim_Setup">
                     <ANIM_NAME>DISPLAY_Knob_Mode_#ID#</ANIM_NAME>
                     <PERCENT>50</PERCENT>
                 </UseTemplate>
@@ -1551,13 +1453,13 @@
                 <ID>@HID_FO</ID>
             </Parameters>
             <Component ID="Displays">
-                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                     <NODE_ID>Screen_PFD_#ID#</NODE_ID>
                     <POTENTIOMETER>29</POTENTIOMETER>
                     <FAILURE_CIRCUIT>23</FAILURE_CIRCUIT>
                 </UseTemplate>
 
-                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                     <NODE_ID>Screen_MFD_#ID#</NODE_ID>
                     <POTENTIOMETER>28</POTENTIOMETER>
                     <FAILURE_CIRCUIT>26</FAILURE_CIRCUIT>
@@ -1565,14 +1467,14 @@
             </Component>
 
             <Component ID="Displays_Ambient_Lights">
-                <UseTemplate Name="ASOBO_LIGHTING_Ambient_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Ambient_Template">
                     <ID>FIRST_OFFICER_OUTBOARD_DISPLAY_AMBIENT</ID>
                     <POTENTIOMETER>35</POTENTIOMETER>
                     <FAILURE_CIRCUIT>23</FAILURE_CIRCUIT>
                     <BOUNCE_POTENTIOMETER_PERCENT>(A:LIGHT POTENTIOMETER:29, Percent) 0.5 * 1 + (L:B787_10_PFD_ScreenLuminosity) *</BOUNCE_POTENTIOMETER_PERCENT>
                 </UseTemplate>
 
-                <UseTemplate Name="ASOBO_LIGHTING_Ambient_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Ambient_Template">
                     <ID>FIRST_OFFICER_INBOARD_AMBIENT</ID>
                     <POTENTIOMETER>34</POTENTIOMETER>
                     <FAILURE_CIRCUIT>26</FAILURE_CIRCUIT>
@@ -1581,7 +1483,7 @@
             </Component>
 
             <Component ID="Airdata">
-                <UseTemplate Name="ASOBO_GT_Anim_Setup">
+                <UseTemplate Name="HEAVY_GT_Anim_Setup">
                     <ANIM_NAME>DISPLAY_Knob_Mode_#ID#</ANIM_NAME>
                     <PERCENT>50</PERCENT>
                 </UseTemplate>
@@ -1590,40 +1492,26 @@
 
         <Component ID="Center_Forward">
             <Component ID="Displays">
-                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                     <NODE_ID>Screen_AttitudeDisplay</NODE_ID>
                     <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
                 </UseTemplate>
             </Component>
 
             <Component ID="Levers">
-                <UseTemplate Name="ASOBO_LANDING_GEAR_Lever_Gear_Template">
-                    <NO_GEARUP_ON_GROUND>@HG_TRUE</NO_GEARUP_ON_GROUND>
-                </UseTemplate>
+                <UseTemplate Name="HEAVY_LANDING_GEAR_Lever_Gear_Template" />
             </Component>
 
             <Component ID="Knobs">
                 <!-- Name: Integrated Standby Flight Display -->
                 <!-- Ref: 10.10.50 -->
                 <Component ID="Integrated_Standby_Flight_Display">
-                    <UseTemplate Name="ASOBO_AUTOPILOT_Knob_Baro_Template">
-                        <ID>3</ID>
-                        <NODE_ID>AUTOPILOT_Knob_Baro_Backup</NODE_ID>
-                        <ANIM_NAME>AUTOPILOT_Knob_Baro</ANIM_NAME>
-                        <BARO_ID>2</BARO_ID>
-                        <USE_PUSH_STD>@HG_TRUE</USE_PUSH_STD>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_AUTOPILOT_Knob_Baro_Backup_Template" />
                 </Component>
                 <!-- End: Integrated Standby Flight Display -->
 
                 <Component ID="Autobrakes">
-                    <UseTemplate Name="ASOBO_HANDLING_Knob_Autobrakes_Template">
-                        <NODE_ID>HANDLING_Knob_Autobrakes</NODE_ID>
-                        <ANIM_NAME>HANDLING_Knob_Autobrakes</ANIM_NAME>
-                        <AIRLINER_TYPE>BOEING</AIRLINER_TYPE>
-                        <THRESHOLD_INPUT>0.0005</THRESHOLD_INPUT>
-                        <THRESHOLD_MOUSE>0.05</THRESHOLD_MOUSE>
-                    </UseTemplate>
+                    <UseTemplate Name="HEAVY_HANDLING_Knob_Autobrakes_Template" />
                 </Component>
             </Component>
         </Component>
@@ -1634,13 +1522,13 @@
             </Parameters>
 
             <Component ID="Knobs">
-                <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Knob_Potentiometer_Template">
                     <NODE_ID>LIGHTING_Knob_PFD_#ID#_Brightness</NODE_ID>
                     <ANIM_NAME>LIGHTING_Knob_PFD_#ID#_Brightness</ANIM_NAME>
                     <POTENTIOMETER>27</POTENTIOMETER>
                 </UseTemplate>
 
-                <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Knob_Potentiometer_Template">
                     <NODE_ID>LIGHTING_Knob_MFD_#ID#_Brightness</NODE_ID>
                     <ANIM_NAME>LIGHTING_Knob_MFD_#ID#_Brightness</ANIM_NAME>
                     <POTENTIOMETER>26</POTENTIOMETER>
@@ -1654,13 +1542,13 @@
             </Parameters>
 
             <Component ID="Knobs">
-                <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Knob_Potentiometer_Template">
                     <NODE_ID>LIGHTING_Knob_PFD_#ID#_Brightness</NODE_ID>
                     <ANIM_NAME>LIGHTING_Knob_PFD_#ID#_Brightness</ANIM_NAME>
                     <POTENTIOMETER>29</POTENTIOMETER>
                 </UseTemplate>
 
-                <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Knob_Potentiometer_Template">
                     <NODE_ID>LIGHTING_Knob_MFD_#ID#_Brightness</NODE_ID>
                     <ANIM_NAME>LIGHTING_Knob_MFD_#ID#_Brightness</ANIM_NAME>
                     <POTENTIOMETER>28</POTENTIOMETER>
@@ -1674,7 +1562,7 @@
             </Parameters>
 
             <Component ID="Displays">
-                <UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
+                <UseTemplate Name="HEAVY_GT_Component_Emissive_Gauge">
                     <ID>3</ID>
                     <NODE_ID>Screen_MFD_3</NODE_ID>
                     <POTENTIOMETER>30</POTENTIOMETER>
@@ -1714,9 +1602,7 @@
             </Parameters>
 
             <Component ID="Parking_Brake">
-                <UseTemplate Name="ASOBO_LANDING_GEAR_Switch_ParkingBrake_Template">
-                    <INVERT_SWITCH_ON_CONDITION>TRUE</INVERT_SWITCH_ON_CONDITION>
-                </UseTemplate>
+                <UseTemplate Name="HEAVY_LANDING_GEAR_Switch_ParkingBrake_Template" />
             </Component>
 
             <Component ID="Alternative_Pitch_Trim">
@@ -1732,6 +1618,7 @@
 
             <Component ID="Thrust_Levers">
                 <Component ID="Levers">
+
                     <UseTemplate Name="HEAVY_ENGINE_Lever_Throttle_Template">
                         <ID>1</ID>
                     </UseTemplate>
@@ -1767,7 +1654,7 @@
             </Component>
 
             <Component ID="Alternative_Flaps">
-                <UseTemplate Name="ASOBO_GT_Anim_Setup">
+                <UseTemplate Name="HEAVY_GT_Anim_Setup">
                     <ANIM_NAME>HANDLING_Knob_FlapsMode</ANIM_NAME>
                     <PERCENT>50</PERCENT>
                 </UseTemplate>
@@ -1779,41 +1666,41 @@
                 <ALT_CODE>@ALT_CODE_DEFAULT</ALT_CODE>
             </Parameters>
 
-            <Component Name="Capitan">
+            <Component ID="Capitan">
                 <Parameters Type="Defaults">
                     <ID>@HID_CAPITAN</ID>
                 </Parameters>
-                <Component Name="TCP">
+                <Component ID="TCP">
                     <UseTemplate Name="HEAVY_BOEING_TCP_Template" />
                 </Component>
 
-                <Component Name="Audio_Pamel">
+                <Component ID="Audio_Pamel">
                     <UseTemplate Name="HEAVY_AIRLINER_Audio_Panel_Template" />
                 </Component>
             </Component>
 
-            <Component Name="First_Officer">
+            <Component ID="First_Officer">
                 <Parameters Type="Defaults">
                     <ID>@HID_FO</ID>
                 </Parameters>
-                <Component Name="TCP">
+                <Component ID="TCP">
                     <UseTemplate Name="HEAVY_BOEING_TCP_Template" />
                 </Component>
 
-                <Component Name="Audio_Pamel">
+                <Component ID="Audio_Pamel">
                     <UseTemplate Name="HEAVY_AIRLINER_Audio_Panel_Template" />
                 </Component>
             </Component>
 
-            <Component Name="Others">
+            <Component ID="Others">
                 <Parameters Type="Defaults">
                     <ID>3</ID>
                 </Parameters>
-                <Component Name="TCP">
+                <Component ID="TCP">
                     <UseTemplate Name="HEAVY_BOEING_TCP_Template" />
                 </Component>
 
-                <Component Name="Audio_Pamel">
+                <Component ID="Audio_Pamel">
                     <UseTemplate Name="HEAVY_AIRLINER_Audio_Panel_Template" />
                 </Component>
 
@@ -1826,9 +1713,9 @@
                 </Component>
             </Component>
 
-            <Component Name="Misc">
+            <Component ID="Misc">
                 <Component ID="Updater">
-                    <UseTemplate Name="ASOBO_AIRLINER_Audio_Panel_Updater" />
+                    <UseTemplate Name="HEAVY_AIRLINER_Audio_Panel_Updater" />
                 </Component>
             </Component>
         </Component>
@@ -1853,7 +1740,7 @@
             <!-- Name: Global Emissives -->
             <!-- Ref: none -->
             <Component ID="Global_Emissives">
-                <UseTemplate Name="ASOBO_LIGHTING_Ambient_Template">
+                <UseTemplate Name="HEAVY_LIGHTING_Ambient_Template">
                     <ID>Minimal</ID>
                     <BOUNCE_POTENTIOMETER_PERCENT>
                         (A:LIGHT POTENTIOMETER:26, Percent)
@@ -1891,7 +1778,10 @@
                     </Parameters>
 
                     <Component ID="Floodlights">
-                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template" />
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
+                            <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_FLOODLIGHT_BRIGHTNESS_PILOT_TITLE</TOOLTIP_TITLE>
+                            <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_FLOODLIGHT_BRIGHTNESS_PILOT_ACTION</TT_DESCRIPTION_ID>
+                        </UseTemplate>
                     </Component>
 
                     <Component ID="Backlights">
@@ -1910,7 +1800,10 @@
                     </Parameters>
 
                     <Component ID="Floodlights">
-                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template" />
+                        <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
+                            <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_FLOODLIGHT_BRIGHTNESS_COPILOT_TITLE</TOOLTIP_TITLE>
+                            <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_FLOODLIGHT_BRIGHTNESS_COPILOT_ACTION</TT_DESCRIPTION_ID>
+                        </UseTemplate>
                     </Component>
 
                     <Component ID="Backlights">
@@ -1924,6 +1817,7 @@
                 <Component ID="Global">
                     <Component ID="Floodlights">
                         <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
+                            <ID>2</ID>
                             <NODE_ID>LIGHTING_Knob_Flood_Glareshield</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Flood_Glareshield</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_GLARESHIELD</POTENTIOMETER>
@@ -1933,6 +1827,7 @@
                         </UseTemplate>
 
                         <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
+                            <ID>4</ID>
                             <NODE_ID>LIGHTING_Knob_Dome</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Dome</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_DOME</POTENTIOMETER>
@@ -1942,18 +1837,19 @@
                         </UseTemplate>
 
                         <UseTemplate Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
+                            <ID>3</ID>
                             <NODE_ID>LIGHTING_Knob_Flood_Pedestal</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Flood_Pedestal</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_AISLE_STAND</POTENTIOMETER>
                             <SIMVAR_INDEX>3</SIMVAR_INDEX>
-                            <TOOLTIP_TITLE>@TT_Package.LIGHTING_KNOB_LIGHT_FLOODLIGHT_BRIGHTNESS_TITLE</TOOLTIP_TITLE>
-                            <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_KNOB_LIGHT_FLOODLIGHT_BRIGHTNESS_ACTION</TT_DESCRIPTION_ID>
+                            <TOOLTIP_TITLE>@TT_Package.AIRLINER_OVHD_KNOB_LIGHT_GLARESHIELD_PANELFLOOD2_TITLE</TOOLTIP_TITLE>
+                            <TT_DESCRIPTION_ID>@TT_Package.AIRLINER_OVHD_KNOB_LIGHT_GLARESHIELD_PANELFLOOD2_ACTION</TT_DESCRIPTION_ID>
                         </UseTemplate>
                     </Component>
 
                     <Component ID="Backlights">
 
-                        <UseTemplate Name="ASOBO_LIGHTING_Knob_Panel_Template">
+                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Panel_Template">
                             <NODE_ID>LIGHTING_Knob_Panel_Overhead</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Panel_Overhead</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_OVERHEAD</POTENTIOMETER>
@@ -1962,7 +1858,7 @@
                             <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_KNOB_SUBPANEL_ACTION</TT_DESCRIPTION_ID>
                         </UseTemplate>
 
-                        <UseTemplate Name="ASOBO_LIGHTING_Knob_Panel_Template">
+                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Panel_Template">
                             <NODE_ID>LIGHTING_Knob_Panel_Pedestal</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Panel_Pedestal</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_AISLE_STAND</POTENTIOMETER>
@@ -1970,7 +1866,7 @@
                             <ANIM_WRAP>@HG_FALSE</ANIM_WRAP>
                         </UseTemplate>
 
-                        <UseTemplate Name="ASOBO_LIGHTING_Knob_Potentiometer_Template">
+                        <UseTemplate Name="HEAVY_LIGHTING_Knob_Potentiometer_Template">
                             <NODE_ID>LIGHTING_Knob_Panel_Glareshield</NODE_ID>
                             <ANIM_NAME>LIGHTING_Knob_Panel_Glareshield</ANIM_NAME>
                             <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_GLARESHIELD</POTENTIOMETER>
@@ -1992,7 +1888,7 @@
                         <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_CAPITAN</POTENTIOMETER>
                     </Parameters>
 
-                    <UseTemplate Name="ASOBO_LIGHTING_Cabin_Emissive_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Cabin_Emissive_Template">
                         <NODE_ID>LIGHTING_Flood_#ID#_Emissive</NODE_ID>
                         <SIMVAR_INDEX>1</SIMVAR_INDEX>
                     </UseTemplate>
@@ -2005,7 +1901,7 @@
                         <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_FIRST_OFFICER</POTENTIOMETER>
                     </Parameters>
 
-                    <UseTemplate Name="ASOBO_LIGHTING_Cabin_Emissive_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Cabin_Emissive_Template">
                         <NODE_ID>LIGHTING_Flood_#ID#_Emissive</NODE_ID>
                         <SIMVAR_INDEX>1</SIMVAR_INDEX>
                     </UseTemplate>
@@ -2013,33 +1909,33 @@
                 </Component>
 
                 <Component ID="Global">
-                    <UseTemplate Name="ASOBO_LIGHTING_Cabin_Emissive_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Cabin_Emissive_Template">
                         <NODE_ID>LIGHTING_Flood_Glareshield_Emissive</NODE_ID>
                         <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_GLARESHIELD</POTENTIOMETER>
                         <SIMVAR_INDEX>2</SIMVAR_INDEX>
                     </UseTemplate>
 
-                    <UseTemplate Name="ASOBO_LIGHTING_Cabin_Emissive_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Cabin_Emissive_Template">
                         <NODE_ID>LIGHTING_Dome_Emissive</NODE_ID>
                         <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_DOME</POTENTIOMETER>
                         <SIMVAR_INDEX>4</SIMVAR_INDEX>
                     </UseTemplate>
 
                     <!-- TODO: Separate from DOME??? -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Cabin_Emissive_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Cabin_Emissive_Template">
                         <NODE_ID>LIGHTING_Storm_Emissive</NODE_ID>
                         <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_DOME</POTENTIOMETER>
                         <SIMVAR_INDEX>4</SIMVAR_INDEX>
                     </UseTemplate>
 
                     <!-- TODO: Separate from DOME??? -->
-                    <UseTemplate Name="ASOBO_LIGHTING_Cabin_Emissive_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Cabin_Emissive_Template">
                         <NODE_ID>ceiling_light_r</NODE_ID>
                         <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_DOME</POTENTIOMETER>
                         <SIMVAR_INDEX>4</SIMVAR_INDEX>
                     </UseTemplate>
 
-                    <UseTemplate Name="ASOBO_LIGHTING_Cabin_Emissive_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Cabin_Emissive_Template">
                         <NODE_ID>LIGHTING_Flood_Pedestal_Emissive</NODE_ID>
                         <POTENTIOMETER>@POT_LIGHT_FLOODLIGHT_AISLE_STAND</POTENTIOMETER>
                         <SIMVAR_INDEX>3</SIMVAR_INDEX>
@@ -2072,7 +1968,7 @@
                 </Component>
 
                 <Component ID="Global">
-                    <UseTemplate Name="ASOBO_LIGHTING_Potentiometer_Emissive_Template">
+                    <UseTemplate Name="HEAVY_LIGHTING_Potentiometer_Emissive_Template">
                         <NODE_ID>LIGHTING_Backlight_Glareshield_Emissive</NODE_ID>
                         <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_GLARESHIELD</POTENTIOMETER>
                         <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
@@ -2140,3 +2036,6 @@ Center Forward -> DONE
 Left HUD -> DONE
 Right HUD -> DONE
 -->
+
+<!-- LEFT_SINGLE_CODE Errors -->
+<!-- GenDrive 8x -->

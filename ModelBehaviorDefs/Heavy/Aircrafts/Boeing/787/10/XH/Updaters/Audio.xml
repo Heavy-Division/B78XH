@@ -1,0 +1,5 @@
+<ModelBehaviors>
+    <Template Name="HEAVY_AIRLINER_Audio_Panel_Updater">
+        <UseTemplate Name="ASOBO_AIRLINER_Audio_Panel_Updater" />
+    </Template>
+</ModelBehaviors>
