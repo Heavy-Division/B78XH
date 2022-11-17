@@ -1,0 +1,34 @@
+name: Model Behavior Report
+description: Report of unexpected behavior (Knobs, Buttons, Lights, Emissives)
+labels: [MODEL BEHAVIOR]
+body:
+  - type: markdown
+    attributes:
+      value: "# B78XH Model behavior report"
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: Name of a button/knob/switch/light/emissive
+    validations:
+      required: true
+  - type: textarea
+    id: desc
+    attributes:
+      label: Description
+    validations:
+      required: true
+  - type: textarea
+    id: misc
+    attributes:
+      label: Additional info (optional)
+    validations:
+      required: false
+  - type: input
+    id: discord
+    attributes:
+      label: Discord Username (optional)
+      description: You may optionally provide your discord username, so that we may contact you directly about the issue.
+      placeholder: ex. username#1234
+    validations:
+      required: false
