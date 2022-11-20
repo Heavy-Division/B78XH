@@ -56,7 +56,7 @@
 
 
     <Template Name="HEAVY_ELECTRICAL_Push_ExternalPower_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <Switch Param="ID">
                 <Case Value="3">
                     <NODE_ID>ELECTRICAL_Switch_ExternalPower_AFT</NODE_ID>
@@ -75,7 +75,7 @@
 
 
     <Template Name="HEAVY_ELECTRICAL_Push_IFE_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>Btn_ovh_electrical_ife</NODE_ID>
             <ANIM_NAME>Btn_ovh_electrical_ife</ANIM_NAME>
         </Parameters>
@@ -87,7 +87,7 @@
     </Template>
 
     <Template Name="HEAVY_ELECTRICAL_Push_CABIN_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>Btn_ovh_electrical_cabin</NODE_ID>
             <ANIM_NAME>Btn_ovh_electrical_cabin</ANIM_NAME>
         </Parameters>
@@ -458,7 +458,7 @@
     </Template>
 
     <Template Name="HEAVY_ENGINE_Switch_Hydraulic_SubTemplate">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>ENGINE_Switch_Hydraulic</NODE_ID>
             <ANIM_NAME>ENGINE_Switch_Hydraulic</ANIM_NAME>
             <PART_ID>ENGINE_Switch_Hydraulic</PART_ID>
@@ -491,7 +491,7 @@
 
 
     <Template Name="HEAVY_TEMPERATURE_Switch_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>PASSENGER_Knob_Temperature_#ID#</NODE_ID>
             <ANIM_NAME>PASSENGER_Knob_Temperature_#ID#</ANIM_NAME>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
@@ -511,7 +511,7 @@
     </Template>
 
     <Template Name="HEAVY_B78XH_TEMPERATURE_Switch_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>PASSENGER_Knob_Temperature_#ID#</NODE_ID>
             <ANIM_NAME>PASSENGER_Knob_Temperature_#ID#</ANIM_NAME>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
@@ -531,7 +531,7 @@
     </Template>
 
     <Template Name="HEAVY_B78XH_TEMPERATURE_Cargo_Switch_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>PASSENGER_Knob_Temperature_#ID#</NODE_ID>
             <ANIM_NAME>PASSENGER_Knob_Temperature_#ID#</ANIM_NAME>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
@@ -583,7 +583,7 @@
 
     <!-- TODO: Reimplement (too many cases)-->
     <Template Name="HEAVY_BOEING_Push_Display_Select_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <PACKAGE>AIRLINER</PACKAGE>
             <ACTION>#BUTTON#</ACTION>
             <Switch Param="BUTTON">
@@ -619,7 +619,7 @@
     </Template>
 
     <Template Name="HEAVY_AIRLINER_Knob_Seatbelts_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>PASSENGERS_Knob_Seatbelts</NODE_ID>
             <ANIM_NAME>PASSENGERS_Knob_Seatbelts</ANIM_NAME>
             <CODE_POS_0>
@@ -647,7 +647,7 @@
     </Template>
 
     <Template Name="HEAVY_B78XH_Switch_Elec_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <Switch Param="ID">
                 <Case Value="L">
                     <NODE_ID>HYDRAULIC_Knob_Demand_1</NODE_ID>
@@ -675,7 +675,7 @@
     </Template>
 
     <Template Name="HEAVY_B78XH_IRS_Switch_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>INSTRUMENT_Knob_IRS_#ID#</NODE_ID>
             <ANIM_NAME>INSTRUMENT_Knob_IRS_#ID#</ANIM_NAME>
             <SWITCH_POSITION_TYPE>L</SWITCH_POSITION_TYPE>
@@ -700,7 +700,7 @@
     </Template>
 
     <Template Name="HEAVY_ELECTRICAL_Push_Alternator_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <ID Process="Int">
                 #ENGINE_ID# 1 == if{
                     #GEN_ID#
@@ -774,7 +774,7 @@
     </Template>
 
     <Template Name="HEAVY_HANDLING_Knob_Wipers_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <Switch Param="SIDE">
                 <Case Value="L">
                     <NODE_ID>SAFETY_KNOB_WIPERS_LEFT</NODE_ID>

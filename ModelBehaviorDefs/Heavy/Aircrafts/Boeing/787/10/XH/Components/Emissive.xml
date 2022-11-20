@@ -1,7 +1,7 @@
 <ModelBehaviors>
     <!-- ## Emissive -->
     <Template Name="HEAVY_SCREEN_Emissive_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <ALT_CODE>@ALT_CODE_DEFAULT</ALT_CODE>
             <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
             <NODE_ID>SCREEN_#NAME#</NODE_ID>

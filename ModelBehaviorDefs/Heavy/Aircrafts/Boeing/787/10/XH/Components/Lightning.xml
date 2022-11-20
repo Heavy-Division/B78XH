@@ -1,7 +1,7 @@
 <ModelBehaviors>
     <!-- ## Lightning -->
     <Template Name="HEAVY_LIGHTNING_Knob_Cabin_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>LIGHTING_Knob_Flood_#ID#</NODE_ID>
             <ANIM_NAME>LIGHTING_Knob_Flood_#ID#</ANIM_NAME>
             <Condition NotEmpty="BASE_POTENTIOMETER">
@@ -15,7 +15,7 @@
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Knob_Panel_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>LIGHTING_Knob_Panel_#ID#</NODE_ID>
             <ANIM_NAME>LIGHTING_Knob_Panel_#ID#</ANIM_NAME>
             <Condition NotEmpty="BASE_POTENTIOMETER">
@@ -29,7 +29,7 @@
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Sidewall_Backlights">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <Condition Check="ID" Match="1">
                 <TRUE>
                     <SIDE_SUFFIX>pilot</SIDE_SUFFIX>
@@ -298,7 +298,7 @@
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Overhead_Backlights">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
             <FAILURE>(A:LIGHT PANEL ON:4, Bool)</FAILURE>
         </Parameters>
@@ -421,7 +421,7 @@
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Aisle_Stand_Backlights">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
             <FAILURE>(A:LIGHT PANEL ON:3, Bool)</FAILURE>
         </Parameters>
@@ -605,7 +605,7 @@
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Center_Forward_Backlights">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
             <FAILURE>(A:LIGHT PANEL ON:3, Bool)</FAILURE>
         </Parameters>
@@ -637,7 +637,7 @@
     </Template>
 
     <Template Name="HEAVY_LIGHTNING_Glareshield_Backlights">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <FAILURE>(A:LIGHT PANEL ON:#ID#, Bool)</FAILURE>
             <EMISSIVE_CODE>@EMISSIVE_CODE_DEFAULT</EMISSIVE_CODE>
 

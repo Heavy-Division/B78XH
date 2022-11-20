@@ -1,7 +1,7 @@
 <ModelBehaviors>
     <!-- ## Glareshield -->
     <Template Name="HEAVY_AIRLINER_Push_Clock_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <Condition Check="ID" Match="1">
                 <TRUE>
                     <SIDE_SUFFIX>pilot</SIDE_SUFFIX>
@@ -19,7 +19,7 @@
     </Template>
 
     <Template Name="HEAVY_SAFETY_Push_WarningCaution_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>SAFETY_Push_WarningCaution_#ID#</NODE_ID>
             <ANIM_NAME>SAFETY_Push_WarningCaution_#ID#</ANIM_NAME>
             <NODE_ID_SEQ_1>SAFETY_Push_WarningCaution_#ID#_SEQ1</NODE_ID_SEQ_1>
@@ -259,7 +259,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Push_Autopilot_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>AUTOPILOT_Push_Autopilot_#ID#</NODE_ID>
             <ANIM_NAME>AUTOPILOT_Push_Autopilot_#ID#</ANIM_NAME>
         </Parameters>
@@ -271,7 +271,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Push_FlightDirector_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <TOGGLEABLE>@HG_TRUE</TOGGLEABLE>
             <NO_INDICATOR>@HG_TRUE</NO_INDICATOR>
             <NODE_ID>AUTOPILOT_Switch_FlightDirector_#ID#</NODE_ID>
@@ -283,7 +283,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Push_Fake_FlightDirector_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>AUTOPILOT_Switch_FlightDirector_#SWITCH_ID#</NODE_ID>
             <ANIM_NAME>AUTOPILOT_Switch_FlightDirector_#SWITCH_ID#</ANIM_NAME>
         </Parameters>
@@ -291,7 +291,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Push_Disengage_Bar_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <TOGGLEABLE>@HG_TRUE</TOGGLEABLE>
             <NO_INDICATOR>@HG_TRUE</NO_INDICATOR>
             <NO_TEXT_EMISSIVE>@HG_TRUE</NO_TEXT_EMISSIVE>
@@ -302,7 +302,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Push_AutoThrottle_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <ID>0</ID>
             <TYPE>AS01B</TYPE>
             <TOGGLEABLE>@HG_TRUE</TOGGLEABLE>
@@ -353,7 +353,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Push_SpeedToggle_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NO_INDICATOR>@HG_TRUE</NO_INDICATOR>
             <NO_TEXT_EMISSIVE>@HG_TRUE</NO_TEXT_EMISSIVE>
         </Parameters>
@@ -362,7 +362,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Knob_SpeedMach_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <TYPE>AS01B</TYPE>
         </Parameters>
 
@@ -382,7 +382,7 @@
     </Template>
 
     <Template Name="HEAVY_BOEING_Push_Heading_Track_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>Btn_main_panel_H_007</NODE_ID>
             <ANIM_NAME>Btn_main_panel_H_007</ANIM_NAME>
         </Parameters>
@@ -390,7 +390,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Knob_Bank_Limit_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <SETTINGS_COUNT>5</SETTINGS_COUNT>
             <NODE_ID>AUTOPILOT_Knob_Bank_Limit</NODE_ID>
             <ANIM_NAME>AUTOPILOT_Knob_Bank_Limit</ANIM_NAME>
@@ -514,7 +514,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Knob_Altitude_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>AUTOPILOT_Knob_Altitude_100</NODE_ID>
             <ANIM_NAME_KNOB>AUTOPILOT_Knob_Altitude_100</ANIM_NAME_KNOB>
             <ANIM_NAME_PUSH>AUTOPILOT_Knob_Altitude_100_Push</ANIM_NAME_PUSH>
@@ -523,7 +523,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Switch_Altitude_Increment_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>AUTOPILOT_Knob_Altitude_1000</NODE_ID>
             <ANIM_NAME>AUTOPILOT_Knob_Altitude_1000</ANIM_NAME>
         </Parameters>
@@ -535,7 +535,7 @@
     </Template>
 
     <Template Name="HEAVY_AUTOPILOT_Push_Approach_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <DISABLE_GPS_MODE>@HG_FALSE</DISABLE_GPS_MODE>
         </Parameters>
         <UseTemplate Name="ASOBO_AUTOPILOT_Push_Approach_Template" />

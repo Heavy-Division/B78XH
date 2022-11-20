@@ -14,7 +14,7 @@
     </Template>
 
     <Template Name="HEAVY_HANDLING_Switch_ElevatorTrim_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>HANDLING_Switch_Elevator_Trim_#ID#</NODE_ID>
             <ANIM_NAME>HANDLING_Switch_Elevator_Trim_#ID#</ANIM_NAME>
         </Parameters>

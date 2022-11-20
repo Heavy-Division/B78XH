@@ -11,7 +11,7 @@
     </Template>
 
     <Template Name="HEAVY_HANDLING_Lever_Spoilers_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <TYPE>AIRLINER</TYPE>
             <PHYSICAL_AUTOSPOILERS>@HG_TRUE</PHYSICAL_AUTOSPOILERS>
             <RETRACT_ARMED_FULL>@HG_TRUE</RETRACT_ARMED_FULL>
@@ -26,7 +26,7 @@
     </Template>
 
     <Template Name="HEAVY_ENGINE_Lever_Throttle_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NODE_ID>ENGINE_Lever_Throttle_#ID#</NODE_ID>
             <ANIM_NAME>ENGINE_Lever_Throttle_#ID#</ANIM_NAME>
             <NODE_ID_REVERSER>ENGINE_Lever_Throttle_Reverser_#ID#</NODE_ID_REVERSER>
@@ -41,14 +41,14 @@
     </Template>
 
     <Template Name="HEAVY_ENGINE_Push_TOGA_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <ON_PUSH_TO_GA>(&gt;H:AS01B_FMC_1_THROTTLE_TO_GA)</ON_PUSH_TO_GA>
         </Parameters>
         <UseTemplate Name="ASOBO_ENGINE_Push_TOGA_Template"/>
     </Template>
 
     <Template Name="HEAVY_FUEL_Switch_Valve_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <Switch Param="SIDE">
                 <Case Value="L">
                     <ID>1</ID>
@@ -67,7 +67,7 @@
     </Template>
 
     <Template Name="HEAVY_HANDLING_Lever_Flaps_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <ANIM_LAG>35</ANIM_LAG>
             <MAX_HANLDE_INDEX>9</MAX_HANLDE_INDEX>
         </Parameters>
@@ -76,7 +76,7 @@
     </Template>
 
     <Template Name="HEAVY_AIRLINER_Audio_Panel_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <TYPE>AS01B</TYPE>
             <NO_LIGHT>@HG_TRUE</NO_LIGHT>
             <NO_SEQ2>@HG_TRUE</NO_SEQ2>
@@ -115,7 +115,7 @@
     </Template>
 
     <Template Name="HEAVY_HANDLING_Switch_RudderTrim_Template">
-        <Parameters Type="Defaults">
+        <Parameters Type="Default">
             <NO_RESET_PUSH>@HG_TRUE</NO_RESET_PUSH>
             <CREATE_SOUNDEVENTS_SAME_TRIGGER>@HG_TRUE</CREATE_SOUNDEVENTS_SAME_TRIGGER>
             <DONT_CREATE_SOUND_ANIM_TRIGGERS>@HG_TRUE</DONT_CREATE_SOUND_ANIM_TRIGGERS>
