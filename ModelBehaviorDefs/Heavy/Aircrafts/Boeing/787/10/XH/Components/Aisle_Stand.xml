@@ -290,9 +290,10 @@
                             </False>
                         </Condition>
                     </Parameters>
-                    <UseTemplate Name="HEAVY_BOEING_Push_HTML_Generic_Template">
+                    <UseTemplate Name="HEAVY_BOEING_Push_SIMCONNECT_EVENT_Generic_Template">
                         <ANIM_NAME>#BUTTON_NAME_PREFIX#_Push_#BTN_NODE_ID##SUFFIX_ID#</ANIM_NAME>
                         <NODE_ID>#BUTTON_NAME_PREFIX#_Push_#BTN_NODE_ID##SUFFIX_ID#</NODE_ID>
+                        <KEY_EVENT>B78XH.CONTROL_IDS_TCP</KEY_EVENT>
                     </UseTemplate>
                 </Do>
             </Loop>

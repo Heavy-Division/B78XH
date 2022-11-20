@@ -213,6 +213,58 @@
             </True>
         </Condition>
     </Template>
-    <!-- End: Common Buttons -->
 
+
+
+    <Template Name="HEAVY_BOEING_Push_SIMCONNECT_EVENT_Generic_Template">
+        <Parameters Type="Default">
+            <ID>1</ID>
+            <KEY_EVENT>B78XH.UNKNOWN_OR_MISSING_EVENT</KEY_EVENT>
+        </Parameters>
+        <Parameters Type="Default">
+            <NODE_ID>BOEING_Push_#ID_BTN#_#ID#</NODE_ID>
+            <ANIM_NAME>BOEING_Push_#ID_BTN#_#ID#</ANIM_NAME>
+            <Condition Valid="EMISSIVE_BUTTON">
+                <False>
+                    <NODE_ID_DECAL>BOEING_Push_#ID_BTN#_#ID#_Text</NODE_ID_DECAL>
+                </False>
+            </Condition>
+            <PART_ID>BOEING_Push_#ID_BTN#</PART_ID>
+            <WWISE_EVENT_1>autopilot_push_button2_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>autopilot_push_button2_off</WWISE_EVENT_2>
+            <!-- <ON_PUSH_EVENT>#CUR_ID# (&gt;L:CONTROL_SWITCH_COM_#ID#)</ON_PUSH_EVENT> -->
+            <ON_PUSH_EVENT>#CUR_ID# '#KEY_EVENT#_#ID#' (&gt;F:KeyEvent)</ON_PUSH_EVENT>
+            <Condition>
+                <Test>
+                    <And>
+                        <Arg Valid="EMISSIVE_BUTTON"/>
+                        <Arg Check="POTENTIOMETER"/>
+                    </And>
+                </Test>
+                <True>
+                    <EMISSIVE_TEMPLATE_TO_USE>ASOBO_GT_Emissive_Potentiometer</EMISSIVE_TEMPLATE_TO_USE>
+                </True>
+            </Condition>
+        </Parameters>
+        <UseTemplate Name="ASOBO_AIRLINER_Base_Template">
+            <INTERACTION_TYPE>Push</INTERACTION_TYPE>
+            <SET_STATE_EXTERNAL>if{ #ON_PUSH_EVENT# }</SET_STATE_EXTERNAL>
+            <IE_NAME>#ID_BTN#_#ID#</IE_NAME>
+        </UseTemplate>
+        <Condition>
+            <Test>
+                <And>
+                    <Arg Valid="NODE_ID_DECAL"/>
+                    <Arg Check="POTENTIOMETER"/>
+                </And>
+            </Test>
+            <True>
+                <Component ID="#NODE_ID_DECAL#" Node="#NODE_ID_DECAL#">
+                    <UseTemplate Name="ASOBO_GT_Emissive_Potentiometer"/>
+                </Component>
+            </True>
+        </Condition>
+    </Template>
+
+    <!-- End: Common Buttons -->
 </ModelBehaviors>
