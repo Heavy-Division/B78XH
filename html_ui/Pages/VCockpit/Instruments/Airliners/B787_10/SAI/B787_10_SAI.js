@@ -21,6 +21,14 @@ class B787_10_SAI extends BaseAirliners {
 		if (this.B78XHSystems) {
 			this.B78XHSystems.update(_deltaTime);
 		}
+
+		const stallSpeed = Simplane.getStallSpeed();
+		const stallProtectionMinSpeed = Simplane.getStallProtectionMinSpeed();
+		const stallProtectionMaxSpeed = Simplane.getStallProtectionMaxSpeed();
+
+		SimVar.SetSimVarValue('L:B78XH_L_TRANSFER_PROTOCOL_STALL_SPEED', 'Number', stallSpeed);
+		SimVar.SetSimVarValue('L:B78XH_L_TRANSFER_PROTOCOL_STALL_PROTECTION_MIN_SPEED', 'Number', stallProtectionMinSpeed);
+		SimVar.SetSimVarValue('L:B78XH_L_TRANSFER_PROTOCOL_STALL_PROTECTION_MAX_SPEED', 'Number', stallProtectionMaxSpeed);
 	}
 
 	onFlightStart() {

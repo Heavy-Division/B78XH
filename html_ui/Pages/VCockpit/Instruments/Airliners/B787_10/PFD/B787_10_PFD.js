@@ -62,19 +62,9 @@ class B787_10_PFD_MainPage extends NavSystemPage {
 		this._debugShowConstraints = false;
 		this.map = new B787_10_PFD_Map();
 		this.compass = new B787_10_PFD_Compass();
-		this.plane = new B787_10_PFD_PlaneInfo();
-		this.day = new B787_10_PFD_DayInfo();
 		this.element = new NavSystemElementGroup([
-			new B787_10_PFD_Attitude(),
-			new B787_10_PFD_VSpeed(),
-			new B787_10_PFD_Airspeed(),
-			new B787_10_PFD_Altimeter(),
-			new B787_10_PFD_NavStatus(),
-			new B787_10_PFD_ILS(),
 			this.map,
 			this.compass,
-			this.plane,
-			this.day
 		]);
 	}
 

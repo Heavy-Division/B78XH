@@ -81,7 +81,7 @@ b787-10-pfd-element {
     width: 100%;
     height: 100%;
     display: block;
-    background-color: black;
+    background-color: rgba(0,0,0,0);
     font-family: Roboto-Bold;
     overflow: hidden;
     z-index: 0;
@@ -112,6 +112,7 @@ b787-10-pfd-element #MainFrame {
 }
 
 b787-10-pfd-element #LeftDisplay {
+    opacity: 0;
     transform: rotateX(0);
     flex: 0 0 33%;
     /* width: 33%; */
@@ -209,6 +210,7 @@ b787-10-pfd-element #RightDisplay {
 }
 
 b787-10-pfd-element #RightDisplay > .top {
+    visibility: hidden;
     transform: rotateX(0);
     position: relative;
     flex: 0 0 65%;
@@ -295,7 +297,7 @@ b787-10-pfd-element #RightDisplay > .bottom {
     transform: rotateX(0);
     position: relative;
     flex: 0 0 35%;
-    background: black;
+    background: rgba(0,0,0,0);
     overflow: hidden;
 }
 
