@@ -31,12 +31,101 @@
     </Template>
 
     <Template Name="HEAVY_BOEING_Knob_Mins_Template">
-        <UseTemplate Name="ASOBO_BOEING_Knob_Mins_Template">
+        <Parameters Type="Default">
+            <ID>1</ID>
             <NODE_ID>Knob_Minimums_#ID#</NODE_ID>
             <ANIM_NAME>Knob_Minimums_#ID#</ANIM_NAME>
             <BUTTON_NODE_ID>Push_Minimums_Reset_#ID#</BUTTON_NODE_ID>
             <BUTTON_ANIM_NAME>Push_Minimums_Reset_#ID#</BUTTON_ANIM_NAME>
-        </UseTemplate>
+        </Parameters>
+        <Parameters Type="Default">
+            <NODE_ID>BOEING_Knob_Mins_#ID#</NODE_ID>
+            <ANIM_NAME>BOEING_Knob_Mins_#ID#</ANIM_NAME>
+            <BUTTON_NODE_ID>BOEING_Knob_Mins_#ID#_Push</BUTTON_NODE_ID>
+            <BUTTON_ANIM_NAME>BOEING_Knob_Mins_#ID#_Push</BUTTON_ANIM_NAME>
+            <PART_ID>BOEING_Knob_Mins</PART_ID>
+            <SYSTEM_NAME>PFD</SYSTEM_NAME>
+            <WWISE_EVENT>autopilot_mins_knob</WWISE_EVENT>
+            <WWISE_PREFIX>autopilot_mins_knob</WWISE_PREFIX>
+            <TT_DESCRIPTION_ID>@TT_Package.AIRLINER_KNOB_BARO_KNOB_MINS_ACTION</TT_DESCRIPTION_ID>
+            <TOOLTIP_TITLE>@TT_Package.AIRLINER_KNOB_BARO_KNOB_MINS_TITLE</TOOLTIP_TITLE>
+            <TT_DESCRIPTION_ID_BUTTON>@TT_Package.AIRLINER_KNOB_BARO_PUSH_MINS_ACTION</TT_DESCRIPTION_ID_BUTTON>
+            <TOOLTIP_TITLE_BUTTON>@TT_Package.AIRLINER_KNOB_BARO_PUSH_MINS_TITLE</TOOLTIP_TITLE_BUTTON>
+        </Parameters>
+        <Parameters Type="Override">
+            <IE_NAME_KNOB>Mins</IE_NAME_KNOB>
+            <IE_NAME_BTN>Mins_Button</IE_NAME_BTN>
+        </Parameters>
+        <Component ID="Knob_Mins">
+            <UseTemplate Name="ASOBO_AIRLINER_Base_Template">
+                <INTERACTION_TYPE>Knob</INTERACTION_TYPE>
+                <IE_NAME>#IE_NAME_KNOB#</IE_NAME>
+                <!-- Time implementation -->
+                <!--
+                (O:LastMoveTime) 0.200 + (E:SIMULATION TIME, seconds) &gt; if{
+                    10 (&gt;O:IncrementValue)
+                } els{
+                    1 (&gt;O:IncrementValue)
+                }
+                -->
+                <SET_STATE_EXTERNAL>
+                    <!-- Continuous implementation -->
+                    (O:Counter) ++ (&gt;O:Counter)
+
+                    (O:LastMoveTime) 1 + (E:SIMULATION TIME, seconds) &gt; if{
+                        1 (&gt;O:InTimeLimit)
+                    } els{
+                        0 (&gt;O:InTimeLimit)
+                        1 (&gt;O:Counter)
+                    }
+
+                    (O:Counter) 10 &gt; if{
+                        1 (&gt;O:Continuous)
+                    } els{
+                        0 (&gt;O:Continuous)
+                    }
+
+                    (O:InTimeLimit) 1 == (O:Continuous) 1 == and if{
+                        10 (&gt;O:IncrementValue)
+                    } els{
+                        1 (&gt;O:IncrementValue)
+                    }
+
+                    p0 0 &gt; if{
+                        (L:XMLVAR_Mins_Selector_Baro, Bool) 1 == if{
+                            (O:IncrementValue) (&gt;K:INCREASE_DECISION_ALTITUDE_MSL)
+                        } els{
+                            (O:IncrementValue) (&gt;K:INCREASE_DECISION_HEIGHT)
+                        }
+                    } els{
+                        (L:XMLVAR_Mins_Selector_Baro, Bool) 1 == if{
+                            (O:IncrementValue) (&gt;K:DECREASE_DECISION_ALTITUDE_MSL)
+                        } els{
+                            (O:IncrementValue) (&gt;K:DECREASE_DECISION_HEIGHT)
+                        }
+                    }
+
+                    (E:SIMULATION TIME, seconds) (&gt;O:LastMoveTime)
+                </SET_STATE_EXTERNAL>
+                <IS_INFINITE>True</IS_INFINITE>
+                <COUNT>36</COUNT>
+            </UseTemplate>
+            <UseTemplate Name="ASOBO_AIRLINER_Base_Template">
+                <INTERACTION_TYPE>Push</INTERACTION_TYPE>
+                <IE_NAME>#IE_NAME_BTN#</IE_NAME>
+                <SET_STATE_EXTERNAL>
+                    (L:XMLVAR_Mins_Selector_Baro, Bool) 1 == if{
+                        200 (&gt;K:SET_DECISION_ALTITUDE_MSL)
+                    } els{
+                        200 (&gt;K:SET_DECISION_HEIGHT)
+                    }
+                </SET_STATE_EXTERNAL>
+                <ANIM_NAME>#BUTTON_ANIM_NAME#</ANIM_NAME>
+                <NODE_ID>#BUTTON_NODE_ID#</NODE_ID>
+                <TT_DESCRIPTION_ID>#TT_DESCRIPTION_ID_BUTTON#</TT_DESCRIPTION_ID>
+                <TOOLTIP_TITLE>#TOOLTIP_TITLE_BUTTON#</TOOLTIP_TITLE>
+            </UseTemplate>
+        </Component>
     </Template>
 
     <Template Name="HEAVY_BOEING_Switch_Mins_Selector_Template">
