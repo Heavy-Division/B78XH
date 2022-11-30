@@ -3,7 +3,7 @@
 
 
 <div style="color:red; font-size: medium; font-weight: bold">
-    This guide is deprecated
+    **This guide is deprecated**
 </div>
 
 **The systems and display implementations have been moved to our [WASM repo](https://github.com/Heavy-Division/B78XH-wasm).**
