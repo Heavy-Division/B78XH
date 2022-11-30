@@ -1,8 +1,8 @@
 # Contributing to B78X Heavy
 
-## What can be worked on/altered? 
 
-<div style="color:red; font-size: medium">
+
+<div style="color:red; font-size: medium; font-weight: bold">
     This guide is deprecated
 </div>
 
@@ -18,7 +18,7 @@ WASM repo.**
 Thank you for your interest in contributing to the B78X Heavy project. Before you begin, it is necessary to understand what you want to work on, and whether it is possible due to the encryption of various 787-10 source code files. 
 
 > Keep in mind this list is not set in stone, and Asobo may unlock more of the files to allow 3rd party changes. 
-
+## What can be worked on/altered?
 ### Possible projects/changes ✅
 * All display frontends (Except EFB)
 * Autopilot logic
