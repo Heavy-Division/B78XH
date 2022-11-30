@@ -2,6 +2,19 @@
 
 ## What can be worked on/altered? 
 
+<div style="color:red; font-size: medium">
+    This guide is deprecated
+</div>
+
+**The systems and display implementations have been moved to our [WASM repo](https://github.com/Heavy-Division/B78XH-wasm).**
+
+**If you would like to contribute to the displays, equipment, or systems logic, please see the contributing guide in the
+WASM repo.**
+
+[B78XH-wasm Contributing](https://github.com/Heavy-Division/B78XH-wasm/blob/master/.github/CONTRIBUTING.md)
+
+---------------------------------------
+
 Thank you for your interest in contributing to the B78X Heavy project. Before you begin, it is necessary to understand what you want to work on, and whether it is possible due to the encryption of various 787-10 source code files. 
 
 > Keep in mind this list is not set in stone, and Asobo may unlock more of the files to allow 3rd party changes. 
@@ -18,7 +31,6 @@ Thank you for your interest in contributing to the B78X Heavy project. Before yo
 ### Unable to alter/add due to encryption ❌
 * Forking into a separate aircraft from the default
 * Alterations to the 3D model (e.g. EFB)
-* Non-existing Animations
 * Cockpit Textures/Text
 
 ## Setup
