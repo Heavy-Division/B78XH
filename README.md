@@ -9,7 +9,7 @@
 
 ## About
 
-B78XH is an open source and free modification of default Boeing 787-10 in Microsoft Flight Simulator.
+B78XH is a free and open source modification of the default Boeing 787-10 for Microsoft Flight Simulator.
 
 ## Installation
 
