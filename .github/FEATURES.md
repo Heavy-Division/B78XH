@@ -1,8 +1,8 @@
-## Features Overview
+# Features Overview
 
-### FMC
+## FMC
 
-#### VNAV
+### VNAV
 
 - CLB Speed restriction
 - CLB Selected speed
@@ -20,21 +20,21 @@
 - DES NOW (descent path calculation not supported now)
 - Climb leveling off
 
-#### LEGS
+### LEGS
 
 - Cruise speed fixed
 - DIRECT TO (basic)
 
-#### ROUTE
+### ROUTE
 
 - Airways support
 - All waypoints between first and last added waypoint are inserted to Legs page
 
-#### MISC
+### MISC
 
 - "HEAVY" button added (misc & configuration of mod)
 
-### ND/MFD
+## ND/MFD
 
 - MFD is touchable on both sides
 - ND symbols changed to default Boeing symbols
@@ -42,7 +42,7 @@
 - TOD
 - TOC
 
-### EICAS / SYS
+## EICAS / SYS
 
 - Gears synoptic page
 - Hydraulics synoptic page
@@ -50,12 +50,13 @@
 - FCTL synoptic page
 - AIR synoptic page (static)
 
-### MISC
+## MISC
 
 - Added HEAVY configuration page
 - Payload Manager added to HEAVY configuration page
+- Fix L Center Fuel Pump switch from cutting off APU
 
-### Payload manager
+## Payload manager
 
 - CG range 0 - 100%
 - FOB range 0 - 33384 Gallons
