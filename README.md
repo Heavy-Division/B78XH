@@ -1,7 +1,7 @@
 # B78XH (B787-10 Heavy)
 
-![Heavy Division](https://github.com/Heavy-Division/branding/blob/main/src/png/Logo%20Dark.png#gh-dark-mode-only)
-![Heavy Division](https://github.com/Heavy-Division/branding/blob/main/src/png/Logo%20Light.png#gh-light-mode-only)
+![Heavy Division](https://github.com/Heavy-Division/branding/blob/main/src/svg/Logo%20Dark.svg#gh-dark-mode-only)
+![Heavy Division](https://github.com/Heavy-Division/branding/blob/main/src/svg/Logo%20Light.svg#gh-light-mode-only)
 
 [![Discord](https://img.shields.io/discord/808476259016769546?color=7289da&logoColor=ffffff&labelColor=99aab5&logo=discord&label=)](https://discord.gg/CfHuVbWfpQ)
 [![Github All Releases](https://img.shields.io/github/downloads/Heavy-Division/B78XH/total?color=%230761e2)](https://github.com/Heavy-Division/B78XH/releases/tag/v0.1.14)
