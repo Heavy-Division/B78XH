@@ -18,82 +18,43 @@ from [our website](https://hdsimulations.com/downloads/)
 
 The latest release available at https://github.com/Heavy-Division/B78XH/releases will be the latest stable version.
 
-## Features Overview
+## Features
 
-* ### FMC
-  #### VNAV
-        * CLB Speed restriction
-        * CLB Selected speed
-        * CLB Selected speed can be deleted by ECON prompt
-        * CLB settable transition altitude
-        * CLB FMC commanded speed is highlighted by magenta
-        * CLB page title depends on commanded speed (ACT/MOD ECON CLB, ACT/MOD xxxKT CLB, ...)
-        * CRZ settable selected speed
-        * CRZ FMC commanded speed is highlighted by magenta
-        * CRZ Selected speed can be deleted by ECON prompt
-        * CRZ page title depends on commanded speed (ACT/MOD ECON CRZ, ACT/MOD xxxKT CRZ, ...)
-        * Cruise Climb
-        * Cruise Descent
-        * Early descent (descent path calculation not supported now)
-        * DES NOW (descent path calculation not supported now)
-        * Climb leveling off
-    * #### LEGS
-        * Cruise speed fixed
-        * DIRECT TO (basic)
-    * #### ROUTE
-        * Airways support
-        * All waypoints between first and last added waypoint are inserted to Legs page
-    * #### MISC
-        * "HEAVY" button added (misc & configuration of mod)
+- Basic functional VNAV and LNAV behaviors
+- simBrief flight planning implementation
+- IRS Functionality
+- Fuel and Payload Manager
+- Re-design of FMC interface to reflect the real version
+- Replaced default ND icons with real versions
 
-* ### ND/MFD
-    * MFD is touchable on both sides
-    * ND symbols changed to default Boeing symbols
-    * Altitude Range Arc (ARA) [Green banana]
-    * TOD
-    * TOC
+Read the full [feature guide](.github/FEATURES.md) for a more detailed overview of B78XH features.
 
-* ### EICAS / SYS
-    * Gears synoptic page
-    * Hydraulics synoptic page
-    * Stat page
-    * FCTL synoptic page
-    * AIR synoptic page (static)
+## Contributing
+Read our [contributing guide](.github/CONTRIBUTING.md) to get started.
 
-* ### MISC
-    * Added HEAVY configuration page
-    * Payload Manager added to HEAVY configuration page
-    * SimRate Manager added to HEAVY configuration page
+## FAQ
 
-* ### Payload manager
-    * CG range 0 - 100%
-    * FOB range 0 - 33384 Gallons
-    * Payload range 0 - 560000 Pounds
-    * FOB can be set only in Gallons
-    * Payload can be set only in Pounds
-    * Fuel tanks priority groups:
-        * LEFT MAIN, RIGHT MAIN
-        * CENTER
-    * "new" ZFW is set automatically by payload manager
-    * manager do not check "GrossWeight" > "Max takeoff weight" (you can overload an aircraft)
+### When is the Next Update?
 
-# ND
+We don't know when the next update will be, however you can keep track of development in b78xh-updates and dev-screenshots.
 
-| Default MSFS 787 ND                                     | B787-10 Heavy ND                                      |
-|---------------------------------------------------------|-------------------------------------------------------|
-| <img src="DOCS/images/map/nd_default.png" width="100%"> | <img src="DOCS/images/map/nd_heavy.png" width="100%"> |
+### How do I join the team?
 
-|                                            Symbol (default)                                            |                                            Symbol (Heavy)                                            | Name               | ND Mode | Remarks |
-|:------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------:|--------------------|---------|---------|
-|          <img src="DOCS/images/map/default/ICON_MAP_INTERSECTION.png" width="32" height="32">          |          <img src="DOCS/images/map/heavy/ICON_MAP_INTERSECTION.png" width="32" height="32">          | Off route waypoint |||
-|    <img src="DOCS/images/map/default/ICON_MAP_INTERSECTION_FLIGHTPLAN.png" width="32" height="32">     |    <img src="DOCS/images/map/heavy/ICON_MAP_INTERSECTION_FLIGHTPLAN.png" width="32" height="32">     | Waypoint inactive  |||
-| <img src="DOCS/images/map/default/ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png" width="32" height="32"> | <img src="DOCS/images/map/heavy/ICON_MAP_INTERSECTION_FLIGHTPLAN_ACTIVE.png" width="32" height="32"> | Waypoint active    |||
-|            <img src="DOCS/images/map/default/ICON_MAP_AIRPORT.png" width="32" height="32">             |            <img src="DOCS/images/map/heavy/ICON_MAP_AIRPORT.png" width="32" height="32">             | Airport            |||
-|              <img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">               |              <img src="DOCS/images/map/heavy/ICON_MAP_VOR.png" width="32" height="32">               | VOR                |||
-|              <img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">               |            <img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">             | VOR/DME            |||
-|              <img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">               |           <img src="DOCS/images/map/heavy/ICON_MAP_VOR_TACAN.png" width="32" height="32">            | TACAN              |||
-|              <img src="DOCS/images/map/default/ICON_MAP_VOR.png" width="32" height="32">               |            <img src="DOCS/images/map/heavy/ICON_MAP_VOR_DME.png" width="32" height="32">             | VORTAC             |||
+Applications for developers are available [here](https://docs.google.com/forms/d/e/1FAIpQLSflPA5f4-qopkpgG_MAc46ooBJGWygljyPTCBlr2COsOK6G3w/viewform)
 
-# ND - Altitude prediction (BANANA)
+### Is it payware?
+No, it is completely free and open-source. However, you must own the Premium Deluxe DLC for Microsoft Flight Simulator to use the modification.
 
-<img src="DOCS/images/map/nd_banana.png" width="100%">
+### Where do we report bugs?
+Report it the github [issues](https://github.com/Heavy-Division/B78XH/issues/new/choose) tab.
+
+### Where is the plane in-sim?
+The B78XH is a modification of the default premium deluxe aircraft, it will not appear as separate from the default.
+You need to own the premium deluxe version of MSFS to use the Heavy Division Mod.
+
+### Is this "study-level" ?
+While we are dedicated to bringing the most accurate 787 simulation to the platform, "study-level" would not be an
+appropriate term, as it connotes FAA certification and licensing which we do not have the resources for.
+
+### Will [X] be implemented in the future?
+The general rule of thumb is if it's in the real aircraft, it will be implemented with ours with some limitations until further notice due to copyright (3D model changes).
