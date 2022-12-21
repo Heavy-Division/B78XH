@@ -32,6 +32,9 @@ Read the full [feature guide](.github/FEATURES.md) for a more detailed overview 
 ## Contributing
 Read our [contributing guide](.github/CONTRIBUTING.md) to get started.
 
+## Known Issues
+Please read our [known issues](https://github.com/Heavy-Division/docs/blob/main/docs/B78XH/support/reported-issues.md) list before reporting bugs or asking for support.
+
 ## FAQ
 
 ### When is the Next Update?
