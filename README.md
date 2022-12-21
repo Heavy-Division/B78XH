@@ -36,7 +36,8 @@ Read our [contributing guide](.github/CONTRIBUTING.md) to get started.
 
 ### When is the Next Update?
 
-We don't know when the next update will be, however you can keep track of development in b78xh-updates and dev-screenshots.
+We don't know when the next update will be. We do not enforce deadlines on our volunteer developers and value high-quality and polished releases
+over quick and unfinished ones. 
 
 ### How do I join the team?
 
