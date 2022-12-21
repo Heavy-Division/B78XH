@@ -17,13 +17,16 @@
 - Early descent (descent path calculation not supported now)
 - DES NOW (descent path calculation not supported now)
 - Climb leveling off
-- #### LEGS
+
+#### LEGS
 - Cruise speed fixed
 - DIRECT TO (basic)
-- #### ROUTE
+
+#### ROUTE
 - Airways support
 - All waypoints between first and last added waypoint are inserted to Legs page
-- #### MISC
+
+#### MISC
 - "HEAVY" button added (misc & configuration of mod)
 
 ### ND/MFD
