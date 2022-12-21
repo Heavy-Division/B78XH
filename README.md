@@ -46,7 +46,7 @@ Applications for developers are available [here](https://docs.google.com/forms/d
 No, it is completely free and open-source. However, you must own the Premium Deluxe DLC for Microsoft Flight Simulator to use the modification.
 
 ### Where do we report bugs?
-Report it the github [issues](https://github.com/Heavy-Division/B78XH/issues/new/choose) tab.
+Report bugs using the github [issues](https://github.com/Heavy-Division/B78XH/issues/new/choose) tab.
 
 ### Where is the plane in-sim?
 The B78XH is a modification of the default premium deluxe aircraft, it will not appear as separate from the default.
