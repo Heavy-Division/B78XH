@@ -16,7 +16,7 @@ B78XH is an open source and free modification of default Boeing 787-10 in Micros
 Download the latest stable, development, or experimental version
 from [our website](https://hdsimulations.com/downloads/)
 
-The latest release availible at https://github.com/Heavy-Division/B78XH/releases will be the latest stable version.
+The latest release available at https://github.com/Heavy-Division/B78XH/releases will be the latest stable version.
 
 ## Features Overview
 
