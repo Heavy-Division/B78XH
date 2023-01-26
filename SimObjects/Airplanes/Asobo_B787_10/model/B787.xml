@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <ModelInfo>
 	<LODS>
-        	<LOD minSize="150" ModelFile="B787_10_LOD00.gltf"/>
-        	<LOD minSize="90" ModelFile="B787_10_LOD01.gltf"/>
-        	<LOD minSize="60" ModelFile="B787_10_LOD02.gltf"/>
-        	<LOD minSize="30" ModelFile="B787_10_LOD03.gltf"/>
-        	<LOD minSize="15" ModelFile="B787_10_LOD04.gltf"/>
-        	<LOD minSize="3" ModelFile="B787_10_LOD05.gltf"/>
-        	<LOD minSize="1" ModelFile="B787_10_LOD06.gltf"/>
+		<LOD minSize="150" ModelFile="B787_lod0.gltf"/>
+		<LOD minSize="110" ModelFile="B787_lod1.gltf"/>
+		<LOD minSize="75" ModelFile="B787_lod2.gltf"/>
+		<LOD minSize="50" ModelFile="B787_lod3.gltf"/>
+		<LOD minSize="15" ModelFile="B787_lod4.gltf"/>
+		<LOD minSize="2" ModelFile="B787_lod5.gltf"/>
+		<LOD minSize="1" ModelFile="B787_lod6.gltf"/>
 	</LODS>
 	<!-- Custom animation definition. -->
 	<!-- This can be used when node movement depends on the simvars in a more complex way. -->
@@ -17,7 +17,6 @@
 		<!-- Alternatively we could script the angles for the wingflex -->
 		<!-- Just define some nodes/bones to move for now (this configuration will likely change at some point) -->
 		<!-- 	order	:	node 															-->
-		<!-- 	--------------------------------------------------------------------------- -->
 		<!-- 	0	:	the left wing bone closest to the center 							-->
 		<!-- 	1	:	in between 															-->
 		<!-- 	2	:	in between 															-->
@@ -30,113 +29,38 @@
 		<!-- 	9	:	the left wing engine pivot node furthest from the center 			-->
 		<!-- 	10	:	the right wing engine pivot node closest to the center 				-->
 		<!-- 	11	:	the right wing engine pivot node furthest from the center 			-->
-		<Node>WING_BONE_LEFT_01</Node> <!-- the left wing bone closest to the center -->
-		<Node>WING_BONE_LEFT_02</Node> <!-- in between -->
-		<Node>WING_BONE_LEFT_03</Node> <!-- in between -->
-		<Node>WING_BONE_LEFT_04</Node> <!-- the left wing bone furthest from the center -->
-		<Node>WING_BONE_RIGHT_01</Node> <!-- the right wing bone closest to the center -->
-		<Node>WING_BONE_RIGHT_02</Node> <!-- in between -->
-		<Node>WING_BONE_RIGHT_03</Node> <!-- in between -->
-		<Node>WING_BONE_RIGHT_04</Node> <!-- the right wing bone furthest from the center -->
-		<Node>Engine_PIVOT_LEFT_1</Node> <!-- the left wing engine pivot node closest to the center -->
-		<Node>Engine_PIVOT_LEFT_2</Node> <!-- the left wing engine pivot node furthest from the center -->
-		<Node>Engine_PIVOT_RIGHT_1</Node> <!-- the right wing engine pivot node closest to the center -->
-		<Node>Engine_PIVOT_RIGHT_2</Node> <!-- the right wing engine pivot node furthest from the center -->
+		<Node>WING_BONE_LEFT_01</Node>
+		<!-- the left wing bone closest to the center -->
+		<Node>WING_BONE_LEFT_02</Node>
+		<!-- in between -->
+		<Node>WING_BONE_LEFT_03</Node>
+		<!-- in between -->
+		<Node>WING_BONE_LEFT_04</Node>
+		<!-- the left wing bone furthest from the center -->
+		<Node>WING_BONE_RIGHT_01</Node>
+		<!-- the right wing bone closest to the center -->
+		<Node>WING_BONE_RIGHT_02</Node>
+		<!-- in between -->
+		<Node>WING_BONE_RIGHT_03</Node>
+		<!-- in between -->
+		<Node>WING_BONE_RIGHT_04</Node>
+		<!-- the right wing bone furthest from the center -->
+		<Node>Engine_PIVOT_LEFT_1</Node>
+		<!-- the left wing engine pivot node closest to the center -->
+		<Node>Engine_PIVOT_LEFT_2</Node>
+		<!-- the left wing engine pivot node furthest from the center -->
+		<Node>Engine_PIVOT_RIGHT_1</Node>
+		<!-- the right wing engine pivot node closest to the center -->
+		<Node>Engine_PIVOT_RIGHT_2</Node>
+		<!-- the right wing engine pivot node furthest from the center -->
 	</NodeAnimation>
 	<Behaviors>
 		<Include ModelBehaviorFile="Asobo\Common.xml"/>
 		<Include ModelBehaviorFile="Asobo\Exterior.xml"/>
-		<Include ModelBehaviorFile="Asobo\Airliner\FMC.xml"/>
-		<Include ModelBehaviorFile="Asobo\Airliner\Boeing.xml"/>
-		<Include ModelBehaviorFile="Asobo\Airliner\AirlinerCommon.xml"/>
-                <Include ModelBehaviorFile="Heavy\Engines\Index.xml"/>
 		<Include RelativeFile="B787_FX.xml"/>
-		<!--AsoboFlaps-->
-		<Component ID="LIGHTING_Emissives">
-			<DefaultTemplateParameters>
-				<ALT_CODE>(A:LIGHT POTENTIOMETER:31, Percent over 100) 0 (L:XMLVAR_LightMasterActive) ?</ALT_CODE>
-			</DefaultTemplateParameters>
-			<Component ID="Overhead">
-				<DefaultTemplateParameters>
-					<POTENTIOMETER>24</POTENTIOMETER>
-					<EMISSIVE_CODE>0.5</EMISSIVE_CODE>
-					<FAILURE>(A:LIGHT PANEL ON:4, Bool)</FAILURE>
-				</DefaultTemplateParameters>
-				<UseTemplate Name="ASOBO_LIGHTING_Panel_Emissive_Template">
-					<NODE_ID>LIGHTING_Backlight_Overhead_Emissive</NODE_ID>
-					<SIMVAR_INDEX>4</SIMVAR_INDEX>
-				</UseTemplate>
-			</Component>
-			<Component ID="Pedestal">
-				<DefaultTemplateParameters>
-					<POTENTIOMETER>23</POTENTIOMETER>
-					<EMISSIVE_CODE>0.5</EMISSIVE_CODE>
-					<FAILURE>(A:LIGHT PANEL ON:3, Bool)</FAILURE>
-				</DefaultTemplateParameters>
-				<UseTemplate Name="ASOBO_LIGHTING_Panel_Emissive_Template">
-					<NODE_ID>LIGHTING_Backlight_Pedestal_Emissive</NODE_ID>
-					<SIMVAR_INDEX>3</SIMVAR_INDEX>
-				</UseTemplate>
-			</Component>
-			<Component ID="Glareshield">
-				<Component ID="Pilot">
-					<DefaultTemplateParameters>
-						<POTENTIOMETER>17</POTENTIOMETER>
-						<EMISSIVE_CODE>0.5</EMISSIVE_CODE>
-						<FAILURE>(A:LIGHT PANEL ON:1, Bool)</FAILURE>
-					</DefaultTemplateParameters>
-					<UseTemplate Name="ASOBO_LIGHTING_Panel_Emissive_Template">
-						<NODE_ID>LIGHTING_Backlight_Panel_1_Emissive</NODE_ID>
-						<SIMVAR_INDEX>1</SIMVAR_INDEX>
-					</UseTemplate>
-					<UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
-						<NODE_ID>LIGHTING_Backlight_Glareshield_Emissive</NODE_ID>
-					</UseTemplate>
-				</Component>
-				<Component ID="Copilot">
-					<DefaultTemplateParameters>
-						<POTENTIOMETER>19</POTENTIOMETER>
-						<EMISSIVE_CODE>0.5</EMISSIVE_CODE>
-						<FAILURE>(A:LIGHT PANEL ON:2, Bool)</FAILURE>
-					</DefaultTemplateParameters>
-					<UseTemplate Name="ASOBO_LIGHTING_Panel_Emissive_Template">
-						<NODE_ID>LIGHTING_Backlight_Panel_2_Emissive</NODE_ID>
-						<SIMVAR_INDEX>2</SIMVAR_INDEX>
-					</UseTemplate>
-					<UseTemplate Name="ASOBO_GT_Component_Emissive_Gauge">
-						<NODE_ID>LIGHTING_Backlight_Panel_2_Emissive</NODE_ID>
-					</UseTemplate>
-				</Component>
-				<UseTemplate Name="ASOBO_LIGHTING_Potentiometer_Emissive_Template">
-					<NODE_ID>LIGHTING_Backlight_Glareshield_Emissive</NODE_ID>
-					<POTENTIOMETER>21</POTENTIOMETER>
-					<EMISSIVE_CODE>0.5</EMISSIVE_CODE>
-				</UseTemplate>
-			</Component>
-		</Component>
-		<!--AsoboTabs-->
-
-		<!--HDFlaps-->
-                <Component ID="Lightning">
-                    <Component ID="Backlights">
-                        <Parameters Type="Defaults">
-                            <ALT_CODE>(A:LIGHT POTENTIOMETER:31, Percent over 100) 0 (L:XMLVAR_LightMasterActive) ?</ALT_CODE>
-                        </Parameters>
-                        <Component ID="Global">
-                            <UseTemplate Name="HEAVY_LIGHTNING_Aisle_Stand_Backlights">
-                                <POTENTIOMETER>@POT_LIGHT_BACKLIGHT_AISLE_STAND</POTENTIOMETER>
-                                <NODE_ID>LIGHTING_Backlight_Pedestal_Emissive</NODE_ID>
-                            </UseTemplate>
-                        </Component>
-                    </Component>
-		</Component>
-		<!--Flaps-->
 		<Component ID="GEARS">
 			<UseTemplate Name="ASOBO_GEAR_Center_Template">
 				<ANIM_NAME>c_gear</ANIM_NAME>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_GEAR_Center_Template">
-				<ANIM_NAME>c_gear2</ANIM_NAME>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_GEAR_Left_Template">
 				<ANIM_NAME>l_gear</ANIM_NAME>
@@ -152,11 +76,6 @@
 				<ANIM_NAME>c_tire_key</ANIM_NAME>
 				<NODE_ID_STILL>Wheel_Nose_center</NODE_ID_STILL>
 				<NODE_ID_BLURRED>Wheel_Nose_blurred</NODE_ID_BLURRED>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_GEAR_Center_Tire_Template">
-				<ANIM_NAME>c_tire_key2</ANIM_NAME>
-				<NODE_ID_STILL>Wheel_Nose_center2</NODE_ID_STILL>
-				<NODE_ID_BLURRED>Wheel_Nose_blurred2</NODE_ID_BLURRED>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_GEAR_Left_Tire_Template">
 				<ANIM_NAME>l_tire_key</ANIM_NAME>
@@ -175,24 +94,14 @@
 			<UseTemplate Name="ASOBO_GEAR_Steering_Template">
 				<ANIM_NAME>c_wheel</ANIM_NAME>
 			</UseTemplate>
-			<UseTemplate Name="ASOBO_GEAR_Steering_Template">
-				<ANIM_NAME>c_wheel2</ANIM_NAME>
-			</UseTemplate>
 		</Component>
 		<Component ID="HANDLING">
 			<UseTemplate Name="ASOBO_HANDLING_Elevator_Template">
 				<ANIM_NAME>elevator_percent_key</ANIM_NAME>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_HANDLING_Elevator_Template">
-				<ANIM_NAME>elevator_percent_key2</ANIM_NAME>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_HANDLING_Elevator_Template">
 				<TRIM_ONLY>True</TRIM_ONLY>
 				<ANIM_NAME_TRIM>trimtab_elevator_key</ANIM_NAME_TRIM>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_HANDLING_Elevator_Template">
-				<TRIM_ONLY>True</TRIM_ONLY>
-				<ANIM_NAME_TRIM>trimtab_elevator_key2</ANIM_NAME_TRIM>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_HANDLING_Aileron_Template">
 				<ANIM_NAME_LEFT>l_aileron_percent_key</ANIM_NAME_LEFT>
@@ -200,14 +109,6 @@
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_HANDLING_Rudder_Template">
 				<ANIM_NAME>rudder_percent_key</ANIM_NAME>
-				<USE_INTEGRATED_TRIM>True</USE_INTEGRATED_TRIM>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_HANDLING_Rudder_Template">
-				<ANIM_NAME>rudder_percent_key2</ANIM_NAME>
-				<USE_INTEGRATED_TRIM>True</USE_INTEGRATED_TRIM>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_HANDLING_Rudder_Template">
-				<ANIM_NAME>rudder_percent_key3</ANIM_NAME>
 				<USE_INTEGRATED_TRIM>True</USE_INTEGRATED_TRIM>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_HANDLING_Spoilers_Template">
@@ -221,7 +122,6 @@
 				<IS_TAKING_OFF_CONDITION>0</IS_TAKING_OFF_CONDITION>
 				<ANIM_NAME_LEFT>l_flaperon_percent_key</ANIM_NAME_LEFT>
 				<ANIM_NAME_RIGHT>r_flaperon_percent_key</ANIM_NAME_RIGHT>
-				<INVERT_ANIM>False</INVERT_ANIM>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_HANDLING_Flaps_Template">
 				<ANIM_NAME_LEFT>l_flap_percent_key</ANIM_NAME_LEFT>
@@ -285,24 +185,12 @@
 				<ANIM_NAME>door_cargo</ANIM_NAME>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_DOOR_InteractivePoint_Template">
-				<ID>8</ID>
-				<ANIM_NAME>door_cargo2</ANIM_NAME>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_DOOR_InteractivePoint_Template">
-				<ID>2</ID>
-				<ANIM_NAME>door_passenger</ANIM_NAME>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_DOOR_InteractivePoint_Template">
 				<ID>0</ID>
-				<ANIM_NAME>door_passenger2</ANIM_NAME>
+				<ANIM_NAME>door_passenger</ANIM_NAME>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_DOOR_InteractivePoint_Template">
 				<ID>7</ID>
 				<ANIM_NAME>door_rear</ANIM_NAME>
-			</UseTemplate>
-			<UseTemplate Name="ASOBO_DOOR_InteractivePoint_Template">
-				<ID>7</ID>
-				<ANIM_NAME>door_rear2</ANIM_NAME>
 			</UseTemplate>
 			<UseTemplate Name="ASOBO_FuelHose_InteractivePoint_Template">
 				<ID>11</ID>
@@ -316,5 +204,5 @@
 		<Component ID="FX">
 			<UseTemplate Name="ASOBO_B787_FX"/>
 		</Component>
-	</Behaviors>	
+	</Behaviors>
 </ModelInfo>
