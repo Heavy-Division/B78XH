@@ -57,6 +57,7 @@
 	<Behaviors>
 		<Include ModelBehaviorFile="Asobo\Common.xml"/>
 		<Include ModelBehaviorFile="Asobo\Exterior.xml"/>
+                <Include ModelBehaviorFile="Heavy\Engines\Index.xml"/>
 		<Include RelativeFile="B787_FX.xml"/>
 		<Component ID="GEARS">
 			<UseTemplate Name="ASOBO_GEAR_Center_Template">
