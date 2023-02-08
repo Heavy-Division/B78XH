@@ -29,10 +29,10 @@ var packageSize = 0;
 
 /** Directories configuration **/
 /** Directories for layout and manifest **/
-const directoriesToProcess = ['./**', '!*.*', '!*', '!./html_ui/Pages/VCockpit/Core/**', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**'];
-const directoriesToProcessDEV = ['./**', '!*.*', '!*', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**'];
+const directoriesToProcess = ['./**', '!*.*', '!*', '!./html_ui/Pages/VCockpit/Core/**', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**', './*.locPak'];
+const directoriesToProcessDEV = ['./**', '!*.*', '!*', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**', './*.locPak'];
 /** Directories for release**/
-const directoriesToRelease = ['./**', '!*', 'LICENSE', 'thirdparty_licenses.txt', './manifest.json', './layout.json', '!./html_ui/Pages/VCockpit/Core/**', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**'];
+const directoriesToRelease = ['./**', '!*', 'LICENSE', 'thirdparty_licenses.txt', './manifest.json', './layout.json', '!./html_ui/Pages/VCockpit/Core/**', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**', './*.locPak'];
 
 /** Internal Transformers */
 const _prepareLayoutFile = (data) => {
