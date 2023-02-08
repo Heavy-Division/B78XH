@@ -1,0 +1,10 @@
+{
+  "LocalisationPackage": {
+    "Language": "en-US",
+    "Strings": {
+      "AIRCRAFT.DESCRIPTION": "During the late 1990s, as sales of the 767 and 747-400 slowed, Boeing kicked-off development for a replacement long-haul, wide-body, twin-engine jetliner. In 2003 they announced the 7E7, which would soon be dubbed 'Dreamliner' after a public naming competition, and officially re-designated as the 787 in 2005.<br><br>The first variant, the 787-8, took flight in 2009, with the longer 787-9 debuting in 2013, and the longest variant, the 787-10, in early 2017. Since launching commercial service with Singapore Airlines in April 2018, the 787-10 has orders for nearly 200 aircraft from 13 customers.<br><br>While the 787-10 accommodates more passengers than its 787 family members, the entire Dreamliner group is built on shared principles and technology -- all geared toward greater efficiency, from both a performance and production standpoint.<br><br>With an airframe constructed primarily of light-weight composite materials, engines featuring all-electrical bleedless systems, fly-by-wire controls, and a suite of aerodynamic improvements from raked wingtips to active gust alleviation, the 787 boasts lower fuel burn and emissions, with increased stability and precision. At the same time, development and assembly has required involvement from numerous suppliers across the world, making the Dreamliner a true collaboration on an unprecedented global scale.",
+      "AIRCRAFT.UI_MANUFACTURER": "Boeing",
+      "AIRCRAFT.UI_MODEL": "787-10 Dreamliner (HD)"
+    }
+  }
+}

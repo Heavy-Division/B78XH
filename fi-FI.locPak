@@ -1,0 +1,10 @@
+{
+  "LocalisationPackage": {
+    "Language": "fi-FI",
+    "Strings": {
+      "AIRCRAFT.DESCRIPTION": "1990-luvun lopulla, kun 767:n ja 747-400:n myynti hidastui, Boeing käynnisti korvaavan pitkänmatkan, leveärunkoisen, kaksimoottorisen suihkukoneen kehitystyön. Vuonna 2003 yhtiö julkisti 7E7:n, joka sai julkisen nimeämiskilpailun jälkeen kutsunimen Dreamliner ja joka nimettiin virallisesti uudelleen 787:ksi vuonna 2005.<br><br>Ensimmäinen versio, 787-8, lähti lentoon vuonna 2009, sitä pidempi 787-9 debytoi vuonna 2013 ja pisin variantti, 787-10, alkuvuodesta 2017. Sen jälkeen, kun kaupallinen palvelu Singapore Airlinesin kanssa käynnistettiin huhtikuussa 2018, 787-10:llä on tilauksia lähes 200 lentokoneelle 13 asiakkaalta.<br><br>Vaikka 787-10:een mahtuu enemmän matkustajia kuin muihin 787-perheen jäseniin, koko Dreamliner-ryhmä perustuu yhteisiin periaatteisiin ja teknologiaan, joilla pyritään parantamaan tehokkuutta sekä suorituskyvyssä että tuotannossa.<br><br>Kun lentokoneen runko on rakennettu pääasiassa kevyistä komposiittimateriaaleista, moottoreissa on täysin sähköiset ja vuodottomat järjestelmät, ohjausjärjestelmä on elektroninen ja käytössä on monia muita aerodynaamisia parannuksia taitetuista siivenkärjistä aktiiviseen puuskankevitykseen, 787 pystyy parempaan vakauteen ja tarkkuuteen pienemmällä polttoaineenkulutuksella ja päästöillä. Samaan aikaan kehityksessä ja kokoonpanossa edellytetään useiden toimittajien osallistumista ympäri maailmaa, mikä tekee Dreamlinerista todellisen yhteistyön taidonnäytteen ennennäkemättömässä maailmanlaajuisessa mittakaavassa.",
+      "AIRCRAFT.UI_MANUFACTURER": "Boeing",
+      "AIRCRAFT.UI_MODEL": "787-10 Dreamliner (HD)"
+    }
+  }
+}

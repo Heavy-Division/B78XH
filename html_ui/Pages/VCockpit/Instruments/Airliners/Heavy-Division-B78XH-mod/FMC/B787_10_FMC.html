@@ -1,0 +1,924 @@
+﻿<link href="B787_10_FMC.css" rel="stylesheet"/>
+
+<script id="B787_10_FMC" type="text/html">
+    <glasscockpit-highlight id="highlight"></glasscockpit-highlight>
+    <div id="Mainframe">
+        <div id="Electricity" state="off">
+
+            <svg id="fms-preflight-overlay" width="640" height="1020" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1020"
+                 style="position: absolute; top: 0; left: 0; z-index: 10;" class="remove-pointers">
+
+                <g id="fms-preflight" visibility="hidden">
+                    <rect
+                            style="fill:#1daa05;"
+                            id="rect833"
+                            width="300"
+                            height="22"
+                            x="170"
+                            y="375"
+                            ry="11" />
+                    <text
+                            style="font-size:18px;font-family:Heavy;fill:white;letter-spacing: 2px; text-anchor: middle"
+                            x="320"
+                            y="393"
+                            id="text837">FMC&nbsp;&nbsp;PREFLIGHT&nbsp;&nbsp;COMPLETE</text>
+                </g>
+            </svg>
+
+            <svg id="hover-svg" width="640" height="1020" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 1020"
+                 style="position: absolute; top: 0; left: 0; z-index: 10;" class="remove-pointers">
+                <path id="RSK6-HOVER"
+                      d="m591.76 401.08v-12.82h34.477l.01172 52.487h-34.479l-.01563-12.815m.00535 1.0393h-270.73v-28.928h270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f;" class="attach-pointers"/>
+                <path id="LSK6-HOVER"
+                      d="m48.245 427.92v12.82h-34.477l-.01172-52.487h34.479l.01563 12.815m-.00535-1.0393h270.73v28.928h-270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="RSK5-HOVER"
+                      d="m591.76 340.08v-12.82h34.477l.01172 52.487h-34.479l-.01563-12.815m.00535 1.0393h-270.73v-28.928h270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="LSK5-HOVER"
+                      d="m48.245 366.92v12.82h-34.477l-.01172-52.487h34.479l.01563 12.815m-.00535-1.0393h270.73v28.928h-270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="RSK4-HOVER"
+                      d="m591.76 279.08v-12.82h34.477l.01172 52.487h-34.479l-.01563-12.815m.00535 1.0393h-270.73v-28.928h270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="LSK4-HOVER"
+                      d="m48.245 305.92v12.82h-34.477l-.01172-52.487h34.479l.01563 12.815m-.00535-1.0393h270.73v28.928h-270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="RSK3-HOVER"
+                      d="m591.76 218.08v-12.82h34.477l.01172 52.487h-34.479l-.01563-12.815m.00535 1.0393h-270.73v-28.928h270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="LSK3-HOVER"
+                      d="m48.245 244.92v12.82h-34.477l-.01172-52.487h34.479l.01563 12.815m-.00535-1.0393h270.73v28.928h-270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="RSK2-HOVER"
+                      d="m591.76 157.08v-12.82h34.477l.01172 52.487h-34.479l-.01563-12.815m.00535 1.0393h-270.73v-28.928h270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="LSK2-HOVER"
+                      d="m48.245 183.92v12.82h-34.477l-.01172-52.487h34.479l.01563 12.815m-.00535-1.0393h270.73v28.928h-270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="RSK1-HOVER"
+                      d="m591.7 96.077v-12.82h34.477l.01172 52.487h-34.479l-.01563-12.815m.00535 1.0393h-270.73v-28.928h270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+                <path id="LSK1-HOVER"
+                      d="m48.245 122.92v12.82h-34.477l-.01172-52.487h34.479l.01563 12.815m-.00535-1.0393h270.73v28.928h-270.73"
+                      style="fill:none;stroke-width:2.077;stroke:#f0f" class="attach-pointers"/>
+            </svg>
+
+
+            <svg id="HDFMC-main" version="1.1" viewBox="0 0 640 1020" xmlns="http://www.w3.org/2000/svg">
+                <style id="style1066"/>
+                <g id="background">
+                    <rect id="background-fill" x="-6.3949e-14" y="-4.5131e-14" width="640" height="1020"
+                          style="fill-opacity:.43922;fill:#8c8cc0;stroke-linecap:round;stroke-linejoin:round;stroke-width:88.185"/>
+                </g>
+                <g id="buttons">
+                    <foreignObject id="LSK1-BUTTON" x="16.50" y="86" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="LSK2-BUTTON" x="16.50" y="147" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="LSK3-BUTTON" x="16.50" y="208" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="LSK4-BUTTON" x="16.50" y="269" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="LSK5-BUTTON" x="16.50" y="330" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="LSK6-BUTTON" x="16.50" y="391" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="RSK2-BUTTON" x="595" y="147" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="RSK1-BUTTON" x="595" y="86" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="RSK3-BUTTON" x="595" y="208" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="RSK4-BUTTON" x="595" y="269" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="RSK5-BUTTON" x="595" y="330" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <foreignObject id="RSK6-BUTTON" x="595" y="391" width="28.5" height="50">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:47px;"></div>
+                    </foreignObject>
+                    <rect id="LSK1-BORDER" class="lsk-btn" x="16.25" y="85.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_LSK_0"/>
+                    <rect id="LSK2-BORDER" class="lsk-btn" x="16.25" y="146.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_LSK_1"/>
+                    <rect id="LSK3-BORDER" class="lsk-btn" x="16.25" y="207.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_LSK_2"/>
+                    <rect id="LSK4-BORDER" class="lsk-btn" x="16.25" y="268.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_LSK_3"/>
+                    <rect id="LSK5-BORDER" class="lsk-btn" x="16.25" y="329.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_LSK_4"/>
+                    <rect id="LSK6-BORDER" class="lsk-btn" x="16.25" y="390.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_LSK_5"/>
+                    <rect id="RSK1-BORDER" class="rsk-btn" x="594.25" y="85.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.4999;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_RSK_0"/>
+                    <rect id="RSK2-BORDER" class="rsk-btn" x="594.25" y="146.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_RSK_1"/>
+                    <rect id="RSK3-BORDER" class="rsk-btn" x="594.25" y="207.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_RSK_2"/>
+                    <rect id="RSK4-BORDER" class="rsk-btn" x="594.25" y="268.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_RSK_3"/>
+                    <rect id="RSK5-BORDER" class="rsk-btn" x="594.25" y="329.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_RSK_4"/>
+                    <rect id="RSK6-BORDER" class="rsk-btn" x="594.25" y="390.75" width="29.5" height="47.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_TRIGGER_RSK_5"/>
+                    <rect id="MK1" class="mk-btn" x="11.25" y="486.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_INIT"/>
+                    <rect id="MK2" class="mk-btn" x="89.25" y="486.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_RTE"/>
+                    <rect id="MK3" class="mk-btn" x="167.25" y="486.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_DEPARR"/>
+                    <rect id="MK4" class="mk-btn" x="245.25" y="486.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_ALTN"/>
+                    <rect id="MK5" class="mk-btn" x="323.25" y="486.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_VNAV"/>
+                    <rect id="MK6" class="mk-btn" x="11.25" y="538.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_FIX"/>
+                    <rect id="MK7" class="mk-btn" x="89.25" y="538.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_LEGS"/>
+                    <rect id="MK8" class="mk-btn" x="167.25" y="538.28" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_HOLD"/>
+                    <rect id="MK9" class="mk-btn" x="245.25" y="538.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_FMCCOMM"/>
+                    <rect id="MK10" class="mk-btn" x="323.25" y="538.28" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_PROG"/>
+                    <rect id="MK11" class="mk-btn" x="11.25" y="590.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_NAVRAD"/>
+                    <rect id="MK12" class="mk-btn" x="89.25" y="590.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_OFST"/>
+                    <rect id="MK13" class="mk-btn" x="167.25" y="590.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_RTA"/>
+                    <rect id="MK14" class="mk-btn" x="245.25" y="590.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_HEAVY"/>
+                    <rect id="MK15" class="mk-btn" x="474.34" y="590.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_PREVPAGE"/>
+                    <rect id="MK16" class="mk-btn" x="550" y="590.25" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"
+                          data-event="H:AS01B_FMC_1_BTN_NEXTPAGE"/>
+                    <rect id="MK17" class="mk-btn" x="553.25" y="486.26" width="75.5" height="49.5"
+                          style="fill-opacity:.56471;fill:#726d72;stroke-linecap:round;stroke-linejoin:round;stroke-width:2.5;stroke:#000"/>
+                    <text id="MK1-1-TEXT" class="remove-pointers" x="48.549316" y="508.72296"
+                          style="fill:#ffffff;font-family:Consolas;font-size:26px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071" x="48.299316" y="508.72296"
+                               style="font-family:Consolas;font-size:26px;font-weight:bold;stroke-width:.5;stroke:#000000">
+                            <tspan id="tspan1065" dy="0"
+                                   style="font-family:Consolas;font-size:26px;font-weight:bold;stroke-width:.5;stroke:#000000">
+                                INIT
+                            </tspan>
+                        </tspan>
+                    </text>
+                    <text id="MK1-2-TEXT" class="remove-pointers" x="49.260254" y="529.91492"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1061" x="49.010254" y="529.91492"
+                               style="font-family:Consolas;font-size:26px;font-weight:bold;stroke-width:.5;stroke:#000000">
+                            REF
+                        </tspan>
+                    </text>
+                    <text id="MK2-TEXT" class="remove-pointers" x="127.16504" y="519.29639"
+                          style="fill:#ffffff;font-family:Consolas;font-size:26px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8" x="126.91504" y="519.29639"
+                               style="font-family:Consolas;font-size:26px;font-weight:bold;stroke-width:.5;stroke:#000000">
+                            RTE
+                        </tspan>
+                    </text>
+                    <text id="MK3-1-TEXT" class="remove-pointers" x="204.9873" y="508.72296"
+                          style="fill:#ffffff;font-family:Consolas;font-size:26px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1119" x="204.7373" y="508.72296"
+                               style="font-family:Consolas;font-size:26px;font-weight:bold;stroke-width:.5;stroke:#000000">
+                            DEP
+                        </tspan>
+                    </text>
+                    <text id="MK3-2-TEXT" class="remove-pointers" x="205.28564" y="530.16492"
+                          style="fill:#ffffff;font-family:Consolas;font-size:26px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1107" x="205.03564" y="530.16492"
+                               style="font-family:Consolas;font-size:26px;font-weight:bold;stroke:#000000">ARR
+                        </tspan>
+                    </text>
+                    <text id="MK4-TEXT" class="remove-pointers" x="283.48047" y="518.6582"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-5" x="283.23047" y="518.6582"
+                               style="font-family:Consolas;font-weight:bold;stroke:#000000">ALTN
+                        </tspan>
+                    </text>
+                    <text id="MK5-TEXT" class="remove-pointers" x="361" y="519.29639"
+                          style="fill:#ffffff;font-family:Consolas;font-size:26px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-0" x="360.75" y="519.29639"
+                               style="font-family:Consolas;font-size:26px;font-weight:bold;stroke-width:.5;stroke:#000000">
+                            VNAV
+                        </tspan>
+                    </text>
+                    <text id="MK6-TEXT" class="remove-pointers" x="47.96875" y="570.6582"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-8" x="47.71875" y="570.6582"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">FIX
+                        </tspan>
+                    </text>
+                    <text id="MK7-TEXT" class="remove-pointers" x="126.4668" y="570.65234"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-2" x="126.2168" y="570.65234"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">LEGS
+                        </tspan>
+                    </text>
+                    <text id="MK8-TEXT" class="remove-pointers" x="204.75391" y="570.68701"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-21" x="204.50391" y="570.68701"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">HOLD
+                        </tspan>
+                    </text>
+                    <text id="MK9-1-TEXT" class="remove-pointers" x="282.63672" y="559.88501"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1316" x="282.38672" y="559.88501" style="font-family:Consolas;font-weight:bold">
+                            FMC
+                        </tspan>
+                    </text>
+                    <text id="MK9-2-TEXT" class="remove-pointers" x="282.7832" y="581.12378"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1113" x="282.5332" y="581.12378" style="font-family:Consolas;font-weight:bold">
+                            COMM
+                        </tspan>
+                    </text>
+                    <text id="MK10-TEXT" class="remove-pointers" x="360.74805" y="570.68701"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-21-5" x="360.49805" y="570.68701" dx="0"
+                               style="font-family:Consolas;font-weight:bold">PROG
+                        </tspan>
+                    </text>
+                    <text id="MK11-1-TEXT" class="remove-pointers" x="48.449219" y="611.42407"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1320" x="48.199219" y="611.42407"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">NAV
+                        </tspan>
+                    </text>
+                    <text id="MK11-2-TEXT" class="remove-pointers" x="48.517578" y="634.14233"
+                          style="fill:#ffffff;font-family:Consolas;font-size:26px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1120" x="48.267578" y="634.14233"
+                               style="font-family:Consolas;font-size:26px;font-weight:bold;stroke-width:.5;stroke:#000000">
+                            RAD
+                        </tspan>
+                    </text>
+                    <text id="MK12-TEXT" class="remove-pointers" x="127.24609" y="622.65234"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-2-9" x="126.99609" y="622.65234"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">OFST
+                        </tspan>
+                    </text>
+                    <text id="MK13-TEXT" class="remove-pointers" x="204.26758" y="622.6582"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-2-8" x="204.01758" y="622.6582"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">RTA
+                        </tspan>
+                    </text>
+                    <text id="MK14-TEXT" class="remove-pointers" x="282.51367" y="622.6582"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-2-5" x="282.26367" y="622.6582"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">HEAVY
+                        </tspan>
+                    </text>
+                    <text id="MK15-1-TEXT" class="remove-pointers" x="511.29773" y="611.67407"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1324" x="511.04773" y="611.67407"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">PREV
+                        </tspan>
+                    </text>
+                    <text id="MK15-2-TEXT" class="remove-pointers" x="512.20593" y="633.12378"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1146" x="511.95593" y="633.12378"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">PAGE
+                        </tspan>
+                    </text>
+                    <text id="MK16-1-TEXT" class="remove-pointers" x="587.66211" y="611.67407"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1328" x="587.41211" y="611.67407"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">NEXT
+                        </tspan>
+                    </text>
+                    <text id="MK16-2-TEXT" class="remove-pointers" x="587.86719" y="633.12378"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;stroke:#000000;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1152" x="587.61719" y="633.12378"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">PAGE
+                        </tspan>
+                    </text>
+                    <text id="MK17-TEXT" class="remove-pointers" x="590.63672" y="527.41864"
+                          style="fill:#ffffff;font-family:Consolas;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:center;text-anchor:middle"
+                          xml:space="default">
+                        <tspan id="tspan1071-8-21-5-5" x="590.38672" y="527.41864"
+                               style="font-family:Consolas;font-weight:bold;stroke-width:.5;stroke:#000000">EXEC
+                        </tspan>
+                    </text>
+                    <rect class="exec-emit-class" x="564" y="494.25" width="54" height="12"
+                          style="fill-opacity:.43922;fill:#8c8cc0;font-variation-settings:'wdth' 100, 'wght' 400;stroke-linecap:round;stroke-linejoin:round;stroke:#000"/>
+                    <foreignObject id="MK1-BUTTON" x="11.25" y="486.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK2-BUTTON" x="89.25" y="486.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK3-BUTTON" x="167.25" y="486.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK4-BUTTON" x="245.25" y="486.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK5-BUTTON" x="323.25" y="486.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK6-BUTTON" x="11.25" y="538.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK7-BUTTON" x="89.25" y="538.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK8-BUTTON" x="167.25" y="538.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK9-BUTTON" x="245.25" y="538.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK10-BUTTON" x="323.25" y="538.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK11-BUTTON" x="11.25" y="590.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK12-BUTTON" x="89.25" y="590.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK13-BUTTON" x="167.25" y="590.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK14-BUTTON" x="245.25" y="590.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK15-BUTTON" x="474.34" y="590.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK16-BUTTON" x="550" y="590.25" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                    <foreignObject id="MK17-BUTTON" x="553.25" y="486.26" width="75.5" height="51">
+                        <div style="background-color:rgba(114,109,114,0);border-bottom-color:#696470;border-color:#696470;border-left-color:#716674;border-right-color:#767078;border-style:outset;border-top-color:#696470;border-width:3px;height:50.5px;"></div>
+                    </foreignObject>
+                </g>
+                <g id="static">
+                    <text id="TIME" class="remove-pointers" x="15" y="30"
+                          style="fill:#ffffff;font-family:Heavy;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:start;text-anchor:start"
+                          xml:space="default">
+                        <tspan id="TIME-TSPAN" class="fms-time" x="15" y="30"
+                               style="font-family:Heavy;font-weight:bold;stroke-width:.5;stroke:#000000">00:00:30 z
+                        </tspan>
+                    </text>
+                    <text id="DATE" class="remove-pointers" x="620" y="30"
+                          style="fill:#ffffff;font-family:Heavy;font-size:24px;font-variation-settings:'wdth' 100, 'wght' 400;letter-spacing:-.5px;line-height:0.75;stroke-width:.5;text-align:end;text-anchor:end"
+                          xml:space="default">
+                        <tspan id="DATE-TSPAN" class="fms-date" x="620" y="30"
+                               style="font-family:Heavy;font-weight:bold;stroke-width:.5;stroke:#000000">01 AUG 20
+                        </tspan>
+                    </text>
+                    <rect id="LSK1-DASH" x="49.55" y="107.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="LSK2-DASH" x="49.55" y="168.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="LSK3-DASH" x="49.55" y="229.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="LSK4-DASH" x="49.55" y="290.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="LSK5-DASH" x="49.55" y="351.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="LSK6-DASH" x="49.55" y="412.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="RSK1-DASH" x="573.55" y="107.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="RSK2-DASH" x="573.55" y="168.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="RSK3-DASH" x="573.55" y="229.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="RSK4-DASH" x="573.55" y="290.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="RSK5-DASH" x="573.55" y="351.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                    <rect id="RSK6-DASH" x="573.55" y="412.55" width="16.9" height="3.9" ry="1.95"
+                          style="fill:#fff;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.1;stroke:#000"/>
+                </g>
+                <g id="display">
+                    <rect id="display-window" x="71" y="35" width="498" height="398"
+                          style="stroke-linecap:round;stroke-linejoin:round;stroke-width:2.0005;stroke:#65697b"/>
+                </g>
+                <g id="lines-foreign">
+                    <foreignobject>
+                        <div id="LT1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:92px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:70px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LL1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:82px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:98px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LT2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:92px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:131px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LL2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:82px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:159px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LT3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:92px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:192px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LL3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:82px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:220px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LT4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:92px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:253px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LL4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:82px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:281px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LT5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:92px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:314px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LL5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:82px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:342px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LT6-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:92px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:375px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="LL6-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:82px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:403px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RT1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:102px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:70px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RL1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:106px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:98px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RT2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:102px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:131px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RL2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:106px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:159px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RT3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:102px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:192px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RL3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:106px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:220px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RT4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:102px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:253px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RL4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:106px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:281px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RT5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:102px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:314px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RL5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:106px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:342px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RT6-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:102px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:375px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="RL6-FOREIGN" class="remove-pointers"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:106px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:403px;width:450px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CT1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:70px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CL1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:98px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CT2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:131px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CL2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:159px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CT3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:192px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CL3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:220px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CT4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:253px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CL4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:281px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CT5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:314px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CL5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:342px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CT6-FOREIGN" class="separator-label"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:375px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CL6-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:403px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLT1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:70px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLL1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:98px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLT2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:131px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLL2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:159px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLT3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:192px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLL3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:220px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLT4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:253px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLL4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:281px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLT5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:314px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLL5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:342px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLT6-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:375px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CLL6-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:403px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRT1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:70px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRL1-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:98px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRT2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:131px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRL2-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:159px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRT3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:192px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRL3-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:220px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRT4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:253px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRL4-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:281px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRT5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:314px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRL5-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:342px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRT6-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:22px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:375px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="CRL6-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:338px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;top:403px;width:230px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="TITLE-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:24px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:71px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:center;text-anchor:middle;top:37px;width:498px">
+                            .
+                        </div>
+                    </foreignobject>
+                    <foreignobject>
+                        <div id="PAGES-FOREIGN"
+                             style="overflow-x: hidden;background-color:transparent;color:#fff;display:block;font-family:Heavy;font-size:20px;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;height:25px;left:72px;letter-spacing:-.73px;line-height:1.25;margin:0;position:absolute;text-align:end;text-anchor:end;top:41px;width:467px">
+                            .
+                        </div>
+                    </foreignobject>
+                </g>
+                <g id="layer1">
+                    <rect id="inOut-line" class="attach-pointers" x="92.321" y="438.65" width="452.18" height="39.624"
+                          style="stroke-linecap:round;stroke-linejoin:round;stroke-width:2;stroke:#65697b"/>
+                    <foreignobject x="110" y="443.65" width="430" height="28">
+                        <div id="inOut-line-html" class="remove-pointers"
+                             style="background-color:transparent;border:0;color:white;font-size:28px;font-weight:bold;height:28px;text-transform:uppercase;width:430px"></div>
+                    </foreignobject>
+                </g>
+            </svg>
+
+
+            <div class="fms-message"
+                 style="display: none; position: absolute; height: 200px; width: 70%; left: 15%; bottom: 50px; border: 2px ridge white;">
+                <div class="fms-message-title" style="padding: 5px 5px 5px 10px; height: 35px;">
+                </div>
+                <div class="fms-message-content"
+                     style="background-color: black; padding: 10px 5px 10px 10px; width: 75%; height: 160px;line-height: 95%; font-size: 20px;">
+                </div>
+                <div style="position: absolute; width: 25%; height: 160px; bottom: 0px; right: 0px;">
+                    <button style="position: relative; width: 80px; height: 50px; line-height: 95%; margin: 0 auto; left: 14px; top: 0px;"
+                            class="fms-button page-button fms-clr-msg active">CLR <br> MSG
+                    </button>
+                    <div style="position: relative; width: 100%; height: 80px; line-height: 95%; margin: 0 auto; top: 20px; font-size: 18px; text-align: center; font-weight: bold;">
+                        <span class="fms-message-count"></span> TOTAL<br>MESSAGES
+                    </div>
+                </div>
+            </div>
+            <svg id="fms-pointer" width="100" height="100" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <path fill="none" stroke="magenta" stroke-width="5"
+                      d="M40 10 L40 40 L10 40 M60 10 L60 40 L90 40 M10 60 L40 60 L40 90 M60 90 L60 60 L90 60"/>
+            </svg>
+        </div>
+    </div>
+    <div id="Borders"></div>
+</script>
+
+<script import-script="/JS/SimPlane.js" type="text/html"></script>
+
+<!-- WT files -->
+<script import-script="/WTPages/WTLibs/WT_SimPlaneMod.js" type="text/html"></script>
+<script import-script="/WTPages/WTLibs/DataStore.js" type="text/html"></script>
+<script import-script="/WTPages/WTLibs/WT_GCMath.js" type="text/html"></script>
+<script import-script="/WTPages/WTLibs/LzUtf8.js" type="text/html"></script>
+<script import-script="/WTPages/WTLibs/wtsdk.js" type="text/html"></script>
+
+<script import-script="/WTPages/Autopilot/AutopilotMath.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/HoldsDirector.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/LocDirector.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/LNavDirector.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/WT_BaseVnav.js" type="text/html"></script>
+<script import-script="/WTPages/Autopilot/WT_VnavAutopilot.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/Heavy-Division-B78XH-mod/FMC/CJ4_FMC_PilotWaypoint.js"
+        type="text/html"></script>
+<!-- WT files END -->
+
+<script import-script="/Pages/VCockpit/Instruments/Shared/Utils/RadioNav.js" type="text/html"></script>
+
+<script import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/Runway.js" type="text/html"></script>
+<script import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/Waypoint.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/Approach.js" type="text/html"></script>
+<script import-script="/HPages/VCockpit/Instruments/Shared/FlightElements/WaypointLoader.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Shared/FlightElements/GeoCalc.js" type="text/html"></script>
+
+<script import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/LogicElements/SearchField.js"
+        type="text/html"></script>
+
+<script import-script="/Pages/VCockpit/Instruments/NavSystems/Shared/NavSystem.js" type="text/html"></script>
+
+<script import-script="/Pages/VCockpit/Instruments/Airliners/Shared/BaseAirliners.js" type="text/html"></script>
+<script import-script="/Pages/VCockpit/Instruments/Airliners/Shared/FMC/FMCDataManager.js" type="text/html"></script>
+
+<!-- Heavy files -->
+<script import-script="/B78XH/Autopilot/B78XHNavModeSelector.js" type="text/html"></script>
+<script import-script="/B78XH/DataHolders/FMC/FMCMessagesHolder.js" type="text/html"></script>
+<script import-script="/B78XH/Managers/FMCMessagesManager.js" type="text/html"></script>
+
+
+<script import-script="/Heavy/Enums/B78XH_LocalVariables.js" type="text/html"></script>
+<script import-script="/Heavy/Utils/HeavyEventDispatcher.js" type="text/html"></script>
+<script import-script="/Heavy/Utils/UpdateDelayer.js" type="text/html"></script>
+<!-- HDLogger should be packed into HDSDK in future (or not)-->
+<script import-script="/Heavy/libs/hdlogger.js" type="text/html"></script>
+<script import-script="/Heavy/libs/hdsdk.js" type="text/html"></script>
+
+<script import-script="/Pages/VCockpit/Instruments/Airliners/Heavy-Division-B78XH-mod/FMC/hdfmc.js" type="text/html"></script>

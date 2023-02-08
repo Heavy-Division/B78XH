@@ -440,6 +440,8 @@
                             <ANIM_NAME>DEICE_Push_Backup_#POSITION#</ANIM_NAME>
                         </Case>
                     </Switch>
+                    <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+                    <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
                 </UseTemplate>
             </FALSE>
         </Condition>
@@ -454,6 +456,8 @@
             <NODE_ID>HYDRAULIC_Push_Pump_#ID#</NODE_ID>
             <ANIM_NAME>HYDRAULIC_Push_Pump_#ID#</ANIM_NAME>
             <EMISSIVE_DRIVES_VISIBILITY>@HG_TRUE</EMISSIVE_DRIVES_VISIBILITY>
+            <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
 
@@ -567,6 +571,8 @@
                     </Condition>
                     <VARIABLE_PREFIX>B78XH</VARIABLE_PREFIX>
                     <VARIABLE_NAME>PRESSURIZATION_Push_#NAME#</VARIABLE_NAME>
+                    <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+                    <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
                 </UseTemplate>
             </TRUE>
         </Condition>
@@ -578,6 +584,8 @@
             <ANIM_NAME>SAFETY_Push_cargoTemp_bulk</ANIM_NAME>
             <VARIABLE_PREFIX>B78XH</VARIABLE_PREFIX>
             <VARIABLE_NAME>SAFETY_Push_cargoTemp_bulk</VARIABLE_NAME>
+            <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
 
@@ -615,6 +623,8 @@
             <ID_BTN>#BUTTON#</ID_BTN>
             <TOOLTIP_TITLE>@TT_Package.#PACKAGE##SUB_PACKAGE#_PUSH_#ACTION#_TITLE</TOOLTIP_TITLE>
             <TT_DESCRIPTION_ID>@TT_Package.#PACKAGE##SUB_PACKAGE#_PUSH_#ACTION#_ACTION</TT_DESCRIPTION_ID>
+            <WWISE_EVENT_1>autopilot_push_button_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>autopilot_push_button_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
 
@@ -816,6 +826,8 @@
             <SEQ2_NODE_ID>LIGHTING_Push_Light_Wing_1</SEQ2_NODE_ID>
             <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_WING_TITLE</TOOLTIP_TITLE>
             <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_WING_ACTION</TT_DESCRIPTION_ID>
+            <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
 
@@ -826,6 +838,8 @@
             <SEQ2_NODE_ID>LIGHTING_Push_Light_Logo_1</SEQ2_NODE_ID>
             <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_LOGO_TITLE</TOOLTIP_TITLE>
             <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_LOGO_ACTION</TT_DESCRIPTION_ID>
+            <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
     <Template Name="HEAVY_LIGHTING_Push_Light_Navigation_Template">
@@ -835,6 +849,8 @@
             <SEQ2_NODE_ID>LIGHTING_Push_Light_NAV_1</SEQ2_NODE_ID>
             <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_NAV_TITLE</TOOLTIP_TITLE>
             <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_NAV_ACTION</TT_DESCRIPTION_ID>
+            <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
 
@@ -845,6 +861,8 @@
             <SEQ2_NODE_ID>LIGHTING_Push_Light_Beacon_1</SEQ2_NODE_ID>
             <TOOLTIP_TITLE>@TT_Package.LIGHTING_SWITCH_LIGHT_BEACON_TITLE</TOOLTIP_TITLE>
             <TT_DESCRIPTION_ID>@TT_Package.LIGHTING_SWITCH_LIGHT_BEACON_ACTION</TT_DESCRIPTION_ID>
+            <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
 
@@ -861,6 +879,10 @@
         <UseTemplate Name="ASOBO_DEICE_Switch_Airframe_Template">
             <NODE_ID>DEICE_Knob_Wing</NODE_ID>
             <ANIM_NAME>DEICE_Knob_Wing</ANIM_NAME>
+            <WWISE_EVENT>deice_engine_knob</WWISE_EVENT>
+            <POS_OFF>0</POS_OFF>
+            <POS_AUTO>1</POS_AUTO>
+            <POS_ON>2</POS_ON>
         </UseTemplate>
     </Template>
 
@@ -877,6 +899,8 @@
             <TRIGGER_ID_LEFTTORIGHT>3</TRIGGER_ID_LEFTTORIGHT>
             <TRIGGER_ID_RIGHTTOLEFT>4</TRIGGER_ID_RIGHTTOLEFT>
             <TRIGGER_ID_ENDBALANCE>5</TRIGGER_ID_ENDBALANCE>
+            <WWISE_EVENT_1>fuel_pump_push_button_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>fuel_pump_push_button_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
 

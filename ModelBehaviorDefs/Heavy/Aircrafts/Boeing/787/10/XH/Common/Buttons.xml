@@ -47,6 +47,8 @@
             <DOWN_STATE_CODE>(A:CIRCUIT SWITCH ON:#CIRCUIT#, Bool)</DOWN_STATE_CODE>
             <SEQ1_EMISSIVE_CODE>(A:CIRCUIT SWITCH ON:#CIRCUIT#, Bool)</SEQ1_EMISSIVE_CODE>
             <SEQ2_EMISSIVE_CODE>(A:CIRCUIT SWITCH ON:#CIRCUIT#, Bool) !</SEQ2_EMISSIVE_CODE>
+            <WWISE_EVENT_1>battery_switch_on</WWISE_EVENT_1>
+            <WWISE_EVENT_2>battery_switch_off</WWISE_EVENT_2>
         </UseTemplate>
     </Template>
 

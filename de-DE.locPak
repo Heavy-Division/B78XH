@@ -1,0 +1,10 @@
+{
+  "LocalisationPackage": {
+    "Language": "de-DE",
+    "Strings": {
+      "AIRCRAFT.DESCRIPTION": "Gegen Ende der 1990er Jahre, als die Verkäufe der 767 und der 747-400 zurückgingen, begann Boeing mit der Entwicklung eines Jetliners für Fernreisen mit breitem Rumpf und Zwillingsmotoren. 2003 wurde schließlich die 7E7 angekündigt, die bald darauf im Rahmen eines öffentlichen Benennungswettbewerbs als „Dreamliner“ bekannt und 2005 schließlich auf den offiziellen Namen 787 getauft wurde.<br><br>Die erste Variante der 787-8 erhob sich 2009 in die Lüfte, wobei die längere 787-9 2013 und die längste Variante Anfang 2017 ihr Debut gaben. Seit der Etablierung kommerzieller Dienstleistungen mit Singapur Airlines im April 2018 wurde die 787-10 fast 200-mal von 13 verschiedenen Kunden geordert.<br><br>Obwohl in der 787-10 mehr Passagiere Platz finden als in den übrigen 787-Varianten, basiert die gesamte Dreamliner-Gruppe auf identischen Prinzipien und Technologien, die eine effizientere Leistung und Produktion gewährleisten sollen.<br><br>Die Flugzeugzelle wird primär aus leichtgewichtigen Kompositmaterialien gefertigt. Ferner verfügt die 787 über Triebwerke mit vollelektrischen Entlüftungssystemen, eine Fly-by-Wire-Steuerung, eine ganze Reihe an aerodynamischen Verbesserungen – von schrägen Flügelspitzen bis hin zu aktiver Böenminderung – sowie einen geringeren Treibstoffverbrauch. Darüber hinaus wurde die Emissionserzeugung gesenkt, die Stabilität und Präzision wurden zugleich erhöht. Die Entwicklung und die Zusammensetzung bedurften der Mithilfe unzähliger Lieferanten rund um den Globus, wodurch der Dreamliner ein wahres Kooperationsprojekt globalen Ausmaßes darstellt.",
+      "AIRCRAFT.UI_MANUFACTURER": "Boeing",
+      "AIRCRAFT.UI_MODEL": "787-10 Dreamliner (HD)"
+    }
+  }
+}

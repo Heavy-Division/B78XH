@@ -1,0 +1,175 @@
+﻿<link rel="stylesheet" href="./B787_10_ND.css"/>
+
+<script type="text/html" id="B787_10_ND_Template">
+    <svg id="FakeMapBox" viewBox="0 0 600 600" irs-state="aligned">
+        <text x="300" y="320">MAP</text>
+        <path d="M273 307L273 334L326 334L326 307L273 307"></path>
+    </svg>
+    <div id="Map" irs-state="aligned">
+        <map-instrument id="MapInstrument" map-mode="plan" bing-id="MFD" bing-ref="plane" show-overlay="false"
+                        config-path="/Pages/VCockpit/Instruments/Airliners/Heavy-Division-B78XH-mod/MFD/"></map-instrument>
+    </div>
+    <div id="altitudeArc" style="position: absolute; left: 0%; top: 0%; width: 100%; height: 100%;">
+        <svg id="altitudeArcSvg" viewBox="0 0 1200 1800">
+            <path id="altitudeArcPath" d="M 400 0 Q 600 -100 800 0" stroke="green" stroke-width="3" fill="none"></path>
+        </svg>
+    </div>
+    <div id="ModeChangeMask"></div>
+    <jet-mfd-nd-compass id="Compass"></jet-mfd-nd-compass>
+    <jet-mfd-nd-info id="NDInfo">
+        <div id="TopBox">
+            <div id="Speed">
+                <svg>
+                    <text id="GS_Text" class="Small" x="0%" y="20%" alignment-baseline="baseline">GS</text>
+                    <text id="GS_Value" class="Value" x="10%" y="20%" alignment-baseline="baseline">---</text>
+                    <text id="TAS_Text" class="Small" x="26%" y="20%" alignment-baseline="baseline">TAS</text>
+                    <text id="TAS_Value" class="Value" x="39%" y="20%" alignment-baseline="baseline">---</text>
+                    <text id="Wind_Direction" class="Value" x="0%" y="45%" alignment-baseline="baseline">--</text>
+                    <text id="Wind_Separator" class="Large" x="14%" y="45%" alignment-baseline="baseline">/</text>
+                    <text id="Wind_Strength" class="Value" x="22%" y="45%" alignment-baseline="baseline">--</text>
+                    <g id="WindArrowContainer">
+                        <polygon id="Wind_Arrow" points="-3 20, 3 20, 3 -20, 15 -20, 0 -40, -15 -20, -3 -20"
+                                 fill="white" display="none"/>
+                    </g>
+                </svg>
+            </div>
+
+            <div id="Approach">
+                <svg>
+                    <text id="APP_Type" class="Large" x="68%" y="20%" alignment-baseline="baseline"></text>
+                    <text id="APP_Freq" class="ValueVor" x="100%" y="20%" alignment-baseline="baseline">---</text>
+                    <text id="APP_Course" class="Large" x="78%" y="45%" alignment-baseline="baseline">CRS</text>
+                    <text id="APP_Course_Value" class="ValueVor" x="101%" y="45%" alignment-baseline="baseline"></text>
+                    <text id="APP_Info" class="ValueVor" x="100%" y="70%" alignment-baseline="baseline">---</text>
+                </svg>
+            </div>
+
+            <div id="Waypoint">
+                <svg>
+                    <text id="WP_Name" class="Large" x="100%" y="20%" alignment-baseline="baseline"></text>
+                    <!-- TRACK is not shown IRL-->
+                    <!-- <text id="WP_Track_Value" class="Value" x="100%" y="20%" alignment-baseline="baseline">---&deg</text> -->
+                    <text id="WP_Distance_Value" class="Value" x="92%" y="45%" alignment-baseline="baseline">-.-</text>
+                    <text id="WP_Distance_Units" class="Units" x="100%" y="45%" alignment-baseline="baseline">NM</text>
+                    <text id="WP_Time" class="Value" x="100%" y="70%" alignment-baseline="baseline">--:--</text>
+                </svg>
+            </div>
+        </div>
+
+        <div id="VORDMENavaids">
+            <div id="VORDMENavaid_Left" style="display:none">
+                <svg>
+                    <text id="State" x="20%" y="20%" alignment-baseline="middle"></text>
+                    <text id="ID" x="20%" y="46%" alignment-baseline="middle"></text>
+                    <text id="Mode" x="60%" y="46%" alignment-baseline="middle"></text>
+                    <text id="Distance" x="37%" y="75%" alignment-baseline="middle">--</text>
+                    <text id="Unit" x="40%" y="75%" alignment-baseline="middle">NM</text>
+                    <path id="ArrowVor" d="M60 10 L50 0 L40 10 M50 0 L50 55 M65 45 L35 45"
+                          transform="translate(-10 12)"/>
+                    <path id="ArrowAdf" d="M60 10 L50 0 L40 10 M50 0 L50 55 M65 45 L35 45"
+                          transform="translate(-10 12)"/>
+                </svg>
+            </div>
+
+            <div id="VORDMENavaid_Right" style="display:none">
+                <svg>
+                    <text id="State" x="80%" y="20%" alignment-baseline="middle"></text>
+                    <text id="ID" x="80%" y="46%" alignment-baseline="middle"></text>
+                    <text id="Mode" x="40%" y="46%" alignment-baseline="middle"></text>
+                    <text id="Distance" x="80%" y="75%" alignment-baseline="middle">--</text>
+                    <text id="Unit" x="83%" y="75%" alignment-baseline="middle">NM</text>
+                    <path id="ArrowVor" d="M60 10 L50 0 L40 10 L40 45 L30 45 L30 55 L70 55 L70 45 L60 45 Z"
+                          transform="translate(235 12)"/>
+                    <path id="ArrowAdf" d="M60 10 L50 0 L40 10 L40 45 L30 45 L30 55 L70 55 L70 45 L60 45 Z"
+                          transform="translate(235 12)"/>
+                </svg>
+            </div>
+        </div>
+
+        <div id="Symbols">
+            <svg>
+                <text id="ARPT" class="Small" x="0%" y="5%" alignment-baseline="baseline">ARPT</text>
+                <text id="WPT" class="Small" x="0%" y="10%" alignment-baseline="baseline">WPT</text>
+                <text id="STA" class="Small" x="0%" y="15%" alignment-baseline="baseline">STA</text>
+                <text id="TERR" class="Large" x="0%" y="20%" alignment-baseline="baseline">TERR</text>
+                <text id="WXR" class="Large" x="0%" y="22%" alignment-baseline="baseline">WXR</text>
+                <text id="WXRInfo" class="Small" x="0%" y="27.5%" alignment-baseline="baseline">+4A</text>
+            </svg>
+        </div>
+    </jet-mfd-nd-info>
+
+    <svg id="FakeCompassBox" viewBox="0 0 600 600" irs-state="aligned">
+        <text x="264" y="80" fill="green" font-size="22" font-family="Roboto-Bold" text-anchor="end"
+              alignment-baseline="central">HDG
+        </text>
+        <text x="300" y="80" fill="white" font-size="26" font-family="Roboto-Bold" text-anchor="middle"
+              alignment-baseline="central">---
+        </text>
+        <text x="336" y="80" fill="green" font-size="22" font-family="Roboto-Bold" text-anchor="start"
+              alignment-baseline="central">MAG
+        </text>
+        <path d="M 268.5 60 L 268.5 99 L 331 99 L 331 60" stroke-width="1" stroke="green" fill="none"></path>
+    </svg>
+
+    <svg id="FakeCompassBoxHdg" viewBox="0 0 600 600" irs-state="aligned">
+        <text x="300" y="80">HDG</text>
+        <path d="M273 65L273 95L326 95L326 65L273 65"></path>
+    </svg>
+
+    <svg id="align-times" irs-state="aligned">
+        <text id="GS_FakeText" class="Small" x="22" y="45" alignment-baseline="baseline" irs-state="aligned">GS</text>
+        <text id="GS_FakeValue" class="Value" x="50" y="45" alignment-baseline="baseline" irs-state="aligned">---</text>
+        <!-- --- -->
+        <text id="time-to-align" class="align" x="13" y="70" alignment-baseline="baseline" irs-state="aligned">TIME TO
+            ALIGN
+        </text>
+        <text id="l-align" class="align align-value" x="13" y="90" alignment-baseline="baseline" irs-state="aligned">05:53
+        </text>
+    </svg>
+
+    <svg id="align-times2" irs-state="aligned">
+        <text id="GS_FakeText2" class="Small" x="25" y="55" alignment-baseline="baseline" irs-state="aligned">GS</text>
+        <text id="GS_FakeValue2" class="Value" x="74" y="50" style="font-size: 40px;" alignment-baseline="baseline"
+              irs-state="aligned">---
+        </text> <!-- --- -->
+        <text id="time-to-align2" class="align" x="25" y="90" alignment-baseline="baseline" irs-state="aligned">TIME TO
+            ALIGN
+        </text>
+        <text id="l-align2" class="align align-value" x="25" y="125" alignment-baseline="baseline" irs-state="aligned">
+            05:53
+        </text>
+    </svg>
+
+    <div id="NavPanel">
+        <svg viewBox="0 0 1200 1800">
+            <g id="Button_Map">
+                <path class="topLeftBorder" d="M0 0 L220 0 l-5 5 L5 50 l-5 5"/>
+                <path class="bottomRightBorder" d="M220 55 L220 0 l-5 5 L5 50 l-5 5"/>
+                <rect class="border" x="0px" width="220px" y="0px" height="55px"/>
+                <rect class="inner" x="5px" width="210px" y="5px" height="45px"/>
+                <text x="110px" y="40px">MAP</text>
+            </g>
+
+            <g id="Button_Plan">
+                <path class="topLeftBorder" d="M0 0 L220 0 l-5 5 L5 50 l-5 5"/>
+                <path class="bottomRightBorder" d="M220 55 L220 0 l-5 5 L5 50 l-5 5"/>
+                <rect class="border" x="0px" width="220px" y="0px" height="55px"/>
+                <rect class="inner" x="5px" width="210px" y="5px" height="45px"/>
+                <text x="110px" y="40px">PLAN</text>
+            </g>
+
+            <g id="Button_Menu">
+                <path class="topLeftBorder" d="M0 0 L110 0 l-5 5 L5 50 l-5 5"/>
+                <path class="bottomRightBorder" d="M110 55 L110 0 l-5 5 L5 50 l-5 5"/>
+                <rect class="border" x="0px" width="110px" y="0px" height="55px"/>
+                <rect class="inner" x="5px" width="100px" y="5px" height="45px"/>
+                <text x="55px" y="40px">MENU</text>
+            </g>
+
+            <g id="Map_Menu"></g>
+        </svg>
+    </div>
+    <div id="Borders"></div>
+</script>
+
+<script type="text/html" import-script="/Pages/VCockpit/Instruments/Airliners/Heavy-Division-B78XH-mod/MFD/Pages/B787_10_ND.js"></script>

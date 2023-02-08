@@ -1,0 +1,10 @@
+{
+  "LocalisationPackage": {
+    "Language": "nl-NL",
+    "Strings": {
+      "AIRCRAFT.DESCRIPTION": "Aan het eind van de jaren 1990, toen de verkoop van de 767 en 747-400 afnam, startte Boeing met de ontwikkeling van een vervangende tweemotorige widebody voor lange verkeersvluchten. In 2003 kondigden het bedrijf de 7E7 aan, die na een openbare wedstrijd om beste naam te bedenken 'Dreamliner' zou worden genoemd en in 2005 het officiële typenummer 787 kreeg.<br><br>De eerste variant, de 787-8, werd geïntroduceerd in 2009, de langere 787-9 debuteerde in 2013, en de langste variant, de 787-10, verscheen begin 2017. Sinds de 787-10 in april 2018 in een commerciële dienst werd genomen bij Singapore Airlines, zijn er bijna 200 exemplaren besteld door 13 klanten.<br><br>Hoewel de 787-10 meer passagiers kan vervoeren dan de andere 787-modellen, is de hele Dreamliner-serie gebaseerd op dezelfde principes en technologie, die zijn bedoeld om zowel de inzet als de productie efficiënter te maken.<br><br>Dankzij een airframe dat voornamelijk is gemaakt van lichte composietmaterialen, motoren met volledig elektrische 'bleedless' systemen, fly-by-wirebesturing en een reeks aerodynamische verbeteringen van gekantelde vleugeltips tot actieve demping van windvlagen, biedt de 787 een lager brandstofverbruik en minder uitstoot in combinatie met verbeterde stabiliteit en precisie. Bovendien is de Dreamliner een voorbeeld van wereldwijde samenwerking op een ongekende schaal, omdat bij de ontwikkeling en assemblage talloze leveranciers over de hele wereld betrokken zijn.",
+      "AIRCRAFT.UI_MANUFACTURER": "Boeing",
+      "AIRCRAFT.UI_MODEL": "787-10 Dreamliner (HD)"
+    }
+  }
+}
