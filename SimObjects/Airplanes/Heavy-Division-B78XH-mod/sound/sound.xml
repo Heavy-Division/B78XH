@@ -33,8 +33,12 @@
 
   </AlwaysPlaySounds>
 
-  <!-- TRIGGERS SOUNDS ========================================================================================== -->  
-  
+  <!-- TRIGGERS SOUNDS ========================================================================================== -->
+
+	<WindSounds>
+		<Sound WwiseEvent="wind_sound" WwiseData="true" />
+	</WindSounds>
+
   <!--<WindSounds>
     <Sound WwiseEvent="wind_sound" WwiseData="true" />    
   </WindSounds>-->
@@ -394,7 +398,7 @@
 
 	<!-- WIND SOUNDS ===================================================================================-->
 	
-	<Sound WwiseData="true" WwiseEvent="CCWind" FadeOutType="1" FadeOutTime="0.5" ViewPoint="Inside" NodeName="SCREEN_MFD_1"  SimVar="AIRSPEED TRUE" Units="KNOTS" Index="1">
+	<!--Sound WwiseData="true" WwiseEvent="CCWind" FadeOutType="1" FadeOutTime="0.5" ViewPoint="Inside" NodeName="SCREEN_MFD_1"  SimVar="AIRSPEED TRUE" Units="KNOTS" Index="1">
 		<WwiseRTPC SimVar="AIRSPEED TRUE" Units="KNOTS" Index="1" RTPCName="SIMVAR_AIRSPEED_TRUE"/>
 		<WwiseRTPC SimVar="GEAR TOTAL PCT EXTENDED" Units="PERCENT" Index="1" RTPCName="SIMVAR_GEAR_TOTAL_PCT_EXTENDED"/> 
 	</Sound> 
@@ -409,7 +413,7 @@
 		<WwiseRTPC SimVar="AIRSPEED TRUE" Units="KNOTS" Index="1" RTPCName="SIMVAR_AIRSPEED_TRUE"/>
 		<WwiseRTPC SimVar="GEAR TOTAL PCT EXTENDED" Units="PERCENT" Index="1" RTPCName="SIMVAR_GEAR_TOTAL_PCT_EXTENDED"/> 
 		<WwiseRTPC SimVar="PLANE ALTITUDE" Units="FEET" Index="1" RTPCName="SIMVAR_PLANE_ALTITUDE"/> 
-	</Sound> 
+	</Sound-->
 
    	<!-- LEVERS ========================================================================================== -->   
        
