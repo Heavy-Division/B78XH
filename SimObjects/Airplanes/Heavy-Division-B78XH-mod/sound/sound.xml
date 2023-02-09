@@ -64,8 +64,8 @@
   </GroundSounds>
   
   <MiscellaneousSounds>
-    <Sound WwiseEvent="STALL_WARNING" WwiseData="true" />
-    <Sound WwiseEvent="OVERSPEED_WARNING_SOUND" WwiseData="true" />
+    <Sound WwiseEvent="STALL_WARNING" WwiseData="true" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+    <Sound WwiseEvent="OVERSPEED_WARNING_SOUND" WwiseData="true" ViewPoint="All" NodeName="SCREEN_MFD_1" />
     <Sound WwiseEvent="GLIDESLOPE_WARNING_SOUND" WwiseData="true" />
     <Sound WwiseEvent="SEATBELTS_ALERT" WwiseData="true" BreakOnStop="true"/>
   </MiscellaneousSounds>
@@ -487,25 +487,25 @@
 <!-- AvionicSounds ========================================================================================== --> 
   
   <AvionicSounds>
-	<Sound WwiseData="true" WwiseEvent="aural_10ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_20ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_30ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_40ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_50ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_100ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_200ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_300ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_400ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_500ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_1000ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_2500ft" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_landing_gear" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_minimums" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_pull_up" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_sink_rate" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_dont_sink" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="aural_v1" ViewPoint="All" />
-	<Sound WwiseData="true" WwiseEvent="tone_altitude_alert_default" ViewPoint="Inside"/>	
+	<Sound WwiseData="true" WwiseEvent="aural_10ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_20ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_30ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_40ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_50ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_100ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_200ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_300ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_400ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_500ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_1000ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_2500ft" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_landing_gear" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_minimums" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_pull_up" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_sink_rate" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_dont_sink" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="aural_v1" ViewPoint="All" NodeName="SCREEN_MFD_1" />
+	<Sound WwiseData="true" WwiseEvent="tone_altitude_alert_default" ViewPoint="Inside" NodeName="SCREEN_MFD_1" />
   </AvionicSounds>
   
 <!-- AnimationSounds ======================================================================================== --> 
@@ -582,16 +582,16 @@
 	<Sound WwiseData="true" WwiseEvent="autopilot_heading_knob" ViewPoint="Inside"/>	  	 	  
 	<Sound WwiseData="true" WwiseEvent="autopilot_speed_knob" ViewPoint="Inside"/>	  		 	  
 	<Sound WwiseData="true" WwiseEvent="autopilot_verticalspeed_knob" ViewPoint="Inside"/>	  	 		 	  
-	<Sound WwiseData="true" WwiseEvent="autopilot_altitude_knob" ViewPoint="Inside"/>	  	 	 		 	  
-	<Sound WwiseData="true" WwiseEvent="autopilot_hdg_bank_knob" ViewPoint="Inside"/>	  
-	<Sound WwiseData="true" WwiseEvent="boeing_vor_adf_switch" ViewPoint="Inside"/>	  
-	<Sound WwiseData="true" WwiseEvent="fpv_push_button_on" ViewPoint="Inside"/>	  
-	<Sound WwiseData="true" WwiseEvent="fpv_push_button_off" ViewPoint="Inside"/>	  
-	<Sound WwiseData="true" WwiseEvent="mtrs_push_button_on" ViewPoint="Inside"/>	  
-	<Sound WwiseData="true" WwiseEvent="mtrs_push_button_off" ViewPoint="Inside"/>		
-	<Sound WwiseData="true" WwiseEvent="autopilot_mins_knob" ViewPoint="Inside"/>		
-	<Sound WwiseData="true" WwiseEvent="autopilot_mins_knob_push_button_on" ViewPoint="Inside"/>		
-	<Sound WwiseData="true" WwiseEvent="autopilot_mins_knob_push_button_off" ViewPoint="Inside"/>	  
+	<Sound WwiseData="true" WwiseEvent="autopilot_altitude_knob" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="autopilot_hdg_bank_knob" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="boeing_vor_adf_switch" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="fpv_push_button_on" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="fpv_push_button_off" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="mtrs_push_button_on" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="mtrs_push_button_off" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="autopilot_mins_knob" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="autopilot_mins_knob_push_button_on" ViewPoint="Inside"/>
+	<Sound WwiseData="true" WwiseEvent="autopilot_mins_knob_push_button_off" ViewPoint="Inside"/>
 	 
 	<!-- Lighting ============================================================================================ -->    
     <Sound WwiseData="true" WwiseEvent="landing_light_switch_on" ViewPoint="Inside"/>	  	  
