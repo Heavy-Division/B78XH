@@ -104,8 +104,8 @@ class B787_10_PFD_MainPage extends NavSystemPage {
 
 	onUpdate(_deltaTime) {
 		super.onUpdate(_deltaTime);
-		this.extendHtmlElementsWithIrsState();
-		this.isIRSAligned();
+		//this.extendHtmlElementsWithIrsState();
+		//this.isIRSAligned();
 	}
 
 	onEvent(_event) {
