@@ -487,24 +487,24 @@
 <!-- AvionicSounds ========================================================================================== --> 
   
   <AvionicSounds>
-	<Sound WwiseData="true" WwiseEvent="aural_10ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_20ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_30ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_40ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_50ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_100ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_200ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_300ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_400ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_500ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_1000ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_2500ft" />
-	<Sound WwiseData="true" WwiseEvent="aural_landing_gear" />
-	<Sound WwiseData="true" WwiseEvent="aural_minimums" />
-	<Sound WwiseData="true" WwiseEvent="aural_pull_up" />
-	<Sound WwiseData="true" WwiseEvent="aural_sink_rate" />	
-	<Sound WwiseData="true" WwiseEvent="aural_dont_sink" />	
-	<Sound WwiseData="true" WwiseEvent="aural_v1" />	
+	<Sound WwiseData="true" WwiseEvent="aural_10ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_20ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_30ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_40ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_50ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_100ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_200ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_300ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_400ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_500ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_1000ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_2500ft" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_landing_gear" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_minimums" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_pull_up" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_sink_rate" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_dont_sink" ViewPoint="All" />
+	<Sound WwiseData="true" WwiseEvent="aural_v1" ViewPoint="All" />
 	<Sound WwiseData="true" WwiseEvent="tone_altitude_alert_default" ViewPoint="Inside"/>	
   </AvionicSounds>
   
