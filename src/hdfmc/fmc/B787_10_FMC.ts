@@ -940,10 +940,24 @@ export class B787_10_FMC extends Boeing_FMC {
 		return 100;
 	}
 
+	getDeratedClimbThrustN1(altitude) {
+		let DeratedClimbThrustN1;
+		if (altitude < 10000) {
+			DeratedClimbThrustN1 = 1;
+		}
+		else if (altitude > 30000) {
+			DeratedClimbThrustN1 = 0;
+		}
+		else {
+			DeratedClimbThrustN1 = 0.01 * Math.floor(100 * (30000 - altitude) / 20000);
+		}
+		return DeratedClimbThrustN1;
+	}
+
 	getThrustClimbLimit() {
 		let altitude = Simplane.getAltitude();
 		let temperature = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
-		return this.getClimbThrustN1(temperature, altitude) - this.getThrustCLBMode() * 8.6;
+		return this.getClimbThrustN1(temperature, altitude) - this.getThrustCLBMode() * 8.6 * this.getDeratedClimbThrustN1(altitude);
 	}
 
 	/**
