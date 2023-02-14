@@ -18722,23 +18722,27 @@
             }
             return 100;
         }
-        getDeratedClimbThrustN1(altitude) {
-            let DeratedClimbThrustN1;
+        getAltitudeCLB(altitude) {
             if (altitude < 10000) {
-                DeratedClimbThrustN1 = 1;
+                let altitudeCLB;
+                altitudeCLB = 1;
+                return altitudeCLB;
             }
             else if (altitude > 30000) {
-                DeratedClimbThrustN1 = 0;
+                let altitudeCLB;
+                altitudeCLB = 0;
+                return altitudeCLB;
             }
             else {
-                DeratedClimbThrustN1 = 0.01 * Math.floor(100 * (30000 - altitude) / 20000);
+                let altitudeCLB;
+                altitudeCLB = 0.01 * Math.floor(100 * (30000 - altitude) / 20000);
+                return altitudeCLB;
             }
-            return DeratedClimbThrustN1;
         }
         getThrustClimbLimit() {
             let altitude = Simplane.getAltitude();
             let temperature = SimVar.GetSimVarValue('AMBIENT TEMPERATURE', 'celsius');
-            return this.getClimbThrustN1(temperature, altitude) - this.getThrustCLBMode() * 8.6 * this.getDeratedClimbThrustN1(altitude);
+            return this.getClimbThrustN1(temperature, altitude) - this.getThrustCLBMode() * 8.6 * this.getAltitudeCLB(altitude);
         }
         /**
          * TODO commented out. This is need only for testing
