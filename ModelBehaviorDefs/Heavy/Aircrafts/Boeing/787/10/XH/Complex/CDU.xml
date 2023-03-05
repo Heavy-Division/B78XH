@@ -1,0 +1,301 @@
+<ModelBehaviors>
+
+    <Template Name="ASOBO_FMC_AS01B_SubTemplate">
+        <UseTemplate Name="ASOBO_FMC_Push_SYS_Template">
+            <INOP_BUTTONS>false</INOP_BUTTONS>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_CDU_Template">
+            <INOP_BUTTONS>True</INOP_BUTTONS>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_INFO_Template">
+            <INOP_BUTTONS>True</INOP_BUTTONS>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_CHKL_Template">
+            <INOP_BUTTONS>True</INOP_BUTTONS>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_COMM_Template">
+            <INOP_BUTTONS>True</INOP_BUTTONS>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_HD_Template">
+            <INOP_BUTTONS>True</INOP_BUTTONS>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Characters_SubTemplate">
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Numbers_SubTemplate">
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_ENTER_Template">
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Dot_Template">
+            <CUR_ID>10</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_PLUSMINUS_Template">
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_SP_Template">
+            <CUR_ID>38</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_DEL_Template">
+            <CUR_ID>39</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_DIV_Template">
+            <CUR_ID>40</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_CLR_Template">
+            <CUR_ID>41</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_PREV_PAGE_Template">
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_NEXT_PAGE_Template">
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_EXEC_Template">
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Emissive_EXEC_Template">
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Knob_Cursor">
+        </UseTemplate>
+    </Template>
+
+
+    <Template Name="ASOBO_FMC_Characters_SubTemplate">
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>A</BTN_ID>
+            <CUR_ID>12</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>B</BTN_ID>
+            <CUR_ID>13</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>C</BTN_ID>
+            <CUR_ID>14</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>D</BTN_ID>
+            <CUR_ID>15</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>E</BTN_ID>
+            <CUR_ID>16</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>F</BTN_ID>
+            <CUR_ID>17</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>G</BTN_ID>
+            <CUR_ID>18</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>H</BTN_ID>
+            <CUR_ID>19</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>I</BTN_ID>
+            <CUR_ID>20</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>J</BTN_ID>
+            <CUR_ID>21</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>K</BTN_ID>
+            <CUR_ID>22</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>L</BTN_ID>
+            <CUR_ID>23</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>M</BTN_ID>
+            <CUR_ID>24</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>N</BTN_ID>
+            <CUR_ID>25</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>O</BTN_ID>
+            <CUR_ID>26</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>P</BTN_ID>
+            <CUR_ID>27</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>Q</BTN_ID>
+            <CUR_ID>28</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>R</BTN_ID>
+            <CUR_ID>29</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>S</BTN_ID>
+            <CUR_ID>30</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>T</BTN_ID>
+            <CUR_ID>31</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>U</BTN_ID>
+            <CUR_ID>32</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>V</BTN_ID>
+            <CUR_ID>33</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>W</BTN_ID>
+            <CUR_ID>34</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>X</BTN_ID>
+            <CUR_ID>35</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>Y</BTN_ID>
+            <CUR_ID>36</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>Z</BTN_ID>
+            <CUR_ID>37</CUR_ID>
+        </UseTemplate>
+    </Template>
+
+    <Template Name="ASOBO_FMC_Numbers_SubTemplate">
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>0</BTN_ID>
+            <CUR_ID>9</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>1</BTN_ID>
+            <CUR_ID>0</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>2</BTN_ID>
+            <CUR_ID>1</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>3</BTN_ID>
+            <CUR_ID>2</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>4</BTN_ID>
+            <CUR_ID>3</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>5</BTN_ID>
+            <CUR_ID>4</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>6</BTN_ID>
+            <CUR_ID>5</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>7</BTN_ID>
+            <CUR_ID>6</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>8</BTN_ID>
+            <CUR_ID>7</CUR_ID>
+        </UseTemplate>
+        <UseTemplate Name="ASOBO_FMC_Push_Character_Template">
+            <BTN_ID>9</BTN_ID>
+            <CUR_ID>8</CUR_ID>
+        </UseTemplate>
+    </Template>
+
+    <!-- FMC components definitions -->
+    <Template Name="ASOBO_FMC_PushButton">
+        <Parameters Type="Default">
+            <TOOLTIP_TITLE_#HTML_EVENT_ID#>@TT_Package.FMC_PUSH_#HTML_EVENT_ID#_TITLE</TOOLTIP_TITLE_#HTML_EVENT_ID#>
+        <TT_DESCRIPTION_ID_#HTML_EVENT_ID#>@TT_Package.FMC_PUSH_#HTML_EVENT_ID#_ACTION</TT_DESCRIPTION_ID_#HTML_EVENT_ID#>
+    <BTN_ID>Button_#HTML_EVENT_ID#</BTN_ID>
+</Parameters>
+<Parameters Type="Override">
+<PART_ID>FMC_Button_#HTML_EVENT_ID#</PART_ID>
+<Condition Valid="INOP_BUTTONS">
+    <True>
+        <TOOLTIPID>TT:COCKPIT.TOOLTIPS.INOP</TOOLTIPID>
+    </True>
+    <False>
+        <INPUT_EVENT_ID>FMC</INPUT_EVENT_ID>
+        <Condition Valid="NO_TOOLTIP_SHOWN">
+            <False>
+                <TOOLTIP_TITLE Process="Param">TOOLTIP_TITLE_#HTML_EVENT_ID#</TOOLTIP_TITLE>
+                <TOOLTIP_ENTRY_0>#INPUT_EVENT_ID_SOURCE#_#BTN_ID#</TOOLTIP_ENTRY_0>
+            </False>
+        </Condition>
+        <TT_DESCRIPTION_ID Process="Param">TT_DESCRIPTION_ID_#HTML_EVENT_ID#</TT_DESCRIPTION_ID>
+        <Condition Valid="HAS_LONG_PRESS">
+            <True>
+                <ANIM>HOLD</ANIM>
+                <!-- Configure event processing -->
+                <SET_ARG_COUNT>2</SET_ARG_COUNT>
+                <!-- p0: Press/Release, p1:PressDuration, 0 = infinite (if pressing) -->
+                <SET_STATE_EXTERNAL>p0 sp0
+                    l0 0 == if{
+                    (O:_PressTime) 0 &gt; if{ (E:SIMULATION TIME, second) (O:_PressTime) - #LONG_CLICK_TIME# &lt; if{
+                    (&gt;H:#PREFIX#_BTN_#HTML_EVENT_ID#) }
+                    els{
+                    (&gt;H:#PREFIX#_BTN_#HTML_EVENT_ID#_Long)
+                    } 0 (&gt;O:_PressTime) }
+                    }
+                    l0 1 == if{ (E:SIMULATION TIME, second) (&gt;O:_PressTime) p1 (&gt;O:_PressForDuration) }
+                </SET_STATE_EXTERNAL>
+                <!-- Configure binding for longpress event -->
+                <BINDING_SET_0>Push_Long</BINDING_SET_0>
+                <BINDING_SET_0_PARAM_0>1</BINDING_SET_0_PARAM_0>
+                <BINDING_SET_0_PARAM_1>#LONG_CLICK_TIME#</BINDING_SET_0_PARAM_1>
+                <BINDING_INC_0>Push</BINDING_INC_0>
+                <BINDING_INC_0_PARAM_0>1</BINDING_INC_0_PARAM_0>
+                <BINDING_DEC_0>Release</BINDING_DEC_0>
+                <BINDING_DEC_0_PARAM_0>0</BINDING_DEC_0_PARAM_0>
+            </True>
+            <False>
+                <!-- <SET_STATE_EXTERNAL>if{ (&gt;H:#PREFIX#_BTN_#HTML_EVENT_ID#) }</SET_STATE_EXTERNAL> -->
+                <SET_STATE_EXTERNAL>if{ #CUR_ID# '#KEY_EVENT#_#ID#' (&gt;F:KeyEvent) }</SET_STATE_EXTERNAL>
+                <BINDING_INC_0>Push</BINDING_INC_0>
+                <BINDING_INC_0_PARAM_0>1</BINDING_INC_0_PARAM_0>
+            </False>
+        </Condition>
+    </False>
+</Condition>
+</Parameters>
+<Component ID="#NODE_ID#" Node="#NODE_ID#">
+<Condition Valid="INOP_BUTTONS">
+    <True>
+        <UseTemplate Name="ASOBO_GT_Push_Button_Airliner_Dummy">
+            <IS_INOP>True</IS_INOP>
+        </UseTemplate>
+    </True>
+    <False>
+        <UseTemplate Name="ASOBO_GT_Push_Button_Airliner">
+            <Condition Valid="HAS_LONG_PRESS">
+                <True>
+                    <LEFT_SINGLE_CODE>(&gt;B:#INPUT_EVENT_ID_SOURCE#_#BTN_ID#_Push)</LEFT_SINGLE_CODE>
+                    <SHORT_CLICK_CODE>(&gt;B:#INPUT_EVENT_ID_SOURCE#_#BTN_ID#_Release)</SHORT_CLICK_CODE>
+                    <LONG_CLICK_CODE>(&gt;B:#INPUT_EVENT_ID_SOURCE#_#BTN_ID#_Release)</LONG_CLICK_CODE>
+                </True>
+                <False>
+                    <LEFT_SINGLE_CODE>(&gt;B:#INPUT_EVENT_ID_SOURCE#_#BTN_ID#_Push)</LEFT_SINGLE_CODE>
+                </False>
+            </Condition>
+        </UseTemplate>
+    </False>
+</Condition>
+</Component>
+        </Template>
+
+<!--
+    <Template Name="HEAVY_CDU_787">
+        <UseTemplate Name="HEAVY_FMC_AS01B">
+            <NODE_ID_PREV_PAGE>CDU_Push_Prev_#ID#</NODE_ID_PREV_PAGE>
+            <NODE_ID_NEXT_PAGE>CDU_Push_Next_#ID#</NODE_ID_NEXT_PAGE>
+            <NODE_ID_EMISSIVE_EXEC>CDU_Push_Exec_Active_#ID#</NODE_ID_EMISSIVE_EXEC>
+            <ANIM_NAME_PREV_PAGE>CDU_Push_Prev_#ID#</ANIM_NAME_PREV_PAGE>
+            <ANIM_NAME_NEXT_PAGE>CDU_Push_Next_#ID#</ANIM_NAME_NEXT_PAGE>
+        </UseTemplate>
+    </Template>
+-->
+</ModelBehaviors>

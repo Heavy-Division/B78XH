@@ -1,0 +1,5 @@
+<ModelBehaviors>
+    <!-- ## Includes -->
+    <Include RelativeFile="CDU.xml" />
+    <!-- ## End: Includes -->
+</ModelBehaviors>
