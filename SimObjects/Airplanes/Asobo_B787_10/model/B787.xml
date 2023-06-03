@@ -60,9 +60,16 @@
                 <Include ModelBehaviorFile="Heavy\Engines\Index.xml"/>
 		<Include RelativeFile="B787_FX.xml"/>
 		<Component ID="GEARS">
+			<UseTemplate Name="ASOBO_GT_Anim">
+                <ANIM_NAME>c_gear</ANIM_NAME>
+                <ANIM_CODE>(A:GEAR ANIMATION POSITION:0, number) (A:GEAR ANIMATION POSITION:0, number) * 200 *</ANIM_CODE>
+                <ANIM_LENGTH>100</ANIM_LENGTH>
+            </UseTemplate>
+		<!--
 			<UseTemplate Name="ASOBO_GEAR_Center_Template">
 				<ANIM_NAME>c_gear</ANIM_NAME>
 			</UseTemplate>
+		-->
 			<UseTemplate Name="ASOBO_GEAR_Left_Template">
 				<ANIM_NAME>l_gear</ANIM_NAME>
 			</UseTemplate>
