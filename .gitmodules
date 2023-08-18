@@ -1,0 +1,3 @@
+[submodule "src/B78XH-wasm"]
+	path = src/wasm
+	url = https://github.com/Heavy-Division/B78XH-wasm.git
