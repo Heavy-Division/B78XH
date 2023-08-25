@@ -9,9 +9,9 @@ const projects = {
 };
 
 const paths = {
-	sdk: ['dist/hdsdk/hdsdk.js', '../html_ui/Heavy/libs'],
-	logger: ['dist/hdlogger/hdlogger.js', '../html_ui/Heavy/libs'],
-	fmc: ['dist/hdfmc/hdfmc.js', '../html_ui/Pages/VCockpit/Instruments/Airliners/B787_10/FMC']
+	sdk: ['dist/hdsdk/hdsdk.js', 'base/hd-aircraft-b78x/html_ui/Heavy/libs'],
+	logger: ['dist/hdlogger/hdlogger.js', 'base/hd-aircraft-b78x/html_ui/Heavy/libs'],
+	fmc: ['dist/hdfmc/hdfmc.js', 'base/hd-aircraft-b78x/html_ui/Pages/VCockpit/Instruments/Airliners/Heavy-Division-B78XH-mod/FMC']
 };
 
 

@@ -12,4 +12,10 @@ todo.yml
 /src/dist/
 /src/build
 /src/node_modules
-/html_ui/Pages/VCockpit/Core
+/src/base/hd-aircraft-b78xh/html_ui/Pages/VCockpit/Core
+/src/base/hd-aircraft-b78x/*.locPak
+/src/base/hd-aircraft-b78x/manifest.json
+/src/base/hd-aircraft-b78x/layout.json
+/src/base/hd-aircraft-b78x/SimObjects/Airplanes/Heavy-Division-B78XH-mod/panel/b78xh.wasm
+*.wasm
+/out

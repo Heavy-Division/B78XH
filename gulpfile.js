@@ -8,6 +8,7 @@ const pipeline = require('readable-stream').pipeline;
 const mergeStream = require('merge-stream');
 const rollup = require('gulp-rollup');
 const ts = require('gulp-typescript');
+const { packageJson } = require('./package.json');
 
 
 /** Default mathjs configuration does not support BigNumbers */
@@ -29,10 +30,10 @@ var packageSize = 0;
 
 /** Directories configuration **/
 /** Directories for layout and manifest **/
-const directoriesToProcess = ['./**', '!*.*', '!*', '!./html_ui/Pages/VCockpit/Core/**', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**', './*.locPak'];
-const directoriesToProcessDEV = ['./**', '!*.*', '!*', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**', './*.locPak'];
+const directoriesToProcess = ['./src/base/hd-aircraft-b78x/**/*'];
+const directoriesToProcessDEV = ['`./**', '!*.*', '!*', '!./docs/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**', './*.locPak'];
 /** Directories for release**/
-const directoriesToRelease = ['./**', '!*', 'LICENSE', 'thirdparty_licenses.txt', './manifest.json', './layout.json', '!./html_ui/Pages/VCockpit/Core/**', '!./DOCS/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**', './*.locPak'];
+const directoriesToRelease = ['./**', '!*', 'LICENSE', 'thirdparty_licenses.txt', './manifest.json', './layout.json', '!./html_ui/Pages/VCockpit/Core/**', '!./docs/**', '!./build/**', '!./release/**', '!./node_modules/**', '!./src/**', './*.locPak'];
 
 /** Internal Transformers */
 const _prepareLayoutFile = (data) => {
@@ -61,21 +62,28 @@ function log(message, color = TerminalColors.default) {
 	console.log(color + message + TerminalColors.default);
 }
 
+
 const _updateManifest = () => {
 	log('Updating manifest.json.', TerminalColors.yellow);
-	let originalManifest = fs.readFileSync('manifest.json').toString();
-	let manifestJson = JSON.parse(originalManifest);
+  
+	const baseManifestPath = './src/base/hd-aircraft-b78x/manifest-base.json';
+	let baseManifest = fs.readFileSync(baseManifestPath).toString();
+	let manifestJson = JSON.parse(baseManifest);
 	manifestJson.total_package_size = String(packageSize).padStart(20, '0');
-	fs.writeFile('manifest.json', JSON.stringify(manifestJson, null, 4), () => {
+	const manifestPath = './src/base/hd-aircraft-b78x/manifest.json';
+	fs.writeFileSync(manifestPath, JSON.stringify(manifestJson, null, 4), () => {
 	});
 	log('manifest.json updated.', TerminalColors.green);
-};
+
+	process.exit(0);
+  };
+  
 
 const copyPackageVersion = () => {
-	let originalManifest = fs.readFileSync('manifest.json').toString();
+	let originalManifest = fs.readFileSync(manifestPath).toString();
 	let manifestJson = JSON.parse(originalManifest);
 	let version = {};
-	version.package_version = manifestJson.package_version;
+	version.package_version = packageJson.version;
 	let versionChunks = manifestJson.package_version.replace(/\./g, '-').split('-');
 	let versionChunks2 = versionChunks;
 	if (versionChunks.length < 4) {
@@ -88,8 +96,9 @@ const copyPackageVersion = () => {
 	const version2String = versionChunks.join('-');
 	version.fms_man_version = 'HD-P' + versionString;
 	version.fms_bak_version = 'HD-C' + version2String;
+	const b78xhJsonPath = './src/base/hd-aircraft-b78x/html_ui/B78XH/b78xh.json';
 
-	fs.writeFile('./html_ui/b78xh/b78xh.json', JSON.stringify(version, null, 4), () => {
+	fs.writeFile(b78xhJsonPath, JSON.stringify(version, null, 4), () => {
 		console.log('version copied successfully.');
 	});
 };
@@ -120,8 +129,9 @@ function buildTask() {
 	).on('data', function (data) {
 		_prepareLayoutFile(data);
 	}).on('end', function () {
+		const outFile = './src/base/hd-aircraft-b78x/layout.json'
 		log('Creating layout.json', TerminalColors.yellow);
-		fs.writeFile('layout.json', JSON.stringify(layoutOutput, null, 4), _updateManifest);
+		fs.writeFile(outFile, JSON.stringify(layoutOutput, null, 4), _updateManifest);
 		log('layout.json created.', TerminalColors.green);
 	});
 }
@@ -149,7 +159,8 @@ function buildDEVTask() {
 		_prepareLayoutFile(data);
 	}).on('end', function () {
 		log('Creating layout.json', TerminalColors.yellow);
-		fs.writeFile('layout.json', JSON.stringify(layoutOutput, null, 4), _updateManifest);
+		const layoutJsonPath = './src/base/hd-aircraft-b78x/layout.json'
+		fs.writeFile(layoutJsonPath, JSON.stringify(layoutOutput, null, 4), _updateManifest);
 		log('layout.json created.', TerminalColors.green);
 	});
 }
@@ -180,7 +191,7 @@ function deleteReleaseCache(callback) {
 }
 
 function bumpTask(callback) {
-	return gulp.src('./manifest.json')
+	return gulp.src('./src/base/hd-aircraft-b78x/manifest.json')
 	.pipe(bump())
 	.pipe(gulp.dest('./')).on('end', function () {
 		copyPackageVersion();
@@ -283,7 +294,7 @@ function copyHDLoggerTask() {
 function copyInstrumentsTask() {
 	return pipeline(
 		gulp.src('build/cache/instruments/**/*'),
-		gulp.dest('html_ui/Pages/VCockpit/Instruments')
+		gulp.dest('./src/base/hd-aircraft-b78x/html_ui/Pages/VCockpit/Instruments')
 	);
 }
 

@@ -1,21 +1,27 @@
 {
-  "name": "b78xhl-heavy",
-  "version": "1.0.0",
+  "name": "b78xh",
+  "author": "heavy-division",
+  "version": "0.2.0",
   "description": "",
-  "main": "",
+  "license": "GPL-3.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:loc": "node buildScripts/locPak.js && echo Copied localization files ✅",
+    "build:wasm": "bash ./src/wasm/build.sh && echo Built WASM module ✅",
+    "build:sdk": "cd src && npx gulp buildAndDistribute",
+    "build:manifest+layout": "gulp build",
+    "build:base": "npm run build:loc && npm run build:sdk && npm run build:manifest+layout",
+    "copy-base-package": "node buildScripts/b78xh.js",
+    "build:b78xh": "npm run build:base && npm run copy-base-package"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Heavy-Division/B78XHL.git"
+    "url": "git+https://github.com/Heavy-Division/B78XH.git"
   },
-  "author": "",
-  "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/Heavy-Division/B78XHL/issues"
+    "url": "https://github.com/Heavy-Division/B78XH/issues"
   },
-  "homepage": "https://github.com/Heavy-Division/B78XHL#readme",
+  "homepage": "https://hdsimulations.com",
   "devDependencies": {
     "del": "^6.0.0",
     "gulp": "^4.0.2",
@@ -29,6 +35,5 @@
     "readable-stream": "^3.6.0",
     "through2": "^4.0.2",
     "typescript": "^4.4.3"
-  },
-  "dependencies": {}
+  }
 }
