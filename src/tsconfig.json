@@ -20,10 +20,10 @@
     "experimentalDecorators": true,
     "noImplicitAny": false,
     "outDir": "build",
-    "rootDir": ".",
+    "rootDir": "./",
     "baseUrl": ".",
     "typeRoots": [
-      ".types/**",
+      "src/types/**",
       "./node_modules/@types"
     ]
   }
