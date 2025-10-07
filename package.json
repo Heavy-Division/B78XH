@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Heavy-Division/B78XHL#readme",
   "devDependencies": {
-    "del": "^6.0.0",
+    "del": "^8.0.1",
     "gulp": "^4.0.2",
     "gulp-ignore": "^3.0.0",
     "gulp-rollup": "^2.17.0",
