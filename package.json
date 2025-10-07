@@ -28,7 +28,7 @@
     "merge-stream": "^2.0.0",
     "readable-stream": "^4.7.0",
     "through2": "^4.0.2",
-    "typescript": "^4.4.3"
+    "typescript": "^5.9.3"
   },
   "dependencies": {}
 }
